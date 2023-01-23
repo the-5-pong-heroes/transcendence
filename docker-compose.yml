@@ -2,6 +2,25 @@ version: '3.1'
 
 services:
 
+#-------------- BACKEND -------------#
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        container_name: "backend"
+        restart: on-failure
+        volumes:
+            - ./backend:/app
+        expose:
+            - "4466"
+        env_file:
+            - .env
+        command: npm run dev
+        networks:
+            - ft_transcendance
+        depends_on:
+            - postgres
+
 #-------------- POSTGRESQL -------------#
     postgres:
         image: postgres:latest
@@ -30,4 +49,4 @@ volumes:
             driver_opts:
                 o: bind
                 type: none
-                device: ${POSTGRESQL_DIR}
+                device: ${POSTGRES_DIR}

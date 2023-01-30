@@ -1,0 +1,41 @@
+# Dependency directory
+node_modules
+
+# bundle
+packages/**/*.d.ts
+packages/**/*.js
+
+# Ignore built ts files
+dist/**/*
+
+# Temporary files
+*.log
+*.gz
+*.dat
+pids
+logs
+tmp
+
+# VIM and IDE
+.vscode
+/.devcontainer
+*.code-workspace
+*.swp
+*.swo
+
+# Cache
+.module-cache
+
+# Build
+public/css/main.css
+
+# Coverage reports
+coverage
+
+# API keys and secrets
+*.env
+!*example*.env
+
+# OS metadata
+.DS_Store
+Thumbs.db

@@ -9,7 +9,7 @@ BLUE		:= $(shell tput -Txterm setaf 6)
 WHITE		:= $(shell tput -Txterm setaf 7)
 RESET		:= $(shell tput -Txterm sgr0)
 
-DIR_CHECK := $(shell grep POSTGRES_DIR .env > /dev/null; echo $$?)
+DIR_CHECK := $(shell grep POSTGRES_DIR example.env > /dev/null; echo $$?)
 
 all: run
 
@@ -17,7 +17,7 @@ run:
 ifeq ($(DIR_CHECK), 1)
 	@read -p "Enter Postgres path: " POSTGRES_DIR; \
 	sudo mkdir -p $$POSTGRES_DIR; \
-	echo "POSTGRES_DIR=$$POSTGRES_DIR" >> .env
+	echo "POSTGRES_DIR=$$POSTGRES_DIR" >> example.env
 endif
 	@sudo docker-compose up -d
 
@@ -26,8 +26,8 @@ list:
 
 clean: 
 ifeq ($(DIR_CHECK), 0)
-	@sed -i "$$(grep -n POSTGRES_DIR .env | cut -f1 -d:)d" .env
-	@echo POSTGRES_DIR var removed from .env
+	@sed -i "$$(grep -n POSTGRES_DIR example.env | cut -f1 -d:)d" example.env
+	@echo POSTGRES_DIR var removed from example.env
 endif
 	@sudo docker-compose down
 	@sudo docker container prune --force

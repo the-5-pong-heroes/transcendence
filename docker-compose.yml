@@ -14,7 +14,7 @@ services:
         expose:
             - "4466"
         env_file:
-            - .env
+            - example.env
         command: npm run dev
         networks:
             - ft_transcendance
@@ -31,7 +31,7 @@ services:
         expose:
             - "5432"
         env_file:
-            - .env
+            - example.env
         networks:
             - ft_transcendance
 

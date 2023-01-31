@@ -19,7 +19,8 @@ ifeq ($(DIR_CHECK), 1)
 	sudo mkdir -p $$POSTGRES_DIR; \
 	echo "POSTGRES_DIR=$$POSTGRES_DIR" >> example.env
 endif
-	@sudo docker-compose up -d
+
+	@sudo docker-compose --env-file ./example.env up -d
 
 list:	
 	@sudo docker container ps -a ; sudo docker images

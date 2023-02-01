@@ -1,0 +1,50 @@
+version: '3'
+services:
+  #############
+  ## SERVER ##
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    networks:
+      - webapp
+      - database
+    depends_on:
+      - postgres_db
+    environment:
+      - SECRET='¯\_(ツ)_/¯'
+    restart: always
+    command: ['./wait-for-it.sh', 'postgres_db:5432', '--', 'node', 'main.js']
+    container_name: server
+  #############
+  ## CLIENT ##
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    networks:
+      - webapp
+    ports:
+      - 80:80
+    restart: always
+    container_name: client
+  ##############
+  ## POSTGRES ##
+  postgres_db:
+    image: postgres
+    networks:
+      - database
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=demo
+    volumes:
+      - ./server/database/data/prod:/var/lib/postgresql/data/
+    restart: always
+    container_name: postgres_db
+
+networks:
+  webapp:
+    driver: bridge
+  database:
+    driver: bridge

@@ -1,0 +1,52 @@
+.navbar {
+  background-color: #333;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 20;
+}
+
+.navbar-list {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  /* margin: 0; */
+}
+
+.navbar li {
+  color: #fff;
+  padding: 2px 25px;
+  cursor: pointer;
+  position: relative;
+  float: left;
+  align-self: auto;
+}
+
+.navbar a {
+  color: white;
+  text-align: center;
+  text-decoration: none;
+}
+
+.navbar .sub-menu {
+  display: none;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  z-index: 21;
+}
+
+.navbar .sub-menu.active {
+  display: block;
+  position: absolute;
+  background-color: #555;
+  left: 0;
+  /* min-width: 3vw; */
+  top: 100%;
+}
+
+.navbar .sub-menu li {
+  color: #fff;
+  /* margin: 5px 5px; */
+  padding-left: 3px;
+}

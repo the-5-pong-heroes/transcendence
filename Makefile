@@ -19,6 +19,7 @@ ifeq ($(DIR_CHECK), 1)
 	sudo mkdir -p $$POSTGRES_DIR; \
 	echo "POSTGRES_DIR=$$POSTGRES_DIR" >> example.env
 endif
+	@cp example.env .env
 	@sudo docker-compose up -d
 
 list:	
@@ -39,6 +40,7 @@ fclean: clean
 	-sudo docker rmi -f `sudo docker images -qa`
 	-sudo docker volume rm `sudo docker volume ls -q`
 	-sudo docker network rm `sudo docker network ls -q 2>/dev/null`
+	sudo rm .env
 	sudo rm -rf $${POSTGRES_DIR}
 
 re: fclean run

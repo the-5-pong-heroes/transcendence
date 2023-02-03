@@ -1,0 +1,9 @@
+.overlay {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  border: none;
+}

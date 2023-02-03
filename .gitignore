@@ -1,5 +1,8 @@
 # Dependency directory
-node_modules
+*/node_modules
+
+# compiled code
+*/dist
 
 # bundle
 packages/**/*.d.ts
@@ -8,13 +11,14 @@ packages/**/*.js
 # Ignore built ts files
 dist/**/*
 
-# Temporary files
-*.log
-*.gz
-*.dat
-pids
+# Logs
 logs
-tmp
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
 
 # VIM and IDE
 .vscode
@@ -39,3 +43,9 @@ coverage
 # OS metadata
 .DS_Store
 Thumbs.db
+
+# others
+*.gz
+*.dat
+pids
+tmp

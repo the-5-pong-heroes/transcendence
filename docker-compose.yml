@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+
+#-------------- BACKEND -------------#
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        container_name: "backend"
+        restart: on-failure
+        volumes:
+            - ./backend:/app
+        expose:
+            - "4466"
+        env_file:
+            - example.env
+        command: yarn start dev
+        networks:
+            - ft_transcendance
+        depends_on:
+            - postgres
+
+#-------------- POSTGRESQL -------------#
+    postgres:
+        image: postgres:latest
+        container_name: "postgresql"
+        restart: on-failure
+        volumes:
+            - postgresql_data:/var/lib/postgresql
+        expose:
+            - "5432"
+        env_file:
+            - example.env
+        networks:
+            - ft_transcendance
+
+# #--------------- NETWORKS --------------#
+
+networks:
+    ft_transcendance:
+        driver: bridge #default
+
+# #--------------- VOLUMES --------------#
+
+volumes:
+        postgresql_data:
+            driver: local
+            driver_opts:
+                o: bind
+                type: none
+                device: ${POSTGRES_DIR}

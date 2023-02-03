@@ -1,21 +1,23 @@
+// ################################# FRONTEND #################################
 {
+  // path to another configuration file to inherit from
+  "extends": "../tsconfig.base.json",
+  // patterns to include in the program
+  "include": ["src/*", "tests/*"],
+  // TypeScript’s configuration & how the language should work
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
+    // base directory to resolve non-absolute module names
+    "baseUrl": "./",
+    // includes a set of type definitions for built-in JS APIs
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": false,
-    "skipLibCheck": true,
-    "esModuleInterop": false,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
+    // sets the module system for the program
     "module": "ESNext",
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
+    // controls how JSX constructs are emitted in JavaScript files
+    "jsx": "react-jsx",
+    // Don't emit compiler output files like JS, source-maps, declarations
     "noEmit": true,
-    "jsx": "react-jsx"
+    // https://www.typescriptlang.org/tsconfig#esModuleInterop
+    "esModuleInterop": false
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  // "references": [{ "path": "./tsconfig.node.json" }] TODO
 }

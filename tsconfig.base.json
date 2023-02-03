@@ -41,6 +41,10 @@
     // raises an error when a piece of code will never be executed
     "allowUnreachableCode": false,
     // warning when you write code that can’t be interpreted by some transpilers
-    "isolatedModules": true
+    "isolatedModules": true,
+    // https://www.typescriptlang.org/tsconfig#useDefineForClassFields
+    "useDefineForClassFields": true,
+    // slower but more type-system accurate
+    "skipLibCheck": false
   }
 }

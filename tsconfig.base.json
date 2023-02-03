@@ -1,0 +1,46 @@
+// this configuration will be used both for the front & backend (with "extends")
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  // TypeScript’s configuration & how the language should work
+  "compilerOptions": {
+    // which JS to use (the more recent, the less compatible)
+    "target": "ESNext",
+    // enforces TS
+    "allowJs": false,
+    // allows importing modules with a .json extension
+    "resolveJsonModule": true,
+    // generates .d.ts files for every TypeScript file of the project
+    "declaration": true,
+    // strips all comments from TypeScript files
+    "removeComments": true,
+    // support for emitting type metadata for decorators
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    // allows you to write: import React from "react" for instance
+    "allowSyntheticDefaultImports": true,
+    // sourcemap files allow debuggers to display the original TS
+    "sourceMap": true,
+    // save information about the project graph from the last compilation
+    "incremental": false,
+    // stronger guarantees of program correctness
+    "strict": true,
+    // null and undefined have their own distinct types
+    "strictNullChecks": true,
+    // call, bind, apply should be invoked with correct argument
+    "strictBindCallApply": true,
+    // functions parameters are checked more correctly
+    "strictFunctionTypes": true,
+    // TS will issue an error whenever it would have inferred ‘any’
+    "noImplicitAny": true,
+    // raises error on ‘this’ expressions with an implied ‘any’ type
+    "noImplicitThis": true,
+    // mimics a case-sensitive file system (for Windows & mac OS)
+    "forceConsistentCasingInFileNames": true,
+    // switch cases should include either [break] or [return]
+    "noFallthroughCasesInSwitch": true,
+    // raises an error when a piece of code will never be executed
+    "allowUnreachableCode": false,
+    // warning when you write code that can’t be interpreted by some transpilers
+    "isolatedModules": true
+  }
+}

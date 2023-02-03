@@ -1,22 +1,20 @@
+// ################################## BACKEND #################################
 {
+  // path to another configuration file to inherit from
   "extends": "../tsconfig.base.json",
+  // patterns to include in the program
+  "include": ["src/*", "test/*"],
+  // TypeScript’s configuration & how the language should work
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "es2017",
-    "sourceMap": true,
-    "outDir": "./dist",
+    // base directory to resolve non-absolute module names
     "baseUrl": "./",
-    "incremental": true,
-    "skipLibCheck": true,
-    "strictNullChecks": true,
-    "noImplicitAny": true,
-    "strictBindCallApply": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true
+    // includes a set of type definitions for built-in JS APIs
+    "lib": ["ESNext"],
+    // sets the module system for the program
+    "module": "commonjs",
+    // files will be emitted into this directory
+    "outDir": "./dist",
+    // https://www.typescriptlang.org/tsconfig#esModuleInterop
+    "esModuleInterop": true
   }
 }

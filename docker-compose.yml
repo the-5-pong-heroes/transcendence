@@ -1,53 +1,52 @@
-# TO BE UPDATED / COMPLETED
-
 version: '3.9'
-services:
-  #############
-  ## SERVER ##
-  server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    networks:
-      - webapp
-      - database
-    depends_on:
-      - postgres_db
-    environment:
-      - SECRET='¯\_(ツ)_/¯'
-    restart: always
-    command: ['./wait-for-it.sh', 'postgres_db:5432', '--', 'node', 'main.js']
-    container_name: server
-  #############
-  ## CLIENT ##
-  client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    networks:
-      - webapp
-    ports:
-      - 80:80
-    restart: always
-    container_name: client
-  ##############
-  ## POSTGRES ##
-  postgres_db:
-    image: postgres
-    networks:
-      - database
-    environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=demo
-    volumes:
-      - ./server/database/data/prod:/var/lib/postgresql/data/
-    restart: always
-    container_name: postgres_db
 
+services:
+
+#-------------- BACKEND -------------#
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        container_name: "backend"
+        restart: on-failure
+        volumes:
+            - ./backend:/app
+        expose:
+            - "4466"
+        env_file:
+            - example.env
+        command: yarn start dev
+        networks:
+            - ft_transcendance
+        depends_on:
+            - postgres
+
+#-------------- POSTGRESQL -------------#
+    postgres:
+        image: postgres:latest
+        container_name: "postgresql"
+        restart: on-failure
+        volumes:
+            - postgresql_data:/var/lib/postgresql
+        expose:
+            - "5432"
+        env_file:
+            - example.env
+        networks:
+            - ft_transcendance
+
+# #--------------- NETWORKS --------------#
 
 networks:
-  webapp:
-    driver: bridge
-  database:
-    driver: bridge
+    ft_transcendance:
+        driver: bridge #default
+
+# #--------------- VOLUMES --------------#
+
+volumes:
+        postgresql_data:
+            driver: local
+            driver_opts:
+                o: bind
+                type: none
+                device: ${POSTGRES_DIR}

@@ -1,12 +1,12 @@
 import { Controller, Post } from "@nestjs/common";
 import { StatsService } from "./stats.service";
 
-@Controller("")
+@Controller("hello")
 export class StatsController {
   constructor(private statsService: StatsService) {}
 
-  @Post("helloworld")
+  @Post("world")
   helloworld() {
-    return "Bonjour monde!";
+    return this.statsService.helloworld();
   }
 }

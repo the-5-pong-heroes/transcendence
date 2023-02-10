@@ -9,30 +9,34 @@ BLUE		:= $(shell tput -Txterm setaf 6)
 WHITE		:= $(shell tput -Txterm setaf 7)
 RESET		:= $(shell tput -Txterm sgr0)
 
-DIR_CHECK := $(shell grep POSTGRES_DIR example.env > /dev/null; echo $$?)
+include ./env/docker.example.env
+export $(shell sed 's/=.*//' ./env/docker.example.env)
+
+# DIR_CHECK := $(shell grep POSTGRES_DIR example.env > /dev/null; echo $$?)
 
 all: run
 
 run:
-ifeq ($(DIR_CHECK), 1)
-	@read -p "Enter Postgres path: " POSTGRES_DIR; \
-	sudo mkdir -p $$POSTGRES_DIR; \
-	echo "POSTGRES_DIR=$$POSTGRES_DIR" >> example.env
-endif
-	@cp example.env .env
-	@sudo docker-compose up -d
+	docker-compose up
+# ifeq ($(DIR_CHECK), 1)
+# 	@read -p "Enter Postgres path: " POSTGRES_DIR; \
+# 	sudo mkdir -p $$POSTGRES_DIR; \
+# 	echo "POSTGRES_DIR=$$POSTGRES_DIR" >> example.env
+# endif
+# 	@cp example.env .env
+# 	@sudo docker-compose up -d
 
 list:
 	@sudo docker container ps -a ; sudo docker images
 
-clean:
-ifeq ($(DIR_CHECK), 0)
-	@sed -i "$$(grep -n POSTGRES_DIR example.env | cut -f1 -d:)d" example.env
-	@echo POSTGRES_DIR var removed from example.env
-endif
-	@sudo docker-compose down
-	@sudo docker container prune --force
-	sudo rm -rf $${POSTGRES_DIR}
+# clean:
+# ifeq ($(DIR_CHECK), 0)
+# 	@sed -i "$$(grep -n POSTGRES_DIR example.env | cut -f1 -d:)d" example.env
+# 	@echo POSTGRES_DIR var removed from example.env
+# endif
+# 	@sudo docker-compose down
+# 	@sudo docker container prune --force
+# 	sudo rm -rf $${POSTGRES_DIR}
 
 fclean: clean
 	-sudo docker stop `sudo docker ps -qa`

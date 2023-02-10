@@ -16,7 +16,7 @@ USER node
 
 RUN yarn run build
 
-EXPOSE 3333
+EXPOSE ${NESTJS_PORT}
 
 # https://notiz.dev/blog/prisma-migrate-deploy-with-docker
 CMD [  "npm", "run", "start:migrate:prod" ]

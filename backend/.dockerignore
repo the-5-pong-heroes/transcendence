@@ -1,0 +1,10 @@
+# ignore everything...
+**
+
+# but what we need!
+!src/
+!test/
+!nest-cli.json
+!tsconfig.json
+!package.json
+!yarn.lock

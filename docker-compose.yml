@@ -1,52 +1,67 @@
 version: '3.9'
 
 services:
-
-#-------------- BACKEND -------------#
+    #----------- POSTGRESQL -------------#
+    db:
+        image: postgres:latest
+        container_name: "db"
+        restart: unless-stopped
+        volumes:
+            - postgresql_data:/var/lib/postgresql/data
+        ports:
+            - "${POSTGRES_PORT:?POSTGRES_PORT env var is missing}:${POSTGRES_PORT}"
+        env_file:
+            - ./env/db.example.env
+        networks:
+            - ft_transcendence
+    #-------------- BACKEND -------------#
     backend:
         build:
             context: ./backend
             dockerfile: Dockerfile
+        command: node dist/main.js
         container_name: "backend"
-        restart: on-failure
+        restart: unless-stopped
         volumes:
             - ./backend:/app
-        expose:
-            - "4466"
-        env_file:
-            - example.env
-        command: npm run start:dev
-        networks:
-            - ft_transcendance
+        ports:
+            - "${BACKEND_PORT:?BACKEND_PORT en var is missing}:${BACKEND_PORT}"
+        env_file: # resolved from the Compose file’s parent folder
+            - ./env/backend.example.env
         depends_on:
             - postgres
-
-#-------------- POSTGRESQL -------------#
-    postgres:
-        image: postgres:latest
-        container_name: "postgresql"
-        restart: on-failure
-        volumes:
-            - postgresql_data:/var/lib/postgresql
-        expose:
-            - "5432"
-        env_file:
-            - example.env
         networks:
-            - ft_transcendance
+            - ft_transcendence
+    #-------------- FRONTEND ------------#
+    frontend:
+        build:
+          context: ./frontend
+          dockerfile: Dockerfile
+        command: TODO
+        container_name: "frontend"
+        restart: unless-stopped
+        # no need for volumes here
+        ports: # resolved from the Compose file’s parent folder
+            - "${FRONTEND_PORT:?FRONTEND_PORT en var is missing}:${FRONTEND_PORT}"
+        env_file:
+            - ./env/frontend.example.env
+        depends_on:
+            - backend
+        networks:
+            - ft_transcendence
 
-# #--------------- NETWORKS --------------#
 
+# --------------- NETWORKS --------------#
 networks:
-    ft_transcendance:
+    ft_transcendence:
         driver: bridge #default
 
-# #--------------- VOLUMES --------------#
 
+# --------------- VOLUMES ---------------#
 volumes:
-        postgresql_data:
-            driver: local
-            driver_opts:
-                o: bind
-                type: none
-                device: ${POSTGRES_DIR}
+    postgresql_data:
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: ${POSTGRES_DIR}

@@ -5,30 +5,37 @@ FROM node:latest
 WORKDIR /app
 
 # Copie les fichiers de l'application dans le répertoire de travail
-COPY --chown=node:node package*.json ./
+COPY --chown=node:node package*.json yarn.lock ./
 
 # Installe les dépendances de l'application
-RUN yarn install
+RUN yarn install --frozen-lockfile --production --non-interactive
 
-#RUN install -g prisma
-#USER node
-COPY --chown=node:node . /app
-#COPY --chown=node:node prisma ./prisma
-#COPY --chown=node:node ././.env ./.env
+COPY --chown=node:node . .
 
-#TODO pas sure de cette la
-RUN yarn global add @nestjs/cli 
+USER node
 
-# Installe Prisma CLI
-RUN yarn add prisma --dev
-RUN yarn prisma
-RUN yarn prisma generate // TODO mettre à jour le chemin
+RUN yarn run build
 
-# Expose le port utilisé
-EXPOSE 4000
+EXPOSE 3333
 
-# Définis l'environnement
-#ENV DATABASE_URL=postgres://<user>:<password>@<host>:<port>/<database_name>
-ENV NODE_ENV production
+# same thing as [node dist/main.js]
+CMD [ "npm", "run", "start:prod" ]
 
-CMD ["start": "node dist/main.js"]
+
+
+# #COPY --chown=node:node prisma ./prisma
+# #COPY --chown=node:node ././.env ./.env
+
+# #TODO pas sure de cette la
+# RUN yarn global add @nestjs/cli
+
+# # Installe Prisma CLI
+# RUN yarn add prisma --dev
+# RUN yarn prisma
+# RUN yarn prisma generate // TODO mettre à jour le chemin
+
+# # Définis l'environnement
+# #ENV DATABASE_URL=postgres://<user>:<password>@<host>:<port>/<database_name>
+# ENV NODE_ENV production
+
+# CMD ["start": "node dist/main.js"]

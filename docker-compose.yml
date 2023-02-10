@@ -15,7 +15,7 @@ services:
             - "4466"
         env_file:
             - example.env
-        command: yarn start dev
+        command: npm run start:dev
         networks:
             - ft_transcendance
         depends_on:

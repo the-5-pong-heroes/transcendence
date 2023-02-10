@@ -13,6 +13,11 @@ RUN yarn install
 #RUN install -g prisma
 #USER node
 COPY --chown=node:node . /app
+#COPY --chown=node:node prisma ./prisma
+#COPY --chown=node:node ././.env ./.env
+
+#TODO pas sure de cette la
+RUN yarn global add @nestjs/cli 
 
 # Installe Prisma CLI
 RUN yarn add prisma --dev

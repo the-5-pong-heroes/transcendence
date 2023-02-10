@@ -1,6 +1,8 @@
 # Utilise une image Node.js en tant que base pour l'image
 FROM node:latest
 
+USER node
+
 # Définis un répertoire de travail
 WORKDIR /app
 
@@ -12,11 +14,11 @@ RUN yarn install --frozen-lockfile --production --non-interactive
 
 COPY --chown=node:node . .
 
-USER node
+# update permissions
+RUN chmod a+x ./entrypoint.sh
 
-RUN yarn run build
+RUN yarn && yarn run build
 
 EXPOSE ${NESTJS_PORT}
 
-# https://notiz.dev/blog/prisma-migrate-deploy-with-docker
-CMD [  "npm", "run", "start:migrate:prod" ]
+ENTRYPOINT ["bash", "./entrypoint.sh"]

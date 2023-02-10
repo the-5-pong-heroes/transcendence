@@ -2,6 +2,7 @@
 **
 
 # but what we need!
+!entrypoint.sh
 !src/
 !test/
 !nest-cli.json

@@ -12,42 +12,40 @@ services:
         ports:
             - "${POSTGRES_PORT:?POSTGRES_PORT env var is missing}:${POSTGRES_PORT}"
         env_file:
-            - ./env/db.example.env
+            - ./env/${DB_ENV_PATH:?DB_ENV_PATH env var is missing}
         networks:
             - ft_transcendence
     #-------------- BACKEND -------------#
     backend:
+        image: "transcendence_backend"
+        container_name: "backend"
         build:
             context: ./backend
             args:
               - NESTJS_PORT=${BACKEND_PORT:?BACKEND_PORT env var is missing}
             dockerfile: Dockerfile
-        command: node dist/main.js
-        container_name: "backend"
         restart: unless-stopped
-        volumes:
-            - ./backend:/app
         ports:
             - "${BACKEND_PORT:?BACKEND_PORT env var is missing}:${BACKEND_PORT}"
         env_file: # resolved from the Compose file’s parent folder
-            - ./env/backend.example.env
+            - ./env/${BACK_ENV_PATH:?BACK_ENV_PATH env var is missing}
         depends_on:
             - db
         networks:
             - ft_transcendence
     #-------------- FRONTEND ------------#
     # frontend:
+    #     container_name: "frontend"
+    # image: "transcendence_frontend"
     #     build:
     #       context: ./frontend
     #       dockerfile: Dockerfile
     #     command: TODO
-    #     container_name: "frontend"
     #     restart: unless-stopped
-    #     # no need for volumes here
     #     ports: # resolved from the Compose file’s parent folder
     #         - "${FRONTEND_PORT:?FRONTEND_PORT en var is missing}:${FRONTEND_PORT}"
     #     env_file:
-    #         - ./env/frontend.example.env
+    #         - ./env/${FRONT_ENV_PATH:?FRONT_ENV_PATH env var is missing}
     #     depends_on:
     #         - backend
     #     networks:

@@ -2,7 +2,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   // patterns to include in the program
-  "include": ["src/*", "tests/*"],
+  "include": ["src", "tests"],
   // TypeScript’s configuration & how the language should work
   "compilerOptions": {
     // which JS to use (the more recent, the less compatible)
@@ -10,7 +10,7 @@
     // enforces TS
     "allowJs": false,
     // allows importing modules with a .json extension
-    "resolveJsonModule": true,
+    "resolveJsonModule": false,
     // generates .d.ts files for every TypeScript file of the project
     "declaration": true,
     // strips all comments from TypeScript files
@@ -60,5 +60,6 @@
     "noEmit": true,
     // https://www.typescriptlang.org/tsconfig#esModuleInterop
     "esModuleInterop": false
-  }
+  },
+  "references": [{ "path": "./tsconfig.vite.json" }]
 }

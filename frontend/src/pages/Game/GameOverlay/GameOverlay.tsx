@@ -1,9 +1,9 @@
 import React, { useImperativeHandle, useState } from "react";
 
-import type { PlayState } from "../Pong2D/@types";
+import type { PlayState } from "../@types";
 
 import type { GameOverlayRef, ScoreState } from "./@types";
-import { Score, Button } from "./components";
+import { PlayButton } from "./components";
 
 import "./GameOverlay.css";
 
@@ -27,7 +27,6 @@ const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef, GameOverlayPr
 
   useImperativeHandle(overlayRef, () => ({
     showScore: ({ player1, player2 }: ScoreState) => {
-      // console.log(player1, " - ", player2);
       setScore({ player1, player2 });
     },
     resetGame: () => {
@@ -38,8 +37,7 @@ const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef, GameOverlayPr
 
   return (
     <div className="overlay" style={containerStyle}>
-      {/* <Score score={score} /> */}
-      <Button visible={visible} setVisible={setVisible} playRef={playRef} />
+      <PlayButton visible={visible} setVisible={setVisible} playRef={playRef} />
     </div>
   );
 };

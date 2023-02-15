@@ -1,22 +1,23 @@
-import React from "react";
-import * as PIXI from "pixi.js";
-import { Sprite } from "react-pixi-fiber/index.js";
+import React, { useRef } from "react";
+import * as THREE from "three";
 
 interface LineProps {
-  height: number;
-  width: number;
+  w: number;
+  h: number;
+  d: number;
 }
 
-export const DashedLine: React.FC<LineProps> = ({ height, width }) => {
+export const DashedLine: React.FC<LineProps> = ({ w, h, d }) => {
+  const lineWidth = 100;
+  const dashSize = 100;
+  const gapSize = 100;
+  const vertices = new THREE.BufferAttribute(new Float32Array([0, h / 2, -128.5, 0, -h / 2, -128.5]), 3);
+  const ref = useRef<THREE.Line>();
+
   return (
-    <Sprite
-      height={height}
-      width={width * 0.01}
-      x={width / 2}
-      y={height / 2}
-      anchor={0.5}
-      texture={PIXI.Texture.WHITE}
-      zIndex={9}
-    />
+    <line>
+      <bufferGeometry attributes={{ position: vertices }} />
+      <lineBasicMaterial linewidth={lineWidth} color={"white"} />
+    </line>
   );
 };

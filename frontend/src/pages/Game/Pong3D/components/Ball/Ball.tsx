@@ -4,11 +4,11 @@ import { useLoader } from "@react-three/fiber";
 
 interface BallProps {
   ballRef: React.RefObject<THREE.Mesh>;
-  initialPosition: { x: number; y: number; z: number };
+  initialPosition: { x: number | undefined; y: number | undefined; z: number | undefined };
   radius: number;
 }
 
-export const Ball: React.FC<BallProps> = ({ ballRef, initialPosition: { x, y, z }, radius }) => {
+export const Ball: React.FC<BallProps> = ({ ballRef, initialPosition: { x = 0, y = 0, z = 0 }, radius }) => {
   const matcapTexture = useLoader(TextureLoader, "/textures/ball_texture.png");
 
   return (

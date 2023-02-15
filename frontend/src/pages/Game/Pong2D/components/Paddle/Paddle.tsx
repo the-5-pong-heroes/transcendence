@@ -1,14 +1,19 @@
 import React from "react";
-import * as PIXI from "pixi.js";
-import { Sprite } from "react-pixi-fiber/index.js";
+import { Vector3 } from "three";
 
 interface PaddleProps {
-  h: number;
+  paddleRef: React.RefObject<THREE.Mesh>;
+  initialPosition: { x: number | undefined; y: number | undefined; z: number | undefined };
   w: number;
-  x: number;
-  y: number;
+  h: number;
+  d: number;
 }
 
-export const Paddle: React.FC<PaddleProps> = ({ h, w, x, y }) => {
-  return <Sprite height={h} width={w} x={x} y={y} texture={PIXI.Texture.WHITE} zIndex={10} />;
+export const Paddle: React.FC<PaddleProps> = ({ paddleRef, initialPosition: { x = 0, y = 0, z = 0 }, w, h, d }) => {
+  return (
+    <mesh ref={paddleRef} position={new Vector3(x, y, z)}>
+      <planeGeometry attach="geometry" args={[w, h]} />
+      <meshBasicMaterial attach="material" color="white" />
+    </mesh>
+  );
 };

@@ -6,7 +6,9 @@ export class Score {
   round: number;
 
   constructor() {
-    this.set();
+    this.player1 = 0;
+    this.player2 = 0;
+    this.round = 0;
   }
 
   set(score?: Score) {

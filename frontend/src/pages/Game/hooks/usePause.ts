@@ -1,6 +1,7 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useEffect, useContext } from "react";
 
-import { type PlayState } from "../Pong2D/@types";
+import { type PlayState } from "../@types";
+import { SocketContext } from "../../../contexts";
 
 import { useKeyboard } from "./useKeyboard";
 
@@ -13,13 +14,26 @@ export const getInitialPlayState = (): PlayState => ({
 });
 
 export const usePause = (): PauseValues => {
+  const { socketRef } = useContext(SocketContext);
   const playRef = useRef<PlayState>(getInitialPlayState());
+
+  useEffect(() => {
+    const socket = socketRef.current;
+    socket?.on("pauseGame", (payload: string) => {
+      console.log("Received message:", payload);
+    });
+
+    return () => {
+      socket?.off("pauseGame");
+    };
+  }, [socketRef]);
 
   const stopOrPlay = useCallback(() => {
     if (playRef.current.started) {
+      socketRef.current?.emit("pauseGame");
       playRef.current.paused = !playRef.current.paused;
     }
-  }, []);
+  }, [socketRef]);
 
   useKeyboard({
     targetKey: "Space",
@@ -28,22 +42,3 @@ export const usePause = (): PauseValues => {
 
   return { playRef };
 };
-
-// interface PauseValues {
-//   paused: React.MutableRefObject<boolean>;
-// }
-
-// export const usePause = (): PauseValues => {
-//   const paused = useRef<boolean>(true);
-
-//   const stopOrPlay = useCallback(() => {
-//     paused.current = !paused.current;
-//   }, []);
-
-//   useKeyboard({
-//     targetKey: "Space",
-//     onKeyDown: stopOrPlay,
-//   });
-
-//   return { paused };
-// };

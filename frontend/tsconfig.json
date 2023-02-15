@@ -59,7 +59,9 @@
     // Don't emit compiler output files like JS, source-maps, declarations
     "noEmit": true,
     // https://www.typescriptlang.org/tsconfig#esModuleInterop
-    "esModuleInterop": false
+    "esModuleInterop": false,
+    // for Node.js’ ECMAScript Module Support from TypeScript 4.7 onwards
+    "moduleResolution": "nodenext"
   },
   "references": [{ "path": "./tsconfig.vite.json" }]
 }

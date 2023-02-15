@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3.8'
 
 services:
     #----------- POSTGRESQL -------------#
@@ -12,7 +12,7 @@ services:
         ports:
             - "${POSTGRES_PORT:?POSTGRES_PORT env var is missing}:${POSTGRES_PORT}"
         env_file:
-            - ./env/${DB_ENV_PATH:?DB_ENV_PATH env var is missing}
+            - ${DB_ENV_PATH:?DB_ENV_PATH env var is missing}
         networks:
             - ft_transcendence
     #-------------- BACKEND -------------#
@@ -28,28 +28,29 @@ services:
         ports:
             - "${BACKEND_PORT:?BACKEND_PORT env var is missing}:${BACKEND_PORT}"
         env_file: # resolved from the Compose file’s parent folder
-            - ./env/${BACK_ENV_PATH:?BACK_ENV_PATH env var is missing}
+            - ${BACK_ENV_PATH:?BACK_ENV_PATH env var is missing}
         depends_on:
             - db
         networks:
             - ft_transcendence
     #-------------- FRONTEND ------------#
-    # frontend:
-    #     container_name: "frontend"
-    # image: "transcendence_frontend"
-    #     build:
-    #       context: ./frontend
-    #       dockerfile: Dockerfile
-    #     command: TODO
-    #     restart: unless-stopped
-    #     ports: # resolved from the Compose file’s parent folder
-    #         - "${FRONTEND_PORT:?FRONTEND_PORT en var is missing}:${FRONTEND_PORT}"
-    #     env_file:
-    #         - ./env/${FRONT_ENV_PATH:?FRONT_ENV_PATH env var is missing}
-    #     depends_on:
-    #         - backend
-    #     networks:
-    #         - ft_transcendence
+    frontend:
+        image: "transcendence_frontend"
+        container_name: "frontend"
+        build:
+          context: ./frontend
+          args:
+            - VITE_PORT=${FRONTEND_PORT:?FRONTEND_PORT env var is missing}
+          dockerfile: Dockerfile
+        restart: unless-stopped
+        ports: # resolved from the Compose file’s parent folder
+            - "${FRONTEND_PORT:?FRONTEND_PORT en var is missing}:${FRONTEND_PORT}"
+        env_file:
+            - ${FRONT_ENV_PATH:?FRONT_ENV_PATH env var is missing}
+        depends_on:
+            - backend
+        networks:
+            - ft_transcendence
 
 
 # --------------- NETWORKS --------------#

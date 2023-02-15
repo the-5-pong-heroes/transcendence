@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import "./Game.css";
 import { useGameSize, usePause } from "./hooks";
 import { type GameOverlayRef } from "./GameOverlay";
-import type { PlayState } from "./Pong2D/@types";
+import type { PlayState } from "./@types";
 
 export const getInitialPlayState = (): PlayState => ({
   started: false,

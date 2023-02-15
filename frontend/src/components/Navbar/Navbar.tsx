@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
+import { menuItems } from "./menuItems";
 
 interface NavbarProps {
   menuItems: {
@@ -15,7 +16,7 @@ interface NavbarProps {
 
 const MINUS_ONE = -1;
 
-export const Navbar: React.FC<NavbarProps> = ({ menuItems }) => {
+export const Navbar: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number>(MINUS_ONE);
 
   const handleHover = useCallback(

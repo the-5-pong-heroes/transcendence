@@ -1,0 +1,14 @@
+# ignore everything...
+**
+
+# but what we need!
+!index.html
+!src/
+!tests/
+!public/
+!tsconfig.json
+!tsconfig.vite.json
+!package.json
+!yarn.lock
+!tailwind.config.cjs
+!postcss.config

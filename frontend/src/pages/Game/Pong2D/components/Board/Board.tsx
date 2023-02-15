@@ -1,12 +1,17 @@
 import React from "react";
-import * as PIXI from "pixi.js";
-import { Sprite } from "react-pixi-fiber/index.js";
+import { Vector3 } from "three";
 
 interface BoardProps {
-  height: number;
-  width: number;
+  w: number;
+  h: number;
+  d: number;
 }
 
-export const Board: React.FC<BoardProps> = ({ height, width }) => {
-  return <Sprite height={height} width={width} texture={PIXI.Texture.WHITE} tint={0x000000} zIndex={5} />;
+export const Board: React.FC<BoardProps> = ({ w, h, d }) => {
+  return (
+    <mesh visible castShadow position={new Vector3(0, 0, -129)}>
+      <planeGeometry attach="geometry" args={[w, h, d]} />
+      <meshBasicMaterial attach="material" color={"#333"} />
+    </mesh>
+  );
 };

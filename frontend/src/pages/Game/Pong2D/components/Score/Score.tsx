@@ -1,24 +1,19 @@
 import React from "react";
-import { Text } from "react-pixi-fiber/index.js";
+import { Text } from "@react-three/drei";
+
+const OFFSET_Z = 2;
 
 interface ScoreProps {
-  height: number;
-  width: number;
-  player1: number;
-  player2: number;
+  h: number;
+  w: number;
+  d: number;
+  score: string;
 }
 
-export const Score: React.FC<ScoreProps> = ({ height, width, player1, player2 }) => {
-  const score = `${player1}   ${player2}`;
-
+export const Score: React.FC<ScoreProps> = ({ w, h, d, score }) => {
   return (
-    <Text
-      text={score}
-      //   scale={height / 5}
-      x={width / 2}
-      y={height / 8}
-      style={{ fill: 0xffffff, fontSize: 130 }}
-      anchor={0.5}
-    />
+    <Text position={[0, h / 3, -128]} fontSize={w / 8} color="white" anchorX="center" characters="0123456789">
+      {score}
+    </Text>
   );
 };

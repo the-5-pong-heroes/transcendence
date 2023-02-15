@@ -51,7 +51,15 @@ export class Ball {
     this.posX = x;
     this.posY = y;
     this.posZ = -gameDepth / 2 + gameDepth * PADDLE_DEPTH_RATIO + OFFSET_Z;
-    this.initRound(gameWidth, gameHeight);
+    this.velX = score?.round
+      ? score.round % 2 === 0
+        ? INITIAL_BALL_VEL_X_RATIO * gameWidth
+        : -INITIAL_BALL_VEL_X_RATIO * gameWidth
+      : INITIAL_BALL_VEL_X_RATIO * gameWidth;
+    this.velY = INITIAL_BALL_VEL_Y_RATIO * gameHeight;
+    this.accX = 0;
+    this.accY = 0;
+    this.rot = 0;
   }
 
   initRound(gameWidth: number, gameHeight: number, score?: Score) {

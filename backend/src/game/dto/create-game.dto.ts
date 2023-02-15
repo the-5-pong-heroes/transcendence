@@ -1,4 +1,4 @@
 export class CreateGameDto {
-  name: string;
+  name?: string;
   userId?: number;
 }

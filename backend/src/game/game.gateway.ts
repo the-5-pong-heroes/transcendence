@@ -24,15 +24,17 @@ import { GameStateDto } from "./dto/game.dto";
 export class GameGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  @WebSocketServer() server: Server; // = socket.io server under the hood
+  @WebSocketServer()
+  server = new Server(); // = socket.io server under the hood
+
   private readonly gameService: GameService;
-  private game: Game;
+  private game: Game | undefined;
 
   constructor(gameService: GameService) {
     this.gameService = gameService;
   }
 
-  afterInit(server: Server) {}
+  afterInit() {}
 
   @SubscribeMessage("connectGame")
   connect(
@@ -40,7 +42,7 @@ export class GameGateway
     @ConnectedSocket() client: Socket
   ) {
     client.emit("initGame", this.getDto());
-    console.log("initGame");
+    // console.log("initGame");
   }
 
   @SubscribeMessage("startGame")
@@ -48,13 +50,13 @@ export class GameGateway
     @MessageBody() createGameDto: CreateGameDto,
     @ConnectedSocket() client: Socket
   ) {
-    this.game.on("updateGame", (data) => {
+    this.game?.on("updateGame", (data) => {
       this.server.emit("updateGame", data);
     });
-    this.game.on("updateScore", (data) => {
+    this.game?.on("updateScore", (data) => {
       this.server.emit("updateScore", data);
     });
-    this.game.on("resetGame", (data) => {
+    this.game?.on("resetGame", (data) => {
       this.server.emit("resetGame", data);
     });
     this.gameService.start();
@@ -87,7 +89,7 @@ export class GameGateway
     console.log(`[Client disconnected: ${client.id}]`);
   }
 
-  getDto(): GameStateDto {
-    return this.gameService.getDto();
+  getDto(): GameStateDto | undefined {
+    return this.game?.getDto();
   }
 }

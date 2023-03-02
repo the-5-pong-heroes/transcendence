@@ -1,7 +1,5 @@
 FROM node:latest
 
-USER node
-
 WORKDIR /app
 
 COPY --chown=node:node package*.json yarn.lock ./
@@ -13,6 +11,8 @@ COPY --chown=node:node . .
 RUN chmod a+x ./entrypoint.sh
 
 RUN yarn && yarn run build
+
+USER node 
 
 EXPOSE ${NESTJS_PORT}
 

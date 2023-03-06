@@ -25,6 +25,7 @@ services:
               - NESTJS_PORT=${BACKEND_PORT:?BACKEND_PORT env var is missing}
             dockerfile: Dockerfile
         restart: unless-stopped
+        #command : yarn run start:prod
         ports:
             - "${BACKEND_PORT:?BACKEND_PORT env var is missing}:${BACKEND_PORT}"
         env_file: # resolved from the Compose file’s parent folder
@@ -52,6 +53,16 @@ services:
 #        networks:
 #            - ft_transcendence
 
+# --------------- PRISMA STUDIO --------------#
+    prisma-studio:
+        container_name: prisma-studio
+        image: prisma-studio:latest
+        restart: unless-stopped
+        env_file:
+            - ${PRISMA_ENV_PATH:?PRISMA_ENV_PATH env var is missing}
+        ports:
+            - ${PRISMA_STUDIO_PORT}:5555
+
 
 # --------------- NETWORKS --------------#
 networks:
@@ -61,4 +72,5 @@ networks:
 
 # --------------- VOLUMES ---------------#
 volumes:
-    postgresql_data:
+        postgresql_data:
+            driver: local

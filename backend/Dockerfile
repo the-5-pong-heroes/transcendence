@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:19-buster
 
 WORKDIR /app
 
@@ -8,12 +8,14 @@ RUN yarn install --frozen-lockfile --production --non-interactive
 
 COPY --chown=node:node . .
 
-RUN chmod a+x ./entrypoint.sh
+RUN chown node:node ./entrypoint.sh
 
 RUN yarn && yarn run build
 
-USER node 
-
 EXPOSE ${NESTJS_PORT}
+
+RUN chown node:node ./dist /app/dist
+
+USER node
 
 ENTRYPOINT ["bash", "./entrypoint.sh"]

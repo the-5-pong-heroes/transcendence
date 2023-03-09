@@ -17,7 +17,7 @@ export $(shell sed 's/=.*//' ./env/docker.example.env)
 all: run
 
 run:
-	docker-compose up
+	docker-compose up --build
 # ifeq ($(DIR_CHECK), 1)
 # 	@read -p "Enter Postgres path: " POSTGRES_DIR; \
 # 	sudo mkdir -p $$POSTGRES_DIR; \

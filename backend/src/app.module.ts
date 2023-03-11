@@ -4,9 +4,10 @@ import { AppService } from "./app.service";
 import { GameModule } from "./game/game.module";
 import { StatsModule } from "./stats/stats.module";
 import { AuthModule } from "./auth/auth.module";
+import { PrismaModule } from "./prisma/prisma.module";
 
 @Module({
-  imports: [GameModule, StatsModule, AuthModule],
+  imports: [GameModule, StatsModule, AuthModule, PrismaModule],
   controllers: [AppController],
   providers: [AppService],
 })

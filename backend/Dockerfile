@@ -5,6 +5,7 @@ WORKDIR /app
 COPY --chown=node:node package*.json yarn.lock ./
 
 RUN yarn install --frozen-lockfile --production --non-interactive
+#RUN yarn install --frozen-lockfile --non-interactive
 
 COPY --chown=node:node . .
 

@@ -1,52 +1,100 @@
 .navbar {
-  background-color: #333;
+  position: fixed;
+  background: #22262a;
+  height: 60px;
   width: 100%;
   display: flex;
-  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-end;
   z-index: 20;
+  padding: 0 20px;
 }
 
-.navbar-list {
+.title {
+  color: white;
+  font-family: "herbarium";
+}
+
+.navbar img {
+  width: 27px;
+  height: 27px;
+}
+
+.menu-icon {
+  display: none;
+  margin-left: 8px;
+}
+
+.nav-elements ul {
+  gap: 12px;
   display: flex;
-  list-style-type: none;
-  padding: 0;
-  /* margin: 0; */
+}
+
+li:nth-child(2) {
+  scale: 0.9;
+}
+
+li:nth-child(4) {
+  scale: 0.9;
 }
 
 .navbar li {
   color: #fff;
-  padding: 2px 25px;
+  padding: 20px;
   cursor: pointer;
   position: relative;
-  float: left;
   align-self: auto;
 }
 
 .navbar a {
-  color: white;
+  color: rgb(255, 255, 255);
   text-align: center;
   text-decoration: none;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont;
 }
 
-.navbar .sub-menu {
-  display: none;
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  z-index: 21;
+.item:hover,
+.item:focus {
+  border-color: hsla(0, 0%, 100%, 0.6);
+  transform: translateY(-0.06rem) scale(1.15);
+  font-weight: bold;
 }
 
-.navbar .sub-menu.active {
-  display: block;
-  position: absolute;
-  background-color: #555;
-  left: 0;
-  /* min-width: 3vw; */
-  top: 100%;
-}
+@media (max-width: 600px) {
+  .navbar {
+    justify-content: flex-start;
+  }
 
-.navbar .sub-menu li {
-  color: #fff;
-  /* margin: 5px 5px; */
-  padding-left: 3px;
+  .menu-icon {
+    display: block;
+    cursor: pointer;
+  }
+
+  .nav-elements {
+    position: absolute;
+    left: 0;
+    top: 60px;
+    background-color: #22262a;
+    width: 0px;
+    height: calc(100vh - 60px);
+    transition: all 0.3s ease-in;
+    overflow: hidden;
+  }
+
+  .nav-elements.active {
+    width: 80px;
+  }
+
+  .nav-elements ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    gap: 8px;
+  }
+
+  .nav-elements ul li {
+    margin-right: unset;
+  }
 }

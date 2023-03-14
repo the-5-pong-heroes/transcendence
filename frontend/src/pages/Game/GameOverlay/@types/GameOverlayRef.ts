@@ -1,6 +1,6 @@
-import type { ScoreState } from "./ScoreState";
+import { type GameResult } from "../../@types";
 
 export interface GameOverlayRef {
-  showScore: ({ player1, player2 }: ScoreState) => void;
-  resetGame: () => void;
+  showLoader: (value: boolean) => void;
+  setResult: (result: GameResult) => void;
 }

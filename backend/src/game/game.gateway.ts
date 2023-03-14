@@ -1,6 +1,5 @@
 import {
   WebSocketGateway,
-  WebSocketServer,
   OnGatewayInit,
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -8,12 +7,16 @@ import {
   MessageBody,
   ConnectedSocket,
 } from "@nestjs/websockets";
-import { GameService } from "./game.service";
-import { Game } from "./lib";
-import { CreateGameDto } from "./dto/create-game.dto";
-import { UserMoveDto } from "./dto/update-game.dto";
+import { Logger } from "@nestjs/common";
 import { Socket, Server } from "socket.io";
-import { GameStateDto } from "./dto/game.dto";
+import { UserMoveDto, LobbyJoinDto } from "./dto";
+import { LobbyManager } from "./lobby";
+import {
+  AuthenticatedSocket,
+  ClientEvents,
+  SocketExceptions,
+} from "./@types";
+import { ServerException } from "./server.exception";
 
 @WebSocketGateway({
   cors: {
@@ -24,72 +27,60 @@ import { GameStateDto } from "./dto/game.dto";
 export class GameGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  @WebSocketServer()
-  server = new Server(); // = socket.io server under the hood
+  private readonly logger: Logger = new Logger(GameGateway.name);
 
-  private readonly gameService: GameService;
-  private game: Game | undefined;
+  constructor(private readonly lobbyManager: LobbyManager) {}
 
-  constructor(gameService: GameService) {
-    this.gameService = gameService;
+  afterInit(server: Server) {
+    this.lobbyManager.server = server;
+    this.logger.log("Game server initialized !");
   }
 
-  afterInit() {}
+  async handleConnection(client: Socket, ...args: any[]): Promise<void> {
+    // console.log(`[Client connected: ${client.id}]`);
+    this.lobbyManager.setupSocket(client as AuthenticatedSocket);
+  }
 
-  @SubscribeMessage("connectGame")
-  connect(
-    @MessageBody() createGameDto: CreateGameDto,
-    @ConnectedSocket() client: Socket
+  async handleDisconnect(client: AuthenticatedSocket) {
+    // console.log(`[Client disconnected: ${client.id}]`);
+    this.lobbyManager.terminateSocket(client);
+  }
+
+  @SubscribeMessage(ClientEvents.LobbyJoin)
+  onLobbyJoin(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody() data: LobbyJoinDto
   ) {
-    client.emit("initGame", this.getDto());
-    // console.log("initGame");
+    this.lobbyManager.joinLobby(data.lobbyMode, data.gameMode, client);
   }
 
-  @SubscribeMessage("startGame")
-  start(
-    @MessageBody() createGameDto: CreateGameDto,
-    @ConnectedSocket() client: Socket
+  @SubscribeMessage(ClientEvents.LobbyLeave)
+  onLobbyLeave(@ConnectedSocket() client: AuthenticatedSocket) {
+    client.data.lobby?.removeClient(client);
+  }
+
+  @SubscribeMessage(ClientEvents.GamePause)
+  onGamePause(@ConnectedSocket() client: AuthenticatedSocket) {
+    if (!client.data.lobby) {
+      throw new ServerException(
+        SocketExceptions.LobbyError,
+        "You're not in a lobby"
+      );
+    }
+    client.data.lobby.gameLoop.pause();
+  }
+
+  @SubscribeMessage(ClientEvents.UserMove)
+  onUserMove(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody() userMove: UserMoveDto
   ) {
-    this.game?.on("updateGame", (data) => {
-      this.server.emit("updateGame", data);
-    });
-    this.game?.on("updateScore", (data) => {
-      this.server.emit("updateScore", data);
-    });
-    this.game?.on("resetGame", (data) => {
-      this.server.emit("resetGame", data);
-    });
-    this.gameService.start();
-  }
-
-  @SubscribeMessage("pauseGame")
-  pause(
-    @MessageBody() createGameDto: CreateGameDto,
-    @ConnectedSocket() client: Socket
-  ) {
-    this.gameService.pause();
-  }
-
-  @SubscribeMessage("movePlayer")
-  updatePaddle(
-    @MessageBody() userMove: UserMoveDto,
-    @ConnectedSocket() client: Socket
-  ) {
-    this.gameService.handleUserMove(userMove);
-  }
-
-  handleConnection(client: Socket, ...args: any[]) {
-    console.log(`[Client connected: ${client.id}]`);
-    this.game = new Game({ userId: client.id });
-    this.gameService.init(this.game);
-    this.server.emit("open", { message: "WebSocket connection established" });
-  }
-
-  handleDisconnect(client: Socket) {
-    console.log(`[Client disconnected: ${client.id}]`);
-  }
-
-  getDto(): GameStateDto | undefined {
-    return this.game?.getDto();
+    if (!client.data.lobby) {
+      throw new ServerException(
+        SocketExceptions.LobbyError,
+        "You're not in a lobby"
+      );
+    }
+    client.data.lobby.gameLoop.userMove(client, userMove.move);
   }
 }

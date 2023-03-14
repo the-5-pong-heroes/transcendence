@@ -1,31 +1,26 @@
-import React, { Suspense, useContext, useEffect } from "react";
-import { useOutletContext } from "react-router-dom";
+import React, { Suspense, useContext } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 
 import "./Pong3D.css";
 
-import { GameOverlay, type GameOverlayRef } from "../GameOverlay";
-import type { PlayState } from "../@types";
+import type { GameMode } from "../@types";
 import {
-  BALL_RADIUS_RATIO,
+  BALL_RADIUS,
   GAME_DEPTH,
   GAME_HEIGHT,
   GAME_WIDTH,
-  PADDLE_DEPTH_RATIO,
-  PADDLE_HEIGHT_RATIO,
-  PADDLE_WIDTH_RATIO,
+  PADDLE_DEPTH,
+  PADDLE_HEIGHT,
+  PADDLE_WIDTH,
 } from "../constants";
 import { useGameLoop } from "../hooks";
-import { SocketContext } from "../../../contexts";
+import { GameContext } from "../context/GameContext";
 
 import { Ball, Board, Paddle, Score } from "./components";
 
 interface GameProps {
-  height: number;
-  width: number;
-  playRef: React.MutableRefObject<PlayState>;
-  overlayRef: React.RefObject<GameOverlayRef>;
+  gameMode: GameMode | undefined;
 }
 
 const Light: React.FC = () => {
@@ -38,14 +33,12 @@ const Light: React.FC = () => {
   );
 };
 
-const PongGame: React.FC<GameProps> = ({ overlayRef }) => {
+const PongGame: React.FC = () => {
   useThree(({ camera }) => {
     camera.position.set(0, 0, GAME_DEPTH / 2);
   });
 
-  const { gameRef, paddleLeftRef, paddleRightRef, ballRef, scoreLabel } = useGameLoop({
-    overlayRef,
-  });
+  const { gameRef, paddleLeftRef, paddleRightRef, ballRef, scoreLabel } = useGameLoop();
 
   return (
     <>
@@ -56,33 +49,33 @@ const PongGame: React.FC<GameProps> = ({ overlayRef }) => {
         <Ball
           ballRef={ballRef}
           initialPosition={{
-            x: gameRef.current?.ball.posX,
-            y: gameRef.current?.ball.posY,
-            z: gameRef.current?.ball.posZ,
+            x: gameRef.current?.ball.pos.x,
+            y: gameRef.current?.ball.pos.y,
+            z: gameRef.current?.ball.pos.z,
           }}
-          radius={GAME_WIDTH * BALL_RADIUS_RATIO}
+          radius={BALL_RADIUS}
         />
         <Paddle
           paddleRef={paddleLeftRef}
           initialPosition={{
-            x: gameRef.current?.paddleLeft.posX,
-            y: gameRef.current?.paddleLeft.posY,
-            z: gameRef.current?.paddleLeft.posZ,
+            x: gameRef.current?.paddleLeft.pos.x,
+            y: gameRef.current?.paddleLeft.pos.y,
+            z: gameRef.current?.paddleLeft.pos.z,
           }}
-          w={GAME_WIDTH * PADDLE_WIDTH_RATIO}
-          h={GAME_HEIGHT * PADDLE_HEIGHT_RATIO}
-          d={-GAME_DEPTH * PADDLE_DEPTH_RATIO}
+          w={PADDLE_WIDTH}
+          h={PADDLE_HEIGHT}
+          d={-PADDLE_DEPTH}
         />
         <Paddle
           paddleRef={paddleRightRef}
           initialPosition={{
-            x: gameRef.current?.paddleRight.posX,
-            y: gameRef.current?.paddleRight.posY,
-            z: gameRef.current?.paddleRight.posZ,
+            x: gameRef.current?.paddleRight.pos.x,
+            y: gameRef.current?.paddleRight.pos.y,
+            z: gameRef.current?.paddleRight.pos.z,
           }}
-          w={GAME_WIDTH * PADDLE_WIDTH_RATIO}
-          h={GAME_HEIGHT * PADDLE_HEIGHT_RATIO}
-          d={-GAME_DEPTH * PADDLE_DEPTH_RATIO}
+          w={PADDLE_WIDTH}
+          h={PADDLE_HEIGHT}
+          d={-PADDLE_DEPTH}
         />
       </mesh>
       <OrbitControls />
@@ -96,24 +89,16 @@ const Loading: React.FC = () => {
 };
 
 const _Pong3D: React.FC = () => {
-  const { height, width, overlayRef, playRef }: GameProps = useOutletContext();
-  const { socketRef } = useContext(SocketContext);
-
-  useEffect(() => {
-    socketRef.current?.on("open", (message) => {
-      setTimeout(() => {
-        socketRef.current?.emit("connectGame");
-      }, 500);
-      console.log("💡💡💡💡", message);
-    });
-  }, [socketRef]);
+  const { gameMode }: GameProps = useContext(GameContext);
+  if (gameMode != "3D") {
+    return null;
+  }
 
   return (
     <div className="canvas-container">
-      <GameOverlay ref={overlayRef} height={height} width={width} playRef={playRef} />
       <Suspense fallback={<Loading />}>
         <Canvas>
-          <PongGame height={height} width={width} overlayRef={overlayRef} playRef={playRef} />
+          <PongGame />
         </Canvas>
       </Suspense>
     </div>

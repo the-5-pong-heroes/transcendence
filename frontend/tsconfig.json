@@ -27,7 +27,7 @@
     "allowUnreachableCode": false,
     "isolatedModules": true,
     "useDefineForClassFields": true,
-    "skipLibCheck": false
+    "skipLibCheck": true
 
   },
   "include": ["src"],

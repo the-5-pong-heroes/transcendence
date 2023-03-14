@@ -1,0 +1,45 @@
+.modal-lobby {
+  background: linear-gradient(127deg, hsl(155, 35%, 10%), hsl(248, 34%, 13%), hsl(315, 38%, 10%));
+  z-index: 2;
+  height: 15vw;
+  width: 42vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  border: 1px solid #5e5e5e;
+  transition: 0.5s ease-out;
+  box-shadow: 0px 0px 22px 0px rgba(118, 118, 118, 0.75);
+  /* box-shadow: -8px 6px 24px rgba(255, 254, 254, 0.25); */
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.button-lobby {
+  height: 4vw;
+  width: 14vw;
+  font-size: 1.5vw;
+  color: white;
+  background: transparent;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Open Sans", sans-serif;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  z-index: 2;
+  border-radius: 100rem;
+  margin: 2vw;
+  transition: 0.5s ease-out;
+  border: 1px solid hsla(0, 0%, 100%, 0.4);
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.button-lobby:hover,
+.button-lobby:focus {
+  border-color: hsla(0, 0%, 100%, 0.6);
+  transform: translateY(-0.1rem);
+}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { type Socket } from "socket.io-client";
 
 import { useSocket } from "../../hooks";
@@ -17,6 +17,7 @@ export const SocketContext = React.createContext<ContextParameters>({
 
 export const SocketContextProvider: React.FC<ProviderParameters> = ({ children }) => {
   const { socketRef } = useSocket();
+  const socketContext = useMemo((): ContextParameters => ({ socketRef }), [socketRef]);
 
-  return <SocketContext.Provider value={{ socketRef }}>{children}</SocketContext.Provider>;
+  return <SocketContext.Provider value={socketContext}>{children}</SocketContext.Provider>;
 };

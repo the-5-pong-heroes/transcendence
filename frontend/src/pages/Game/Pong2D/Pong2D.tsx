@@ -1,30 +1,26 @@
-import React, { Suspense } from "react";
-import { useOutletContext } from "react-router-dom";
+import React, { Suspense, useContext } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, OrthographicCamera } from "@react-three/drei";
 
 import "./Pong2D.css";
 
-import { GameOverlay, type GameOverlayRef } from "../GameOverlay";
-import type { PlayState } from "../@types";
+import { GameContext } from "../context/GameContext";
+import type { GameMode } from "../@types";
 import {
-  BALL_RADIUS_RATIO,
+  BALL_RADIUS,
   GAME_DEPTH,
   GAME_HEIGHT,
   GAME_WIDTH,
-  PADDLE_DEPTH_RATIO,
-  PADDLE_HEIGHT_RATIO,
-  PADDLE_WIDTH_RATIO,
+  PADDLE_DEPTH,
+  PADDLE_HEIGHT,
+  PADDLE_WIDTH,
 } from "../constants";
 import { useGameLoop } from "../hooks";
 
 import { Ball, Board, Paddle, Score, DashedLine } from "./components";
 
 interface GameProps {
-  height: number;
-  width: number;
-  overlayRef: React.RefObject<GameOverlayRef>;
-  playRef: React.MutableRefObject<PlayState>;
+  gameMode: GameMode | undefined;
 }
 
 const Light: React.FC = () => {
@@ -35,14 +31,12 @@ const Light: React.FC = () => {
   );
 };
 
-const PongGame: React.FC<GameProps> = ({ overlayRef }) => {
+const PongGame: React.FC = () => {
   useThree(({ camera }) => {
     camera.position.set(0, 0, 183);
   });
 
-  const { gameRef, paddleLeftRef, paddleRightRef, ballRef, scoreLabel } = useGameLoop({
-    overlayRef,
-  });
+  const { gameRef, paddleLeftRef, paddleRightRef, ballRef, scoreLabel } = useGameLoop();
 
   return (
     <>
@@ -55,33 +49,33 @@ const PongGame: React.FC<GameProps> = ({ overlayRef }) => {
         <Ball
           ballRef={ballRef}
           initialPosition={{
-            x: gameRef.current?.ball.posX,
-            y: gameRef.current?.ball.posY,
-            z: gameRef.current?.ball.posZ,
+            x: gameRef.current?.ball.pos.x,
+            y: gameRef.current?.ball.pos.y,
+            z: gameRef.current?.ball.pos.z,
           }}
-          radius={GAME_WIDTH * BALL_RADIUS_RATIO}
+          radius={BALL_RADIUS}
         />
         <Paddle
           paddleRef={paddleLeftRef}
           initialPosition={{
-            x: gameRef.current?.paddleLeft.posX,
-            y: gameRef.current?.paddleLeft.posY,
-            z: gameRef.current?.paddleLeft.posZ,
+            x: gameRef.current?.paddleLeft.pos.x,
+            y: gameRef.current?.paddleLeft.pos.y,
+            z: gameRef.current?.paddleLeft.pos.z,
           }}
-          w={GAME_WIDTH * PADDLE_WIDTH_RATIO}
-          h={GAME_HEIGHT * PADDLE_HEIGHT_RATIO}
-          d={-GAME_DEPTH * PADDLE_DEPTH_RATIO}
+          w={PADDLE_WIDTH}
+          h={PADDLE_HEIGHT}
+          d={-PADDLE_DEPTH}
         />
         <Paddle
           paddleRef={paddleRightRef}
           initialPosition={{
-            x: gameRef.current?.paddleRight.posX,
-            y: gameRef.current?.paddleRight.posY,
-            z: gameRef.current?.paddleRight.posZ,
+            x: gameRef.current?.paddleRight.pos.x,
+            y: gameRef.current?.paddleRight.pos.y,
+            z: gameRef.current?.paddleRight.pos.z,
           }}
-          w={GAME_WIDTH * PADDLE_WIDTH_RATIO}
-          h={GAME_HEIGHT * PADDLE_HEIGHT_RATIO}
-          d={-GAME_DEPTH * PADDLE_DEPTH_RATIO}
+          w={PADDLE_WIDTH}
+          h={PADDLE_HEIGHT}
+          d={-PADDLE_DEPTH}
         />
       </mesh>
       <OrbitControls />
@@ -95,14 +89,16 @@ const Loading: React.FC = () => {
 };
 
 const _Pong2D: React.FC = () => {
-  const { height, width, overlayRef, playRef }: GameProps = useOutletContext();
+  const { gameMode }: GameProps = useContext(GameContext);
+  if (gameMode != "2D") {
+    return null;
+  }
 
   return (
     <div className="canvas-container">
-      <GameOverlay ref={overlayRef} height={height} width={width} playRef={playRef} />
       <Suspense fallback={<Loading />}>
         <Canvas>
-          <PongGame height={height} width={width} overlayRef={overlayRef} playRef={playRef} />
+          <PongGame />
         </Canvas>
       </Suspense>
     </div>

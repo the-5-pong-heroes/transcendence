@@ -1,43 +1,51 @@
-import React, { useImperativeHandle, useState } from "react";
+import React, { useImperativeHandle, useState, useContext } from "react";
 
-import type { PlayState } from "../@types";
+import type { GameMode, LobbyMode, GameResult } from "../@types";
+import { GameContext } from "../context/GameContext";
 
-import type { GameOverlayRef, ScoreState } from "./@types";
-import { PlayButton } from "./components";
+import type { GameOverlayRef } from "./@types";
+import { Loader, LobbyModeButton, Result } from "./components";
 
 import "./GameOverlay.css";
 
 interface GameOverlayProps {
   height: number;
   width: number;
-  playRef: React.MutableRefObject<PlayState>;
+  overlayRef: React.RefObject<GameOverlayRef> | undefined;
+  gameMode: GameMode | undefined;
+  setGameMode: (mode: GameMode) => void;
 }
 
-const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef, GameOverlayProps> = (
-  { height, width, playRef },
-  overlayRef
-) => {
+const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef> = () => {
+  const { height, width, overlayRef, gameMode, setGameMode }: GameOverlayProps = useContext(GameContext);
+
   const containerStyle: React.CSSProperties = {
     height,
     width,
   };
 
-  const [score, setScore] = useState<ScoreState>({ player1: 0, player2: 0 });
-  const [visible, setVisible] = useState<boolean>(true);
+  const [loader, setLoader] = useState<boolean>(false);
+  const [gameResult, setGameResult] = useState<GameResult | undefined>(undefined);
+  const [lobbyMode, setLobbyMode] = useState<LobbyMode | undefined>(undefined);
 
   useImperativeHandle(overlayRef, () => ({
-    showScore: ({ player1, player2 }: ScoreState) => {
-      setScore({ player1, player2 });
+    showLoader: (value: boolean) => {
+      setLoader(value);
     },
-    resetGame: () => {
-      setScore({ player1: 0, player2: 0 });
-      setVisible(true);
+    setResult: (result: GameResult) => {
+      setGameResult(result);
     },
   }));
 
+  if (!gameMode) {
+    return null;
+  }
+
   return (
     <div className="overlay" style={containerStyle}>
-      <PlayButton visible={visible} setVisible={setVisible} playRef={playRef} />
+      <Loader loader={loader} />
+      <LobbyModeButton gameMode={gameMode} lobbyMode={lobbyMode} setLobbyMode={setLobbyMode} />
+      <Result result={gameResult} setResult={setGameResult} setLobbyMode={setLobbyMode} setGameMode={setGameMode} />
     </div>
   );
 };

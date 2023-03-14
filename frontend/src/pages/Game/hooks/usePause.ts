@@ -1,6 +1,6 @@
-import { useCallback, useRef, useEffect, useContext } from "react";
+import { useCallback, useRef, useContext } from "react";
 
-import { type PlayState } from "../@types";
+import { type PlayState, ClientEvents } from "../@types";
 import { SocketContext } from "../../../contexts";
 
 import { useKeyboard } from "./useKeyboard";
@@ -17,21 +17,10 @@ export const usePause = (): PauseValues => {
   const { socketRef } = useContext(SocketContext);
   const playRef = useRef<PlayState>(getInitialPlayState());
 
-  useEffect(() => {
-    const socket = socketRef.current;
-    socket?.on("pauseGame", (payload: string) => {
-      console.log("Received message:", payload);
-    });
-
-    return () => {
-      socket?.off("pauseGame");
-    };
-  }, [socketRef]);
-
   const stopOrPlay = useCallback(() => {
     if (playRef.current.started) {
-      socketRef.current?.emit("pauseGame");
-      playRef.current.paused = !playRef.current.paused;
+      socketRef.current?.emit(ClientEvents.GamePause);
+      // playRef.current.paused = !playRef.current.paused;
     }
   }, [socketRef]);
 

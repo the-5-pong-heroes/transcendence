@@ -1,57 +1,33 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+
 import "./Navbar.css";
 import { menuItems } from "./menuItems";
 
-interface NavbarProps {
-  menuItems: {
-    label: string;
-    path: string;
-    submenuItems?: {
-      label: string;
-      path: string;
-    }[];
-  }[];
-}
-
-const MINUS_ONE = -1;
-
 export const Navbar: React.FC = () => {
-  const [activeIndex, setActiveIndex] = useState<number>(MINUS_ONE);
+  const [showNavbar, setShowNavbar] = useState<boolean>(false);
 
-  const handleHover = useCallback(
-    (index: number): void => {
-      setActiveIndex(index === activeIndex ? MINUS_ONE : index);
-    },
-    [activeIndex, setActiveIndex]
-  );
-
-  const handleClick = useCallback((): void => {
-    setActiveIndex(MINUS_ONE);
-  }, [setActiveIndex]);
+  const handleShowNavbar = (): void => {
+    setShowNavbar(!showNavbar);
+  };
 
   return (
     <div className="navbar">
-      <ul className="navbar-list">
-        {menuItems.map((item, index) => (
-          <li
-            key={item.label}
-            onMouseEnter={() => handleHover(index)}
-            onMouseLeave={() => handleHover(MINUS_ONE)}
-            onClick={handleClick}>
-            <Link to={item.path}>{item.label}</Link>
-            {item.submenuItems && (
-              <ul className={`sub-menu ${index === activeIndex ? "active" : ""}`}>
-                {item.submenuItems.map((subItem) => (
-                  <li key={subItem.label}>
-                    <Link to={subItem.path}>{subItem.label}</Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
-      </ul>
+      <div className="menu-icon" onClick={handleShowNavbar}>
+        <img src="menu.png" className="burger" />
+      </div>
+      {/* <div className="title">transcendence</div> */}
+      <div className={`nav-elements ${showNavbar ? "active" : ""}`}>
+        <ul>
+          {menuItems.map((item) => (
+            <li className="item" key={item.label}>
+              <Link to={item.path}>
+                <img src={item.icon} />
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

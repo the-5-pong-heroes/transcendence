@@ -1,1 +1,1 @@
-export { SocketContext, SocketContextProvider } from "./Socket/socket";
+export { SocketContext, SocketContextProvider } from "./Socket";

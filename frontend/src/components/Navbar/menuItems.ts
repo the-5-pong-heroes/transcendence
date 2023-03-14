@@ -2,31 +2,26 @@ export const menuItems = [
   {
     label: "Home",
     path: "/",
-  },
-  {
-    label: "Login",
-    path: "/Login",
+    icon: "home.png",
   },
   {
     label: "Game",
     path: "/Game",
-    submenuItems: [
-      {
-        label: "Pong 2D",
-        path: "/Game/Pong2D",
-      },
-      {
-        label: "Pong 3D",
-        path: "/Game/Pong3D",
-      },
-    ],
+    icon: "pong.png",
   },
   {
     label: "Leaderboard",
     path: "/Leaderboard",
+    icon: "trophy.png",
   },
   {
     label: "Chat",
     path: "/Chat",
+    icon: "chat.png",
+  },
+  {
+    label: "Login",
+    path: "/Login",
+    icon: "login.png",
   },
 ];

@@ -2,9 +2,9 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 
 import { Navbar } from "./components";
-import { Home, Login, Game, PongMenu, Pong2D, Pong3D, Leaderboard, Chat, NotFound } from "./pages";
+import { Home, Login, Game, Leaderboard, Chat, NotFound } from "./pages";
 import "./App.css";
-import { SocketContextProvider } from "./contexts/Socket/socket";
+import { SocketContextProvider } from "./contexts/Socket";
 
 const App: React.FC = () => {
   return (
@@ -15,11 +15,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/Login" element={<Login />} />
-            <Route path="/Game" element={<Game />}>
-              <Route index element={<PongMenu />} />
-              <Route path="/Game/Pong2D" element={<Pong2D />} />
-              <Route path="/Game/Pong3D" element={<Pong3D />} />
-            </Route>
+            <Route path="/Game" element={<Game />} />
             <Route path="/Leaderboard" element={<Leaderboard />} />
             <Route path="/Chat" element={<Chat />} />
             <Route path="*" element={<NotFound />} />

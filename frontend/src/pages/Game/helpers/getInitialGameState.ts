@@ -1,54 +1,34 @@
-import type { GameState } from "../@types";
-import {
-  BALL_RADIUS_RATIO,
-  PADDLE_DEPTH_RATIO,
-  PADDLE_HEIGHT_RATIO,
-  PADDLE_WIDTH_RATIO,
-  INITIAL_BALL_VEL_X,
-  INITIAL_BALL_VEL_Y,
-} from "../constants";
+import { Vec3 } from "cannon-es";
 
-const OFFSET_Z = 2;
+import type { GameState } from "../@types/states";
+import { GAME_WIDTH, GAME_DEPTH, BALL_RADIUS, PADDLE_DEPTH, PADDLE_HEIGHT, PADDLE_WIDTH, OFFSET_Z } from "../constants";
 
-interface InitParameters {
-  width: number;
-  height: number;
-  depth: number;
-  score?: GameState["score"];
-}
-
-export const getInitialGameState = ({ width, height, depth, score }: InitParameters): GameState => ({
+export const getInitialGameState = (): GameState => ({
   ball: {
-    radius: width * BALL_RADIUS_RATIO,
-    posX: 0,
-    posY: 0,
-    posZ: -depth / 2 + depth * PADDLE_DEPTH_RATIO + OFFSET_Z,
-    velX: score?.round ? (score.round % 2 === 0 ? INITIAL_BALL_VEL_X : -INITIAL_BALL_VEL_X) : INITIAL_BALL_VEL_X,
-    velY: INITIAL_BALL_VEL_Y,
-    accX: 0,
-    accY: 0,
+    radius: BALL_RADIUS,
+    pos: new Vec3(0, 0, -GAME_DEPTH / 2 + PADDLE_DEPTH + OFFSET_Z),
     rot: 0,
   },
   paddleRight: {
-    height: height * PADDLE_HEIGHT_RATIO,
-    width: width * PADDLE_WIDTH_RATIO + 5,
-    depth: depth * PADDLE_DEPTH_RATIO,
-    posX: width / 2 - width * PADDLE_WIDTH_RATIO * 2,
-    posY: 0,
-    posZ: -depth / 2 + depth * PADDLE_DEPTH_RATIO + OFFSET_Z,
+    side: "right",
+    lastMove: "stop",
+    height: PADDLE_HEIGHT,
+    width: PADDLE_WIDTH + 5,
+    depth: PADDLE_DEPTH,
+    pos: new Vec3(GAME_WIDTH / 2 - PADDLE_WIDTH * 2, 0, -GAME_DEPTH / 2 + PADDLE_DEPTH + OFFSET_Z),
   },
   paddleLeft: {
-    height: height * PADDLE_HEIGHT_RATIO,
-    width: width * PADDLE_WIDTH_RATIO - 5,
-    depth: depth * PADDLE_DEPTH_RATIO,
-    posX: -width / 2 + width * PADDLE_WIDTH_RATIO * 2,
-    posY: 0,
-    posZ: -depth / 2 + depth * PADDLE_DEPTH_RATIO + OFFSET_Z,
+    side: "left",
+    lastMove: "stop",
+    height: PADDLE_HEIGHT,
+    width: PADDLE_WIDTH - 5,
+    depth: PADDLE_DEPTH,
+    pos: new Vec3(-GAME_WIDTH / 2 + PADDLE_WIDTH * 2, 0, -GAME_DEPTH / 2 + PADDLE_DEPTH + OFFSET_Z),
   },
   score: {
-    player1: score ? score.player1 : 0,
-    player2: score ? score.player2 : 0,
-    round: score ? score.round : 0,
+    player1: 0,
+    player2: 0,
+    round: 0,
   },
   play: {
     started: false,

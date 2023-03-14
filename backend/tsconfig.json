@@ -24,7 +24,10 @@
 	 "skipLibCheck": false,
      "module": "commonjs",
      "outDir": "./dist",
-     "baseUrl": "./"
+     "baseUrl": "./",
+	 "paths": {
+		"shared/*": ["../shared/*"]
+	}
   }
 }
 

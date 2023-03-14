@@ -9,7 +9,7 @@ import {
   BALL_ACC_X,
   PADDLE_VELOCITY,
 } from "./constants";
-import type { PaddleSide, CollisionSide, PaddleMove } from "./@types";
+import type { PaddleSide, CollisionSide, PaddleMove, PongState } from "./@types";
 import { Ball } from "./ball";
 import { Paddle } from "./paddle";
 
@@ -192,5 +192,27 @@ export class Pong {
     }
 
     return this.paddle.left.lastMove;
+  }
+
+  public getState(): PongState {
+    return {
+      width: this.width,
+      height: this.height,
+      depth: this.depth,
+      ball: this.ball.getState(),
+      paddleRight: this.paddle.right.getState(),
+      paddleLeft: this.paddle.left.getState(),
+      rotFactor: this.rotFactor,
+    };
+  }
+
+  public set(other: Pong): void {
+    this.width = other.width;
+    this.height = other.height;
+    this.depth = other.depth;
+    this.ball.set(other.ball);
+    this.paddle.right.set(other.paddle.right);
+    this.paddle.left.set(other.paddle.left);
+    this.rotFactor = other.rotFactor;
   }
 }

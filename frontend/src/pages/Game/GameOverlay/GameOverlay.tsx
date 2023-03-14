@@ -17,7 +17,11 @@ interface GameOverlayProps {
 }
 
 const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef> = () => {
-  const { height, width, overlayRef, gameMode, setGameMode }: GameOverlayProps = useContext(GameContext);
+  const gameContext = useContext(GameContext);
+  if (gameContext === undefined) {
+    throw new Error("Undefined GameContext");
+  }
+  const { height, width, overlayRef, gameMode, setGameMode }: GameOverlayProps = gameContext;
 
   const containerStyle: React.CSSProperties = {
     height,

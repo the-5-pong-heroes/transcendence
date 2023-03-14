@@ -1,3 +1,5 @@
+/* eslint-disable no-magic-numbers */
+
 import React, { Suspense, useContext } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, OrthographicCamera } from "@react-three/drei";
@@ -6,16 +8,9 @@ import "./Pong2D.css";
 
 import { GameContext } from "../context/GameContext";
 import type { GameMode } from "../@types";
-import {
-  BALL_RADIUS,
-  GAME_DEPTH,
-  GAME_HEIGHT,
-  GAME_WIDTH,
-  PADDLE_DEPTH,
-  PADDLE_HEIGHT,
-  PADDLE_WIDTH,
-} from "../constants";
-import { useGameLoop } from "../hooks";
+import { GAME_WIDTH } from "../constants";
+import { useGameLoop, useScoreLabel, useGameEvents } from "../hooks";
+import { getInitialGameState } from "../helpers";
 
 import { Ball, Board, Paddle, Score, DashedLine } from "./components";
 
@@ -36,47 +31,22 @@ const PongGame: React.FC = () => {
     camera.position.set(0, 0, 183);
   });
 
-  const { gameRef, paddleLeftRef, paddleRightRef, ballRef, scoreLabel } = useGameLoop();
+  const initialGameState = getInitialGameState();
+  useGameEvents();
+  const { paddleLeftRef, paddleRightRef, ballRef } = useGameLoop();
+  const scoreLabel = useScoreLabel();
 
   return (
     <>
       <OrthographicCamera />
       <Light />
       <mesh>
-        <Board w={GAME_WIDTH} h={GAME_HEIGHT} d={GAME_DEPTH} />
-        <DashedLine w={GAME_WIDTH} h={GAME_HEIGHT} d={GAME_DEPTH} />
-        <Score w={GAME_WIDTH} h={GAME_HEIGHT} d={GAME_DEPTH} score={scoreLabel} />
-        <Ball
-          ballRef={ballRef}
-          initialPosition={{
-            x: gameRef.current?.ball.pos.x,
-            y: gameRef.current?.ball.pos.y,
-            z: gameRef.current?.ball.pos.z,
-          }}
-          radius={BALL_RADIUS}
-        />
-        <Paddle
-          paddleRef={paddleLeftRef}
-          initialPosition={{
-            x: gameRef.current?.paddleLeft.pos.x,
-            y: gameRef.current?.paddleLeft.pos.y,
-            z: gameRef.current?.paddleLeft.pos.z,
-          }}
-          w={PADDLE_WIDTH}
-          h={PADDLE_HEIGHT}
-          d={-PADDLE_DEPTH}
-        />
-        <Paddle
-          paddleRef={paddleRightRef}
-          initialPosition={{
-            x: gameRef.current?.paddleRight.pos.x,
-            y: gameRef.current?.paddleRight.pos.y,
-            z: gameRef.current?.paddleRight.pos.z,
-          }}
-          w={PADDLE_WIDTH}
-          h={PADDLE_HEIGHT}
-          d={-PADDLE_DEPTH}
-        />
+        <Board />
+        <DashedLine />
+        <Score score={scoreLabel} />
+        <Ball ballRef={ballRef} initialPos={initialGameState.ball.pos} />
+        <Paddle paddleRef={paddleLeftRef} initialPos={initialGameState.paddleLeft.pos} />
+        <Paddle paddleRef={paddleRightRef} initialPos={initialGameState.paddleRight.pos} />
       </mesh>
       <OrbitControls />
       <axesHelper args={[GAME_WIDTH]} />
@@ -89,7 +59,11 @@ const Loading: React.FC = () => {
 };
 
 const _Pong2D: React.FC = () => {
-  const { gameMode }: GameProps = useContext(GameContext);
+  const gameContext = useContext(GameContext);
+  if (gameContext === undefined) {
+    throw new Error("Undefined GameContext");
+  }
+  const { gameMode }: GameProps = gameContext;
   if (gameMode != "2D") {
     return null;
   }

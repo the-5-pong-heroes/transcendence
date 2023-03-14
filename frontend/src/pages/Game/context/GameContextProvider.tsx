@@ -1,7 +1,8 @@
 import React, { useMemo, useRef, useState } from "react";
+import { Pong } from "shared/pongCore";
 
-import { Pong } from "../pongCore";
-import type { PlayState, GameMode, PaddleSide } from "../@types";
+// import { Pong } from "../pongCore";
+import type { PlayState, GameMode, PaddleSide, ServerPong } from "../@types";
 import { type GameOverlayRef } from "../GameOverlay";
 import { useGameSize, usePause } from "../hooks";
 
@@ -11,10 +12,11 @@ interface ContextParameters {
   height: number;
   width: number;
   overlayRef: React.RefObject<GameOverlayRef> | undefined;
-  playRef: React.MutableRefObject<PlayState | undefined>;
+  playRef: React.MutableRefObject<PlayState>;
   gameMode: GameMode | undefined;
   setGameMode: (mode: GameMode) => void;
-  pong: Pong;
+  localPongRef: React.MutableRefObject<Pong>;
+  serverPongRef: React.MutableRefObject<ServerPong | undefined>;
   paddleSideRef: React.MutableRefObject<PaddleSide>;
 }
 
@@ -28,7 +30,8 @@ export const GameContextProvider: React.FC<ProviderParameters> = ({ children }) 
   const { playRef } = usePause();
   const [gameMode, setGameMode] = useState<GameMode | undefined>();
   const paddleSideRef = useRef<PaddleSide>("right");
-  const pong = useMemo((): Pong => new Pong(), []);
+  const localPongRef = useRef<Pong>(new Pong());
+  const serverPongRef = useRef<ServerPong>();
 
   const gameContext = useMemo(
     (): ContextParameters => ({
@@ -39,9 +42,10 @@ export const GameContextProvider: React.FC<ProviderParameters> = ({ children }) 
       gameMode,
       setGameMode,
       paddleSideRef,
-      pong,
+      serverPongRef,
+      localPongRef,
     }),
-    [height, width, overlayRef, playRef, gameMode, setGameMode, pong, paddleSideRef]
+    [height, width, overlayRef, playRef, gameMode, setGameMode, localPongRef, paddleSideRef]
   );
 
   return <GameContext.Provider value={gameContext}>{children}</GameContext.Provider>;

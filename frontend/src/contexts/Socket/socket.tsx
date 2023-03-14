@@ -11,9 +11,7 @@ interface ProviderParameters {
   children: React.ReactNode;
 }
 
-export const SocketContext = React.createContext<ContextParameters>({
-  socketRef: { current: undefined },
-});
+export const SocketContext = React.createContext<ContextParameters | undefined>(undefined);
 
 export const SocketContextProvider: React.FC<ProviderParameters> = ({ children }) => {
   const { socketRef } = useSocket();

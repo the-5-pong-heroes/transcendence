@@ -70,6 +70,16 @@ export class Paddle<Side extends PaddleSide> {
     this.clampPosition(gameHeight);
   }
 
+  // public update({ delta, ball, gameHeight }: UpdateParameters) {
+  //   if (this.isBot) {
+  //       this.posY = ball.posY;
+  //     // this.moveBot(ball);
+  //   } else {
+  //     this.posY += this.velocity * delta;
+  //   }
+  //   this.clampPosition(gameHeight);
+  // }
+
   private moveBot(ball: Ball): void {
     let speed = 18; // adjust this value to control the speed of the interpolation
     let range = 200;

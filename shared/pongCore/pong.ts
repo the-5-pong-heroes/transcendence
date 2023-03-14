@@ -1,3 +1,5 @@
+/* eslint max-lines: ["warn", 275] */
+
 import {
   GAME_WIDTH,
   GAME_HEIGHT,
@@ -7,12 +9,7 @@ import {
   BALL_ACC_X,
   PADDLE_VELOCITY,
 } from "./constants";
-import {
-  PaddleSide,
-  CollisionSide,
-  PaddleMove,
-  LobbyMode
-} from "../../@types";
+import type { PaddleSide, CollisionSide, PaddleMove, PongState } from "./@types";
 import { Ball } from "./ball";
 import { Paddle } from "./paddle";
 
@@ -31,8 +28,6 @@ export class Pong {
     this.ball = new Ball({
       x: 0,
       y: 0,
-      gameWidth: this.width,
-      gameHeight: this.height,
       gameDepth: this.depth,
     });
     this.paddle = {
@@ -135,12 +130,12 @@ export class Pong {
 
     /* Missed paddle */
     if (reachedRight) {
-      return ("right");
+      return "right";
     }
     if (reachedLeft) {
-      return ("left");
+      return "left";
     }
-      
+
     /* Reached paddle */
     if (reachedRightPaddle) {
       this.handlePaddleCollision("right");
@@ -156,8 +151,8 @@ export class Pong {
     if (reachedTop) {
       this.handleWallCollision("top");
     }
-  
-    return ("none");
+
+    return "none";
   };
 
   handlePaddleCollision = (collision: CollisionSide): void => {
@@ -197,5 +192,27 @@ export class Pong {
     }
 
     return this.paddle.left.lastMove;
+  }
+
+  public getState(): PongState {
+    return {
+      width: this.width,
+      height: this.height,
+      depth: this.depth,
+      ball: this.ball.getState(),
+      paddleRight: this.paddle.right.getState(),
+      paddleLeft: this.paddle.left.getState(),
+      rotFactor: this.rotFactor,
+    };
+  }
+
+  public set(other: Pong): void {
+    this.width = other.width;
+    this.height = other.height;
+    this.depth = other.depth;
+    this.ball.set(other.ball);
+    this.paddle.right.set(other.paddle.right);
+    this.paddle.left.set(other.paddle.left);
+    this.rotFactor = other.rotFactor;
   }
 }

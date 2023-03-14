@@ -5,17 +5,10 @@ import { OrbitControls } from "@react-three/drei";
 import "./Pong3D.css";
 
 import type { GameMode } from "../@types";
-import {
-  BALL_RADIUS,
-  GAME_DEPTH,
-  GAME_HEIGHT,
-  GAME_WIDTH,
-  PADDLE_DEPTH,
-  PADDLE_HEIGHT,
-  PADDLE_WIDTH,
-} from "../constants";
-import { useGameLoop } from "../hooks";
+import { GAME_DEPTH, GAME_HEIGHT, GAME_WIDTH } from "../constants";
+import { useGameLoop, useScoreLabel, useGameEvents } from "../hooks";
 import { GameContext } from "../context/GameContext";
+import { getInitialGameState } from "../helpers";
 
 import { Ball, Board, Paddle, Score } from "./components";
 
@@ -38,45 +31,20 @@ const PongGame: React.FC = () => {
     camera.position.set(0, 0, GAME_DEPTH / 2);
   });
 
-  const { gameRef, paddleLeftRef, paddleRightRef, ballRef, scoreLabel } = useGameLoop();
+  const initialGameState = getInitialGameState();
+  useGameEvents();
+  const { paddleLeftRef, paddleRightRef, ballRef } = useGameLoop();
+  const scoreLabel = useScoreLabel();
 
   return (
     <>
       <Light />
       <mesh>
-        <Board w={GAME_WIDTH} h={GAME_HEIGHT} d={GAME_DEPTH} />
-        <Score w={GAME_WIDTH} h={GAME_HEIGHT} d={GAME_DEPTH} score={scoreLabel} />
-        <Ball
-          ballRef={ballRef}
-          initialPosition={{
-            x: gameRef.current?.ball.pos.x,
-            y: gameRef.current?.ball.pos.y,
-            z: gameRef.current?.ball.pos.z,
-          }}
-          radius={BALL_RADIUS}
-        />
-        <Paddle
-          paddleRef={paddleLeftRef}
-          initialPosition={{
-            x: gameRef.current?.paddleLeft.pos.x,
-            y: gameRef.current?.paddleLeft.pos.y,
-            z: gameRef.current?.paddleLeft.pos.z,
-          }}
-          w={PADDLE_WIDTH}
-          h={PADDLE_HEIGHT}
-          d={-PADDLE_DEPTH}
-        />
-        <Paddle
-          paddleRef={paddleRightRef}
-          initialPosition={{
-            x: gameRef.current?.paddleRight.pos.x,
-            y: gameRef.current?.paddleRight.pos.y,
-            z: gameRef.current?.paddleRight.pos.z,
-          }}
-          w={PADDLE_WIDTH}
-          h={PADDLE_HEIGHT}
-          d={-PADDLE_DEPTH}
-        />
+        <Board />
+        <Score score={scoreLabel} />
+        <Ball ballRef={ballRef} initialPos={initialGameState.ball.pos} />
+        <Paddle paddleRef={paddleLeftRef} initialPos={initialGameState.paddleLeft.pos} />
+        <Paddle paddleRef={paddleRightRef} initialPos={initialGameState.paddleRight.pos} />
       </mesh>
       <OrbitControls />
       <axesHelper args={[GAME_WIDTH]} />
@@ -89,7 +57,12 @@ const Loading: React.FC = () => {
 };
 
 const _Pong3D: React.FC = () => {
-  const { gameMode }: GameProps = useContext(GameContext);
+  const gameContext = useContext(GameContext);
+  if (gameContext === undefined) {
+    throw new Error("Undefined GameContext");
+  }
+  const { gameMode }: GameProps = gameContext;
+
   if (gameMode != "3D") {
     return null;
   }

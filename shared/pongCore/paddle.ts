@@ -44,37 +44,27 @@ export class Paddle<Side extends PaddleSide> {
     this.velocity = 0;
   }
 
-  private clampPosition(gameHeight: number): void {
+  private clampPosition(gameHeight: number) {
     this.posY = Math.max(
       -gameHeight / 2 + this.height / 2 + 1,
       Math.min(gameHeight / 2 - this.height / 2 - 1, this.posY)
     );
   }
 
-  public move({ y, gameHeight }: MoveParameters): void {
+  public move({ y, gameHeight }: MoveParameters) {
     this.posY = y;
     this.clampPosition(gameHeight);
   }
 
-  public update({ delta, gameHeight }: UpdateParameters): void {
+  public update({ delta, gameHeight }: UpdateParameters) {
     this.posY += this.velocity * delta;
     this.clampPosition(gameHeight);
   }
 
-  // public update({ delta, ball, gameHeight }: UpdateParameters): void {
-  //   if (this.isBot) {
-  //     this.posY = ball.posY;
-  //     // this.moveBot(ball);
-  //   } else {
-  //     this.posY += this.velocity * delta;
-  //   }
-  //   this.clampPosition(gameHeight);
-  // }
-
   private moveBot(ball: Ball): void {
-    const speed = 18; // adjust this value to control the speed of the interpolation
-    const range = 200;
-    const currentPos = this.posY;
+    let speed = 18; // adjust this value to control the speed of the interpolation
+    let range = 200;
+    let currentPos = this.posY;
     let previousDirection = 0;
     let currentDirection = ball.velY;
 

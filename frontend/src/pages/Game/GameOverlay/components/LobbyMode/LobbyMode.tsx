@@ -11,7 +11,11 @@ interface LobbyModeProps {
 }
 
 export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode, setLobbyMode }) => {
-  const { socketRef } = useContext(SocketContext);
+  const socketContext = useContext(SocketContext);
+  if (socketContext === undefined) {
+    throw new Error("Undefined SocketContext");
+  }
+  const { socketRef } = socketContext;
 
   if (lobbyMode) {
     return null;

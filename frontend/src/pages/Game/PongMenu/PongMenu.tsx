@@ -14,7 +14,12 @@ interface GameProps {
 }
 
 const _PongMenu: React.FC = () => {
-  const { height, width, gameMode, setGameMode }: GameProps = useContext(GameContext);
+  const gameContext = useContext(GameContext);
+  if (gameContext === undefined) {
+    throw new Error("Undefined GameContext");
+  }
+  const { height, width, gameMode, setGameMode }: GameProps = gameContext;
+
   if (gameMode) {
     return null;
   }

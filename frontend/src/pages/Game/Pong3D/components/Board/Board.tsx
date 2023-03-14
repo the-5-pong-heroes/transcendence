@@ -1,16 +1,12 @@
 import React from "react";
 import * as THREE from "three";
 
-interface BoardProps {
-  w: number;
-  h: number;
-  d: number;
-}
+import { GAME_WIDTH, GAME_HEIGHT, GAME_DEPTH } from "../../../constants";
 
-export const Board: React.FC<BoardProps> = ({ w, h, d }) => {
+export const Board: React.FC = () => {
   return (
     <mesh visible castShadow>
-      <boxGeometry attach="geometry" args={[w, h, d]} />
+      <boxGeometry attach="geometry" args={[GAME_WIDTH, GAME_HEIGHT, GAME_DEPTH]} />
       <meshStandardMaterial color={"#333"} side={THREE.DoubleSide} />
     </mesh>
   );

@@ -14,6 +14,7 @@ import { LobbyManager } from "./lobby";
 import {
   AuthenticatedSocket,
   ClientEvents,
+  ServerEvents,
   SocketExceptions,
 } from "./@types";
 import { ServerException } from "./server.exception";

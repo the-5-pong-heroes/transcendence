@@ -2,6 +2,8 @@ import { ServerEvents } from "../events";
 import type { GameState, ScoreState, PlayState } from "../states";
 import { LobbyMode, LobbyStatus } from "../Lobby";
 import { GameResult, PaddleSide, PaddleMove } from "../Game";
+// import { Pong } from "../../gamePlay/pongCore";
+import { Pong } from "shared/pongCore";
 
 export type ServerPayloads = {
   [ServerEvents.LobbyState]: {
@@ -16,7 +18,7 @@ export type ServerPayloads = {
   };
 
   [ServerEvents.GameUpdate]: {
-    game: GameState;
+    pong: Pong;
   };
 
   [ServerEvents.PlayUpdate]: {
@@ -30,6 +32,7 @@ export type ServerPayloads = {
 
   [ServerEvents.ScoreUpdate]: {
     score: ScoreState;
+    play: PlayState;
   };
 
   [ServerEvents.GameEnd]: {

@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
-import { Pong } from "./pongCore";
+// import { Pong } from "./pongCore";
+import { Pong } from "shared/pongCore";
 import { ServerEvents, AuthenticatedSocket, PaddleSide, PaddleMove, CollisionSide, GameState, PaddleState } from "../@types";
 import { Lobby } from "../lobby";
 import { SCORE_MAX } from "../constants";
@@ -32,7 +33,12 @@ export class GameLoop {
     }
 
     this.update(delta);
-    this.lobby.dispatchToLobby(ServerEvents.GameUpdate, this.getState());
+    // this.lobby.dispatchToLobby(ServerEvents.GameUpdate, this.pong);
+
+    if (timeSinceLastUpdate > 100) {
+      this.lastUpdate = currentTime;
+      this.lobby.dispatchToLobby(ServerEvents.GameUpdate, this.pong);
+    }
   }
 
   private handlePaddleBot(): void {
@@ -66,6 +72,7 @@ export class GameLoop {
   }
 
   public start(): void {
+    // this.lobby.dispatchToLobby(ServerEvents.ScoreUpdate, this.score.getState());
     this.play.start();
     this.lobby.dispatchToLobby(ServerEvents.PlayUpdate, this.play.getState());
     this.lastTime = Date.now();
@@ -108,7 +115,7 @@ export class GameLoop {
       this.score.player2 += 1;
     }
     this.score.round++;
-    this.lobby.dispatchToLobby(ServerEvents.ScoreUpdate, this.score.getState());
+    this.lobby.dispatchToLobby(ServerEvents.ScoreUpdate, { score: this.score.getState(), play: this.play.getState() });
     if (this.score.player1 < SCORE_MAX && this.score.player2 < SCORE_MAX) {
       return this.pong.initRound(this.score.round);
     }
@@ -128,6 +135,7 @@ export class GameLoop {
   }
 
   public botMove(move: PaddleMove): void {
+    // console.log(move);
     this.pong.updatePaddleVelocity("left", move);
     for (const [lobbyClientId, lobbyClient] of this.lobby.clients) {
       this.server.to(lobbyClientId).emit(ServerEvents.PaddleUpdate, { side: "left", move: move });
@@ -138,7 +146,7 @@ export class GameLoop {
     for (const [lobbyClientId, lobbyClient] of this.lobby.clients) {
       if (lobbyClientId !== client.id && move !== client.data.paddle.lastMove) {
         this.server.to(lobbyClientId).emit(ServerEvents.PaddleUpdate, { side: client.data.paddle.side, move: move });
-        console.log(client.data.paddle.lastMove);
+        // console.log(client.data.paddle.lastMove);
       }
     }
     this.pong.updatePaddleVelocity(client.data.paddle.side, move);

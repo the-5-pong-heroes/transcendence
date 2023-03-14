@@ -4,7 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import { Navbar } from "./components";
 import { Home, Login, Game, Leaderboard, Chat, NotFound } from "./pages";
 import "./App.css";
-import { SocketContextProvider } from "./contexts/Socket";
+import { SocketContextProvider } from "./contexts";
 
 const App: React.FC = () => {
   return (

@@ -42,7 +42,7 @@ export class Ball {
     this.rot = 0;
   }
 
-  initRound(round: number): void {
+  initRound(gameWidth: number, gameHeight: number, round: number) {
     this.move({ x: 0, y: 0 });
     this.velX = round % 2 === 0 ? BALL_VEL_X : -BALL_VEL_X;
     this.velY = BALL_VEL_Y;
@@ -51,12 +51,12 @@ export class Ball {
     this.rot = 0;
   }
 
-  move({ x, y }: MoveParameters): void {
+  move({ x, y }: MoveParameters) {
     this.posX = x;
     this.posY = y;
   }
 
-  update({ delta, rotFactor }: UpdateParameters): void {
+  update({ delta, rotFactor }: UpdateParameters) {
     this.posX += this.velX * delta;
     this.posY += this.velY * delta;
 

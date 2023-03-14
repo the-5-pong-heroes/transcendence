@@ -1,18 +1,16 @@
-import React, { useRef } from "react";
+/* eslint-disable no-magic-numbers */
+
+import React from "react";
 import * as THREE from "three";
 
-interface LineProps {
-  w: number;
-  h: number;
-  d: number;
-}
+import { GAME_HEIGHT } from "../../../constants";
 
-export const DashedLine: React.FC<LineProps> = ({ w, h, d }) => {
+export const DashedLine: React.FC = () => {
   const lineWidth = 100;
-  const dashSize = 100;
-  const gapSize = 100;
-  const vertices = new THREE.BufferAttribute(new Float32Array([0, h / 2, -128.5, 0, -h / 2, -128.5]), 3);
-  const ref = useRef<THREE.Line>();
+  const vertices = new THREE.BufferAttribute(
+    new Float32Array([0, GAME_HEIGHT / 2, -128.5, 0, -GAME_HEIGHT / 2, -128.5]),
+    3
+  );
 
   return (
     <line>

@@ -14,13 +14,17 @@ export const getInitialPlayState = (): PlayState => ({
 });
 
 export const usePause = (): PauseValues => {
-  const { socketRef } = useContext(SocketContext);
+  const socketContext = useContext(SocketContext);
+  if (socketContext === undefined) {
+    throw new Error("Undefined SocketContext");
+  }
+  const { socketRef } = socketContext;
+
   const playRef = useRef<PlayState>(getInitialPlayState());
 
   const stopOrPlay = useCallback(() => {
     if (playRef.current.started) {
       socketRef.current?.emit(ClientEvents.GamePause);
-      // playRef.current.paused = !playRef.current.paused;
     }
   }, [socketRef]);
 

@@ -6,7 +6,9 @@ export DATABASE_URL="postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HO
 
 echo "💭 Syncing the migration history..."
 npx prisma migrate deploy
+
+npx prisma generate
 echo "✅ Migration files successfully run"
 
 echo "🚀 Launching NestJS..."
-yarn run start:prod
+yarn run start:dev

@@ -3,20 +3,28 @@ version: '3.8'
 services:
 
     # --------------- PRISMA STUDIO --------------#
-    #prisma-studio:
-    #    image: prismagraphql/prisma:1.7
-    #    container_name: "prisma-studio"
-    #    restart: unless-stopped
-    #    env_file:
-    #       - ${PRISMA_ENV_PATH:?PRISMA_ENV_PATH env var is missing}
-    #    ports:
-    #        - ${PRISMA_STUDIO_PORT}:5555
-    #    environment:
-    #        PRISMA_CONFIG: |
-    #            port: 5432
-    #            managementApiSecret: your-management-api-secret
-    #            enableManagementApi: true
-
+    prisma:
+        image: timothyjmiller/prisma-studio:latest
+        container_name: "prisma"
+        restart: unless-stopped
+        ports:
+            - "5555:5555"
+        environment:
+            PRISMA_CONFIG: |
+                port: 5555
+                databases:
+                    default:
+                        connector: postgres
+                        host: db
+                        port: ${POSTGRES_PORT:?POSTGRES_PORT env var is missing}
+                        user: ${POSTGRES_USER:?POSTGRES_USER env var is missing}
+                        password: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD env var is missing}
+                        migrations: true
+                        active: true
+        depends_on:
+            - db
+        networks:
+            - ft_transcendence
     #----------- POSTGRESQL -------------#
     db:
         image: postgres:latest
@@ -41,7 +49,6 @@ services:
               - NESTJS_PORT=${BACKEND_PORT:?BACKEND_PORT env var is missing}
             dockerfile: Dockerfile
         restart: unless-stopped
-        #command : yarn run start:prod
         ports:
             - "${BACKEND_PORT:?BACKEND_PORT env var is missing}:${BACKEND_PORT}"
         env_file: # resolved from the Compose file’s parent folder

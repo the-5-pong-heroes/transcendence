@@ -2,29 +2,6 @@ version: '3.8'
 
 services:
 
-    # --------------- PRISMA STUDIO --------------#
-    prisma:
-        image: timothyjmiller/prisma-studio:latest
-        container_name: "prisma"
-        restart: unless-stopped
-        ports:
-            - "5555:5555"
-        environment:
-            PRISMA_CONFIG: |
-                port: 5555
-                databases:
-                    default:
-                        connector: postgres
-                        host: db
-                        port: ${POSTGRES_PORT:?POSTGRES_PORT env var is missing}
-                        user: ${POSTGRES_USER:?POSTGRES_USER env var is missing}
-                        password: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD env var is missing}
-                        migrations: true
-                        active: true
-        depends_on:
-            - db
-        networks:
-            - ft_transcendence
     #----------- POSTGRESQL -------------#
     db:
         image: postgres:latest
@@ -57,6 +34,7 @@ services:
             - db
         volumes:
             - ${PWD}/backend:/app
+            - /usr/src/app/node_modules
         networks:
             - ft_transcendence
     #-------------- FRONTEND ------------#
@@ -78,6 +56,19 @@ services:
 #        networks:
 #            - ft_transcendence
 
+# --------------- PRISMA STUDIO --------------#
+    prisma:
+        image: timothyjmiller/prisma-studio:latest
+        container_name: "prisma"
+        restart: unless-stopped
+        ports:
+            - "5555:5555"
+        env_file:
+            - ${BACK_ENV_PATH:?BACK_ENV_PATH env var is missing}
+        depends_on:
+            - db
+        networks:
+            - ft_transcendence
 
 # --------------- NETWORKS --------------#
 networks:

@@ -2,12 +2,13 @@
 set -e
 
 # evaluates the env variable expected by Prisma
-export DATABASE_URL="postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB"
+export POSTGRES_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
+
+npx prisma generate --schema=./src/prisma/schema.prisma
 
 echo "💭 Syncing the migration history..."
-npx prisma migrate deploy
+npx prisma migrate dev
 
-npx prisma generate
 echo "✅ Migration files successfully run"
 
 echo "🚀 Launching NestJS..."

@@ -6,7 +6,7 @@ COPY --chown=node:node package*.json yarn.lock ./
 
 COPY --chown=node:node ./src/prisma ./prisma
 
-RUN yarn install --frozen-lockfile --production --non-interactive
+RUN yarn install --frozen-lockfile --non-interactive
 #RUN yarn install --frozen-lockfile --non-interactive
 
 COPY --chown=node:node . .

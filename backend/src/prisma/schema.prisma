@@ -3,30 +3,113 @@ datasource db {
   url      = env("POSTGRES_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-  binaryTargets = ["native", "debian-openssl-1.1.x", "linux-musl"]
-}
-
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
-  name      String?
-  role      Role     @default(USER)
+  id          String        @id @default(uuid())
+  name        String?
+  profile     String?
+  status      Int
+  last_login  DateTime
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime
+  owner       Channel[]     @relation("owner")
+  playerOne   Game?         @relation("playerOne")
+  playerTwo   Game?         @relation("playerTwo")
+  message     Message[]
+  friends     Friends[]
+  channelUser ChannelUser[]
+  auth        Auth?
 }
 
-model Admin {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
-  name      String?
-  role      Role     @default(USER)
+model Auth {
+  userId   Int    @id
+  user     User   @relation(fields: [userId], references: [id])
+  email    String @unique
+  password String
+}
+
+model Friends {
+  id        String  @id @default(uuid())
+  friends   User    @relation(fields: [friendsId], references: [id])
+  friendsId Int
+}
+
+model Game {
+  id        String     @id @default(uuid())
+  mode      GameMode
+  lobbyMode LobbyMode
+  startedAt DateTime   @default(now())
+  endedAt   DateTime   @default(now())
+  status    GameStatus @default(STARTING)
+
+  playerOne      User @relation("playerOne", fields: [playerOneId], references: [id])
+  playerOneId    Int  @unique
+  playerOnecore  Int
+  playerTwo      User @relation("playerTwo", fields: [playerTwoId], references: [id])
+  playerTwoId    Int  @unique
+  playerTwoScore Int
+
+  socketId String @unique
+}
+
+model Channel {
+  id          String        @id @default(uuid())
+  owner       User          @relation("owner", fields: [ownerId], references: [id])
+  channelType ChannelType
+  password    String
+  ownerId     Int
+  messages    Message[]
+  users       ChannelUser[]
+}
+
+model ChannelUser {
+  id     String @default(uuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int
+
+  channel   Channel @relation(fields: [channelId], references: [id])
+  channelId Int
+
+  role Role
+
+  isBlocked Boolean
+  isBan     Boolean
+  banUntil  DateTime
+  isMute    Boolean
+}
+
+model Message {
+  id        String  @id @default(uuid())
+  content   String
+  sender    User    @relation(fields: [senderId], references: [id])
+  channel   Channel @relation(fields: [channelid], references: [id])
+  channelid Int
+  senderId  Int
 }
 
 enum Role {
   USER
   ADMIN
+  OWNER
+}
+
+enum LobbyMode {
+  SOLO
+  DUO
+}
+
+enum GameMode {
+  PONG_2D
+  PONG_3D
+}
+
+enum ChannelType {
+  PRIVATE
+  PUBLIC
+  PROTECTED
+}
+
+enum GameStatus {
+  STARTING
+  RUNNING
+  FINISHED
 }

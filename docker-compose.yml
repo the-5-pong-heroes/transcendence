@@ -56,20 +56,6 @@ services:
 #        networks:
 #            - ft_transcendence
 
-# --------------- PRISMA STUDIO --------------#
-    prisma:
-        image: timothyjmiller/prisma-studio:latest
-        container_name: "prisma"
-        restart: unless-stopped
-        ports:
-            - "5555:5555"
-        env_file:
-            - ${BACK_ENV_PATH:?BACK_ENV_PATH env var is missing}
-        depends_on:
-            - db
-        networks:
-            - ft_transcendence
-
 # --------------- NETWORKS --------------#
 networks:
     ft_transcendence:

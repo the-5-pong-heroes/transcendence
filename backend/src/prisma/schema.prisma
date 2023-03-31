@@ -3,14 +3,19 @@ datasource db {
   url      = env("POSTGRES_URL")
 }
 
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x", "linux-musl"]
+}
+
 model User {
   id          String        @id @default(uuid())
   name        String?
-  profile     String?
-  status      Int
+  avatar      String?
+  status      UserStatus
   last_login  DateTime
   createdAt   DateTime      @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime      @updatedAt
   owner       Channel[]     @relation("owner")
   playerOne   Game?         @relation("playerOne")
   playerTwo   Game?         @relation("playerTwo")
@@ -18,34 +23,34 @@ model User {
   friends     Friends[]
   channelUser ChannelUser[]
   auth        Auth?
+  userId      String?
 }
 
 model Auth {
-  userId   Int    @id
+  userId   String @id 
   user     User   @relation(fields: [userId], references: [id])
   email    String @unique
   password String
 }
 
 model Friends {
-  id        String  @id @default(uuid())
-  friends   User    @relation(fields: [friendsId], references: [id])
-  friendsId Int
+  id        String @id @default(uuid())
+  friends   User   @relation(fields: [friendsId], references: [id])
+  friendsId String
 }
 
 model Game {
   id        String     @id @default(uuid())
   mode      GameMode
-  lobbyMode LobbyMode
   startedAt DateTime   @default(now())
-  endedAt   DateTime   @default(now())
+  endedAt   DateTime?   @default(now())
   status    GameStatus @default(STARTING)
 
-  playerOne      User @relation("playerOne", fields: [playerOneId], references: [id])
-  playerOneId    Int  @unique
-  playerOnecore  Int
-  playerTwo      User @relation("playerTwo", fields: [playerTwoId], references: [id])
-  playerTwoId    Int  @unique
+  playerOne      User   @relation("playerOne", fields: [playerOneId], references: [id])
+  playerOneId    String @unique
+  playerOneScore Int
+  playerTwo      User?   @relation("playerTwo", fields: [playerTwoId], references: [id])
+  playerTwoId    String @unique
   playerTwoScore Int
 
   socketId String @unique
@@ -54,20 +59,21 @@ model Game {
 model Channel {
   id          String        @id @default(uuid())
   owner       User          @relation("owner", fields: [ownerId], references: [id])
+  createdAt   DateTime      @default(now())
   channelType ChannelType
-  password    String
-  ownerId     Int
+  password    String?
+  ownerId     String
   messages    Message[]
   users       ChannelUser[]
 }
 
 model ChannelUser {
-  id     String @default(uuid())
+  id     String @id @default(uuid())
   user   User   @relation(fields: [userId], references: [id])
-  userId Int
+  userId String
 
   channel   Channel @relation(fields: [channelId], references: [id])
-  channelId Int
+  channelId String
 
   role Role
 
@@ -81,20 +87,15 @@ model Message {
   id        String  @id @default(uuid())
   content   String
   sender    User    @relation(fields: [senderId], references: [id])
-  channel   Channel @relation(fields: [channelid], references: [id])
-  channelid Int
-  senderId  Int
+  channel   Channel @relation(fields: [channelId], references: [id])
+  channelId String
+  senderId  String
 }
 
 enum Role {
   USER
   ADMIN
   OWNER
-}
-
-enum LobbyMode {
-  SOLO
-  DUO
 }
 
 enum GameMode {
@@ -112,4 +113,10 @@ enum GameStatus {
   STARTING
   RUNNING
   FINISHED
+}
+
+enum UserStatus {
+  ONLINE
+  OFFLINE
+  IN_GAME
 }

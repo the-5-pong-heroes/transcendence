@@ -2,7 +2,7 @@
 set -e
 
 # evaluates the env variable expected by Prisma
-export POSTGRES_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:${POSTGRES_PORT}/${POSTGRES_DB}"
+export POSTGRES_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_PORT}:${POSTGRES_PORT}/${POSTGRES_DB}"
 
 npx prisma generate --schema=./src/prisma/schema.prisma
 

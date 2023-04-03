@@ -44,7 +44,9 @@ export class Lobby {
         this.server.to(clientId).emit(ServerEvents.ScoreUpdate, { score: this.gameLoop.score.getState(), play: this.gameLoop.play.getState() });
       }
       // Database Create Game
-      this.initGame();
+      // this.initGame(); // TODO
+      this.gameLoop.initScore();
+      this.gameLoop.start();
     }
     this.dispatchLobbyState();
   }
@@ -58,8 +60,6 @@ export class Lobby {
       playerOneScore: 0,
       playerTwoScore: 0,
     });
-    this.gameLoop.initScore();
-    this.gameLoop.start();
     return newGame;
   }
 
@@ -81,7 +81,7 @@ export class Lobby {
 
   public endGame(winner: PaddleSide): void {
     // Database update Game
-    this.terminateGame();
+    // this.terminateGame(); // TODO
     for (const [clientId, client] of this.clients) {
       if (client.data.paddle.side === winner) {
         this.server.to(clientId).emit(ServerEvents.GameEnd, "Winner");

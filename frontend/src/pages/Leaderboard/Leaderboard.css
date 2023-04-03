@@ -1,0 +1,64 @@
+.Leaderboard {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* flex-flow: column nowrap;
+  margin: 0;
+  user-select: none;
+  z-index: 2; */
+	/* height: 100vh;
+	display: flex;
+	flex-flow: column nowrap;
+	margin: 0;
+	align-items: center;
+	justify-content: center;
+	user-select: none;
+	z-index: 2; */
+}
+
+.title {
+	color: #9d8ce0;
+}
+
+.group {
+	text-align: center;
+	white-space: nowrap;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	/* background: linear-gradient(135deg, #295fd5, #9d8ce0); */
+  }
+
+  .item {
+	width: 55vw;
+	height: 5vh;
+	background-position: center;
+	background-size: adapt;
+	margin: 2vh;
+	padding: 20px;
+	border-radius: 4vh;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	transition: ease-out 0.5s;
+  }
+
+  .item:hover {
+	height: 10vh;
+	justify-content: space-between;
+  }
+
+  .Infos {
+	display: none;
+	justify-content: space-between;
+	gap: 20px;
+	flex-direction: row;
+  }
+
+  .item:hover .Infos {
+	  display: flex;
+  }

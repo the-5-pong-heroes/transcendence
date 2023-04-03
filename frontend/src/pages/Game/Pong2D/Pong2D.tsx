@@ -1,18 +1,18 @@
-/* eslint-disable no-magic-numbers */
-
 import React, { Suspense, useContext } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, OrthographicCamera } from "@react-three/drei";
 
 import "./Pong2D.css";
 
+import { CAMERA_2D_Z } from "../constants";
 import { GameContext } from "../context/GameContext";
-import type { GameMode } from "../@types";
-import { GAME_WIDTH } from "../constants";
+import { type GameMode } from "../@types";
 import { useGameLoop, useScoreLabel, useGameEvents } from "../hooks";
-import { getInitialGameState } from "../helpers";
+import { getInitialPongState } from "../helpers";
 
-import { Ball, Board, Paddle, Score, DashedLine } from "./components";
+import { Ball, Board, Paddle, Score, DashedLine, ParticleSystem } from "./components";
+
+const INITIAL_PONG_STATE = getInitialPongState();
 
 interface GameProps {
   gameMode: GameMode | undefined;
@@ -27,29 +27,27 @@ const Light: React.FC = () => {
 };
 
 const PongGame: React.FC = () => {
+  useGameEvents();
+
   useThree(({ camera }) => {
-    camera.position.set(0, 0, 183);
+    camera.position.set(0, 0, CAMERA_2D_Z);
   });
 
-  const initialGameState = getInitialGameState();
-  useGameEvents();
-  const { paddleLeftRef, paddleRightRef, ballRef } = useGameLoop();
   const scoreLabel = useScoreLabel();
+  const { paddleLeftRef, paddleRightRef, ballRef, particlesRef } = useGameLoop();
 
   return (
     <>
       <OrthographicCamera />
       <Light />
-      <mesh>
-        <Board />
-        <DashedLine />
-        <Score score={scoreLabel} />
-        <Ball ballRef={ballRef} initialPos={initialGameState.ball.pos} />
-        <Paddle paddleRef={paddleLeftRef} initialPos={initialGameState.paddleLeft.pos} />
-        <Paddle paddleRef={paddleRightRef} initialPos={initialGameState.paddleRight.pos} />
-      </mesh>
+      <Board />
+      <DashedLine />
+      <Score score={scoreLabel} />
+      <Ball ballRef={ballRef} initialPos={INITIAL_PONG_STATE.ball.pos} />
+      <Paddle paddleRef={paddleLeftRef} initialPos={INITIAL_PONG_STATE.paddleLeft.pos} />
+      <Paddle paddleRef={paddleRightRef} initialPos={INITIAL_PONG_STATE.paddleRight.pos} />
+      <ParticleSystem particlesRef={particlesRef} initialPos={INITIAL_PONG_STATE.ball.pos} />
       <OrbitControls />
-      <axesHelper args={[GAME_WIDTH]} />
     </>
   );
 };

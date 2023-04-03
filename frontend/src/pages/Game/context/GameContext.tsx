@@ -1,7 +1,6 @@
 import React from "react";
-import type { Pong } from "shared/pongCore";
 
-// import type { Pong } from "../pongCore";
+import type { Pong } from "../pongCore";
 import type { PlayState, GameMode, PaddleSide, ServerPong } from "../@types";
 import { type GameOverlayRef } from "../GameOverlay";
 

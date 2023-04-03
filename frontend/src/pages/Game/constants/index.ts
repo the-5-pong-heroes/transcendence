@@ -1,4 +1,1 @@
-export { GAME_WIDTH, GAME_HEIGHT, GAME_DEPTH, OFFSET_Z } from "./game";
-export { BALL_RADIUS, BALL_OFFSET_RATIO, BALL_ACC_X, MAX_BOUNCE_ANGLE, BALL_VEL_X, BALL_VEL_Y } from "./ball";
-export { PADDLE_HEIGHT, PADDLE_WIDTH, PADDLE_DEPTH, PADDLE_VELOCITY } from "./paddle";
-export { SCORE_MAX } from "./score";
+export { BOARD_2D_Z, CAMERA_2D_Z, CAMERA_3D_Z, SCORE_3D_Z, BOARD_3D_Z } from "./game";

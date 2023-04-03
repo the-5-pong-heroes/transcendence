@@ -1,4 +1,5 @@
-export const GAME_WIDTH = 640;
-export const GAME_HEIGHT = 480;
-export const GAME_DEPTH = 500;
-export const OFFSET_Z = 2;
+export const CAMERA_2D_Z = 311;
+export const BOARD_2D_Z = -1;
+export const CAMERA_3D_Z = 378;
+export const SCORE_3D_Z = -120;
+export const BOARD_3D_Z = 128;

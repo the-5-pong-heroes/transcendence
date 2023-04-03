@@ -4,7 +4,7 @@ import type { GameMode, LobbyMode, GameResult } from "../@types";
 import { GameContext } from "../context/GameContext";
 
 import type { GameOverlayRef } from "./@types";
-import { Loader, LobbyModeButton, Result } from "./components";
+import { Loader, LobbyModeButton, Result, Countdown } from "./components";
 
 import "./GameOverlay.css";
 
@@ -29,12 +29,16 @@ const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef> = () => {
   };
 
   const [loader, setLoader] = useState<boolean>(false);
+  const [countdown, setCountdown] = useState<number>(0);
   const [gameResult, setGameResult] = useState<GameResult | undefined>(undefined);
   const [lobbyMode, setLobbyMode] = useState<LobbyMode | undefined>(undefined);
 
   useImperativeHandle(overlayRef, () => ({
     showLoader: (value: boolean) => {
       setLoader(value);
+    },
+    showCountdown: () => {
+      setCountdown(3);
     },
     setResult: (result: GameResult) => {
       setGameResult(result);
@@ -48,6 +52,7 @@ const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef> = () => {
   return (
     <div className="overlay" style={containerStyle}>
       <Loader loader={loader} />
+      {countdown > 0 && <Countdown countdown={countdown} setCountdown={setCountdown} />}
       <LobbyModeButton gameMode={gameMode} lobbyMode={lobbyMode} setLobbyMode={setLobbyMode} />
       <Result result={gameResult} setResult={setGameResult} setLobbyMode={setLobbyMode} setGameMode={setGameMode} />
     </div>

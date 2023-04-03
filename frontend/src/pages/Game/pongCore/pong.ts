@@ -4,7 +4,8 @@ import {
   GAME_WIDTH,
   GAME_HEIGHT,
   GAME_DEPTH,
-  PADDLE_WIDTH,
+  RIGHT_PADDLE_X,
+  LEFT_PADDLE_X,
   BALL_OFFSET_RATIO,
   BALL_ACC_X,
   PADDLE_VELOCITY,
@@ -28,20 +29,17 @@ export class Pong {
     this.ball = new Ball({
       x: 0,
       y: 0,
-      gameDepth: this.depth,
     });
     this.paddle = {
       right: new Paddle({
         side: "right",
-        x: this.width / 2 - PADDLE_WIDTH * 2,
+        x: RIGHT_PADDLE_X,
         y: 0,
-        gameDepth: this.depth,
       }),
       left: new Paddle({
         side: "left",
-        x: -this.width / 2 + PADDLE_WIDTH * 2,
+        x: LEFT_PADDLE_X,
         y: 0,
-        gameDepth: this.depth,
       }),
     };
     this.rotFactor = 0.0;
@@ -65,20 +63,6 @@ export class Pong {
     });
   }
 
-  public updatePaddle(delta: number, side: PaddleSide): void {
-    if (side === "right") {
-      this.paddle.right.update({
-        delta,
-        gameHeight: this.height,
-      });
-    } else if (side === "left") {
-      this.paddle.left.update({
-        delta,
-        gameHeight: this.height,
-      });
-    }
-  }
-
   private getPaddleVelocity(move: PaddleMove): number {
     switch (move) {
       case "up":
@@ -92,20 +76,13 @@ export class Pong {
 
   public updatePaddleVelocity(side: PaddleSide, move: PaddleMove): void {
     const newVelocity = this.getPaddleVelocity(move);
+
     if (side === "right") {
       this.paddle.right.velocity = newVelocity;
       this.paddle.right.lastMove = move;
     } else if (side === "left") {
       this.paddle.left.velocity = newVelocity;
       this.paddle.left.lastMove = move;
-    }
-  }
-
-  public movePaddle(side: PaddleSide, posY: number): void {
-    if (side === "right") {
-      this.paddle.right.move({ y: posY, gameHeight: this.height });
-    } else if (side === "left") {
-      this.paddle.left.move({ y: posY, gameHeight: this.height });
     }
   }
 
@@ -146,10 +123,12 @@ export class Pong {
 
     /* Reached wall */
     if (reachedBottom) {
-      this.handleWallCollision("bottom");
+      this.ball.velY = -Math.abs(this.ball.velY);
+      this.ball.accX = -Math.abs(this.ball.accY);
     }
     if (reachedTop) {
-      this.handleWallCollision("top");
+      this.ball.velY = Math.abs(this.ball.velY);
+      this.ball.accY = Math.abs(this.ball.accY);
     }
 
     return "none";
@@ -175,17 +154,6 @@ export class Pong {
     }
   };
 
-  handleWallCollision = (collision: CollisionSide): void => {
-    if (collision === "bottom") {
-      this.ball.velY = -Math.abs(this.ball.velY);
-      this.ball.accX = -Math.abs(this.ball.accY);
-    }
-    if (collision === "top") {
-      this.ball.velY = Math.abs(this.ball.velY);
-      this.ball.accY = Math.abs(this.ball.accY);
-    }
-  };
-
   public paddleLastMove(paddleSide: PaddleSide): PaddleMove {
     if (paddleSide === "right") {
       return this.paddle.right.lastMove;
@@ -196,23 +164,21 @@ export class Pong {
 
   public getState(): PongState {
     return {
-      width: this.width,
-      height: this.height,
-      depth: this.depth,
       ball: this.ball.getState(),
       paddleRight: this.paddle.right.getState(),
       paddleLeft: this.paddle.left.getState(),
-      rotFactor: this.rotFactor,
     };
   }
 
-  public set(other: Pong): void {
-    this.width = other.width;
-    this.height = other.height;
-    this.depth = other.depth;
+  public set(other: PongState): void {
     this.ball.set(other.ball);
-    this.paddle.right.set(other.paddle.right);
-    this.paddle.left.set(other.paddle.left);
-    this.rotFactor = other.rotFactor;
+    this.paddle.right.set(other.paddleRight);
+    this.paddle.left.set(other.paddleLeft);
+  }
+
+  public interpolate(other: PongState, factor: number): void {
+    this.ball.set(other.ball);
+    this.paddle.right.interpolate(other.paddleRight, factor);
+    this.paddle.left.interpolate(other.paddleLeft, factor);
   }
 }

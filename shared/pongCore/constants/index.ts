@@ -9,9 +9,4 @@ export {
   MIN_ROT_FACTOR,
   MAX_ROT_FACTOR,
 } from "./ball";
-export {
-  PADDLE_HEIGHT,
-  PADDLE_WIDTH,
-  PADDLE_DEPTH,
-  PADDLE_VELOCITY,
-} from "./paddle";
+export { PADDLE_HEIGHT, PADDLE_WIDTH, PADDLE_DEPTH, PADDLE_VELOCITY, LEFT_PADDLE_X, RIGHT_PADDLE_X } from "./paddle";

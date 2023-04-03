@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const WIDTH_RATIO = 0.8;
+const WIDTH_RATIO = 0.6;
 const ASPECT_RATIO = 4 / 3;
 
 const computeGameWidth = (): number => Math.floor(WIDTH_RATIO * window.innerWidth);

@@ -27,8 +27,18 @@
     "allowUnreachableCode": false,
     "isolatedModules": true,
     "useDefineForClassFields": true,
-    "skipLibCheck": true
-
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      // "shared/*": ["../shared/*"]
+      "@/*": ["./src/*", "./dist/*", ""],
+      "pages/*": ["src/pages/*"],
+      "components/*": ["src/components/*"],
+      "types/*": ["src/@types/*"],
+      "assets/*": ["src/assets/*"],
+      "contexts/*": ["src/contexts/*"],
+      "public/*": ["public/*"]
+    } 
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

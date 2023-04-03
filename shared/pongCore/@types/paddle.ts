@@ -11,4 +11,5 @@ export type PaddleState = {
   height: number;
   width: number;
   depth: number;
+  velocity: number;
 };

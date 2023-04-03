@@ -5,7 +5,7 @@ import { GameOverlay } from "./GameOverlay";
 import { Pong2D } from "./Pong2D";
 import { Pong3D } from "./Pong3D";
 import { PongMenu } from "./PongMenu";
-import { GameContextProvider } from "./context/GameContextProvider";
+import { GameProvider } from "./context/GameProvider";
 import { useGameSize } from "./hooks";
 
 export const Game: React.FC = () => {
@@ -13,7 +13,7 @@ export const Game: React.FC = () => {
   const gameStyle: React.CSSProperties = { width, height };
 
   return (
-    <GameContextProvider>
+    <GameProvider>
       <div className="game-container">
         <div className="game" style={gameStyle}>
           <PongMenu />
@@ -22,6 +22,6 @@ export const Game: React.FC = () => {
           <Pong3D />
         </div>
       </div>
-    </GameContextProvider>
+    </GameProvider>
   );
 };

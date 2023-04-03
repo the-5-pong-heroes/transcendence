@@ -1,7 +1,8 @@
-// import type { Pong } from "../pongCore";
-import type { Pong } from "shared/pongCore";
+import { type PongState } from "../pongCore/@types";
 
 export type ServerPong = {
-  pong: Pong;
+  pong: PongState;
   evaluated: boolean;
+  timestamp: number;
+  lastElapsedMs: number;
 };

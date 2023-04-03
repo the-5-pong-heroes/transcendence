@@ -1,12 +1,12 @@
 import { Vec3 } from "cannon-es";
 
-import { BALL_RADIUS, BALL_VEL_X, BALL_VEL_Y, PADDLE_DEPTH, OFFSET_Z } from "./constants";
+import { BALL_RADIUS, BALL_VEL_X, BALL_VEL_Y } from "./constants";
 import { type BallState } from "./@types";
+import { lerp } from "./helpers";
 
 interface ConstructorParameters {
   x: number;
   y: number;
-  gameDepth: number;
 }
 
 interface MoveParameters {
@@ -30,11 +30,11 @@ export class Ball {
   accY: number;
   rot: number;
 
-  constructor({ x, y, gameDepth }: ConstructorParameters) {
+  constructor({ x, y }: ConstructorParameters) {
     this.radius = BALL_RADIUS;
     this.posX = x;
     this.posY = y;
-    this.posZ = -gameDepth / 2 + PADDLE_DEPTH + OFFSET_Z;
+    this.posZ = 0;
     this.velX = BALL_VEL_X;
     this.velY = BALL_VEL_Y;
     this.accX = 0;
@@ -71,18 +71,28 @@ export class Ball {
       radius: this.radius,
       pos: new Vec3(this.posX, this.posY, this.posZ),
       rot: this.rot,
+      velX: this.velX,
+      velY: this.velY,
     };
   }
 
-  public set(other: Ball): void {
+  public set(other: BallState): void {
+    // console.log("🏀", this.posX, other.pos.x, this.posY, other.pos.y);
     this.radius = other.radius;
-    this.posX = other.posX;
-    this.posY = other.posY;
-    this.posZ = other.posZ;
+    this.posX = other.pos.x;
+    this.posY = other.pos.y;
+    this.posZ = other.pos.z;
+    this.rot = other.rot;
     this.velX = other.velX;
     this.velY = other.velY;
-    this.accX = other.accX;
-    this.accY = other.accY;
-    this.rot = other.rot;
+  }
+
+  public interpolate(other: BallState, factor: number): void {
+    this.posX = lerp({ value1: this.posX, value2: other.pos.x, t: factor });
+    this.posY = lerp({ value1: this.posY, value2: other.pos.y, t: factor });
+    this.posZ = lerp({ value1: this.posZ, value2: other.pos.z, t: factor });
+    this.rot = lerp({ value1: this.rot, value2: other.rot, t: factor });
+    this.velX = lerp({ value1: this.velX, value2: other.velX, t: factor });
+    this.velY = lerp({ value1: this.velY, value2: other.velY, t: factor });
   }
 }

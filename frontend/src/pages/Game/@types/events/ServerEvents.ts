@@ -1,6 +1,7 @@
 export const ServerEvents = {
   LobbyState: "server.lobby.state",
   GameInit: "server.game.init",
+  GameStart: "server.game.start",
   GameUpdate: "server.game.update",
   PlayUpdate: "server.play.update",
   PaddleUpdate: "server.paddle.update",

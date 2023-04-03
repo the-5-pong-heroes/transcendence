@@ -4,13 +4,16 @@ import { OrbitControls } from "@react-three/drei";
 
 import "./Pong3D.css";
 
+import { GAME_DEPTH, GAME_HEIGHT, GAME_WIDTH } from "../pongCore/constants";
 import type { GameMode } from "../@types";
-import { GAME_DEPTH, GAME_HEIGHT, GAME_WIDTH } from "../constants";
+import { CAMERA_3D_Z } from "../constants";
 import { useGameLoop, useScoreLabel, useGameEvents } from "../hooks";
 import { GameContext } from "../context/GameContext";
-import { getInitialGameState } from "../helpers";
+import { getInitialPongState } from "../helpers";
 
-import { Ball, Board, Paddle, Score } from "./components";
+import { Ball, Board, Paddle, Score, ParticleSystem } from "./components";
+
+const INITIAL_PONG_STATE = getInitialPongState();
 
 interface GameProps {
   gameMode: GameMode | undefined;
@@ -27,25 +30,24 @@ const Light: React.FC = () => {
 };
 
 const PongGame: React.FC = () => {
+  useGameEvents();
+
   useThree(({ camera }) => {
-    camera.position.set(0, 0, GAME_DEPTH / 2);
+    camera.position.set(0, 0, CAMERA_3D_Z);
   });
 
-  const initialGameState = getInitialGameState();
-  useGameEvents();
-  const { paddleLeftRef, paddleRightRef, ballRef } = useGameLoop();
   const scoreLabel = useScoreLabel();
+  const { paddleLeftRef, paddleRightRef, ballRef, particlesRef } = useGameLoop();
 
   return (
     <>
       <Light />
-      <mesh>
-        <Board />
-        <Score score={scoreLabel} />
-        <Ball ballRef={ballRef} initialPos={initialGameState.ball.pos} />
-        <Paddle paddleRef={paddleLeftRef} initialPos={initialGameState.paddleLeft.pos} />
-        <Paddle paddleRef={paddleRightRef} initialPos={initialGameState.paddleRight.pos} />
-      </mesh>
+      <Board />
+      <Score score={scoreLabel} />
+      <Ball ballRef={ballRef} initialPos={INITIAL_PONG_STATE.ball.pos} />
+      <Paddle paddleRef={paddleLeftRef} initialPos={INITIAL_PONG_STATE.paddleLeft.pos} />
+      <Paddle paddleRef={paddleRightRef} initialPos={INITIAL_PONG_STATE.paddleRight.pos} />
+      <ParticleSystem particlesRef={particlesRef} initialPos={INITIAL_PONG_STATE.ball.pos} />
       <OrbitControls />
       <axesHelper args={[GAME_WIDTH]} />
     </>

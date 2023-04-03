@@ -1,18 +1,16 @@
 import React from "react";
 import { Text } from "@react-three/drei";
 
-import { GAME_WIDTH, GAME_HEIGHT } from "../../../constants";
+import { GAME_WIDTH, GAME_HEIGHT } from "../../../pongCore/constants";
 
 interface ScoreProps {
   score: string;
 }
 
 export const Score: React.FC<ScoreProps> = ({ score }) => {
-  const posZ = -128;
-
   return (
     <Text
-      position={[0, GAME_HEIGHT / 3, posZ]}
+      position={[0, GAME_HEIGHT / 3, 0]}
       fontSize={GAME_WIDTH / 8}
       color="white"
       anchorX="center"

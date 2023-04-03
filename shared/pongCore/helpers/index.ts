@@ -1,0 +1,1 @@
+export { lerp } from "./mathHelper";

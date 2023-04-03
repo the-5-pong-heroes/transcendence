@@ -1,0 +1,36 @@
+.container {
+	z-index: 2;
+	height: 100vw;
+	width: 100vh;
+	transform: rotate(-90deg) translateX(-100vh);
+	transform-origin: top left;
+	position: absolute;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+.wrap {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100vw;
+	transform: rotate(90deg) translateY(-100vh);
+	transform-origin: top left;
+	background-color: #9BCEDF ;
+}
+
+.layer {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 540vh;
+	background-position: bottom;
+	background-size: cover;
+	overflow: hidden;
+}
+
+@media (max-width: 768px) {
+	.wrap {
+		transform: rotate(90deg) translateY(-100vh) scale(0.8);
+	  }
+}

@@ -1,0 +1,35 @@
+.countdown {
+  z-index: 12;
+  font-size: 18vh;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Open Sans", sans-serif;
+  -webkit-animation-duration: 0.7s;
+  animation-duration: 0.7s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@-webkit-keyframes fadeOut {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fadeOut {
+  -webkit-animation-name: fadeOut;
+  animation-name: fadeOut;
+  -webkit-animation-direction: reverse;
+  animation-direction: reverse;
+}

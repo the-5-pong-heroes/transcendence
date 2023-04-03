@@ -8,25 +8,45 @@ generator client {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  email     String   @unique
-  name      String?
-  role      Role     @default(USER)
-  posts     Post[]
+  id          String        @id @default(uuid())
+  name        String?
+  avatar      String?
+  status      UserStatus
+  last_login  DateTime
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  playerOne   Game?         @relation("playerOne")
+  playerTwo   Game?         @relation("playerTwo")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  published Boolean  @default(false)
-  title     String   @db.VarChar(255)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+model Game {
+  id              String      @id @default(uuid())
+  startedAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  finished        Boolean     @default(false)
+  playerOne       User?       @relation("playerOne", fields: [playerOneId], references: [id])
+  playerOneId     String?     @unique
+  playerOneScore  Int         @default(0)
+  playerTwo       User?       @relation("playerTwo", fields: [playerTwoId], references: [id])
+  playerTwoId     String?     @unique
+  playerTwoScore  Int         @default(0)
+  socketId        String      @unique
 }
 
 enum Role {
   USER
   ADMIN
+  OWNER
+}
+
+enum ChannelType {
+  PRIVATE
+  PUBLIC
+  PROTECTED
+}
+
+enum UserStatus {
+  ONLINE
+  OFFLINE
+  IN_GAME
 }

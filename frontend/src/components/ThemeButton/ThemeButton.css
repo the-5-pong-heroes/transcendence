@@ -1,0 +1,103 @@
+.theme-container {
+	z-index: 5;
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  transition: 0.7s;
+}
+
+.theme-container:hover {
+  opacity: 0.7;
+}
+
+#dark .theme-container {
+  background: linear-gradient(145deg, #23282c, #1e2125);
+  box-shadow: 7px 7px 15px -10px #1a1d20,
+  -4px -4px 13px #282d32,
+    inset 5px 5px 4px #1e2226,
+    inset -5px -5px 4px #24282c;
+}
+
+#light .theme-container {
+  background: linear-gradient(145deg, #fdf6d6, #ffffff);
+  box-shadow: 7px 7px 15px -10px #bbcfda,
+  -4px -4px 13px #ffffff,
+    inset 5px 5px 4px rgba(209, 217, 230, 0.35),
+    inset -5px -5px 4px rgba(255, 255, 255, 0.3)
+}
+
+#light .theme-icon {
+  animation: change 0.3s;
+  width: 22px;
+  height: 22px; 
+}
+
+#dark .theme-icon {
+  animation: changeDark 0.3s;
+  width: 18px;
+  height: 18px; 
+}
+
+@-webkit-keyframes change {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.2);
+  }
+}
+
+
+@keyframes change {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.2);
+  }
+}
+
+.change {
+  -webkit-animation-name: change;
+  animation-name: change;
+  animation-duration: 1s;
+  -webkit-animation-direction: alternate;
+  animation-direction: alternate;
+}
+
+@-webkit-keyframes changeDark {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.2);
+  }
+}
+
+
+@keyframes changeDark {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.2);
+  }
+}
+
+.change {
+  -webkit-animation-name: changeDark;
+  animation-name: changeDark;
+  animation-duration: 1s;
+  -webkit-animation-direction: alternate;
+  animation-direction: alternate;
+}

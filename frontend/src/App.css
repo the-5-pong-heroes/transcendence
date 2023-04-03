@@ -1,17 +1,28 @@
+:root {
+  --global-background-color-light: hsl(0, 3%, 93%);
+  --global-background-color-dark: hsl(220, 11%, 16%);
+}
+
 .App {
   height: 100vh;
   width: 100vw;
-  background-color: hsl(0deg 0% 90%);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  transition: color .4s ease-in-out, background-color .4s ease-in-out;
 }
 
-.container {
-  height: 95%;
-  width: 95%;
-  padding: 0;
-  margin: 0;
+#light {
+  background-color: var(--global-background-color-light);
+  color: hsl(240, 4%, 11%);
+}
+
+#dark {
+  background-color: var(--global-background-color-dark);
+  color: white;
+}
+
+.PageContainer {
   display: flex;
   align-items: center;
   align-self: center;

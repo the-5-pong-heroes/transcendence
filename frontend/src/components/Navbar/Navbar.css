@@ -1,6 +1,5 @@
 .navbar {
   position: fixed;
-  background: #22262a;
   height: 60px;
   width: 100%;
   display: flex;
@@ -11,14 +10,24 @@
   padding: 0 20px;
 }
 
+#light .navbar {
+  /* background: var(--global-background-color-light); */
+  /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1); */
+}
+
+#dark .navbar {
+  /* background: var(--global-background-color-dark); */
+  /* box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.1); */
+}
+
 .title {
   color: white;
   font-family: "herbarium";
 }
 
 .navbar img {
-  width: 27px;
-  height: 27px;
+  width: 30px;
+  height: 30px;
 }
 
 .menu-icon {
@@ -31,20 +40,16 @@
   display: flex;
 }
 
-li:nth-child(2) {
+/* li:nth-child(4) {
   scale: 0.9;
-}
-
-li:nth-child(4) {
-  scale: 0.9;
-}
+} */
 
 .navbar li {
-  color: #fff;
   padding: 20px;
   cursor: pointer;
   position: relative;
   align-self: auto;
+  opacity: 0.8;
 }
 
 .navbar a {
@@ -57,8 +62,9 @@ li:nth-child(4) {
 .item:hover,
 .item:focus {
   border-color: hsla(0, 0%, 100%, 0.6);
-  transform: translateY(-0.06rem) scale(1.15);
+  /* transform: translateY(-0.06rem) scale(1.0); */
   font-weight: bold;
+  opacity: 1;
 }
 
 @media (max-width: 600px) {
@@ -71,20 +77,29 @@ li:nth-child(4) {
     cursor: pointer;
   }
 
-  .nav-elements {
-    position: absolute;
-    left: 0;
-    top: 60px;
-    background-color: #22262a;
-    width: 0px;
-    height: calc(100vh - 60px);
-    transition: all 0.3s ease-in;
-    overflow: hidden;
-  }
+.nav-elements {
+  position: absolute;
+  left: 0;
+  top: 52px;
+  width: 0px;
+  height: calc(100vh - 60px);
+  transition: all 0.3s ease-in;
+  overflow: hidden;
+}
 
-  .nav-elements.active {
-    width: 80px;
-  }
+#light .nav-elements {
+  background-color: var(--global-background-color-light);
+  box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+#dark .nav-elements {
+  background-color: var(--global-background-color-dark);
+  box-shadow: 1px 1px 2px 0 rgba(255, 255, 255, 0.1);
+}
+
+.nav-elements.active {
+  width: 70px;
+}
 
   .nav-elements ul {
     display: flex;

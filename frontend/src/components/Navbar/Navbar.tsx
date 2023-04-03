@@ -28,7 +28,7 @@ export const Navbar: React.FC = () => {
       <div className={`nav-elements ${showNavbar ? "active" : ""}`}>
         <ul>
           {menuItems.map((item, index: number) => (
-            <li className="item" key={item.label}>
+            <li className="nav-item" key={item.label}>
               <Link to={item.path}>
                 <img
                   src={

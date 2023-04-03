@@ -1,34 +1,23 @@
 import React from "react";
-// import "./Leaderboard.css";
+import "./Leaderboard.css";
 
 interface users {
-  name: string;
-  level: string;
-  avatar: string;
-  score: number;
+	name: string;
+	level: string;
+	avatar: string;
+	score: number;
 }
 export const Leaderboard: React.FC = () => {
   return (
-    <div className="Leaderboard">
-      <h1 className="title">Leaderboard</h1>
-        <div className="group">
-        <div className="item" style={{backgroundColor: "white"}}><div className="Bob">Bob</div> <div className="Infos"><span>1260</span><span>Walle</span></div></div>
-
-        <div className="item" style={{backgroundColor: "white"}}>
-		  Marion
-	    </div>
-        <div className="item" style={{backgroundColor: "white"}}></div>
-        <div className="item" style={{backgroundColor: "white"}}></div>
-        <div className="item" style={{backgroundColor: "white"}}></div>
-      </div>
+	<div id="Leaderboard" className="Leaderboard">
+		<h1 className="title">Leaderboard</h1>
+		<div className="group">
+		  <div className="item"><div className="Player">Bob</div> <div className="Infos"><span>1260pts</span><span>Rank: 1</span><span>V/D: 4</span><span>Friends: Nope</span><span>Team: Walle</span></div></div>
+		  <div className="item"><div className="Player">Marion</div> <div className="Infos"><span>832pts</span><span>Rank: 2</span><span>V/D: 2</span><span>Friends: Yes</span><span>Team: Eve</span></div></div>
+		  <div className="item"><div className="Player">Tom</div> <div className="Infos"><span>624pts</span><span>Rank: 3</span><span>V/D: 1</span><span>Friends: Yes</span><span>Team: Eve</span></div></div>
+		  <div className="item" style={{backgroundColor: "white"}}></div>
+		  <div className="item" style={{backgroundColor: "white"}}></div>
+	</div>
     </div>
   );
 };
-
-/*
-<div className="item" style={{backgroundImage: "url(/src/assets/color-wall-e.png)"}}></div>
-<div className="item" style={{backgroundImage: "url(/src/assets/color-wall-e.png)"}}></div>
-<div className="item" style={{backgroundImage: "url(/src/assets/color-wall-e.png)"}}></div>
-<div className="item" style={{backgroundImage: "url(/src/assets/color-wall-e.png)"}}></div>
-<div className="item" style={{backgroundImage: "url(/src/assets/color-wall-e.png)"}}></div>
-*/

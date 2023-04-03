@@ -1,21 +1,13 @@
 .Leaderboard {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  /* flex-flow: column nowrap;
-  margin: 0;
-  user-select: none;
-  z-index: 2; */
-	/* height: 100vh;
+	width: 100vw;
+	height: 100vh;
 	display: flex;
 	flex-flow: column nowrap;
 	margin: 0;
 	align-items: center;
 	justify-content: center;
 	user-select: none;
-	z-index: 2; */
+	z-index: 2;
 }
 
 .title {
@@ -23,15 +15,16 @@
 }
 
 .group {
+	position: absolute;
 	text-align: center;
 	white-space: nowrap;
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
-	/* background: linear-gradient(135deg, #295fd5, #9d8ce0); */
   }
 
   .item {
+	position: relative;
 	width: 55vw;
 	height: 5vh;
 	background-position: center;
@@ -41,24 +34,36 @@
 	border-radius: 4vh;
 	display: flex;
 	flex-flow: row nowrap;
-	justify-content: center;
+	justify-content: space-between;
 	align-items: center;
 	cursor: pointer;
-	transition: ease-out 0.5s;
+	transition: ease-out 0.2s;
+	background: linear-gradient(135deg, #295fd5, #9d8ce0);
   }
 
   .item:hover {
 	height: 10vh;
-	justify-content: space-between;
   }
 
   .Infos {
-	display: none;
+	display: flex;
+	opacity: 0;
+	width: 0;
 	justify-content: space-between;
-	gap: 20px;
 	flex-direction: row;
-  }
+	flex-grow: 0;
+	transition: opacity 0.1s ease, width 1s ease 0.1s;
+}
 
-  .item:hover .Infos {
-	  display: flex;
+.item .Player {
+	font-weight: bold;
+	color: #9d8ce0;
+	flex-grow: 1;
+	transition: ease 1s;
+}
+
+.item:hover .Infos {
+	width: 35vw;
+	opacity: 1;
+	transition: opacity 0.1s ease 1s, width 1s ease;
   }

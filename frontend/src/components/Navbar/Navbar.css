@@ -59,8 +59,8 @@
   font-family: system-ui, -apple-system, BlinkMacSystemFont;
 }
 
-.item:hover,
-.item:focus {
+.nav-item:hover,
+.nav-item:focus {
   border-color: hsla(0, 0%, 100%, 0.6);
   /* transform: translateY(-0.06rem) scale(1.0); */
   font-weight: bold;

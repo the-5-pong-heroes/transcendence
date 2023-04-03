@@ -32,9 +32,6 @@ services:
             - ${BACK_ENV_PATH:?BACK_ENV_PATH env var is missing}
         depends_on:
             - db
-        volumes:
-            - ${PWD}/backend:/app
-            - /usr/src/app/node_modules
         networks:
             - ft_transcendence
     #-------------- FRONTEND ------------#

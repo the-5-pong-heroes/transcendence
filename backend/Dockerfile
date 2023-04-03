@@ -1,4 +1,6 @@
-FROM node:latest
+FROM node:19
+
+RUN mkdir /app && chown -R node:node ./app/
 
 USER node
 
@@ -19,5 +21,6 @@ RUN yarn && yarn run build
 EXPOSE ${NESTJS_PORT}
 
 RUN chown node:node ./dist /app/dist
+
 
 ENTRYPOINT ["bash", "./entrypoint.sh"]

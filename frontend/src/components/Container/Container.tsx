@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { useParallax } from "react-scroll-parallax";
+import { Parallax, useParallax } from "react-scroll-parallax";
 
 import "./Container.css";
 import { Background, Moon, Light, Stars, Trash1, Trash2, Trash3 } from "../../assets";
@@ -16,7 +16,6 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
     event.stopPropagation();
     setX(event.currentTarget.scrollTop);
   };
-
   const startAndEnd = {
     startScroll: 0,
     endScroll: window.innerWidth,
@@ -28,13 +27,13 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
   });
 
   const starsRef = useParallax<HTMLDivElement>({
-    speed: 100,
-    targetElement: target.current,
+    ...startAndEnd,
+    translateX: [0, 500],
   });
 
   const lightRef = useParallax<HTMLDivElement>({
-    speed: -10,
-    translateY: [-100, 100],
+    ...startAndEnd,
+    // translateX: [-1000 + x / 4, 1000],
     targetElement: target.current,
   });
 
@@ -53,7 +52,9 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
   return (
     <div onScroll={handleScroll} className="container">
       <div className="wrap">
-        <div className="layer background" ref={backgroundRef.ref}>
+        {/* <Parallax speed={100}><img src={Background} /></Parallax>
+        <Parallax speed={200}><img src={Stars} /></Parallax> */}
+        <div className="layer background" ref={backgroundRef.ref} style={{left: 0}}>
           <img src={Background} />
         </div>
         <div className="layer stars" ref={starsRef.ref}>
@@ -65,13 +66,13 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
         <div className="layer moon" ref={moonRef.ref}>
           <img src={Moon} />
         </div>
-        <div className="layer trash" ref={trashRef.ref}>
+        <div className="layer trash" ref={trashRef.ref} style={{left: -1000 + x / 4, top:30}}>
           <img src={Trash1} />
         </div>
-        <div className="layer trash" ref={trashRef.ref}>
+        <div className="layer trash" ref={trashRef.ref} style={{left: 900 + x / 8}}>
           <img src={Trash2} />
         </div>
-        <div className="layer trash" ref={trashRef.ref}>
+        <div className="layer trash" ref={trashRef.ref} style={{left: -1000 + x / 4}}>
           <img src={Trash3} />
         </div>
         {children}

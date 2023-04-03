@@ -11,7 +11,9 @@
 }
 
 .title {
+	z-index: 2;
 	color: #9d8ce0;
+	font-size: 2rem;
 }
 
 .group {

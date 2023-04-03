@@ -1,4 +1,6 @@
-FROM node:19-buster
+FROM node:latest
+
+USER node
 
 WORKDIR /app
 
@@ -7,7 +9,6 @@ COPY --chown=node:node package*.json yarn.lock ./
 COPY --chown=node:node ./src/prisma ./prisma
 
 RUN yarn install --frozen-lockfile --non-interactive
-#RUN yarn install --frozen-lockfile --non-interactive
 
 COPY --chown=node:node . .
 
@@ -18,7 +19,5 @@ RUN yarn && yarn run build
 EXPOSE ${NESTJS_PORT}
 
 RUN chown node:node ./dist /app/dist
-
-USER node
 
 ENTRYPOINT ["bash", "./entrypoint.sh"]

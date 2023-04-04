@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
       <ThemeProvider>
-        <ParallaxProvider>
+        <ParallaxProvider scrollAxis="horizontal">
           <App />
         </ParallaxProvider>
       </ThemeProvider>

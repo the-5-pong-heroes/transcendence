@@ -10,50 +10,53 @@ interface ContainerProps {
 
 export const Container: React.FC<ContainerProps> = ({ children }) => {
   const [x, setX] = useState<number>(0);
+  const target = useRef<HTMLElement | undefined>(undefined);
 
   const handleScroll = (event: React.UIEvent<HTMLDivElement>): void => {
     event.stopPropagation();
     setX(event.currentTarget.scrollTop);
   };
-
-  const target = useRef<HTMLElement>();
+  const startAndEnd = {
+    startScroll: 0,
+    endScroll: window.innerWidth,
+  };
 
   const backgroundRef = useParallax<HTMLDivElement>({
+    ...startAndEnd,
     scale: [1, 1, "easeInQuad"],
   });
 
   const starsRef = useParallax<HTMLDivElement>({
-    speed: 40
-  });
-
-  const moonRef = useParallax<HTMLDivElement>({
-    speed: 50,
-    targetElement: target.current,
+    ...startAndEnd,
+    translateX: [0, 500],
   });
 
   const lightRef = useParallax<HTMLDivElement>({
-    speed: 80,
+    ...startAndEnd,
+    // translateX: [-1000 + x / 4, 1000],
     targetElement: target.current,
   });
 
+  const moonRef = useParallax<HTMLDivElement>({
+    ...startAndEnd,
+    scale: [1, 1, "easeInQuad"],
+    translateX: [0, 100],
+  });
+
   const trashRef = useParallax<HTMLDivElement>({
-    speed: 80
-  });
-
-  const trash2Ref = useParallax<HTMLDivElement>({
-    speed: 100
-  });
-
-  const trash3Ref = useParallax<HTMLDivElement>({
-    speed: 70,
+    ...startAndEnd,
+    scale: [1, 1, "easeInQuad"],
+    translateX: [0, 100],
   });
 
   return (
     <div onScroll={handleScroll} className="container">
       <div className="wrap">
-        <div className="background" ref={backgroundRef.ref}>
+        {/* <Parallax speed={100}><img src={Background} /></Parallax>
+        <Parallax speed={200}><img src={Stars} /></Parallax> */}
+        <div className="layer background" ref={backgroundRef.ref} style={{left: 0}}>
           <img src={Background} />
-        {/* <div className="layer background" style={{ backgroundImage: `url(${Background})` }} > */}
+        </div>
         <div className="layer stars" ref={starsRef.ref}>
           <img src={Stars} />
         </div>
@@ -63,15 +66,14 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
         <div className="layer moon" ref={moonRef.ref}>
           <img src={Moon} />
         </div>
-        <div className="layer trash" ref={trashRef.ref}>
+        <div className="layer trash" ref={trashRef.ref} style={{left: -1000 + x / 4, top:30}}>
           <img src={Trash1} />
         </div>
-        <div className="layer trash" ref={trash2Ref.ref}>
+        <div className="layer trash" ref={trashRef.ref} style={{left: 900 + x / 8}}>
           <img src={Trash2} />
         </div>
-        <div className="layer trash" ref={trash3Ref.ref} >
+        <div className="layer trash" ref={trashRef.ref} style={{left: -1000 + x / 4}}>
           <img src={Trash3} />
-        </div>
         </div>
         {children}
       </div>

@@ -18,16 +18,17 @@
 
 #dark .theme-container {
   background: linear-gradient(145deg, #23282c, #1e2125);
-  box-shadow: 7px 7px 15px -10px #1a1d20,
-  -4px -4px 13px #282d32,
+  box-shadow: 
+  4px 4px 5px -5px #1a1d20,
+  -1px -1px 5px #282d32,
     inset 5px 5px 4px #1e2226,
     inset -5px -5px 4px #24282c;
 }
 
 #light .theme-container {
   background: linear-gradient(145deg, #fdf6d6, #ffffff);
-  box-shadow: 7px 7px 15px -10px #bbcfda,
-  -4px -4px 13px #ffffff,
+  box-shadow: 4px 4px 5px -5px #bbcfda,
+  -1px -1px 5px #ffffff,
     inset 5px 5px 4px rgba(209, 217, 230, 0.35),
     inset -5px -5px 4px rgba(255, 255, 255, 0.3)
 }

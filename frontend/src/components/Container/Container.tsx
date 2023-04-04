@@ -1,14 +1,22 @@
-import React, { useState, useRef } from "react";
-import { Parallax, useParallax } from "react-scroll-parallax";
+import React, { useContext, useState, useRef } from "react";
+import { useParallax } from "react-scroll-parallax";
+
+import { ThemeContext } from "../../contexts";
 
 import "./Container.css";
-import { Background, Moon, Light, Stars, Trash1, Trash2, Trash3 } from "../../assets";
+import { Background, BackgroundLight, Moon, Light, Stars, Trash1, Trash2, Trash3 } from "../../assets";
 
 interface ContainerProps {
   children: React.ReactNode;
 }
 
 export const Container: React.FC<ContainerProps> = ({ children }) => {
+  const themeContext = useContext(ThemeContext);
+  if (themeContext === undefined) {
+    throw new Error("Undefined ThemeContext");
+  }
+  const { theme } = themeContext;
+
   const [x, setX] = useState<number>(0);
 
   const handleScroll = (event: React.UIEvent<HTMLDivElement>): void => {
@@ -45,15 +53,14 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
   });
 
   const trash3Ref = useParallax<HTMLDivElement>({
-    speed: 70,
+    speed: 70
   });
 
   return (
     <div onScroll={handleScroll} className="container">
       <div className="wrap">
         <div className="background" ref={backgroundRef.ref}>
-          <img src={Background} />
-        {/* <div className="layer background" style={{ backgroundImage: `url(${Background})` }} > */}
+          <img src={theme === "light" ? BackgroundLight : Background} />
         <div className="layer stars" ref={starsRef.ref}>
           <img src={Stars} />
         </div>
@@ -70,7 +77,7 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
           <img src={Trash2} />
         </div>
         <div className="layer trash" ref={trash3Ref.ref} >
-          <img src={Trash3} />
+          <img src={Trash3} style={{ left: -100 }} />
         </div>
         </div>
         {children}

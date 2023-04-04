@@ -27,24 +27,28 @@ html, body {
 	position: absolute;
 	top: 0;
 	left: 0;
+	right: 0;
 	bottom: 0;
 	width: 540vh;
 	background-position: left top;
 	background-size: auto 100%;
+	background-attachment: fixed;
 	height: 100%;
 }
 
 .layer {
 	position: absolute;
 	top: 0;
-	left: 0;
 	bottom: 0;
-	width: 540vh;
+	height: 100vh;
 	overflow: hidden;
 }
 
+#light .stars {
+	display: none;
+}
+
 @media (max-width: 768px) {
-	.wrap {
-		transform: rotate(90deg) translateY(-100vh) scale(0.8);
-	  }
+	.background {
+	}
 }

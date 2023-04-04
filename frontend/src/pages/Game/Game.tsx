@@ -14,7 +14,7 @@ export const Game: React.FC = () => {
 
   return (
     <GameProvider>
-      <div className="game-container">
+      <div id="Game" className="game-container">
         <div className="game" style={gameStyle}>
           <PongMenu />
           <GameOverlay />

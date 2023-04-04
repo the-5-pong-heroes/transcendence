@@ -4,4 +4,4 @@ export { PongLight, PongDark, PongDarkSelected, PongLightSelected } from "./icon
 export { LoginLight, LoginDark, LoginDarkSelected, LoginLightSelected } from "./icons";
 export { PodiumLight, PodiumDark, PodiumDarkSelected, PodiumLightSelected } from "./icons";
 export { MenuLight, MenuDark } from "./icons";
-export { Background, Moon, Trash1, Trash2, Trash3, Stars, Light } from "./background";
+export { Background, BackgroundLight, Moon, Trash1, Trash2, Trash3, Stars, Light } from "./background";

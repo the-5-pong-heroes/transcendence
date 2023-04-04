@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { ThemeContext } from "../../contexts";
@@ -18,8 +18,16 @@ export const Navbar: React.FC = () => {
   if (themeContext === undefined) {
     throw new Error("Undefined ThemeContext");
   }
-  const { theme } = themeContext;
+  const { theme, scrollRef } = themeContext;
 
+  useEffect(() => {
+    console.log("**", scrollRef.current);
+    const element = document.getElementById(scrollRef.current);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, [scrollRef]);
+  
   return (
     <div className="navbar">
       <div className="menu-icon" onClick={handleShowNavbar}>
@@ -43,6 +51,12 @@ export const Navbar: React.FC = () => {
                   key={`${item.label}-${selectedIndex}`}
                   onClick={() => {
                     setSelectedIndex(index);
+                    scrollRef.current = item.label;
+    const element = document.getElementById(scrollRef.current);
+    console.log("**********", element);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
                   }}
                 />
               </Link>

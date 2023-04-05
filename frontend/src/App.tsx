@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { Route, Routes } from "react-router-dom";
 
 import { Navbar, ThemeButton, Container } from "./components";
 import { Home, Profile, Game, Leaderboard, Chat, NotFound } from "./pages";
@@ -21,12 +21,31 @@ import { SocketProvider, ThemeContext } from "@/contexts";
 //   return null;
 // }
 
+const Pages: React.FC = () => {
+  return (
+    <Container>
+      <Home/>
+      <Leaderboard/>
+      <Chat/>
+      <Profile/>
+    </Container>
+  );
+}
+
 const App: React.FC = () => {
   const themeContext = useContext(ThemeContext);
   if (themeContext === undefined) {
     throw new Error("Undefined ThemeContext");
   }
-  const { theme } = themeContext;
+  const { theme, scrollRef } = themeContext;
+
+  useEffect(() => {
+    console.log("**", scrollRef.current);
+    const element = document.getElementById(scrollRef.current);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, [scrollRef]);
 
   return (
     <SocketProvider>

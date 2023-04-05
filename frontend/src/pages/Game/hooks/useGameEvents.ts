@@ -52,12 +52,11 @@ export const useGameEvents = (): void => {
     };
 
     const setPlay = (): void => {
-      // console.log("setPlay", Date.now());
       playRef.current.started = true;
       playRef.current.paused = false;
     };
 
-    let timeoutId: number | undefined;
+    let timeoutId: NodeJS.Timeout | undefined;
     const startGame = (time: number): void => {
       overlayRef?.current?.showCountdown();
       const currentTime = Date.now();

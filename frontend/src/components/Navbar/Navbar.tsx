@@ -5,7 +5,7 @@ import { ThemeContext } from "../../contexts";
 
 import "./Navbar.css";
 import { menuItems } from "./menuItems";
-import { MenuLight, MenuDark } from "../../assets";
+import { MenuLight, MenuDark, LogoWallE } from "../../assets";
 
 export const Navbar: React.FC = () => {
   const [showNavbar, setShowNavbar] = useState<boolean>(false);
@@ -19,17 +19,12 @@ export const Navbar: React.FC = () => {
     throw new Error("Undefined ThemeContext");
   }
   const { theme, scrollRef } = themeContext;
-
-  useEffect(() => {
-    console.log("**", scrollRef.current);
-    const element = document.getElementById(scrollRef.current);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, [scrollRef]);
   
   return (
     <div className="navbar">
+      <Link to="/">
+        <img src={LogoWallE} className="logo-wall-e" />
+      </Link>
       <div className="menu-icon" onClick={handleShowNavbar}>
         <img src={theme === "light" ? MenuLight : MenuDark} className="burger" />
       </div>
@@ -52,11 +47,6 @@ export const Navbar: React.FC = () => {
                   onClick={() => {
                     setSelectedIndex(index);
                     scrollRef.current = item.label;
-    const element = document.getElementById(scrollRef.current);
-    console.log("**********", element);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
                   }}
                 />
               </Link>

@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useContext, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
@@ -6,10 +6,7 @@ import { OrbitControls } from "@react-three/drei";
 import "./Pong3D.css";
 
 import { GameOverlay, type GameOverlayRef } from "../GameOverlay";
-
-import type { PlayState } from "./@types";
-import { useGameLoop } from "./hooks";
-import { Ball, Board, Paddle, Score } from "./components";
+import type { PlayState } from "../@types";
 import {
   BALL_RADIUS_RATIO,
   GAME_DEPTH,
@@ -18,13 +15,17 @@ import {
   PADDLE_DEPTH_RATIO,
   PADDLE_HEIGHT_RATIO,
   PADDLE_WIDTH_RATIO,
-} from "./constants";
+} from "../constants";
+import { useGameLoop } from "../hooks";
+import { SocketContext } from "../../../contexts";
+
+import { Ball, Board, Paddle, Score } from "./components";
 
 interface GameProps {
   height: number;
   width: number;
-  overlayRef: React.RefObject<GameOverlayRef>;
   playRef: React.MutableRefObject<PlayState>;
+  overlayRef: React.RefObject<GameOverlayRef>;
 }
 
 const Light: React.FC = () => {
@@ -37,16 +38,12 @@ const Light: React.FC = () => {
   );
 };
 
-const PongGame: React.FC<GameProps> = ({ playRef, overlayRef }) => {
+const PongGame: React.FC<GameProps> = ({ overlayRef }) => {
   useThree(({ camera }) => {
     camera.position.set(0, 0, GAME_DEPTH / 2);
   });
 
   const { gameRef, paddleLeftRef, paddleRightRef, ballRef, scoreLabel } = useGameLoop({
-    width: GAME_WIDTH,
-    height: GAME_HEIGHT,
-    depth: GAME_DEPTH,
-    playRef,
     overlayRef,
   });
 
@@ -59,18 +56,18 @@ const PongGame: React.FC<GameProps> = ({ playRef, overlayRef }) => {
         <Ball
           ballRef={ballRef}
           initialPosition={{
-            x: gameRef.current.ball.posX,
-            y: gameRef.current.ball.posY,
-            z: gameRef.current.ball.posZ,
+            x: gameRef.current?.ball.posX,
+            y: gameRef.current?.ball.posY,
+            z: gameRef.current?.ball.posZ,
           }}
           radius={GAME_WIDTH * BALL_RADIUS_RATIO}
         />
         <Paddle
           paddleRef={paddleLeftRef}
           initialPosition={{
-            x: gameRef.current.paddleLeft.posX,
-            y: gameRef.current.paddleLeft.posY,
-            z: gameRef.current.paddleLeft.posZ,
+            x: gameRef.current?.paddleLeft.posX,
+            y: gameRef.current?.paddleLeft.posY,
+            z: gameRef.current?.paddleLeft.posZ,
           }}
           w={GAME_WIDTH * PADDLE_WIDTH_RATIO}
           h={GAME_HEIGHT * PADDLE_HEIGHT_RATIO}
@@ -79,9 +76,9 @@ const PongGame: React.FC<GameProps> = ({ playRef, overlayRef }) => {
         <Paddle
           paddleRef={paddleRightRef}
           initialPosition={{
-            x: gameRef.current.paddleRight.posX,
-            y: gameRef.current.paddleRight.posY,
-            z: gameRef.current.paddleRight.posZ,
+            x: gameRef.current?.paddleRight.posX,
+            y: gameRef.current?.paddleRight.posY,
+            z: gameRef.current?.paddleRight.posZ,
           }}
           w={GAME_WIDTH * PADDLE_WIDTH_RATIO}
           h={GAME_HEIGHT * PADDLE_HEIGHT_RATIO}
@@ -100,6 +97,16 @@ const Loading: React.FC = () => {
 
 const _Pong3D: React.FC = () => {
   const { height, width, overlayRef, playRef }: GameProps = useOutletContext();
+  const { socketRef } = useContext(SocketContext);
+
+  useEffect(() => {
+    socketRef.current?.on("open", (message) => {
+      setTimeout(() => {
+        socketRef.current?.emit("connectGame");
+      }, 500);
+      console.log("💡💡💡💡", message);
+    });
+  }, [socketRef]);
 
   return (
     <div className="canvas-container">

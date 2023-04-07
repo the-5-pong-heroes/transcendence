@@ -1,0 +1,11 @@
+# ignore everything...
+**
+
+# but what we need!
+!entrypoint.sh
+!src/
+!test/
+!nest-cli.json
+!tsconfig.json
+!package.json
+!yarn.lock

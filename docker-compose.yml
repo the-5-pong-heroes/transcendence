@@ -1,52 +1,65 @@
-version: '3.9'
+version: '3.8'
 
 services:
 
-#-------------- BACKEND -------------#
+    #----------- POSTGRESQL -------------#
+    db:
+        image: postgres:latest
+        container_name: "db"
+        restart: unless-stopped
+        command: -p ${POSTGRES_PORT:?POSTGRES_PORT env var is missing}
+        volumes:
+            - postgresql_data:/var/lib/postgresql/data
+        ports:
+            - "${POSTGRES_PORT:?POSTGRES_PORT env var is missing}:${POSTGRES_PORT}"
+        env_file:
+            - ${DB_ENV_PATH:?DB_ENV_PATH env var is missing}
+        networks:
+            - ft_transcendence
+    #-------------- BACKEND -------------#
     backend:
+        image: "transcendence_backend"
+        container_name: "backend"
         build:
             context: ./backend
+            args:
+              - NESTJS_PORT=${BACKEND_PORT:?BACKEND_PORT env var is missing}
             dockerfile: Dockerfile
-        container_name: "backend"
-        restart: on-failure
-        volumes:
-            - ./backend:/app
-        expose:
-            - "4466"
-        env_file:
-            - example.env
-        command: yarn start dev
-        networks:
-            - ft_transcendance
+        restart: unless-stopped
+        ports:
+            - "${BACKEND_PORT:?BACKEND_PORT env var is missing}:${BACKEND_PORT}"
+        env_file: # resolved from the Compose file’s parent folder
+            - ${BACK_ENV_PATH:?BACK_ENV_PATH env var is missing}
         depends_on:
-            - postgres
-
-#-------------- POSTGRESQL -------------#
-    postgres:
-        image: postgres:latest
-        container_name: "postgresql"
-        restart: on-failure
-        volumes:
-            - postgresql_data:/var/lib/postgresql
-        expose:
-            - "5432"
-        env_file:
-            - example.env
+            - db
         networks:
-            - ft_transcendance
+            - ft_transcendence
+    #-------------- FRONTEND ------------#
+#    frontend:
+#        image: "transcendence_frontend"
+#        container_name: "frontend"
+#        build:
+#          context: ./frontend
+#          args:
+#            - VITE_PORT=${FRONTEND_PORT:?FRONTEND_PORT env var is missing}
+#          dockerfile: Dockerfile
+#        restart: unless-stopped
+#        ports: # resolved from the Compose file’s parent folder
+#            - "${FRONTEND_PORT:?FRONTEND_PORT en var is missing}:${FRONTEND_PORT}"
+#        env_file:
+#            - ${FRONT_ENV_PATH:?FRONT_ENV_PATH env var is missing}
+#        depends_on:
+#            - backend
+#        networks:
+#            - ft_transcendence
 
-# #--------------- NETWORKS --------------#
-
+# --------------- NETWORKS --------------#
 networks:
-    ft_transcendance:
-        driver: bridge #default
+    ft_transcendence:
+        driver: bridge # default
 
-# #--------------- VOLUMES --------------#
 
+# --------------- VOLUMES ---------------#
 volumes:
         postgresql_data:
             driver: local
-            driver_opts:
-                o: bind
-                type: none
-                device: ${POSTGRES_DIR}

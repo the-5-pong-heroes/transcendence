@@ -9,7 +9,12 @@ import { AuthModule } from "./auth/auth.module";
 import { PrismaModule } from "./database/prisma.module";
 
 @Module({
-  imports: [StatsModule, AuthModule, PrismaModule, ConfigModule.forRoot({isGlobal: true}),],
+  imports: [
+    StatsModule,
+    AuthModule,
+    PrismaModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

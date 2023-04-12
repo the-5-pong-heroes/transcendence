@@ -34,12 +34,13 @@ model Auth {
 }
 
 model Friendship {
-  id        String   @id @default(uuid())
   user      User     @relation("friendships", fields: [userId], references: [id])
   userId    String
   addedBy   User     @relation("addedBy", fields: [addedById], references: [id])
   addedById String
   createdAt DateTime @default(now())
+
+  @@id(fields: [userId, addedById])
 }
 
 model Game {

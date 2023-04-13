@@ -47,7 +47,7 @@ const PongGame: React.FC = () => {
       <Ball ballRef={ballRef} initialPos={INITIAL_PONG_STATE.ball.pos} />
       <Paddle paddleRef={paddleLeftRef} initialPos={INITIAL_PONG_STATE.paddleLeft.pos} />
       <Paddle paddleRef={paddleRightRef} initialPos={INITIAL_PONG_STATE.paddleRight.pos} />
-      <ParticleSystem particlesRef={particlesRef} initialPos={INITIAL_PONG_STATE.ball.pos} />
+      {/* <ParticleSystem particlesRef={particlesRef} initialPos={INITIAL_PONG_STATE.ball.pos} /> */}
       <OrbitControls />
       <axesHelper args={[GAME_WIDTH]} />
     </>

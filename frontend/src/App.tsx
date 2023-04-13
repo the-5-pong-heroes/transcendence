@@ -2,34 +2,34 @@ import React, { useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import { Navbar, ThemeButton, Container } from "./components";
-import { Home, Login, Game, Leaderboard, Chat, NotFound } from "./pages";
+import { Home, Profile, Game, Leaderboard, Chat, NotFound } from "./pages";
 import "./App.css";
-import { SocketProvider, ThemeContext } from "@/contexts";
+import { SocketProvider, AppContext } from "./contexts";
 
 const App: React.FC = () => {
-  const themeContext = useContext(ThemeContext);
-  if (themeContext === undefined) {
-    throw new Error("Undefined ThemeContext");
+  const appContext = useContext(AppContext);
+  if (appContext === undefined) {
+    throw new Error("Undefined AppContext");
   }
-  const { theme } = themeContext;
+  const { theme, homeRef, profileRef, gameRef, boardRef, chatRef } = appContext;
 
   return (
     <SocketProvider>
       <div className="App" id={theme}>
         <Navbar />
         <ThemeButton />
-        <Container>
-          <div className="PageContainer">
+        <div className="App-container">
+          <Container>
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/Login" element={<Login />} />
-              <Route path="/Game" element={<Game />} />
-              <Route path="/Leaderboard" element={<Leaderboard />} />
-              <Route path="/Chat" element={<Chat />} />
+              <Route path="/" element={<Home homeRef={homeRef} />} />
+              <Route path="/Profile" element={<Profile profileRef={profileRef} />} />
+              <Route path="/Game" element={<Game gameRef={gameRef} />} />
+              <Route path="/Leaderboard" element={<Leaderboard boardRef={boardRef} />} />
+              <Route path="/Chat" element={<Chat chatRef={chatRef} />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </div>
-        </Container>
+          </Container>
+        </div>
       </div>
     </SocketProvider>
   );

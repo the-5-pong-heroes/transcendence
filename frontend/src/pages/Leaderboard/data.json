@@ -1,0 +1,38 @@
+[
+	{
+	  "userID": "abcde",
+	  "displayName": "Wall-e",
+	  "picture": "url(/src/assets/color-wall-e.png)",
+	  "score": 16000
+	},
+	{
+	  "userID": "efghi",
+	  "displayName": "Eve",
+	  "picture": "url(/src/assets/color-wall-e.png)",
+	  "score": 4200
+	},
+	{
+	  "userID": "jklmn",
+	  "displayName": "Bobo",
+	  "picture": "url(/src/assets/color-wall-e.png)",
+	  "score": 3800
+	},
+	{
+	  "userID": "opqrs",
+	  "displayName": "Freak",
+	  "picture": "url(/src/assets/color-wall-e.png)",
+	  "score": 3400
+	},
+	{
+	  "userID": "tuvwx",
+	  "displayName": "Shawn",
+	  "picture": "url(/src/assets/color-wall-e.png)",
+	  "score": 600
+	},
+	{
+	  "userID": "yz",
+	  "displayName": "Charlie",
+	  "picture": "url(/src/assets/color-wall-e.png)",
+	  "score": 200
+	}
+  ]

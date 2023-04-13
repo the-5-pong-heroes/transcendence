@@ -1,8 +1,25 @@
 .home {
-  z-index: 1;
+	height: 100vh;
+	width: 100vw;
+  z-index: 7;
   color: #fff;
-  display: inline-block;
   font-size: 50px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.home h1 {
+  font-size: 7vw;
+}
+
+#light .home h1 {
+  color: #070c76;
+}
+
+#dark .home h1 {
+  color: #ffffff;
 }

@@ -1,27 +1,27 @@
-import { IsNumber, IsString, IsNotEmpty, IsBoolean } from 'class-validator';
+import { IsNumber, IsString, IsNotEmpty, IsBoolean } from "class-validator";
 
 export class CreateGameDto {
-    @IsNotEmpty()
-    @IsNumber()
-    readonly socketId: string;
+  @IsNotEmpty()
+  @IsNumber()
+  readonly socketId: string;
 
-    @IsBoolean()
-    finished: boolean = false;
+  @IsBoolean()
+  finished = false;
 
-    @IsNotEmpty()
-    @IsString()
-    readonly playerOneId?: string;
+  @IsNotEmpty()
+  @IsString()
+  readonly playerOneId?: string;
 
-    @IsString()
-    readonly playerTwoId?: string;
-  
-    @IsNumber()
-    playerOneScore: number = 0;
-  
-    @IsNumber()
-    playerTwoScore: number = 0;
+  @IsString()
+  readonly playerTwoId?: string;
 
-    constructor(socketId: string) {
-      this.socketId = socketId;
-    }
+  @IsNumber()
+  playerOneScore = 0;
+
+  @IsNumber()
+  playerTwoScore = 0;
+
+  constructor(socketId: string) {
+    this.socketId = socketId;
+  }
 }

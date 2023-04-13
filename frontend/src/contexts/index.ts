@@ -1,2 +1,2 @@
 export { SocketContext, SocketProvider } from "./Socket";
-export { ThemeContext, ThemeProvider, type ThemeMode } from "./Theme";
+export { AppContext, AppProvider, type ThemeMode } from "./App";

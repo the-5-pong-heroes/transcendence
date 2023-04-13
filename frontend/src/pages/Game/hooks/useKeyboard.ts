@@ -16,15 +16,17 @@ export function useKeyboard({
   onKeyUp = EMPTY_CALLBACK,
 }: KeyboardParameters): void {
   useEffect(() => {
-    const downHandler = ({ code }: KeyboardEvent): void => {
-      if (code === targetKey) {
+    const downHandler = (event: KeyboardEvent): void => {
+      event.preventDefault();
+      if (event.code === targetKey) {
         onKeyDown();
       }
     };
     window.addEventListener("keydown", downHandler);
 
-    const upHandler = ({ code }: KeyboardEvent): void => {
-      if (code === targetKey) {
+    const upHandler = (event: KeyboardEvent): void => {
+      event.preventDefault();
+      if (event.code === targetKey) {
         onKeyUp();
       }
     };

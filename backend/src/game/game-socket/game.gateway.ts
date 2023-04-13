@@ -11,11 +11,7 @@ import { Logger } from "@nestjs/common";
 import { Socket, Server } from "socket.io";
 import { UserMoveDto, LobbyJoinDto } from "./dto";
 import { GameLobbyService } from "./game-lobby.service";
-import {
-  AuthenticatedSocket,
-  ClientEvents,
-  SocketExceptions,
-} from "./@types";
+import { AuthenticatedSocket, ClientEvents, SocketExceptions } from "./@types";
 import { ServerException } from "./server.exception";
 
 @WebSocketGateway({
@@ -24,9 +20,7 @@ import { ServerException } from "./server.exception";
     credentials: true,
   },
 })
-export class GameGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger: Logger = new Logger(GameGateway.name);
 
   constructor(private readonly lobbyManager: GameLobbyService) {}
@@ -36,7 +30,7 @@ export class GameGateway
     this.logger.log("Game server initialized !");
   }
 
-  async handleConnection(client: Socket, ...args: any[]): Promise<void> {
+  async handleConnection(client: Socket): Promise<void> {
     // console.log(`[Client connected: ${client.id}]`);
     this.lobbyManager.setupSocket(client as AuthenticatedSocket);
   }
@@ -47,10 +41,7 @@ export class GameGateway
   }
 
   @SubscribeMessage(ClientEvents.LobbyJoin)
-  onLobbyJoin(
-    @ConnectedSocket() client: AuthenticatedSocket,
-    @MessageBody() data: LobbyJoinDto
-  ) {
+  onLobbyJoin(@ConnectedSocket() client: AuthenticatedSocket, @MessageBody() data: LobbyJoinDto) {
     this.lobbyManager.joinLobby(data.lobbyMode, data.gameMode, client);
   }
 
@@ -62,24 +53,15 @@ export class GameGateway
   @SubscribeMessage(ClientEvents.GamePause)
   onGamePause(@ConnectedSocket() client: AuthenticatedSocket) {
     if (!client.data.lobby) {
-      throw new ServerException(
-        SocketExceptions.LobbyError,
-        "You're not in a lobby"
-      );
+      throw new ServerException(SocketExceptions.LobbyError, "You're not in a lobby");
     }
     client.data.lobby.gameLoop.pause();
   }
 
   @SubscribeMessage(ClientEvents.UserMove)
-  onUserMove(
-    @ConnectedSocket() client: AuthenticatedSocket,
-    @MessageBody() userMove: UserMoveDto,
-  ) {
+  onUserMove(@ConnectedSocket() client: AuthenticatedSocket, @MessageBody() userMove: UserMoveDto) {
     if (!client.data.lobby) {
-      throw new ServerException(
-        SocketExceptions.LobbyError,
-        "You're not in a lobby"
-      );
+      throw new ServerException(SocketExceptions.LobbyError, "You're not in a lobby");
     }
     client.data.lobby.gameLoop.userMove(client, userMove.move);
   }

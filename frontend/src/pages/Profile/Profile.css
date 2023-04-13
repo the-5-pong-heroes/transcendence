@@ -1,0 +1,38 @@
+.Profile {
+  z-index: 7;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-flow: column nowrap;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  animation: fadeInAnimation ease 500ms;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.profile-title {
+  font-size: 7vw;
+}
+
+#light .profile-title {
+	color: #6709b9;
+}
+
+#dark .profile-title {
+	color: #c0b4f2;
+}

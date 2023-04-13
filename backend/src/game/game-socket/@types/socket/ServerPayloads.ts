@@ -38,5 +38,5 @@ export type ServerPayloads = {
 
   [ServerEvents.GameEnd]: {
     result: GameResult;
-  }; 
+  };
 };

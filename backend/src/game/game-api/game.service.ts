@@ -12,11 +12,11 @@ export class GameService {
   /* Create new match */
   async create(createGameDto: CreateGameDto): Promise<Game> {
     const game = this.prisma.game.create({
-        data: {
-          socketId: createGameDto.socketId,
-          playerOneId: createGameDto.playerOneId,
-          playerTwoId: createGameDto.playerTwoId,
-        }
+      data: {
+        socketId: createGameDto.socketId,
+        playerOneId: createGameDto.playerOneId,
+        playerTwoId: createGameDto.playerTwoId,
+      },
     });
     return game;
   }
@@ -26,7 +26,7 @@ export class GameService {
     const games = await this.prisma.game.findMany({
       where: {
         finished: true,
-      }
+      },
     });
     return games;
   }
@@ -46,9 +46,7 @@ export class GameService {
       data: {
         ...updateGameDto,
       },
-      include: {
-
-      }
+      include: {},
     });
     return game;
   }
@@ -56,7 +54,7 @@ export class GameService {
   /* Remove one match */
   async remove(id: string): Promise<Game | null> {
     const game = await this.prisma.game.delete({
-        where: { id: id },
+      where: { id: id },
     });
     return game;
   }

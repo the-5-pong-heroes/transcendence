@@ -1,5 +1,9 @@
+/* eslint-disable no-magic-numbers */
+
 import React, { useEffect } from "react";
 import "./Countdown.css";
+
+const INTERVAL = 1000;
 
 interface CountdownParameters {
   countdown: number;
@@ -10,7 +14,7 @@ export const Countdown: React.FC<CountdownParameters> = ({ countdown, setCountdo
   useEffect(() => {
     const interval = setInterval(() => {
       setCountdown((prevCount) => prevCount - 1);
-    }, 1000);
+    }, INTERVAL);
 
     return () => clearInterval(interval);
   }, [setCountdown]);

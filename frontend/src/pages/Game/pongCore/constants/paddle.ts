@@ -1,3 +1,5 @@
+/* eslint-disable no-magic-numbers */
+
 import { GAME_WIDTH } from "./game";
 
 export const PADDLE_HEIGHT = 80;

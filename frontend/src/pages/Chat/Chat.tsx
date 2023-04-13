@@ -1,9 +1,15 @@
 import React from "react";
 
-export const Chat: React.FC = () => {
+import "./Chat.css";
+
+interface ChatProps {
+  chatRef: React.RefObject<HTMLDivElement>;
+}
+
+export const Chat: React.FC<ChatProps> = ({ chatRef }) => {
   return (
-    <div className="chat">
-      <h1>Chat</h1>
+    <div ref={chatRef} id="Chat" className="chat">
+      <h1 className="chat-title">Chat</h1>
     </div>
   );
 };

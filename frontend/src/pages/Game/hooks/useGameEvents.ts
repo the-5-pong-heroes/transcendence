@@ -1,3 +1,5 @@
+/* eslint max-lines: ["warn", 150] */
+
 import { useEffect, useContext } from "react";
 
 import type { Pong } from "../pongCore";
@@ -6,6 +8,8 @@ import type { GameOverlayRef } from "../GameOverlay";
 import type { PaddleMove, LobbyState, PlayState, GameResult, PaddleSide, ServerPong, PongState } from "../@types";
 import { ServerEvents } from "../@types";
 import { SocketContext } from "../../../contexts";
+
+const DELAY_START_ROUND = 500;
 
 interface PaddleUpdateParameters {
   side: PaddleSide;
@@ -52,12 +56,11 @@ export const useGameEvents = (): void => {
     };
 
     const setPlay = (): void => {
-      // console.log("setPlay", Date.now());
       playRef.current.started = true;
       playRef.current.paused = false;
     };
 
-    let timeoutId: number | undefined;
+    let timeoutId: NodeJS.Timeout | undefined;
     const startGame = (time: number): void => {
       overlayRef?.current?.showCountdown();
       const currentTime = Date.now();
@@ -66,7 +69,7 @@ export const useGameEvents = (): void => {
     };
 
     const updateGame = (serverPong: PongState): void => {
-      const lastUpdate = serverPongRef.current ? serverPongRef.current.timestamp : Date.now() - 500;
+      const lastUpdate = serverPongRef.current ? serverPongRef.current.timestamp : Date.now() - DELAY_START_ROUND;
       serverPongRef.current = {
         pong: serverPong,
         evaluated: false,

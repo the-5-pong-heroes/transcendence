@@ -1,115 +1,150 @@
 .navbar {
   position: fixed;
-  height: 60px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  justify-content: flex-end;
+	top: 0;
+	left: 0;
+	width: 100%;
+	padding: 2vh 5vw;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
   z-index: 20;
-  padding: 0 20px;
 }
 
-#light .navbar {
-  /* background: var(--global-background-color-light); */
-  /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1); */
+.logo-wall-e {
+  position: relative;
+	height: 60px;
+  cursor: pointer;
 }
 
-#dark .navbar {
-  /* background: var(--global-background-color-dark); */
-  /* box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.1); */
-}
-
-.title {
-  color: white;
-  font-family: "herbarium";
-}
-
-.navbar img {
-  width: 30px;
-  height: 30px;
+ul img {
+  vertical-align: center;
+  height: 50px;
 }
 
 .menu-icon {
   display: none;
-  margin-left: 8px;
+}
+
+.burger {
+  height: 6vh;
+  z-index: 6;
 }
 
 .nav-elements ul {
-  gap: 12px;
   display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 2vw;
 }
-
-/* li:nth-child(4) {
-  scale: 0.9;
-} */
 
 .navbar li {
-  padding: 20px;
+  padding: 6px 8px;
+  margin: 0px 5px;
   cursor: pointer;
   position: relative;
-  align-self: auto;
-  opacity: 0.8;
+  list-style: none;
 }
 
-.navbar a {
-  color: rgb(255, 255, 255);
-  text-align: center;
-  text-decoration: none;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont;
-}
-
-.item:hover,
-.item:focus {
-  border-color: hsla(0, 0%, 100%, 0.6);
-  /* transform: translateY(-0.06rem) scale(1.0); */
-  font-weight: bold;
+.nav-item:hover,
+.nav-item:focus {
   opacity: 1;
+  background: rgba(227, 24, 54, 0.9);
+	color: white;
+	border-radius: 20px;
+	cursor: pointer;
 }
 
-@media (max-width: 600px) {
+#light .nav-item:hover,
+#light .nav-item:focus {
+  background: rgba(255, 0, 38, 0.9);
+}
+
+@media (max-width: 680px) {
   .navbar {
-    justify-content: flex-start;
+    display: flex;
+    justify-content: space-between;
   }
 
   .menu-icon {
     display: block;
     cursor: pointer;
+    margin-left: 5px;
   }
 
-.nav-elements {
-  position: absolute;
-  left: 0;
-  top: 52px;
-  width: 0px;
-  height: calc(100vh - 60px);
-  transition: all 0.3s ease-in;
-  overflow: hidden;
-}
+  .logo-wall-e {
+	  height: 50px;
+  }
 
-#light .nav-elements {
-  background-color: var(--global-background-color-light);
-  box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
+body.open .navbar li {
+  animation: appear 0.7s backwards;
 }
-
-#dark .nav-elements {
-  background-color: var(--global-background-color-dark);
-  box-shadow: 1px 1px 2px 0 rgba(255, 255, 255, 0.1);
-}
-
-.nav-elements.active {
-  width: 70px;
-}
+  .nav-elements {
+    position: absolute;
+    left: 0;
+    top: 60px;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    z-index: 10;
+    margin-left: 1vw;
+  }
 
   .nav-elements ul {
+    display: none;
+    opacity: 0;
+  }
+  
+  .nav-elements.active ul {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    margin-top: 20px;
-    gap: 8px;
+    opacity: 1;
   }
 
-  .nav-elements ul li {
+  .navbar li {
+    margin: 6px 10px;
+    padding: 6px 8px;
     margin-right: unset;
+  }
+
+  ul img {
+    /* height: 45px; */
+    height: 8vh;
+    transition: all 2s ease-in-out;
+  }
+}
+
+@media (max-height: 350px) {
+  .burger {
+    height: 25px;
+  }
+
+  .logo-wall-e {
+	  height: 35px;
+  }
+
+  .nav-elements ul {
+    margin-top: 0;
+  }
+
+  .navbar li {
+    margin: 0px 10px;
+    padding: 6px 6px;
+  }
+
+  ul img {
+    height: 30px;
+  }
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+    translate: 0 50px;
+  }
+  100% {
+    opacity: 1;
   }
 }

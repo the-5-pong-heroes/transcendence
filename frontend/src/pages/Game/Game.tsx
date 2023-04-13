@@ -8,20 +8,24 @@ import { PongMenu } from "./PongMenu";
 import { GameProvider } from "./context/GameProvider";
 import { useGameSize } from "./hooks";
 
-export const Game: React.FC = () => {
+interface GameProps {
+  gameRef: React.RefObject<HTMLDivElement>;
+}
+
+export const Game: React.FC<GameProps> = ({ gameRef }) => {
   const { height, width } = useGameSize();
   const gameStyle: React.CSSProperties = { width, height };
 
   return (
-    <GameProvider>
-      <div className="game-container">
-        <div className="game" style={gameStyle}>
+    <div ref={gameRef} id="Game" className="game-container">
+      <div className="game" style={gameStyle}>
+        <GameProvider>
           <PongMenu />
           <GameOverlay />
           <Pong2D />
           <Pong3D />
-        </div>
+        </GameProvider>
       </div>
-    </GameProvider>
+    </div>
   );
 };

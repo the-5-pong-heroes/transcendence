@@ -1,21 +1,32 @@
-import React, { useContext, useState, useRef } from "react";
-import { useParallax } from "react-scroll-parallax";
+import React, { useContext, useState } from "react";
+import { Parallax } from "react-scroll-parallax";
 
-import { ThemeContext } from "../../contexts";
-
+import { AppContext } from "../../contexts";
 import "./Container.css";
-import { Background, BackgroundLight, Moon, Light, Stars, Trash1, Trash2, Trash3 } from "../../assets";
+import {
+  Background,
+  BackgroundLight,
+  Moon,
+  Light,
+  Stars,
+  Trash1,
+  Trash2,
+  Trash3,
+  Cloud,
+  Cloud2,
+  MoonDayLight,
+} from "../../assets";
 
 interface ContainerProps {
   children: React.ReactNode;
 }
 
 export const Container: React.FC<ContainerProps> = ({ children }) => {
-  const themeContext = useContext(ThemeContext);
-  if (themeContext === undefined) {
-    throw new Error("Undefined ThemeContext");
+  const appContext = useContext(AppContext);
+  if (appContext === undefined) {
+    throw new Error("Undefined AppContext");
   }
-  const { theme } = themeContext;
+  const { theme } = appContext;
 
   const [x, setX] = useState<number>(0);
 
@@ -24,62 +35,42 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
     setX(event.currentTarget.scrollTop);
   };
 
-  const target = useRef<HTMLElement>();
-
-  const backgroundRef = useParallax<HTMLDivElement>({
-    scale: [1, 1, "easeInQuad"],
-  });
-
-  const starsRef = useParallax<HTMLDivElement>({
-    speed: 40
-  });
-
-  const moonRef = useParallax<HTMLDivElement>({
-    speed: 50,
-    targetElement: target.current,
-  });
-
-  const lightRef = useParallax<HTMLDivElement>({
-    speed: 80,
-    targetElement: target.current,
-  });
-
-  const trashRef = useParallax<HTMLDivElement>({
-    speed: 80
-  });
-
-  const trash2Ref = useParallax<HTMLDivElement>({
-    speed: 100
-  });
-
-  const trash3Ref = useParallax<HTMLDivElement>({
-    speed: 70
-  });
-
   return (
     <div onScroll={handleScroll} className="container">
       <div className="wrap">
-        <div className="background" ref={backgroundRef.ref}>
+        <div className="background">
           <img src={theme === "light" ? BackgroundLight : Background} />
-        <div className="layer stars" ref={starsRef.ref}>
+          {/* <Image /> */}
+        </div>
+        <Parallax className="layer stars" translateX={["-200px", "10px"]}>
           <img src={Stars} />
-        </div>
-        <div className="layer light" ref={lightRef.ref}>
+        </Parallax>
+        <Parallax className="layer light" speed={120}>
           <img src={Light} />
-        </div>
-        <div className="layer moon" ref={moonRef.ref}>
+        </Parallax>
+        <Parallax className="layer moon" speed={20}>
           <img src={Moon} />
-        </div>
-        <div className="layer trash" ref={trashRef.ref}>
+        </Parallax>
+        <Parallax className="layer moonDayLight" speed={10}>
+          <img src={MoonDayLight} />
+        </Parallax>
+        <Parallax className="layer cloud" speed={55}>
+          <img src={Cloud} />
+        </Parallax>
+        <Parallax className="layer cloud" speed={70}>
+          <img src={Cloud2} />
+        </Parallax>
+        <Parallax className="layer trash" translateX={["40%", "-20%"]}>
           <img src={Trash1} />
-        </div>
-        <div className="layer trash" ref={trash2Ref.ref}>
+        </Parallax>
+        <Parallax className="layer trash" speed={130}>
           <img src={Trash2} />
-        </div>
-        <div className="layer trash" ref={trash3Ref.ref} >
-          <img src={Trash3} style={{ left: -100 }} />
-        </div>
-        </div>
+        </Parallax>
+        <Parallax className="layer trash" translateX={["50%", "-20%"]}>
+          <div className="parallax-wrapper">
+            <img src={Trash3} className="parallax-img" />
+          </div>
+        </Parallax>
         {children}
       </div>
     </div>

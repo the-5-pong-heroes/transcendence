@@ -1,56 +1,83 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
-import { ThemeContext } from "../../contexts";
+import { AppContext } from "../../contexts";
+import { MenuLight, MenuDark, LogoWallE, LogoWallELight } from "../../assets";
+import { MenuButton } from "../MenuButton";
 
 import "./Navbar.css";
-import { menuItems } from "./menuItems";
-import { MenuLight, MenuDark, LogoWallE } from "../../assets";
+import { type MenuRefs, menuItems } from "./menuItems";
+
+export const ScrollToPage: React.FC = () => {
+  const { pathname } = useLocation();
+
+  const appContext = useContext(AppContext);
+  if (appContext === undefined) {
+    throw new Error("Undefined AppContext");
+  }
+  const { homeRef, profileRef, gameRef, boardRef, chatRef } = appContext;
+
+  const refs: Record<string, React.RefObject<HTMLDivElement>> = {
+    "/": homeRef,
+    "/Game": gameRef,
+    "/Leaderboard": boardRef,
+    "/Chat": chatRef,
+    "/Profile": profileRef,
+  };
+  const ref = refs[pathname] ?? homeRef;
+
+  useEffect(() => {
+    ref.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [pathname, ref]);
+
+  return null;
+};
 
 export const Navbar: React.FC = () => {
   const [showNavbar, setShowNavbar] = useState<boolean>(false);
   const handleShowNavbar = (): void => {
     setShowNavbar(!showNavbar);
+    document.body.classList.toggle("open");
   };
-  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
 
-  const themeContext = useContext(ThemeContext);
-  if (themeContext === undefined) {
-    throw new Error("Undefined ThemeContext");
+  const handleScroll = (ref: React.RefObject<HTMLDivElement>): (() => void) => {
+    return () => {
+      ref.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    };
+  };
+
+  const appContext = useContext(AppContext);
+  if (appContext === undefined) {
+    throw new Error("Undefined AppContext");
   }
-  const { theme, scrollRef } = themeContext;
-  
+  const { theme, homeRef, profileRef, gameRef, boardRef, chatRef } = appContext;
+
+  const menuRefs: MenuRefs = {
+    gameRef,
+    boardRef,
+    chatRef,
+    profileRef,
+  };
+
   return (
-    <div className="navbar">
-      <Link to="/">
-        <img src={LogoWallE} className="logo-wall-e" />
-      </Link>
+    <div className="navbar" id="navbar">
+      <ScrollToPage />
       <div className="menu-icon" onClick={handleShowNavbar}>
         <img src={theme === "light" ? MenuLight : MenuDark} className="burger" />
       </div>
+      <Link to="/" onClick={handleScroll(homeRef)}>
+        <img src={theme === "light" ? LogoWallELight : LogoWallE} className="logo-wall-e" />
+      </Link>
       <div className={`nav-elements ${showNavbar ? "active" : ""}`}>
         <ul>
-          {menuItems.map((item, index: number) => (
-            <li className="nav-item" key={item.label}>
-              <Link to={item.path}>
-                <img
-                  src={
-                    theme === "light"
-                      ? selectedIndex === index
-                        ? item.iconLightSelected
-                        : item.iconLight
-                      : selectedIndex === index
-                      ? item.iconDarkSelected
-                      : item.iconDark
-                  }
-                  key={`${item.label}-${selectedIndex}`}
-                  onClick={() => {
-                    setSelectedIndex(index);
-                    scrollRef.current = item.label;
-                  }}
-                />
-              </Link>
-            </li>
+          {menuItems.map((item) => (
+            <MenuButton
+              key={item.path}
+              icon={theme === "light" ? item.iconLight : item.iconDark}
+              path={item.path}
+              label={item.label}
+              menuRef={menuRefs[item.refName]}
+            />
           ))}
         </ul>
       </div>

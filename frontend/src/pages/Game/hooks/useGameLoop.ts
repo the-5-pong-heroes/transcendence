@@ -1,3 +1,5 @@
+/* eslint-disable no-magic-numbers */
+
 import { useRef, useEffect, useCallback, useContext } from "react";
 import { Vector3 } from "three";
 import { useFrame } from "@react-three/fiber";
@@ -48,6 +50,18 @@ export const useGameLoop = (): GameLoopValues => {
   const particlesRef = useRef<THREE.Points>(null);
 
   /* Logic loop */
+  // const gameLoop = useCallback(
+  //   (delta: number): void => {
+  //     if (serverPongRef.current && !serverPongRef.current?.evaluated) {
+  //       localPongRef.current.ball.set(serverPongRef.current.pong.ball);
+  //       serverPongRef.current.evaluated = true;
+  //     }
+
+  //     localPongRef.current.update(delta);
+  //   },
+  //   [localPongRef, serverPongRef]
+  // );
+
   const gameLoop = useCallback(
     (delta: number): void => {
       if (serverPongRef.current && !serverPongRef.current?.evaluated) {
@@ -56,6 +70,7 @@ export const useGameLoop = (): GameLoopValues => {
       }
 
       localPongRef.current.update(delta);
+      localPongRef.current.detectCollisions();
     },
     [localPongRef, serverPongRef]
   );

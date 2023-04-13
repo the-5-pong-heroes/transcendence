@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { GameGateway } from './game.gateway';
-import { GameService } from './game.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { GameGateway } from "./game.gateway";
+import { GameService } from "./game.service";
 
-describe('GameGateway', () => {
+describe("GameGateway", () => {
   let gateway: GameGateway;
 
   beforeEach(async () => {
@@ -13,7 +13,7 @@ describe('GameGateway', () => {
     gateway = module.get<GameGateway>(GameGateway);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(gateway).toBeDefined();
   });
 });

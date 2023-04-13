@@ -1,14 +1,22 @@
 import { Server } from "socket.io";
 import { Pong } from "shared/pongCore";
 
-import { ServerEvents, AuthenticatedSocket, PaddleSide, PaddleMove, CollisionSide, GameState, PaddleState } from "../@types";
+import {
+  ServerEvents,
+  AuthenticatedSocket,
+  PaddleSide,
+  PaddleMove,
+  CollisionSide,
+  GameState,
+  PaddleState,
+} from "../@types";
 import { Lobby } from "../lobby";
 import { SCORE_MAX } from "../constants";
 import { Play } from "./play";
 import { Score } from "./score";
 
 const DELAY_START_GAME = 3000;
-const DELAY_START_ROUND = 500;
+// const DELAY_START_ROUND = 500;
 
 export class GameLoop {
   public readonly pong: Pong;
@@ -19,13 +27,13 @@ export class GameLoop {
   private lastUpdate = 0;
   private lastPaddleBotUpdate = 0;
 
-  constructor(private readonly lobby: Lobby, private readonly server: Server,) {
+  constructor(private readonly lobby: Lobby, private readonly server: Server) {
     this.score = new Score();
     this.play = new Play();
     this.pong = new Pong();
   }
 
-  private gameLoop(delta: number, time: number) {
+  private gameLoop(delta: number) {
     if (this.play.paused) {
       return;
     }
@@ -38,7 +46,7 @@ export class GameLoop {
       this.handlePaddleBot();
     }
     this.update(delta);
-    if (timeSinceLastUpdate > 100) {
+    if (timeSinceLastUpdate > 20) {
       this.lastUpdate = currentTime;
       this.lobby.dispatchToLobby(ServerEvents.GameUpdate, this.pong.getState());
     }
@@ -49,13 +57,12 @@ export class GameLoop {
     const lastBotMove = this.pong.paddle.left.lastMove;
     const ballVelY = this.pong.ball.velY;
     let move: PaddleMove;
-  
+
     if (ballVelY < 0 && distance < -5) {
       move = "down";
     } else if (ballVelY > 0 && distance > 5) {
       move = "up";
-    } 
-    else {
+    } else {
       move = "stop";
     }
     if (move != lastBotMove) {
@@ -87,7 +94,7 @@ export class GameLoop {
     this.lastPaddleBotUpdate = Date.now();
     this.intervalId = setInterval(() => {
       const time = Date.now();
-      this.gameLoop(time - this.lastTime, time);
+      this.gameLoop(time - this.lastTime);
       this.lastTime = time;
     }, 1000 / 60);
   }
@@ -114,7 +121,7 @@ export class GameLoop {
 
   handleMissedCollision = (collision: CollisionSide): void => {
     if (collision === "none") {
-      return ;
+      return;
     }
     if (collision === "right") {
       this.score.player1 += 1;
@@ -147,16 +154,15 @@ export class GameLoop {
   }
 
   public botMove(move: PaddleMove): void {
-    // console.log(move);
     this.pong.updatePaddleVelocity("left", move);
-    for (const [lobbyClientId, lobbyClient] of this.lobby.clients) {
+    for (const [lobbyClientId] of this.lobby.clients) {
       this.server.to(lobbyClientId).emit(ServerEvents.PaddleUpdate, { side: "left", move: move });
     }
   }
 
   public userMove(client: AuthenticatedSocket, move: PaddleMove): void {
     this.pong.updatePaddleVelocity(client.data.paddle.side, move);
-    for (const [lobbyClientId, lobbyClient] of this.lobby.clients) {
+    for (const [lobbyClientId] of this.lobby.clients) {
       if (lobbyClientId !== client.id && move !== client.data.paddle.lastMove) {
         this.server.to(lobbyClientId).emit(ServerEvents.PaddleUpdate, { side: client.data.paddle.side, move: move });
       }
@@ -171,12 +177,12 @@ export class GameLoop {
       score: this.score.getState(),
       play: this.play.getState(),
     };
-  };
+  }
 
   public getOpponentPaddleState(paddleSide: PaddleSide | null): PaddleState {
     if (paddleSide && paddleSide === "left") {
       return this.pong.paddle.right.getState();
     }
     return this.pong.paddle.left.getState();
-  };
+  }
 }

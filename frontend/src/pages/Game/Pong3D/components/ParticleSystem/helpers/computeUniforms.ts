@@ -1,3 +1,5 @@
+/* eslint-disable no-magic-numbers */
+
 import * as THREE from "three";
 
 interface UniformsObject {

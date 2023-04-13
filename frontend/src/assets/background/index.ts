@@ -6,3 +6,7 @@ export { default as Trash2 } from "./trashh.png";
 export { default as Trash3 } from "./trashhh.png";
 export { default as Stars } from "./stars.png";
 export { default as Light } from "./light.png";
+export { default as Cloud } from "./cloud.png";
+export { default as Cloud2 } from "./cloud2.png";
+export { default as Sun } from "./sun.png";
+export { default as MoonDayLight } from "./moon_daylight.png";

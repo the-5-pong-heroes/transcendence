@@ -1,65 +1,58 @@
 import {
-  HomeLight,
-  HomeLightSelected,
-  HomeDark,
-  HomeDarkSelected,
+  RobotLight,
+  RobotDark,
   ChatLight,
-  ChatLightSelected,
   ChatDark,
-  ChatDarkSelected,
-  LoginLight,
-  LoginLightSelected,
-  LoginDark,
-  LoginDarkSelected,
-  PongLight,
-  PongLightSelected,
-  PongDark,
-  PongDarkSelected,
-  PodiumLight,
-  PodiumLightSelected,
-  PodiumDark,
-  PodiumDarkSelected,
-} from "@/assets";
+  GameLight,
+  GameDark,
+  LeaderboardLight,
+  LeaderboardDark,
+} from "../../assets";
 
-export const menuItems = [
-  {
-    label: "Home",
-    path: "/",
-    iconLight: HomeLight,
-    iconDark: HomeDark,
-    iconLightSelected: HomeLightSelected,
-    iconDarkSelected: HomeDarkSelected,
-  },
+export interface MenuRefs {
+  gameRef: React.RefObject<HTMLDivElement>;
+  boardRef: React.RefObject<HTMLDivElement>;
+  chatRef: React.RefObject<HTMLDivElement>;
+  profileRef: React.RefObject<HTMLDivElement>;
+}
+
+export type MenuRefName = keyof MenuRefs;
+
+export type MenuItem<RefName extends MenuRefName = MenuRefName> = {
+  label: string;
+  path: string;
+  iconLight: string;
+  iconDark: string;
+  refName: RefName;
+};
+
+export const menuItems: MenuItem[] = [
   {
     label: "Game",
     path: "/Game",
-    iconLight: PongLight,
-    iconDark: PongDark,
-    iconLightSelected: PongLightSelected,
-    iconDarkSelected: PongDarkSelected,
+    iconLight: GameLight,
+    iconDark: GameDark,
+    refName: "gameRef",
   },
   {
     label: "Leaderboard",
     path: "/Leaderboard",
-    iconLight: PodiumLight,
-    iconDark: PodiumDark,
-    iconLightSelected: PodiumLightSelected,
-    iconDarkSelected: PodiumDarkSelected,
+    iconLight: LeaderboardLight,
+    iconDark: LeaderboardDark,
+    refName: "boardRef",
   },
   {
     label: "Chat",
     path: "/Chat",
     iconLight: ChatLight,
     iconDark: ChatDark,
-    iconLightSelected: ChatLightSelected,
-    iconDarkSelected: ChatDarkSelected,
+    refName: "chatRef",
   },
   {
-    label: "Login",
-    path: "/Login",
-    iconLight: LoginLight,
-    iconDark: LoginDark,
-    iconLightSelected: LoginLightSelected,
-    iconDarkSelected: LoginDarkSelected,
+    label: "Profile",
+    path: "/Profile",
+    iconLight: RobotLight,
+    iconDark: RobotDark,
+    refName: "profileRef",
   },
 ];

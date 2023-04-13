@@ -22,9 +22,11 @@
   color: white;
 }
 
-.PageContainer {
-  display: flex;
-  align-items: center;
-  align-self: center;
-  justify-content: center;
+.App-container {
+	z-index: 0;
+	height: 100vw;
+	width: 100vh;
+	transform: rotate(-90deg) translateX(-100vh);
+	transform-origin: top left;
+	position: absolute;
 }

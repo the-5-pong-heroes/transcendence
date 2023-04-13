@@ -1,3 +1,5 @@
+/* eslint-disable no-magic-numbers */
+
 import { Vec3 } from "cannon-es";
 
 import {

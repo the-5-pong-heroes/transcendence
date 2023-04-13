@@ -1,20 +1,19 @@
 import React, { useContext } from "react";
 
-import { ThemeContext } from "../../contexts";
+import { AppContext } from "../../contexts";
 import "./ThemeButton.css";
-import SunIcon from "../../assets/theme/sun.svg";
-import MoonIcon from "../../assets/theme/moon.svg";
+import { LightTheme, DarkTheme } from "../../assets";
 
 export const ThemeButton: React.FC = () => {
-  const themeContext = useContext(ThemeContext);
-  if (themeContext === undefined) {
-    throw new Error("Undefined ThemeContext");
+  const appContext = useContext(AppContext);
+  if (appContext === undefined) {
+    throw new Error("Undefined AppContext");
   }
-  const { toggleTheme, theme } = themeContext;
+  const { toggleTheme, theme } = appContext;
 
   return (
-    <div className="theme-container">
-      <img src={theme === "light" ? SunIcon : MoonIcon} className="theme-icon" onClick={toggleTheme} />
+    <div className="theme-container" onClick={toggleTheme}>
+      <img src={theme === "light" ? LightTheme : DarkTheme} className="theme-icon" />
     </div>
   );
 };

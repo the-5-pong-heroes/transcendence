@@ -1,10 +1,14 @@
 import React from "react";
 import "./Profile.css";
 
-export const Profile: React.FC = () => {
+interface ProfileProps {
+  profileRef: React.RefObject<HTMLDivElement>;
+}
+
+export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
   return (
-    <div id="Profile" className="Profile">
-      <h1 className="title">Profile</h1>
+    <div ref={profileRef} id="Profile" className="Profile">
+      <h1 className="profile-title">Profile</h1>
     </div>
   );
 };

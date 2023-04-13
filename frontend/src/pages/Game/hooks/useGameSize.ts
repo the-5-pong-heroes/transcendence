@@ -1,9 +1,17 @@
 import { useEffect, useState } from "react";
 
-const WIDTH_RATIO = 0.6;
-const ASPECT_RATIO = 4 / 3;
+const WIDTH_RATIO = 0.9;
+const HEIGHT_RATIO = 0.8;
+// const ASPECT_RATIO = 4 / 3;
+const ASPECT_RATIO = 1.56;
 
-const computeGameWidth = (): number => Math.floor(WIDTH_RATIO * window.innerWidth);
+const computeGameWidth = (): number => {
+  const widthFromHeight = Math.floor(ASPECT_RATIO * HEIGHT_RATIO * window.innerHeight);
+  const widthFromWidth = Math.floor(WIDTH_RATIO * window.innerWidth);
+
+  return Math.min(widthFromHeight, widthFromWidth);
+};
+
 const computeGameHeight = (): number => Math.floor(computeGameWidth() / ASPECT_RATIO);
 
 interface GameSizeValues {

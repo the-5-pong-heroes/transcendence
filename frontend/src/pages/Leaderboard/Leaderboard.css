@@ -1,71 +1,86 @@
 .Leaderboard {
-	width: 100vw;
-	height: 100vh;
-	display: flex;
-	flex-flow: column nowrap;
-	margin: 0;
-	align-items: center;
-	justify-content: center;
-	user-select: none;
-	z-index: 2;
+  z-index: 8;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-flow: column nowrap;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  position: absolute;
+  top: 0;
+  left: 30%;
+  animation: fadeInAnimation ease 500ms;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .title {
-	z-index: 2;
-	color: #9d8ce0;
-	font-size: 2rem;
+  z-index: 8;
+  color: #9d8ce0;
+  font-size: 2rem;
 }
 
 .group {
-	position: absolute;
-	text-align: center;
-	white-space: nowrap;
-	overflow: hidden;
-	display: flex;
-	flex-direction: column;
-  }
+  position: absolute;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
 
-  .item {
-	position: relative;
-	width: 55vw;
-	height: 5vh;
-	background-position: center;
-	background-size: adapt;
-	margin: 2vh;
-	padding: 20px;
-	border-radius: 4vh;
-	display: flex;
-	flex-flow: row nowrap;
-	justify-content: space-between;
-	align-items: center;
-	cursor: pointer;
-	transition: ease-out 0.2s;
-	background: linear-gradient(135deg, #295fd5, #9d8ce0);
-  }
+.item {
+  position: relative;
+  width: 55vw;
+  height: 5vh;
+  background-position: center;
+  background-size: adapt;
+  margin: 2vh;
+  padding: 20px;
+  border-radius: 4vh;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: ease-out 0.2s;
+  background: linear-gradient(135deg, #295fd5, #9d8ce0);
+}
 
-  .item:hover {
-	height: 10vh;
-  }
+.item:hover {
+  height: 10vh;
+}
 
-  .Infos {
-	display: flex;
-	opacity: 0;
-	width: 0;
-	justify-content: space-between;
-	flex-direction: row;
-	flex-grow: 0;
-	transition: opacity 0.1s ease, width 1s ease 0.1s;
+.Infos {
+  display: flex;
+  opacity: 0;
+  width: 0;
+  justify-content: space-between;
+  flex-direction: row;
+  flex-grow: 0;
+  transition: opacity 0.1s ease, width 1s ease 0.1s;
 }
 
 .item .Player {
-	font-weight: bold;
-	color: #9d8ce0;
-	flex-grow: 1;
-	transition: ease 1s;
+  font-weight: bold;
+  color: #9d8ce0;
+  flex-grow: 1;
+  transition: ease 1s;
 }
 
 .item:hover .Infos {
-	width: 35vw;
-	opacity: 1;
-	transition: opacity 0.1s ease 1s, width 1s ease;
-  }
+  width: 35vw;
+  opacity: 1;
+  transition: opacity 0.1s ease 1s, width 1s ease;
+}

@@ -1,7 +1,6 @@
 import React, { useMemo, useRef, useState } from "react";
 
 import { Pong } from "../pongCore";
-
 import type { PlayState, GameMode, PaddleSide, ServerPong } from "../@types";
 import { type GameOverlayRef } from "../GameOverlay";
 import { useGameSize, usePause } from "../hooks";

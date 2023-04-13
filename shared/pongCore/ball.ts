@@ -1,6 +1,6 @@
 import { Vec3 } from "cannon-es";
 
-import { BALL_RADIUS, BALL_VEL_X, BALL_VEL_Y } from "./constants";
+import { BALL_RADIUS, BALL_VEL_X, BALL_VEL_Y, BALL_ACC_X } from "./constants";
 import { type BallState } from "./@types";
 import { lerp } from "./helpers";
 
@@ -37,7 +37,7 @@ export class Ball {
     this.posZ = 0;
     this.velX = BALL_VEL_X;
     this.velY = BALL_VEL_Y;
-    this.accX = 0;
+    this.accX = BALL_ACC_X;
     this.accY = 0;
     this.rot = 0;
   }
@@ -46,7 +46,7 @@ export class Ball {
     this.move({ x: 0, y: 0 });
     this.velX = round % 2 === 0 ? BALL_VEL_X : -BALL_VEL_X;
     this.velY = BALL_VEL_Y;
-    this.accX = 0;
+    this.accX = round % 2 === 0 ? BALL_ACC_X : -BALL_ACC_X;
     this.accY = 0;
     this.rot = 0;
   }
@@ -77,7 +77,6 @@ export class Ball {
   }
 
   public set(other: BallState): void {
-    // console.log("🏀", this.posX, other.pos.x, this.posY, other.pos.y);
     this.radius = other.radius;
     this.posX = other.pos.x;
     this.posY = other.pos.y;

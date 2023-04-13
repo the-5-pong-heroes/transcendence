@@ -4,5 +4,5 @@ import { PaddleMove } from "../@types";
 export class GameUpdateDto {
   @IsString()
   @IsNotEmpty()
-	move: PaddleMove = "stop";
-};
+  move: PaddleMove = "stop";
+}

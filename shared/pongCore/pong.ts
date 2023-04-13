@@ -7,7 +7,6 @@ import {
   RIGHT_PADDLE_X,
   LEFT_PADDLE_X,
   BALL_OFFSET_RATIO,
-  BALL_ACC_X,
   PADDLE_VELOCITY,
 } from "./constants";
 import type { PaddleSide, CollisionSide, PaddleMove, PongState } from "./@types";
@@ -88,14 +87,14 @@ export class Pong {
 
   detectCollisions = (): CollisionSide => {
     const reachedRightPaddle =
-      this.ball.posX + this.ball.radius >= this.paddle.right.posX &&
+      this.ball.posX + this.ball.radius >= this.paddle.right.posX + 3.0 &&
       this.ball.posY + this.ball.radius * BALL_OFFSET_RATIO >= this.paddle.right.posY - this.paddle.right.height / 2 &&
       this.ball.posY - this.ball.radius * BALL_OFFSET_RATIO <= this.paddle.right.posY + this.paddle.right.height / 2;
 
     const reachedRight = this.ball.posX + this.ball.radius >= this.width / 2;
 
     const reachedLeftPaddle =
-      this.ball.posX - this.ball.radius <= this.paddle.left.posX &&
+      this.ball.posX - this.ball.radius <= this.paddle.left.posX - 3.0 &&
       this.ball.posY + this.ball.radius * BALL_OFFSET_RATIO >= this.paddle.left.posY - this.paddle.left.height / 2 &&
       this.ball.posY - this.ball.radius * BALL_OFFSET_RATIO <= this.paddle.left.posY + this.paddle.left.height / 2;
 
@@ -143,14 +142,14 @@ export class Pong {
       dist = (paddleCenter - this.ball.posY) / (this.paddle.right.height / 2);
 
       this.ball.velX = -Math.abs(this.ball.velX);
-      this.ball.accX = -Math.abs(this.ball.accX) + BALL_ACC_X;
+      this.ball.accX = -Math.abs(this.ball.accX);
     }
     if (collision === "left") {
       paddleCenter = this.paddle.left.posY + this.paddle.left.height / 2;
       dist = (paddleCenter - this.ball.posY) / (this.paddle.left.height / 2);
 
       this.ball.velX = Math.abs(this.ball.velX);
-      this.ball.accX = Math.abs(this.ball.accX) + BALL_ACC_X;
+      this.ball.accX = Math.abs(this.ball.accX);
     }
   };
 

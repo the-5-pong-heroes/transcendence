@@ -1,12 +1,7 @@
 import { v4 as uuid4 } from "uuid";
 import { Socket, Server } from "socket.io";
 import { LobbyStatus, PaddleSide, GameMode, LobbyMode } from "../@types";
-import {
-  ServerEvents,
-  ServerPayloads,
-  TServerEvents,
-  AuthenticatedSocket,
-} from "../@types";
+import { ServerEvents, ServerPayloads, TServerEvents, AuthenticatedSocket } from "../@types";
 import { GameLoop } from "../game-logic";
 import { GameService } from "src/game/game-api/game.service";
 import { Game } from "@prisma/client";
@@ -14,8 +9,10 @@ import { Game } from "@prisma/client";
 export class Lobby {
   public readonly id: string = uuid4();
 
-  public readonly clients: Map<AuthenticatedSocket["id"], AuthenticatedSocket> =
-    new Map<Socket["id"], AuthenticatedSocket>();
+  public readonly clients: Map<AuthenticatedSocket["id"], AuthenticatedSocket> = new Map<
+    Socket["id"],
+    AuthenticatedSocket
+  >();
 
   public readonly gameLoop: GameLoop;
   public status: LobbyStatus = "waiting";
@@ -41,7 +38,10 @@ export class Lobby {
       this.status = "in progress";
       for (const [clientId, client] of this.clients) {
         this.server.to(clientId).emit(ServerEvents.GameInit, client.data.paddle.side);
-        this.server.to(clientId).emit(ServerEvents.ScoreUpdate, { score: this.gameLoop.score.getState(), play: this.gameLoop.play.getState() });
+        this.server.to(clientId).emit(ServerEvents.ScoreUpdate, {
+          score: this.gameLoop.score.getState(),
+          play: this.gameLoop.play.getState(),
+        });
       }
       // Database Create Game
       // this.initGame(); // TODO

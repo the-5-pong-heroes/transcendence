@@ -2,6 +2,7 @@
 
 export const BALL_RADIUS = 15;
 export const BALL_OFFSET_RATIO = 0.06;
+// export const BALL_ACC_X = 0.0001;
 export const BALL_ACC_X = 0.0;
 export const BALL_MAX_SPEED = 1.0;
 export const MAX_BOUNCE_ANGLE: number = (5 / 12) * Math.PI;

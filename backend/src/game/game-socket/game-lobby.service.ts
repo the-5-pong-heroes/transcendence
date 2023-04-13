@@ -10,10 +10,7 @@ export class GameLobbyService {
 
   constructor(@Inject(GameService) private readonly gameApiService: GameService) {}
 
-  private readonly lobbies: Map<Lobby["id"], Lobby> = new Map<
-    Lobby["id"],
-    Lobby
-  >();
+  private readonly lobbies: Map<Lobby["id"], Lobby> = new Map<Lobby["id"], Lobby>();
 
   public setupSocket(client: AuthenticatedSocket): void {
     client.data.lobby = null;
@@ -35,21 +32,13 @@ export class GameLobbyService {
     return lobby;
   }
 
-  public joinLobby(
-    lobbyMode: LobbyMode,
-    gameMode: GameMode,
-    client: AuthenticatedSocket
-  ): void {
+  public joinLobby(lobbyMode: LobbyMode, gameMode: GameMode, client: AuthenticatedSocket): void {
     let lobbyToJoin = null;
     let paddleSide: PaddleSide = "right";
 
     if (lobbyMode === "duo") {
-      for (const [lobbyId, lobby] of this.lobbies) {
-        if (
-          lobby.status === "waiting" &&
-          lobby.gameMode === gameMode &&
-          lobby.clients.size < lobby.maxClients
-        ) {
+      for (const [, lobby] of this.lobbies) {
+        if (lobby.status === "waiting" && lobby.gameMode === gameMode && lobby.clients.size < lobby.maxClients) {
           lobbyToJoin = lobby;
           paddleSide = "left";
           break;
@@ -64,5 +53,5 @@ export class GameLobbyService {
     lobbyToJoin.addClient(client, paddleSide);
   }
 
-  private cleanLobbies(): void {}
+  // private cleanLobbies(): void {}
 }

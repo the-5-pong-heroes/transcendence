@@ -1,5 +1,5 @@
 .theme-container {
-	z-index: 5;
+	z-index: 10;
   width: 50px;
   height: 50px;
   position: fixed;
@@ -101,4 +101,21 @@
   animation-duration: 1s;
   -webkit-animation-direction: alternate;
   animation-direction: alternate;
+}
+
+@media (max-height: 350px) {
+  .theme-container {
+    height: 40px;
+    width: 40px;
+  }
+
+  #light .theme-icon {
+    width: 18px;
+    height: 18px; 
+  }
+  
+  #dark .theme-icon {
+    width: 15px;
+    height: 15px; 
+  }
 }

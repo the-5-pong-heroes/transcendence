@@ -28,16 +28,16 @@ export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode,
 
   return (
     <div className="modal-lobby">
-      <div className="button-wrapper">
+      <div className="game-button-wrapper">
         <button
-          className="button-lobby"
+          className="game-button"
           onClick={() => {
             handleSendEvent("solo");
           }}>
           ONE PLAYER
         </button>
         <button
-          className="button-lobby"
+          className="game-button"
           onClick={() => {
             handleSendEvent("duo");
           }}>

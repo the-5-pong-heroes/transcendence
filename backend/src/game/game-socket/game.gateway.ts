@@ -9,7 +9,7 @@ import {
 } from "@nestjs/websockets";
 import { Logger } from "@nestjs/common";
 import { Socket, Server } from "socket.io";
-import { UserMoveDto, LobbyJoinDto } from "./dto";
+import { UserMoveDto, LobbyJoinDto, GameViewDto } from "./dto";
 import { GameLobbyService } from "./game-lobby.service";
 import { AuthenticatedSocket, ClientEvents, SocketExceptions } from "./@types";
 import { ServerException } from "./server.exception";
@@ -64,5 +64,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       throw new ServerException(SocketExceptions.LobbyError, "You're not in a lobby");
     }
     client.data.lobby.gameLoop.userMove(client, userMove.move);
+  }
+
+  @SubscribeMessage(ClientEvents.GameView)
+  onViewGame(@ConnectedSocket() client: AuthenticatedSocket, @MessageBody() data: GameViewDto) {
+    this.lobbyManager.viewGame(data.lobbyId, client);
   }
 }

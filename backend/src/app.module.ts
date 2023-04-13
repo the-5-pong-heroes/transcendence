@@ -4,9 +4,10 @@ import { AppService } from "./app.service";
 import { GameApiModule, GameSocketModule } from "./game";
 import { PrismaModule } from "./database/prisma.module";
 import { UserModule } from "./user/user.module";
+import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
-  imports: [PrismaModule, UserModule, GameApiModule, GameSocketModule],
+  imports: [PrismaModule, UserModule, ScheduleModule.forRoot(), GameApiModule, GameSocketModule],
   controllers: [AppController],
   providers: [AppService],
 })

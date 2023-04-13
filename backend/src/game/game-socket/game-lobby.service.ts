@@ -1,16 +1,24 @@
 import { Injectable, Inject } from "@nestjs/common";
+import { Cron } from "@nestjs/schedule";
 import { Server } from "socket.io";
-import { LobbyMode, PaddleSide, GameMode, AuthenticatedSocket } from "./@types";
+import { LobbyMode, PaddleSide, GameMode, AuthenticatedSocket, ServerEvents } from "./@types";
 import { Lobby } from "./lobby";
 import { GameService } from "../game-api/game.service";
+
+const LOBBY_MAX_LIFETIME = 1000 * 60 * 60;
 
 @Injectable()
 export class GameLobbyService {
   public server!: Server;
 
-  constructor(@Inject(GameService) private readonly gameApiService: GameService) {}
+  @Inject(GameService)
+  private readonly gameApiService: GameService;
 
   private readonly lobbies: Map<Lobby["id"], Lobby> = new Map<Lobby["id"], Lobby>();
+
+  constructor(private readonly service: GameService) {
+    this.gameApiService = service;
+  }
 
   public setupSocket(client: AuthenticatedSocket): void {
     client.data.lobby = null;
@@ -53,5 +61,27 @@ export class GameLobbyService {
     lobbyToJoin.addClient(client, paddleSide);
   }
 
-  // private cleanLobbies(): void {}
+  public viewGame(lobbyId: string, client: AuthenticatedSocket): void {
+    const lobby = this.lobbies.get(lobbyId);
+    if (lobby) {
+      lobby.viewGame(client);
+    }
+  }
+
+  @Cron("*/5 * * * *")
+  private cleanLobbies(): void {
+    for (const [, lobby] of this.lobbies) {
+      const now = new Date().getTime();
+      const lobbyCreatedAt = lobby.createdAt.getTime();
+      const lobbyLifetime = now - lobbyCreatedAt;
+
+      if (lobbyLifetime > LOBBY_MAX_LIFETIME) {
+        lobby.dispatchToLobby(ServerEvents.GameEnd, "");
+
+        lobby.gameLoop.stop();
+
+        this.lobbies.delete(lobby.id);
+      }
+    }
+  }
 }

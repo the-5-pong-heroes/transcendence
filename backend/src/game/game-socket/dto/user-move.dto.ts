@@ -4,5 +4,9 @@ import { PaddleMove } from "../@types";
 export class UserMoveDto {
   @IsString()
   @IsNotEmpty()
-  move: PaddleMove = "stop";
+  move: PaddleMove;
+
+  constructor(move: PaddleMove) {
+    this.move = move;
+  }
 }

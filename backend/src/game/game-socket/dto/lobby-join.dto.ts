@@ -4,8 +4,13 @@ import { LobbyMode, GameMode } from "../@types";
 export class LobbyJoinDto {
   @IsString()
   @IsNotEmpty()
-  lobbyMode: LobbyMode = "solo";
+  lobbyMode: LobbyMode;
   @IsString()
   @IsNotEmpty()
-  gameMode: GameMode = "2D";
+  gameMode: GameMode;
+
+  constructor(lobbyMode: LobbyMode, gameMode: GameMode) {
+    this.lobbyMode = lobbyMode;
+    this.gameMode = gameMode;
+  }
 }

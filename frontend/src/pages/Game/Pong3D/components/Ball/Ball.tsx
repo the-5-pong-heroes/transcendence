@@ -16,7 +16,7 @@ export const Ball: React.FC<BallProps> = ({ ballRef, initialPos = new Vec3(0, 0,
 
   return (
     <Trail
-      width={100} // Width of the line
+      width={400} // Width of the line
       color={"white"} // Color of the line
       length={10} // Length of the line
       decay={5} // How fast the line fades away

@@ -11,8 +11,8 @@ interface ScoreProps {
 export const Score: React.FC<ScoreProps> = ({ score }) => {
   return (
     <Text
-      position={[0, GAME_HEIGHT / 3, SCORE_3D_Z]}
-      fontSize={GAME_WIDTH / 4}
+      position={[0, GAME_HEIGHT / 3 + 10, SCORE_3D_Z]}
+      fontSize={GAME_WIDTH / 5}
       color="white"
       anchorX="center"
       characters="0123456789">

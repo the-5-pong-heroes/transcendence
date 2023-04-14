@@ -7,10 +7,11 @@ import { AppService } from "./app.service";
 import { StatsModule } from "./stats/stats.module";
 import { AuthModule } from "./auth/auth.module";
 import { PrismaModule } from "./database/prisma.module";
+import { GoogleStrategy } from "./auth/google/google.strategy";
 
 @Module({
   imports: [StatsModule, AuthModule, PrismaModule, ConfigModule.forRoot({isGlobal: true}),],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, GoogleStrategy],
 })
 export class AppModule {}

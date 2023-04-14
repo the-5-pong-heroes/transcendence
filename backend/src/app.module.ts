@@ -8,7 +8,7 @@ import { GameApiModule, GameSocketModule } from "./game";
 import { StatsModule } from "./stats/stats.module";
 import { AuthModule } from "./auth/auth.module";
 import { PrismaModule } from "./database/prisma.module";
-import { ScheduleModule } from "@nestjs/schedule";
+import { GoogleStrategy } from "./auth/google/google.strategy";
 
 @Module({
   imports: [
@@ -22,6 +22,6 @@ import { ScheduleModule } from "@nestjs/schedule";
     ConfigModule.forRoot({ isGlobal: true }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, GoogleStrategy],
 })
 export class AppModule {}

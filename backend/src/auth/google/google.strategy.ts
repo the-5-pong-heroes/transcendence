@@ -1,10 +1,10 @@
 import { PassportStrategy } from "@nestjs/passport";
-import { Strategy, VerifyCallback } from "passport-google-oauth20";
+import { Profile, Strategy, VerifyCallback } from "passport-google-oauth20";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
 
-export class GoogleStrategy extends PassportStrategy(Strategy, "google"){
+export class GoogleStrategy extends PassportStrategy(Strategy){
     constructor(){
         super({
             clientID : "710896193743-ghevbabaa9s9f94qlsaqbvbrnlj30hgv.apps.googleusercontent.com",
@@ -13,19 +13,18 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google"){
             scope: ["email", "profile"]
         });
     }
-    async validate(accessToken: string, refreshToken: string, profile: any, done:
-         VerifyCallback): Promise<any>{
-            //console.log("Access token:", accessToken);
-            //console.log("Profile:", profile);
-
-            const {name, emails, photos} = profile
+    async validate(accessToken: string, refreshToken: string, profile:
+        Profile, done: VerifyCallback): Promise<any>{
+            console.log("Access token:", accessToken);
+            console.log("Refresh token:", refreshToken);
+            console.log("Profile:", profile);
+            
+            const {name, emails} = profile
             const user = {
-                email: (emails && emails.length > 0) ? emails[0].value : '',                firstName: name.givenName,
-                lastName: name.familyName,
-                picture: (photos && photos.length > 0) ? photos[0].value : '',
+                email: (emails && emails.length > 0) ? emails[0].value : '',
+                displayName: profile.displayName,
                 accessToken
             }
-            
             done(null, user);
          }
 }

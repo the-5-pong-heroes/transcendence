@@ -1,18 +1,22 @@
-import { Body, Controller, Post} from "@nestjs/common";
+import { Controller, Get, UseGuards} from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { AuthDto } from "./dto";
+import { GoogleAuthGuard } from './google/guards';
 
 @Controller("auth")
 export class AuthController{
     constructor(private authService: AuthService)  {}
 
-    @Post("signup")
-    signup(@Body() dto: AuthDto) {
-    //    return this.authService.signup(dto);
+    //3333
+    @Get("google/login")
+    @UseGuards(GoogleAuthGuard)
+    handleLogin() {
+        return { msg: "Google Authentification "};
     }
 
-    @Post("signin")
-    signin(@Body() dto: AuthDto) {
-    //    return this.authService.signin(dto);
+    ///auth/google/callback
+    @Get("/google/callback")
+    @UseGuards(GoogleAuthGuard)
+    handleRedirect() {
+        return { msg: "OK"};
     }
 }

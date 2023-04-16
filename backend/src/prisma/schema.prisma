@@ -9,7 +9,7 @@ generator client {
 }
 
 model User {
-  id            String        @id @default(uuid())
+  id            String        @id @default(uuid()) @db.Uuid
   name          String?       @unique
   avatar        String?
   status        UserStatus
@@ -27,57 +27,57 @@ model User {
 }
 
 model Auth {
-  userId   String @id
   user     User   @relation(fields: [userId], references: [id])
+  userId   String @id @db.Uuid
   email    String @unique
   password String
 }
 
 model Friendship {
   user      User     @relation("friendships", fields: [userId], references: [id])
-  userId    String
+  userId    String   @db.Uuid
   addedBy   User     @relation("addedBy", fields: [addedById], references: [id])
-  addedById String
+  addedById String   @db.Uuid
   createdAt DateTime @default(now())
 
   @@id(fields: [userId, addedById])
 }
 
 model Game {
-  id        String     @id @default(uuid())
+  id        String     @id @default(uuid()) @db.Uuid
   mode      GameMode   @default(PONG_2D)
   startedAt DateTime   @default(now())
   endedAt   DateTime?
   status    GameStatus @default(STARTING)
 
   playerOne      User   @relation("playerOne", fields: [playerOneId], references: [id])
-  playerOneId    String
+  playerOneId    String @db.Uuid
   playerOneScore Int    @default(0)
   playerTwo      User?  @relation("playerTwo", fields: [playerTwoId], references: [id])
-  playerTwoId    String
+  playerTwoId    String @db.Uuid
   playerTwoScore Int    @default(0)
 
   socketId String @unique
 }
 
 model Channel {
-  id          String        @id @default(uuid())
+  id          String        @id @default(uuid()) @db.Uuid
   createdAt   DateTime      @default(now())
   channelType ChannelType
   password    String?
   owner       User          @relation("owner", fields: [ownerId], references: [id])
-  ownerId     String
+  ownerId     String        @db.Uuid
   messages    Message[]
   users       ChannelUser[]
 }
 
 model ChannelUser {
-  id     String @id @default(uuid())
+  id     String @id @default(uuid()) @db.Uuid
   user   User   @relation(fields: [userId], references: [id])
-  userId String
+  userId String @db.Uuid
 
   channel   Channel @relation(fields: [channelId], references: [id])
-  channelId String
+  channelId String  @db.Uuid
 
   role Role
 
@@ -88,12 +88,12 @@ model ChannelUser {
 }
 
 model Message {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @db.Uuid
   content   String
   sender    User     @relation(fields: [senderId], references: [id])
   channel   Channel  @relation(fields: [channelId], references: [id])
-  channelId String
-  senderId  String
+  channelId String   @db.Uuid
+  senderId  String   @db.Uuid
   sentAt    DateTime @default(now())
 }
 

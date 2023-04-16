@@ -1,13 +1,6 @@
-/*
-  Warnings:
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN', 'OWNER');
 
-  - The primary key for the `User` table will be changed. If it partially fails, the table could be left without primary key constraint.
-  - You are about to drop the column `email` on the `User` table. All the data in the column will be lost.
-  - You are about to drop the column `role` on the `User` table. All the data in the column will be lost.
-  - Added the required column `last_login` to the `User` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `status` to the `User` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- CreateEnum
 CREATE TYPE "GameMode" AS ENUM ('PONG_2D', 'PONG_3D');
 
@@ -20,28 +13,22 @@ CREATE TYPE "GameStatus" AS ENUM ('STARTING', 'RUNNING', 'FINISHED');
 -- CreateEnum
 CREATE TYPE "UserStatus" AS ENUM ('ONLINE', 'OFFLINE', 'IN_GAME');
 
--- AlterEnum
-ALTER TYPE "Role" ADD VALUE 'OWNER';
+-- CreateTable
+CREATE TABLE "User" (
+    "id" UUID NOT NULL,
+    "name" TEXT,
+    "avatar" TEXT,
+    "status" "UserStatus" NOT NULL,
+    "lastLogin" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
--- DropIndex
-DROP INDEX "User_email_key";
-
--- AlterTable
-ALTER TABLE "User" DROP CONSTRAINT "User_pkey",
-DROP COLUMN "email",
-DROP COLUMN "role",
-ADD COLUMN     "avatar" TEXT,
-ADD COLUMN     "last_login" TIMESTAMP(3) NOT NULL,
-ADD COLUMN     "status" "UserStatus" NOT NULL,
-ADD COLUMN     "userId" TEXT,
-ALTER COLUMN "id" DROP DEFAULT,
-ALTER COLUMN "id" SET DATA TYPE TEXT,
-ADD CONSTRAINT "User_pkey" PRIMARY KEY ("id");
-DROP SEQUENCE "User_id_seq";
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Auth" (
-    "userId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
 
@@ -49,24 +36,25 @@ CREATE TABLE "Auth" (
 );
 
 -- CreateTable
-CREATE TABLE "Friends" (
-    "id" TEXT NOT NULL,
-    "friendsId" TEXT NOT NULL,
+CREATE TABLE "Friendship" (
+    "userId" UUID NOT NULL,
+    "addedById" UUID NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "Friends_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Friendship_pkey" PRIMARY KEY ("userId","addedById")
 );
 
 -- CreateTable
 CREATE TABLE "Game" (
-    "id" TEXT NOT NULL,
-    "mode" "GameMode" NOT NULL,
+    "id" UUID NOT NULL,
+    "mode" "GameMode" NOT NULL DEFAULT 'PONG_2D',
     "startedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "endedAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "endedAt" TIMESTAMP(3),
     "status" "GameStatus" NOT NULL DEFAULT 'STARTING',
-    "playerOneId" TEXT NOT NULL,
-    "playerOneScore" INTEGER NOT NULL,
-    "playerTwoId" TEXT NOT NULL,
-    "playerTwoScore" INTEGER NOT NULL,
+    "playerOneId" UUID NOT NULL,
+    "playerOneScore" INTEGER NOT NULL DEFAULT 0,
+    "playerTwoId" UUID NOT NULL,
+    "playerTwoScore" INTEGER NOT NULL DEFAULT 0,
     "socketId" TEXT NOT NULL,
 
     CONSTRAINT "Game_pkey" PRIMARY KEY ("id")
@@ -74,47 +62,45 @@ CREATE TABLE "Game" (
 
 -- CreateTable
 CREATE TABLE "Channel" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "channelType" "ChannelType" NOT NULL,
     "password" TEXT,
-    "ownerId" TEXT NOT NULL,
+    "ownerId" UUID NOT NULL,
 
     CONSTRAINT "Channel_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "ChannelUser" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "channelId" TEXT NOT NULL,
+    "id" UUID NOT NULL,
+    "userId" UUID NOT NULL,
+    "channelId" UUID NOT NULL,
     "role" "Role" NOT NULL,
-    "isBlocked" BOOLEAN NOT NULL,
-    "isBan" BOOLEAN NOT NULL,
-    "banUntil" TIMESTAMP(3) NOT NULL,
-    "isMute" BOOLEAN NOT NULL,
+    "isBlocked" BOOLEAN NOT NULL DEFAULT false,
+    "isBanned" BOOLEAN NOT NULL DEFAULT false,
+    "bannedUntil" TIMESTAMP(3),
+    "isMuted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "ChannelUser_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Message" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "content" TEXT NOT NULL,
-    "channelId" TEXT NOT NULL,
-    "senderId" TEXT NOT NULL,
+    "channelId" UUID NOT NULL,
+    "senderId" UUID NOT NULL,
+    "sentAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Message_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_name_key" ON "User"("name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Auth_email_key" ON "Auth"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Game_playerOneId_key" ON "Game"("playerOneId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Game_playerTwoId_key" ON "Game"("playerTwoId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Game_socketId_key" ON "Game"("socketId");
@@ -123,7 +109,10 @@ CREATE UNIQUE INDEX "Game_socketId_key" ON "Game"("socketId");
 ALTER TABLE "Auth" ADD CONSTRAINT "Auth_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Friends" ADD CONSTRAINT "Friends_friendsId_fkey" FOREIGN KEY ("friendsId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Friendship" ADD CONSTRAINT "Friendship_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Friendship" ADD CONSTRAINT "Friendship_addedById_fkey" FOREIGN KEY ("addedById") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Game" ADD CONSTRAINT "Game_playerOneId_fkey" FOREIGN KEY ("playerOneId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

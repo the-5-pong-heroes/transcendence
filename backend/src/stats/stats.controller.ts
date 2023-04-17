@@ -22,6 +22,15 @@ export class StatsController {
 export class CreationController {
   constructor(private prisma: PrismaService) {}
 
+  @Get("user")
+  async get_user() {
+    const user = await this.prisma.user.findFirst({
+      where: { name: "raoul" },
+    });
+    console.log(user);
+    return user;
+  }
+
   @Post("user")
   async create_user() {
     const user = await this.prisma.user.create({

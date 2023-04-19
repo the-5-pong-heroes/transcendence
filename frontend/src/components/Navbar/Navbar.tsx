@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { AppContext } from "../../contexts";
-import { MenuLight, MenuDark, LogoWallE, LogoWallELight } from "../../assets";
+import { LogoWallE, LogoWallELight } from "../../assets";
 import { MenuButton } from "../MenuButton";
 
 import "./Navbar.css";
@@ -62,8 +62,11 @@ export const Navbar: React.FC = () => {
   return (
     <div className="navbar" id="navbar">
       <ScrollToPage />
-      <div className="menu-icon" onClick={handleShowNavbar}>
-        <img src={theme === "light" ? MenuLight : MenuDark} className="burger" />
+      <div className={`hamburger-button ${showNavbar ? "active" : ""}`} onClick={handleShowNavbar}>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
       <Link to="/" onClick={handleScroll(homeRef)}>
         <img src={theme === "light" ? LogoWallELight : LogoWallE} className="logo-wall-e" />
@@ -77,6 +80,8 @@ export const Navbar: React.FC = () => {
               path={item.path}
               label={item.label}
               menuRef={menuRefs[item.refName]}
+              showNavbar={showNavbar}
+              handleShowNavbar={handleShowNavbar}
             />
           ))}
         </ul>

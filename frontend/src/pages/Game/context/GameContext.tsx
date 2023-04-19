@@ -10,7 +10,7 @@ interface ContextParameters {
   overlayRef: React.RefObject<GameOverlayRef> | undefined;
   playRef: React.MutableRefObject<PlayState>;
   gameMode: GameMode | undefined;
-  setGameMode: (mode: GameMode) => void;
+  setGameMode: (mode: GameMode | undefined) => void;
   localPongRef: React.MutableRefObject<Pong>;
   serverPongRef: React.MutableRefObject<ServerPong | undefined>;
   paddleSideRef: React.MutableRefObject<PaddleSide>;

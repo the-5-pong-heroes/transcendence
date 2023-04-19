@@ -21,6 +21,7 @@ export const useControlledPaddle = (): void => {
 
   const moveUp = useCallback(() => {
     if (localPongRef.current.paddleLastMove(paddleSideRef.current) !== "up") {
+      // socketRef.current?.emit(ClientEvents.UserMove, { move: 4 });
       socketRef.current?.emit(ClientEvents.UserMove, { move: "up" });
       localPongRef.current.updatePaddleVelocity(paddleSideRef.current, "up");
     }

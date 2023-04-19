@@ -40,7 +40,6 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
       <div className="wrap">
         <div className="background">
           <img src={theme === "light" ? BackgroundLight : Background} />
-          {/* <Image /> */}
         </div>
         <Parallax className="layer stars" translateX={["-200px", "10px"]}>
           <img src={Stars} />
@@ -63,7 +62,7 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
         <Parallax className="layer trash" translateX={["40%", "-20%"]}>
           <img src={Trash1} />
         </Parallax>
-        <Parallax className="layer trash" speed={130}>
+        <Parallax className="layer trash" speed={30}>
           <img src={Trash2} />
         </Parallax>
         <Parallax className="layer trash" translateX={["50%", "-20%"]}>

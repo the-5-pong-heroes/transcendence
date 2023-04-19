@@ -23,11 +23,12 @@ export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode,
 
   const handleSendEvent = (lobbyMode: LobbyMode): void => {
     setLobbyMode(lobbyMode);
+    // socketRef.current?.emit(ClientEvents.LobbyJoin, { lobbyMode: true, gameMode: 3 });
     socketRef.current?.emit(ClientEvents.LobbyJoin, { lobbyMode: lobbyMode, gameMode: gameMode });
   };
 
   return (
-    <div className="modal-lobby">
+    <div className="game-modal lobby">
       <div className="game-button-wrapper">
         <button
           className="game-button"

@@ -1,6 +1,7 @@
 import { NestFactory, HttpAdapterHost } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { PrismaClientExceptionFilter } from "./prisma-client-exception/prisma-client-exception.filter";
+import { ValidationPipe } from "@nestjs/common";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -8,6 +9,13 @@ async function bootstrap() {
     origin: ["http://localhost:5173", "http://127.0.0.1:5173", "https://api.intra.42.fr/*"],
     credentials: true,
   });
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      disableErrorMessages: true,
+      whitelist: true,
+    }),
+  );
 
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));

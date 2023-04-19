@@ -1,7 +1,7 @@
 import React from "react";
 import { Vector3 } from "three";
 
-import { PADDLE_WIDTH, GAME_HEIGHT } from "../../../pongCore/constants";
+import { PADDLE_WIDTH, GAME_HEIGHT } from "../../../pongModel/constants";
 import { BOARD_2D_Z } from "../../../constants";
 
 interface LineParameters {

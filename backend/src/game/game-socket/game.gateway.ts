@@ -7,13 +7,15 @@ import {
   MessageBody,
   ConnectedSocket,
 } from "@nestjs/websockets";
-import { Logger } from "@nestjs/common";
+import { Logger, UsePipes, ValidationPipe } from "@nestjs/common";
 import { Socket, Server } from "socket.io";
-import { UserMoveDto, LobbyJoinDto } from "./dto";
+import { UserMoveDto, LobbyJoinDto, GameViewDto } from "./dto";
 import { GameLobbyService } from "./game-lobby.service";
 import { AuthenticatedSocket, ClientEvents, SocketExceptions } from "./@types";
 import { ServerException } from "./server.exception";
+import { WsValidationPipe } from "./ws.validation-pipe";
 
+@UsePipes(ValidationPipe)
 @WebSocketGateway({
   cors: {
     origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
@@ -36,7 +38,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   async handleDisconnect(client: AuthenticatedSocket) {
-    // console.log(`[Client disconnected: ${client.id}]`);
+    console.log(`[Client disconnected: ${client.id}]`);
     this.lobbyManager.terminateSocket(client);
   }
 
@@ -47,7 +49,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   @SubscribeMessage(ClientEvents.LobbyLeave)
   onLobbyLeave(@ConnectedSocket() client: AuthenticatedSocket) {
-    client.data.lobby?.removeClient(client);
+    this.lobbyManager.terminateSocket(client);
   }
 
   @SubscribeMessage(ClientEvents.GamePause)
@@ -58,11 +60,17 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     client.data.lobby.gameLoop.pause();
   }
 
+  @UsePipes(new WsValidationPipe())
   @SubscribeMessage(ClientEvents.UserMove)
-  onUserMove(@ConnectedSocket() client: AuthenticatedSocket, @MessageBody() userMove: UserMoveDto) {
+  onUserMove(@ConnectedSocket() client: AuthenticatedSocket, @MessageBody() data: UserMoveDto) {
     if (!client.data.lobby) {
       throw new ServerException(SocketExceptions.LobbyError, "You're not in a lobby");
     }
-    client.data.lobby.gameLoop.userMove(client, userMove.move);
+    client.data.lobby.gameLoop.userMove(client, data.move);
+  }
+
+  @SubscribeMessage(ClientEvents.GameView)
+  onViewGame(@ConnectedSocket() client: AuthenticatedSocket, @MessageBody() data: GameViewDto) {
+    this.lobbyManager.viewGame(data.lobbyId, client);
   }
 }

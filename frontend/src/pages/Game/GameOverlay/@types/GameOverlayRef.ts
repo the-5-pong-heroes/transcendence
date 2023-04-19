@@ -4,4 +4,5 @@ export interface GameOverlayRef {
   showLoader: (value: boolean) => void;
   showCountdown: () => void;
   setResult: (result: GameResult) => void;
+  quitGame: () => boolean;
 }

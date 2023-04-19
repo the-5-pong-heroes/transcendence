@@ -4,7 +4,7 @@ import type { GameMode, LobbyMode, GameResult } from "../@types";
 import { GameContext } from "../context/GameContext";
 
 import type { GameOverlayRef } from "./@types";
-import { Loader, LobbyModeButton, Result, Countdown } from "./components";
+import { Loader, LobbyModeButton, Result, Countdown, QuitButton } from "./components";
 
 import "./GameOverlay.css";
 
@@ -29,6 +29,8 @@ const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef> = () => {
   };
 
   const [loader, setLoader] = useState<boolean>(false);
+  const [quitGame, setQuitGame] = useState<boolean>(false);
+  const [quitButton, setQuitButton] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number>(0);
   const [gameResult, setGameResult] = useState<GameResult | undefined>(undefined);
   const [lobbyMode, setLobbyMode] = useState<LobbyMode | undefined>(undefined);
@@ -43,6 +45,11 @@ const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef> = () => {
     setResult: (result: GameResult) => {
       setGameResult(result);
     },
+    quitGame: (): boolean => {
+      setQuitButton(true);
+
+      return quitGame;
+    },
   }));
 
   if (!gameMode) {
@@ -55,6 +62,7 @@ const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef> = () => {
       {countdown > 0 && <Countdown countdown={countdown} setCountdown={setCountdown} />}
       <LobbyModeButton gameMode={gameMode} lobbyMode={lobbyMode} setLobbyMode={setLobbyMode} />
       <Result result={gameResult} setResult={setGameResult} setLobbyMode={setLobbyMode} setGameMode={setGameMode} />
+      {quitButton && <QuitButton setQuitButton={setQuitButton} setQuitGame={setQuitGame} setLobbyMode={setLobbyMode} />}
     </div>
   );
 };

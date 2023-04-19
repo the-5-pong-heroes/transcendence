@@ -4,7 +4,7 @@ import { OrbitControls } from "@react-three/drei";
 
 import "./Pong3D.css";
 
-import { GAME_DEPTH, GAME_HEIGHT, GAME_WIDTH } from "../pongCore/constants";
+import { GAME_DEPTH, GAME_HEIGHT, GAME_WIDTH } from "../pongModel/constants";
 import type { GameMode } from "../@types";
 import { CAMERA_3D_Z } from "../constants";
 import { useGameLoop, useScoreLabel, useGameEvents } from "../hooks";
@@ -49,7 +49,7 @@ const PongGame: React.FC = () => {
       <Paddle paddleRef={paddleRightRef} initialPos={INITIAL_PONG_STATE.paddleRight.pos} />
       {/* <ParticleSystem particlesRef={particlesRef} initialPos={INITIAL_PONG_STATE.ball.pos} /> */}
       <OrbitControls />
-      <axesHelper args={[GAME_WIDTH]} />
+      {/* <axesHelper args={[GAME_WIDTH]} /> */}
     </>
   );
 };

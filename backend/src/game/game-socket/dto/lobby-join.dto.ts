@@ -1,11 +1,19 @@
-import { IsString, IsNotEmpty } from "class-validator";
+import { IsString, IsNotEmpty, MaxLength } from "class-validator";
 import { LobbyMode, GameMode } from "../@types";
 
 export class LobbyJoinDto {
   @IsString()
   @IsNotEmpty()
-  lobbyMode: LobbyMode = "solo";
+  @MaxLength(4)
+  lobbyMode: LobbyMode;
+
   @IsString()
   @IsNotEmpty()
-  gameMode: GameMode = "2D";
+  @MaxLength(2)
+  gameMode: GameMode;
+
+  constructor(lobbyMode: LobbyMode, gameMode: GameMode) {
+    this.lobbyMode = lobbyMode;
+    this.gameMode = gameMode;
+  }
 }

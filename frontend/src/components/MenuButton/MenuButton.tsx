@@ -6,10 +6,17 @@ interface ButtonProps {
   path: string;
   label: string;
   menuRef: React.RefObject<HTMLDivElement>;
+  showNavbar: boolean;
+  handleShowNavbar: () => void;
 }
 
-const _MenuButton: React.FC<ButtonProps> = ({ icon, path, label, menuRef }) => {
-  const onClick = (): void => menuRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+const _MenuButton: React.FC<ButtonProps> = ({ icon, path, label, menuRef, showNavbar, handleShowNavbar }) => {
+  const onClick = (): void => {
+    menuRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    if (showNavbar) {
+      handleShowNavbar();
+    }
+  };
 
   return (
     <li className="nav-item">

@@ -13,7 +13,7 @@ interface ContextParameters {
   overlayRef: React.RefObject<GameOverlayRef> | undefined;
   playRef: React.MutableRefObject<PlayState>;
   gameMode: GameMode | undefined;
-  setGameMode: (mode: GameMode) => void;
+  setGameMode: (mode: GameMode | undefined) => void;
   localPongRef: React.MutableRefObject<Pong>;
   serverPongRef: React.MutableRefObject<ServerPong | undefined>;
   paddleSideRef: React.MutableRefObject<PaddleSide>;
@@ -26,8 +26,8 @@ interface ProviderParameters {
 export const GameProvider: React.FC<ProviderParameters> = ({ children }) => {
   const overlayRef = useRef<GameOverlayRef>(null);
   const { height, width } = useGameSize();
-  const { playRef } = usePause();
-  const [gameMode, setGameMode] = useState<GameMode | undefined>();
+  const { playRef } = usePause({ overlayRef });
+  const [gameMode, setGameMode] = useState<GameMode | undefined>(undefined);
   const paddleSideRef = useRef<PaddleSide>("right");
   const localPongRef = useRef<Pong>(new Pong());
   const serverPongRef = useRef<ServerPong>();

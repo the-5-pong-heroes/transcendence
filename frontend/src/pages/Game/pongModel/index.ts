@@ -1,0 +1,1 @@
+export { PongModel } from "./pong";

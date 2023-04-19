@@ -15,6 +15,15 @@ interface GameProps {
 export const Game: React.FC<GameProps> = ({ gameRef }) => {
   const { height, width } = useGameSize();
   const gameStyle: React.CSSProperties = { width, height };
+  // const mounted = useRef<boolean>(false);
+
+  // useEffect(() => {
+  //   mounted.current = true;
+
+  //   return () => {
+  //     mounted.current = false;
+  //   };
+  // }, []);
 
   return (
     <div ref={gameRef} id="Game" className="game-container">

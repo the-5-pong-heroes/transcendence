@@ -9,6 +9,8 @@ import { Game } from "@prisma/client";
 export class Lobby {
   public readonly id: string = uuid4();
 
+  public readonly createdAt: Date = new Date();
+
   public readonly clients: Map<AuthenticatedSocket["id"], AuthenticatedSocket> = new Map<
     Socket["id"],
     AuthenticatedSocket
@@ -89,6 +91,12 @@ export class Lobby {
         this.server.to(clientId).emit(ServerEvents.GameEnd, "Loser");
       }
     }
+  }
+
+  public viewGame(client: AuthenticatedSocket): void {
+    this.clients.set(client.id, client);
+    client.join(this.id);
+    client.data.lobby = this;
   }
 
   public dispatchLobbyState(): void {

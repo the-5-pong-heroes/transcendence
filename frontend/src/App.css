@@ -1,6 +1,8 @@
 :root {
   --global-background-color-light: hsl(0, 3%, 93%);
   --global-background-color-dark: hsl(220, 11%, 16%);
+  --global-game-gradient-dark: linear-gradient(45deg, hsl(311, 33%, 10%), hsl(253, 32%, 14%), hsl(296, 32%, 9%));
+  --global-game-gradient-light: linear-gradient(45deg, hsl(60, 100%, 98%), hsl(202, 100%, 95%),rgb(184, 203, 248));
 }
 
 .App {

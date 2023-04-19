@@ -1,8 +1,13 @@
-import { IsString, IsNotEmpty } from "class-validator";
+import { IsString, IsNotEmpty, MaxLength } from "class-validator";
 import { PaddleMove } from "../@types";
 
 export class UserMoveDto {
   @IsString()
   @IsNotEmpty()
-  move: PaddleMove = "stop";
+  @MaxLength(4)
+  move: PaddleMove;
+
+  constructor(move: PaddleMove) {
+    this.move = move;
+  }
 }

@@ -12,6 +12,7 @@ interface ContextParameters {
   boardRef: React.RefObject<HTMLDivElement>;
   chatRef: React.RefObject<HTMLDivElement>;
   profileRef: React.RefObject<HTMLDivElement>;
+  gameIsRunning: React.RefObject<boolean>;
 }
 
 interface ProviderParameters {
@@ -19,7 +20,7 @@ interface ProviderParameters {
 }
 
 export const AppProvider: React.FC<ProviderParameters> = ({ children }) => {
-  const [theme, setTheme] = useState<ThemeMode>("light");
+  const [theme, setTheme] = useState<ThemeMode>("dark");
 
   const toggleTheme = (): void => {
     setTheme((curr) => (curr === "light" ? "dark" : "light"));
@@ -31,8 +32,10 @@ export const AppProvider: React.FC<ProviderParameters> = ({ children }) => {
   const chatRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
 
+  const gameIsRunning = useRef<boolean>(false);
+
   const appContext = useMemo(
-    (): ContextParameters => ({ theme, toggleTheme, homeRef, gameRef, boardRef, chatRef, profileRef }),
+    (): ContextParameters => ({ theme, toggleTheme, homeRef, gameRef, boardRef, chatRef, profileRef, gameIsRunning }),
     [theme]
   );
 

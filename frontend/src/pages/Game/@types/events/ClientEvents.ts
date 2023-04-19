@@ -4,6 +4,7 @@ export const ClientEvents = {
   GameUpdate: "client.game.update",
   GamePause: "client.game.pause",
   LobbyLeave: "client.lobby.leave",
+  GameView: "client.game.view",
 } as const;
 
 export type TClientEvents = (typeof ClientEvents)[keyof typeof ClientEvents];

@@ -11,6 +11,7 @@
   animation: fadeInAnimation ease 500ms;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
+  border: none;
 }
 
 @keyframes fadeInAnimation {
@@ -26,28 +27,55 @@
   margin-top: 7vh;
 }
 
+.game-modal {
+  z-index: 2;
+  height: 150px;
+  width: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  border: 1px solid #5e5e5e;
+  transition: 0.5s ease-out;
+  box-shadow: 0px 0px 22px 0px rgba(118, 118, 118, 0.75);
+  background: var(--global-game-gradient-dark); 
+}
+
+#light .game-modal {
+  background: var(--global-game-gradient-light);
+  border: 1px solid #252525;
+}
+
 .game-button-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: white;
+}
+
+#light .game-button {
+  color: black;
 }
 
 .game-button {
   height: 45px;
   width: 180px;
   font-size: 0.9em;
-  border: none;
   outline: none;
   cursor: pointer;
   z-index: 2;
   border-radius: 100rem;
-  margin: 30px;
+  margin: 20px;
   color: white;
   background: transparent;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Open Sans", sans-serif;
   border: 1px solid hsla(0, 0%, 100%, 0.4);
 }
 
+#light .game-button {
+  color: black;
+  border: 1px solid hsla(0, 0%, 0%, 0.4);
+}
 
 .game-button:hover,
 .game-button:focus {
@@ -56,23 +84,29 @@
 }
 
 @media (max-width: 680px) {
-  /* .game {
-    margin-left: 5vw;
-  } */
+  .game-modal {
+    height: 150px;
+    width: 480px;
+  }
 
   .game-button {
     font-size: 0.6em;
     height: 30px;
     width: 110px;
-    margin: 20px;
+    margin: 10px 15px;
   }
 }
 
-@media (max-height: 400px) {
+@media (max-width: 350px), (max-height: 440px) {
+  .game-modal {
+    height: 40%;
+    width: 75%;
+  }
+
   .game-button {
-    font-size: 0.6em;
-    height: 25px;
-    width: 100px;
-    margin: 10px;
+    font-size: 0.5em;
+    height: 20px;
+    width: 75px;
+    margin: 5px 10px;
   }
 }

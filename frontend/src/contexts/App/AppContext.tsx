@@ -10,6 +10,7 @@ interface ContextParameters {
   boardRef: React.RefObject<HTMLDivElement>;
   chatRef: React.RefObject<HTMLDivElement>;
   profileRef: React.RefObject<HTMLDivElement>;
+  gameIsRunning: React.RefObject<boolean>;
 }
 
 export const AppContext = React.createContext<ContextParameters | undefined>(undefined);

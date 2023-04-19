@@ -1,7 +1,7 @@
 import React from "react";
 import { Vector3 } from "three";
 
-import { GAME_WIDTH, GAME_HEIGHT, GAME_DEPTH } from "../../../pongCore/constants";
+import { GAME_WIDTH, GAME_HEIGHT, GAME_DEPTH } from "../../../pongModel/constants";
 import { BOARD_2D_Z } from "../../../constants";
 
 export const Board: React.FC = () => {

@@ -16,7 +16,7 @@ export const Result: React.FC<ResultProps> = ({ result, setResult, setLobbyMode,
   }
 
   return (
-    <div className="modal-result">
+    <div className="game-modal result-modal">
       <div>
         {result === "Winner" && (
           <>
@@ -30,7 +30,7 @@ export const Result: React.FC<ResultProps> = ({ result, setResult, setLobbyMode,
         )}
         <div className="button-wrapper">
           <button
-            className="button-result"
+            className="game-button result-button"
             onClick={() => {
               setLobbyMode(undefined);
               setResult(undefined);
@@ -38,7 +38,7 @@ export const Result: React.FC<ResultProps> = ({ result, setResult, setLobbyMode,
             PLAY AGAIN
           </button>
           <button
-            className="button-result"
+            className="game-button result-button"
             onClick={() => {
               setResult(undefined);
               setLobbyMode(undefined);

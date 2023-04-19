@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import "./PongMenu.css";
 
 import type { GameMode } from "../@types";
-import { GameContext } from "../context/GameContext";
+import { GameContext } from "../context";
 
 import { GameModeButton } from "./components";
 

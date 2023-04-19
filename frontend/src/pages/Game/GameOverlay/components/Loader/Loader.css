@@ -1,16 +1,8 @@
-.modal-loader {
+.loader-modal {
   height: 18vw;
   width: 42vw;
-  background: linear-gradient(127deg, hsl(155, 35%, 10%), hsl(248, 34%, 13%), hsl(315, 38%, 10%));
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 1rem;
-  border: 1px solid #5e5e5e;
-  transition: 0.5s ease-out;
-  box-shadow: 0px 0px 22px 0px rgba(167, 167, 168, 0.75);
 }
+
 .loader-wrapper {
   position: absolute;
   display: flex;
@@ -23,7 +15,6 @@
 .text {
   margin: 1vw;
   font-size: 1.5vw;
-  color: white;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Open Sans", sans-serif;
 }
 
@@ -65,6 +56,11 @@
   animation: rotation 1s linear infinite;
   margin: 1vw;
 }
+
+#light .loader {
+  border-top: 0.3vw solid #350350;
+}
+
 .loader::after {
   content: "";
   box-sizing: border-box;
@@ -78,11 +74,46 @@
   border-bottom: 0.3vw solid transparent;
   animation: rotation 0.5s linear infinite reverse;
 }
+
+#light .loader::after {
+  border-left: 0.3vw solid rgb(208, 173, 251);
+}
+
 @keyframes rotation {
   0% {
     transform: rotate(0deg);
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@media (max-height: 400px) {
+  .game-modal {
+    height: 40%;
+    width: 50%;
+  }
+
+  .loader {
+    width: 4vh;
+    height: 4vh;
+    border-top: 0.3vh solid #fff;
+    border-right: 0.3vh solid transparent;
+    margin: 1vh;
+  }
+  
+  #light .loader {
+    border-top: 0.3vh solid #350350;
+  }
+  
+  .loader::after {
+    width: 4vh;
+    height: 4vh;
+    border-left: 0.3vh solid rgb(152, 71, 251);
+    border-bottom: 0.3vh solid transparent;
+  }
+  
+  #light .loader::after {
+    border-left: 0.3vh solid rgb(208, 173, 251);
   }
 }

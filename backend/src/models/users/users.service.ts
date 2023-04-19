@@ -13,15 +13,15 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(uuid: string) {
+    return `This action returns a #${uuid} user`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  update(uuid: string, updateUserDto: UpdateUserDto) {
+    return `This action updates a #${uuid} user`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(uuid: string) {
+    return `This action removes a #${uuid} user`;
   }
 }

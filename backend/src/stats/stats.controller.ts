@@ -6,7 +6,7 @@ import { PrismaService } from "src/database/prisma.service";
 export class StatsController {
   constructor(private statsService: StatsService) {}
 
-  @Post("world")
+  @Get("world")
   helloworld() {
     /*
     We'll need:

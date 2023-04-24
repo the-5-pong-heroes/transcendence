@@ -13,6 +13,8 @@ import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { ListAllEntities } from "./dto/list-all-entities.dto";
+import { User } from "@prisma/client";
+import { CurrentUser } from "./current-user.decorator";
 
 @Controller("users")
 export class UsersController {
@@ -30,20 +32,27 @@ export class UsersController {
   }
 
   @Get(":uuid")
-  findOne(@Param("uuid", ParseUUIDPipe) uuid: string) {
-    return this.usersService.findOne(uuid);
+  findOne(
+    @CurrentUser() user: User,
+    @Param("uuid", ParseUUIDPipe) uuid: string,
+  ) {
+    return this.usersService.findOne(user, uuid);
   }
 
   @Patch(":uuid")
   update(
+    @CurrentUser() user: User,
     @Param("uuid", ParseUUIDPipe) uuid: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return this.usersService.update(uuid, updateUserDto);
+    return this.usersService.update(user, uuid, updateUserDto);
   }
 
   @Delete(":uuid")
-  remove(@Param("uuid", ParseUUIDPipe) uuid: string) {
-    return this.usersService.remove(uuid);
+  remove(
+    @CurrentUser() user: User,
+    @Param("uuid", ParseUUIDPipe) uuid: string,
+  ) {
+    return this.usersService.remove(user, uuid);
   }
 }

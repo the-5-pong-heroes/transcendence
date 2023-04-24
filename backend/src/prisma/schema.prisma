@@ -115,7 +115,7 @@ enum ChannelType {
 }
 
 enum GameStatus {
-  STARTING
+  WAITING
   RUNNING
   FINISHED
 }

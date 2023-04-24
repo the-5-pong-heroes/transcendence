@@ -6,13 +6,8 @@ import { PrismaService } from "src/database/prisma.service";
 export class StatsController {
   constructor(private statsService: StatsService) {}
 
-  @Get("points")
-  orderByPoints() {
-    return this.statsService.orderByPoints();
-  }
-
-  @Get("games")
-  orderByResults() {
-    return this.statsService.orderByResults();
+  @Get()
+  getUserData() {
+    return this.statsService.getUserData();
   }
 }

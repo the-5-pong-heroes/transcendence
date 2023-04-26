@@ -56,7 +56,7 @@ export class StatsService {
     return LEVELS[level_number];
   }
 
-  async getUserData() {
+  async getStatsData() {
     const games = await this.getGames();
     let users: UserData = {};
     // initialization
@@ -114,5 +114,18 @@ export class StatsService {
         return { id: id, ...users[id] };
       })
       .sort((userA, userB): number => userB.score - userA.score);
+  }
+
+  async getUserData() {
+    return "mon profil mon choix";
+    // avatar: string;
+    // name: string;
+    // score: number;
+    // wins: number;
+    // defeats: number;
+    // level: string;
+    // status: string;
+    //liste d'amis
+    //log out 
   }
 }

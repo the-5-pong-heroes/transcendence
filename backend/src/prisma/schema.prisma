@@ -48,7 +48,7 @@ model Game {
   mode      GameMode   @default(PONG_2D)
   startedAt DateTime   @default(now())
   endedAt   DateTime?
-  status    GameStatus @default(STARTING)
+  status    GameStatus @default(WAITING)
 
   playerOne      User   @relation("playerOne", fields: [playerOneId], references: [id])
   playerOneId    String @db.Uuid

@@ -23,7 +23,7 @@ export class AppController {
       },
       {
         id: "205c401b-b6da-4d17-b93d-eb8db5635f11",
-        name: "205c401b-b6da-4d17-b93d-eb8db5635f11",
+        name: "jack",
         score: 15,
         wins: 3,
         defeats: 2,
@@ -31,7 +31,7 @@ export class AppController {
       },
       {
         id: "2a80ccb2-763f-4539-8457-4af9f488c258",
-        name: "2a80ccb2-763f-4539-8457-4af9f488c258",
+        name: "bob",
         score: 12,
         wins: 2,
         defeats: 3,

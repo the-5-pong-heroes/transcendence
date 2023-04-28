@@ -1,22 +1,40 @@
-import { BALL_OFFSET_RATIO, GAME_WIDTH, GAME_HEIGHT, MIN_ROT_FACTOR, MAX_ROT_FACTOR } from "../constants";
+import {
+  BALL_OFFSET_RATIO,
+  GAME_WIDTH,
+  GAME_HEIGHT,
+  MIN_ROT_FACTOR,
+  MAX_ROT_FACTOR,
+} from "../constants";
 import { type Ball } from "../ball";
 import { type Paddle } from "../paddle";
 
 const OFFSET_SIDE_WALL = 50;
 
-export const reachedRightPaddle = (ball: Ball, paddle: Paddle<"right">): boolean => {
+export const reachedRightPaddle = (
+  ball: Ball,
+  paddle: Paddle<"right">,
+): boolean => {
   return (
-    ball.posX + ball.radius * BALL_OFFSET_RATIO >= paddle.posX - paddle.width / 2 &&
-    ball.posY + ball.radius * BALL_OFFSET_RATIO >= paddle.posY - paddle.height / 2 &&
-    ball.posY - ball.radius * BALL_OFFSET_RATIO <= paddle.posY + paddle.height / 2
+    ball.posX + ball.radius * BALL_OFFSET_RATIO >=
+      paddle.posX - paddle.width / 2 &&
+    ball.posY + ball.radius * BALL_OFFSET_RATIO >=
+      paddle.posY - paddle.height / 2 &&
+    ball.posY - ball.radius * BALL_OFFSET_RATIO <=
+      paddle.posY + paddle.height / 2
   );
 };
 
-export const reachedLeftPaddle = (ball: Ball, paddle: Paddle<"left">): boolean => {
+export const reachedLeftPaddle = (
+  ball: Ball,
+  paddle: Paddle<"left">,
+): boolean => {
   return (
-    ball.posX - ball.radius * BALL_OFFSET_RATIO <= paddle.posX + paddle.width / 2 &&
-    ball.posY + ball.radius * BALL_OFFSET_RATIO >= paddle.posY - paddle.height / 2 &&
-    ball.posY - ball.radius * BALL_OFFSET_RATIO <= paddle.posY + paddle.height / 2
+    ball.posX - ball.radius * BALL_OFFSET_RATIO <=
+      paddle.posX + paddle.width / 2 &&
+    ball.posY + ball.radius * BALL_OFFSET_RATIO >=
+      paddle.posY - paddle.height / 2 &&
+    ball.posY - ball.radius * BALL_OFFSET_RATIO <=
+      paddle.posY + paddle.height / 2
   );
 };
 

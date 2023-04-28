@@ -47,7 +47,7 @@ export class Paddle<Side extends PaddleSide> {
   private clampPosition(gameHeight: number): void {
     this.posY = Math.max(
       -gameHeight / 2 + this.height / 2 + 1,
-      Math.min(gameHeight / 2 - this.height / 2 - 1, this.posY)
+      Math.min(gameHeight / 2 - this.height / 2 - 1, this.posY),
     );
   }
 
@@ -104,6 +104,10 @@ export class Paddle<Side extends PaddleSide> {
     this.posX = lerp({ value1: this.posX, value2: other.pos.x, t: factor });
     this.posY = lerp({ value1: this.posY, value2: other.pos.y, t: factor });
     this.posZ = lerp({ value1: this.posZ, value2: other.pos.z, t: factor });
-    this.velocity = lerp({ value1: this.velocity, value2: other.velocity, t: factor });
+    this.velocity = lerp({
+      value1: this.velocity,
+      value2: other.velocity,
+      t: factor,
+    });
   }
 }

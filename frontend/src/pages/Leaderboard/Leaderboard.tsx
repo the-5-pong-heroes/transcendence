@@ -11,7 +11,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
 
   const fetchUsers = async () => {
     try {
-      const resp = await fetch("http://localhost:3000/test");
+      const resp = await fetch("http://localhost:3000/leaderboard");
       const data = await resp.json();
       if (data.length > 0) {
         setUSers(data);

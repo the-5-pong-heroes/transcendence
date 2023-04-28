@@ -53,17 +53,17 @@ export class Lobby {
     this.dispatchLobbyState();
   }
 
-  private async initGame(): Promise<Game> {
-    const newGame = await this.gameService.create({
-      socketId: this.id,
-      finished: false,
-      playerOneId: "test",
-      playerTwoId: "test2",
-      playerOneScore: 0,
-      playerTwoScore: 0,
-    });
-    return newGame;
-  }
+  // private async initGame(): Promise<Game> {
+  //   const newGame = await this.gameService.create({
+  //     socketId: this.id,
+  //     finished: false,
+  //     playerOneId: "test",
+  //     playerTwoId: "test2",
+  //     playerOneScore: 0,
+  //     playerTwoScore: 0,
+  //   });
+  //   return newGame;
+  // }
 
   public removeClient(client: AuthenticatedSocket): void {
     this.clients.delete(client.id);
@@ -73,13 +73,13 @@ export class Lobby {
     this.gameLoop.stop();
   }
 
-  private async terminateGame(): Promise<Game | null> {
-    return await this.gameService.update(this.id, {
-      finished: true,
-      playerOneScore: this.gameLoop.score.player1,
-      playerTwoScore: this.gameLoop.score.player2,
-    });
-  }
+  // private async terminateGame(): Promise<Game | null> {
+  //   return await this.gameService.update(this.id, {
+  //     finished: true,
+  //     playerOneScore: this.gameLoop.score.player1,
+  //     playerTwoScore: this.gameLoop.score.player2,
+  //   });
+  // }
 
   public endGame(winner: PaddleSide): void {
     // Database update Game

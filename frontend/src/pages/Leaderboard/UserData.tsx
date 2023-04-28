@@ -1,4 +1,4 @@
-const UserData = ({users}) => {
+const UserData = ({users}: any) => {
   return (
     <>
       {

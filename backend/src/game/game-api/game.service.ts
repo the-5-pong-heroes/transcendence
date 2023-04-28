@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
-import { Game } from "@prisma/client";
+import { Game, GameStatus } from "@prisma/client";
 import { CreateGameDto, UpdateGameDto } from "./dto";
 
 @Injectable()
@@ -10,12 +10,16 @@ export class GameService {
   /***   CRUD operations   ***/
 
   /* Create new match */
-  async create(createGameDto: CreateGameDto): Promise<Game> {
+  async create(): Promise<Game> {
+    // createGameDto: CreateGameDto
     const game = this.prisma.game.create({
       data: {
-        socketId: createGameDto.socketId,
-        playerOneId: createGameDto.playerOneId,
-        playerTwoId: createGameDto.playerTwoId,
+        socketId: "test",
+        playerOneId: "test",
+        playerTwoId: "test",
+        // socketId: createGameDto.socketId,
+        // playerOneId: createGameDto.playerOneId,
+        // playerTwoId: createGameDto.playerTwoId,
       },
     });
     return game;
@@ -25,7 +29,7 @@ export class GameService {
   async findAll(): Promise<Game[]> {
     const games = await this.prisma.game.findMany({
       where: {
-        finished: true,
+        status: GameStatus.FINISHED,
       },
     });
     return games;
@@ -40,15 +44,16 @@ export class GameService {
   }
 
   /* Update a game */
-  async update(id: string, updateGameDto: UpdateGameDto): Promise<Game | null> {
-    const game = await this.prisma.game.update({
-      where: { id: id },
-      data: {
-        ...updateGameDto,
-      },
-      include: {},
-    });
-    return game;
+  async update(): Promise<Game | null> {
+    /* id: string, updateGameDto: UpdateGameDto */
+    // const game = await this.prisma.game.update({
+    //   where: { id: id },
+    //   data: {
+    //     ...updateGameDto,
+    //   },
+    //   include: {},
+    // });
+    return null;
   }
 
   /* Remove one match */

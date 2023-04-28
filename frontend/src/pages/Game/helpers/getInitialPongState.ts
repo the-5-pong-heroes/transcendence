@@ -11,7 +11,7 @@ import {
   PADDLE_HEIGHT,
   PADDLE_WIDTH,
   PADDLE_VELOCITY,
-} from "../pongModel/constants";
+} from "../pongCore/constants";
 import type { PongState } from "../@types/states";
 
 export const getInitialPongState = (): PongState => ({

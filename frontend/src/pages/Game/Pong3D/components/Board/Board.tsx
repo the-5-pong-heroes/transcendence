@@ -3,7 +3,7 @@ import { TextureLoader, Vector3 } from "three";
 import { useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 
-import { GAME_WIDTH, GAME_HEIGHT, PADDLE_DEPTH } from "../../../pongModel/constants";
+import { GAME_WIDTH, GAME_HEIGHT, PADDLE_DEPTH } from "../../../pongCore/constants";
 import { BOARD_3D_Z } from "../../../constants";
 
 // export const Board: React.FC = () => {

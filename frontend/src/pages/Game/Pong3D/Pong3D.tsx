@@ -4,7 +4,7 @@ import { OrbitControls } from "@react-three/drei";
 
 import "./Pong3D.css";
 
-import { GAME_DEPTH, GAME_HEIGHT, GAME_WIDTH } from "../pongModel/constants";
+import { GAME_DEPTH, GAME_HEIGHT, GAME_WIDTH } from "../pongCore/constants";
 import type { GameMode } from "../@types";
 import { CAMERA_3D_Z } from "../constants";
 import { useGameLoop, useScoreLabel, useGameEvents } from "../hooks";

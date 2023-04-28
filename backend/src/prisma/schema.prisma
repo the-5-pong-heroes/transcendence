@@ -1,36 +1,99 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("POSTGRES_URL")
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x", "linux-musl"]
 }
 
 model User {
-  id          String        @id @default(uuid())
-  name        String?
-  avatar      String?
-  status      UserStatus
-  last_login  DateTime
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  playerOne   Game?         @relation("playerOne")
-  playerTwo   Game?         @relation("playerTwo")
+  id            String        @id @default(uuid())
+  name          String?       @unique
+  avatar        String?
+  status        UserStatus
+  lastLogin     DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  ownedChannels Channel[]     @relation("owner")
+  gamesOne      Game[]        @relation("playerOne")
+  gamesTwo      Game[]        @relation("playerTwo")
+  messages      Message[]
+  friendships   Friendship[]  @relation("friendships")
+  addedBy       Friendship[]  @relation("addedBy")
+  channelUsers  ChannelUser[]
+  auth          Auth?
+}
+
+model Auth {
+  userId   String @id
+  user     User   @relation(fields: [userId], references: [id])
+  email    String @unique
+  password String
+}
+
+model Friendship {
+  user      User     @relation("friendships", fields: [userId], references: [id])
+  userId    String
+  addedBy   User     @relation("addedBy", fields: [addedById], references: [id])
+  addedById String
+  createdAt DateTime @default(now())
+
+  @@id(fields: [userId, addedById])
 }
 
 model Game {
-  id              String      @id @default(uuid())
-  startedAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  finished        Boolean     @default(false)
-  playerOne       User?       @relation("playerOne", fields: [playerOneId], references: [id])
-  playerOneId     String?     @unique
-  playerOneScore  Int         @default(0)
-  playerTwo       User?       @relation("playerTwo", fields: [playerTwoId], references: [id])
-  playerTwoId     String?     @unique
-  playerTwoScore  Int         @default(0)
-  socketId        String      @unique
+  id        String     @id @default(uuid())
+  startedAt DateTime   @default(now())
+  endedAt   DateTime?
+  status    GameStatus @default(STARTING)
+
+  playerOne      User   @relation("playerOne", fields: [playerOneId], references: [id])
+  playerOneId    String
+  playerOneScore Int    @default(0)
+  playerTwo      User?  @relation("playerTwo", fields: [playerTwoId], references: [id])
+  playerTwoId    String
+  playerTwoScore Int    @default(0)
+
+  socketId String
+}
+
+model Channel {
+  id          String        @id @default(uuid())
+  createdAt   DateTime      @default(now())
+  channelType ChannelType
+  password    String?
+  owner       User          @relation("owner", fields: [ownerId], references: [id])
+  ownerId     String
+  messages    Message[]
+  users       ChannelUser[]
+}
+
+model ChannelUser {
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  channel   Channel @relation(fields: [channelId], references: [id])
+  channelId String
+
+  role Role
+
+  isBlocked   Boolean   @default(false)
+  isBanned    Boolean   @default(false)
+  bannedUntil DateTime?
+  isMuted     Boolean   @default(false)
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  sender    User     @relation(fields: [senderId], references: [id])
+  channel   Channel  @relation(fields: [channelId], references: [id])
+  channelId String
+  senderId  String
+  sentAt    DateTime @default(now())
 }
 
 enum Role {
@@ -39,10 +102,21 @@ enum Role {
   OWNER
 }
 
+enum GameMode {
+  PONG_2D
+  PONG_3D
+}
+
 enum ChannelType {
   PRIVATE
   PUBLIC
   PROTECTED
+}
+
+enum GameStatus {
+  STARTING
+  RUNNING
+  FINISHED
 }
 
 enum UserStatus {

@@ -14,6 +14,15 @@ export default defineConfig({
       assets: path.resolve(__dirname, "./src/assets"),
       contexts: path.resolve(__dirname, "./src/contexts"),
       types: `${path.resolve(__dirname, "./src/@types")}`,
-    }, 
-  }
+    },
+  },
+  server: {
+    watch: {
+      // file system watcher options
+      usePolling: true,
+    },
+    host: true, // listens on all addresses and not only localhost
+    strictPort: true, // exits when the port is not available
+    port: parseInt(process.env.FRONTEND_PORT),
+  },
 });

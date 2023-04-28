@@ -1,4 +1,4 @@
-import { type PongState } from "../pongModel/@types";
+import { type PongState } from "../pongCore/@types";
 
 export type ServerPong = {
   pong: PongState;

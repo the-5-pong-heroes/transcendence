@@ -6,14 +6,17 @@ USER node
 
 WORKDIR /app
 
-COPY --chown=node:node package*.json yarn.lock ./
+COPY --chown=node:node ./shared ./shared
 
-COPY --chown=node:node ./src/prisma ./prisma
+COPY --chown=node:node ./backend/package*.json ./backend/yarn.lock ./backend/
 
-# we could add --prod to avoid installing packages listed in devDependencies
-RUN yarn install --frozen-lockfile --non-interactive
+WORKDIR /app/backend
 
-COPY --chown=node:node . .
+RUN yarn install --frozen-lockfile --production --non-interactive
+
+COPY --chown=node:node ./backend ./
+
+RUN yarn prisma generate --schema ./src/prisma/schema.prisma
 
 RUN chown node:node ./entrypoint.sh
 
@@ -21,6 +24,6 @@ RUN yarn && yarn run build
 
 EXPOSE ${NESTJS_PORT}
 
-RUN chown node:node ./dist /app/dist
+RUN chown node:node ./dist
 
 ENTRYPOINT ["bash", "./entrypoint.sh"]

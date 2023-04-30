@@ -21,10 +21,9 @@ services:
         image: "transcendence_backend"
         container_name: "backend"
         build:
-            context: ./backend
             args:
               - NESTJS_PORT=${BACKEND_PORT:?BACKEND_PORT env var is missing}
-            dockerfile: Dockerfile
+            dockerfile: backend/Dockerfile
         restart: unless-stopped
         ports:
             - "${BACKEND_PORT:?BACKEND_PORT env var is missing}:${BACKEND_PORT}"
@@ -39,10 +38,9 @@ services:
         image: "transcendence_frontend"
         container_name: "frontend"
         build:
-          context: ./frontend
           args:
             - VITE_PORT=${FRONTEND_PORT:?FRONTEND_PORT env var is missing}
-          dockerfile: Dockerfile
+          dockerfile: frontend/Dockerfile
         restart: unless-stopped
         ports: # resolved from the Compose file’s parent folder
             - "${FRONTEND_PORT:?FRONTEND_PORT en var is missing}:${FRONTEND_PORT}"

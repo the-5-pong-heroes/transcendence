@@ -35,7 +35,7 @@ async function createGames() {
         playerOneScore: 10,
         playerTwoId: "4e0e94c6-f526-4346-b2f5-b51c7ea9ba5c",
         playerTwoScore: 5,
-
+        status: "FINISHED",
         socketId: "socketId",
       },
       {
@@ -43,7 +43,7 @@ async function createGames() {
         playerOneScore: 0,
         playerTwoId: "4e0e94c6-f526-4346-b2f5-b51c7ea9ba5c",
         playerTwoScore: 5,
-
+        status: "FINISHED",
         socketId: "socketId",
       },
       {
@@ -51,7 +51,7 @@ async function createGames() {
         playerOneScore: 2,
         playerTwoId: "bb7d87d5-dba5-4461-b462-e577a210e827",
         playerTwoScore: 4,
-
+        status: "FINISHED",
         socketId: "socketId",
       },
     ],

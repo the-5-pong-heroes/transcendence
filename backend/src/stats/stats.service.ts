@@ -25,7 +25,7 @@ interface MyData {
   defeats: number;
   level: string;
   status: string;
-  friendships: Friendship[];
+  friends: { name: string; id: string }[];
 }
 
 @Injectable({})
@@ -126,11 +126,13 @@ export class StatsService {
   }
 
   async getUserData(currentuser: User) {
+    // TEMPORAIRE
     const user = await this.prisma.user.findUnique({
       where: {
-        name: "John Doe",
+        // name: "John Doe",
+        name: "Jane Smith",
       },
-      include: { friendships: true },
+      include: { addedBy: { select: { user: { select: { name: true, id: true } } } } },
     });
     const games = await this.getGames();
     const myData: MyData = {
@@ -143,7 +145,7 @@ export class StatsService {
       level: "human",
       avatar: user?.avatar as string,
       status: user?.status as string,
-      friendships: user?.friendships as Friendship[],
+      friends: user?.addedBy.map((item) => item.user) as { name: string; id: string }[],
     };
     games.forEach((game) => {
       if (user?.id === game["playerOne"]["id"] || user?.id === game["playerTwo"]?.id) {

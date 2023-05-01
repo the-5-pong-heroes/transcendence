@@ -7,14 +7,14 @@ interface LeaderboardProps {
 }
 
 export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
-  const [users, setUSers] = useState([]);
+  const [users, setUsers] = useState([]);
 
   const fetchUsers = async () => {
     try {
       const resp = await fetch("http://localhost:3000/leaderboard");
       const data = await resp.json();
       if (data.length > 0) {
-        setUSers(data);
+        setUsers(data);
       }
     } catch (err) {
       console.error(err);

@@ -1,31 +1,22 @@
-import React, { Suspense, useContext, useEffect } from "react";
-import { useOutletContext } from "react-router-dom";
+import React, { Suspense, useContext } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 
 import "./Pong3D.css";
 
-import { GameOverlay, type GameOverlayRef } from "../GameOverlay";
-import type { PlayState } from "../@types";
-import {
-  BALL_RADIUS_RATIO,
-  GAME_DEPTH,
-  GAME_HEIGHT,
-  GAME_WIDTH,
-  PADDLE_DEPTH_RATIO,
-  PADDLE_HEIGHT_RATIO,
-  PADDLE_WIDTH_RATIO,
-} from "../constants";
-import { useGameLoop } from "../hooks";
-import { SocketContext } from "../../../contexts";
+import { GAME_DEPTH, GAME_HEIGHT, GAME_WIDTH } from "../pongCore/constants";
+import type { GameMode } from "../@types";
+import { CAMERA_3D_Z } from "../constants";
+import { useGameLoop, useScoreLabel, useGameEvents } from "../hooks";
+import { GameContext } from "../context/GameContext";
+import { getInitialPongState } from "../helpers";
 
-import { Ball, Board, Paddle, Score } from "./components";
+import { Ball, Board, Paddle, Score, ParticleSystem } from "./components";
+
+const INITIAL_PONG_STATE = getInitialPongState();
 
 interface GameProps {
-  height: number;
-  width: number;
-  playRef: React.MutableRefObject<PlayState>;
-  overlayRef: React.RefObject<GameOverlayRef>;
+  gameMode: GameMode | undefined;
 }
 
 const Light: React.FC = () => {
@@ -38,55 +29,27 @@ const Light: React.FC = () => {
   );
 };
 
-const PongGame: React.FC<GameProps> = ({ overlayRef }) => {
+const PongGame: React.FC = () => {
+  useGameEvents();
+
   useThree(({ camera }) => {
-    camera.position.set(0, 0, GAME_DEPTH / 2);
+    camera.position.set(0, 0, CAMERA_3D_Z);
   });
 
-  const { gameRef, paddleLeftRef, paddleRightRef, ballRef, scoreLabel } = useGameLoop({
-    overlayRef,
-  });
+  const scoreLabel = useScoreLabel();
+  const { paddleLeftRef, paddleRightRef, ballRef, particlesRef } = useGameLoop();
 
   return (
     <>
       <Light />
-      <mesh>
-        <Board w={GAME_WIDTH} h={GAME_HEIGHT} d={GAME_DEPTH} />
-        <Score w={GAME_WIDTH} h={GAME_HEIGHT} d={GAME_DEPTH} score={scoreLabel} />
-        <Ball
-          ballRef={ballRef}
-          initialPosition={{
-            x: gameRef.current?.ball.posX,
-            y: gameRef.current?.ball.posY,
-            z: gameRef.current?.ball.posZ,
-          }}
-          radius={GAME_WIDTH * BALL_RADIUS_RATIO}
-        />
-        <Paddle
-          paddleRef={paddleLeftRef}
-          initialPosition={{
-            x: gameRef.current?.paddleLeft.posX,
-            y: gameRef.current?.paddleLeft.posY,
-            z: gameRef.current?.paddleLeft.posZ,
-          }}
-          w={GAME_WIDTH * PADDLE_WIDTH_RATIO}
-          h={GAME_HEIGHT * PADDLE_HEIGHT_RATIO}
-          d={-GAME_DEPTH * PADDLE_DEPTH_RATIO}
-        />
-        <Paddle
-          paddleRef={paddleRightRef}
-          initialPosition={{
-            x: gameRef.current?.paddleRight.posX,
-            y: gameRef.current?.paddleRight.posY,
-            z: gameRef.current?.paddleRight.posZ,
-          }}
-          w={GAME_WIDTH * PADDLE_WIDTH_RATIO}
-          h={GAME_HEIGHT * PADDLE_HEIGHT_RATIO}
-          d={-GAME_DEPTH * PADDLE_DEPTH_RATIO}
-        />
-      </mesh>
+      <Board />
+      <Score score={scoreLabel} />
+      <Ball ballRef={ballRef} initialPos={INITIAL_PONG_STATE.ball.pos} />
+      <Paddle paddleRef={paddleLeftRef} initialPos={INITIAL_PONG_STATE.paddleLeft.pos} />
+      <Paddle paddleRef={paddleRightRef} initialPos={INITIAL_PONG_STATE.paddleRight.pos} />
+      {/* <ParticleSystem particlesRef={particlesRef} initialPos={INITIAL_PONG_STATE.ball.pos} /> */}
       <OrbitControls />
-      <axesHelper args={[GAME_WIDTH]} />
+      {/* <axesHelper args={[GAME_WIDTH]} /> */}
     </>
   );
 };
@@ -96,24 +59,21 @@ const Loading: React.FC = () => {
 };
 
 const _Pong3D: React.FC = () => {
-  const { height, width, overlayRef, playRef }: GameProps = useOutletContext();
-  const { socketRef } = useContext(SocketContext);
+  const gameContext = useContext(GameContext);
+  if (gameContext === undefined) {
+    throw new Error("Undefined GameContext");
+  }
+  const { gameMode }: GameProps = gameContext;
 
-  useEffect(() => {
-    socketRef.current?.on("open", (message) => {
-      setTimeout(() => {
-        socketRef.current?.emit("connectGame");
-      }, 500);
-      console.log("💡💡💡💡", message);
-    });
-  }, [socketRef]);
+  if (gameMode != "3D") {
+    return null;
+  }
 
   return (
     <div className="canvas-container">
-      <GameOverlay ref={overlayRef} height={height} width={width} playRef={playRef} />
       <Suspense fallback={<Loading />}>
         <Canvas>
-          <PongGame height={height} width={width} overlayRef={overlayRef} playRef={playRef} />
+          <PongGame />
         </Canvas>
       </Suspense>
     </div>

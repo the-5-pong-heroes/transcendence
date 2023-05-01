@@ -3,7 +3,6 @@
 
 # compiled code
 */dist
-*/dist-ssr
 
 # bundle
 packages/**/*.d.ts
@@ -50,4 +49,6 @@ Thumbs.db
 *.dat
 pids
 tmp
+
 test.http
+notes.txt

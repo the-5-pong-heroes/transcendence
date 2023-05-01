@@ -1,32 +1,37 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import { Navbar } from "./components";
-import { Home, Login, Game, PongMenu, Pong2D, Pong3D, Leaderboard, Chat, NotFound } from "./pages";
+import { Navbar, ThemeButton, Container } from "./components";
+import { Home, Profile, Game, Leaderboard, Chat, NotFound } from "./pages";
 import "./App.css";
-import { SocketContextProvider } from "./contexts/Socket/socket";
+import { SocketProvider, AppContext } from "./contexts";
 
 const App: React.FC = () => {
+  const appContext = useContext(AppContext);
+  if (appContext === undefined) {
+    throw new Error("Undefined AppContext");
+  }
+  const { theme, homeRef, profileRef, gameRef, boardRef, chatRef } = appContext;
+
   return (
-    <SocketContextProvider>
-      <div className="App">
+    <SocketProvider>
+      <div className="App" id={theme}>
         <Navbar />
-        <div className="container">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/Login" element={<Login />} />
-            <Route path="/Game" element={<Game />}>
-              <Route index element={<PongMenu />} />
-              <Route path="/Game/Pong2D" element={<Pong2D />} />
-              <Route path="/Game/Pong3D" element={<Pong3D />} />
-            </Route>
-            <Route path="/Leaderboard" element={<Leaderboard />} />
-            <Route path="/Chat" element={<Chat />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+        <ThemeButton />
+        <div className="App-container">
+          <Container>
+            <Routes>
+              <Route path="/" element={<Home homeRef={homeRef} />} />
+              <Route path="/Profile" element={<Profile profileRef={profileRef} />} />
+              <Route path="/Game" element={<Game gameRef={gameRef} />} />
+              <Route path="/Leaderboard" element={<Leaderboard boardRef={boardRef} />} />
+              <Route path="/Chat" element={<Chat chatRef={chatRef} />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Container>
         </div>
       </div>
-    </SocketContextProvider>
+    </SocketProvider>
   );
 };
 

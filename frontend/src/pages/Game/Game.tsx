@@ -1,29 +1,39 @@
-import React, { useMemo, useRef } from "react";
-import { Outlet } from "react-router-dom";
+import React from "react";
 
 import "./Game.css";
-import { useGameSize, usePause } from "./hooks";
-import { type GameOverlayRef } from "./GameOverlay";
-import type { PlayState } from "./@types";
+import { GameOverlay } from "./GameOverlay";
+import { Pong2D } from "./Pong2D";
+import { Pong3D } from "./Pong3D";
+import { PongMenu } from "./PongMenu";
+import { GameProvider } from "./context/GameProvider";
+import { useGameSize } from "./hooks";
 
-export const getInitialPlayState = (): PlayState => ({
-  started: false,
-  paused: true,
-});
+interface GameProps {
+  gameRef: React.RefObject<HTMLDivElement>;
+}
 
-export const Game: React.FC = () => {
-  const overlayRef = useRef<GameOverlayRef>(null);
+export const Game: React.FC<GameProps> = ({ gameRef }) => {
   const { height, width } = useGameSize();
-  const { playRef } = usePause();
-
   const gameStyle: React.CSSProperties = { width, height };
+  // const mounted = useRef<boolean>(false);
 
-  const context = useMemo(() => ({ height, width, overlayRef, playRef }), [height, width, playRef]);
+  // useEffect(() => {
+  //   mounted.current = true;
+
+  //   return () => {
+  //     mounted.current = false;
+  //   };
+  // }, []);
 
   return (
-    <div className="game-container">
+    <div ref={gameRef} id="Game" className="game-container">
       <div className="game" style={gameStyle}>
-        <Outlet context={context} />
+        <GameProvider>
+          <PongMenu />
+          <GameOverlay />
+          <Pong2D />
+          <Pong3D />
+        </GameProvider>
       </div>
     </div>
   );

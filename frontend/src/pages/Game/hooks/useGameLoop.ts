@@ -1,94 +1,110 @@
-/* eslint max-lines: ["warn", 125] */
 /* eslint-disable no-magic-numbers */
 
-import { useRef, useState, useEffect, useCallback, useContext } from "react";
+import { useRef, useEffect, useCallback, useContext } from "react";
+import { useFrame, useLoader } from "@react-three/fiber";
+import { TextureLoader } from "three";
 
-import type { GameOverlayRef } from "../GameOverlay";
-import type { GameState } from "../@types";
-import { computeScoreLabel } from "../helpers";
-import { SocketContext } from "../../../contexts";
+import type { Pong } from "../pongCore";
+import { GameContext } from "../context";
+import type { PlayState, ServerPong, GameMode } from "../@types";
 
 import { useControlledPaddle } from "./useControlledPaddle";
 
+const REFRESH_RATE = 1000 / 60;
+
 interface GameLoopParameters {
-  overlayRef: React.RefObject<GameOverlayRef>;
+  playRef: React.MutableRefObject<PlayState>;
+  localPongRef: React.MutableRefObject<Pong>;
+  serverPongRef: React.MutableRefObject<ServerPong | undefined>;
+  gameMode: GameMode | undefined;
 }
 
 interface GameLoopValues {
-  gameRef: React.MutableRefObject<GameState | undefined>;
   ballRef: React.RefObject<THREE.Mesh>;
   paddleLeftRef: React.RefObject<THREE.Mesh>;
   paddleRightRef: React.RefObject<THREE.Mesh>;
-  scoreLabel: string;
+  particlesRef: React.RefObject<THREE.Points>;
 }
 
-export const useGameLoop = ({ overlayRef }: GameLoopParameters): GameLoopValues => {
-  useControlledPaddle();
-  const { socketRef } = useContext(SocketContext);
+interface UniformsParameters {
+  uTime: { value: number };
+  uRadius: { value: number };
+  [uniform: string]: THREE.IUniform; // allows for additional uniform properties
+}
 
-  const gameRef = useRef<GameState>();
+interface ParticleSystemMaterial extends THREE.ShaderMaterial {
+  uniforms: UniformsParameters;
+}
+
+export const useGameLoop = (): GameLoopValues => {
+  const gameContext = useContext(GameContext);
+  if (gameContext === undefined) {
+    throw new Error("Undefined GameContext");
+  }
+  const { playRef, localPongRef, serverPongRef, gameMode }: GameLoopParameters = gameContext;
+
+  useControlledPaddle();
+
   const ballRef = useRef<THREE.Mesh>(null);
   const paddleLeftRef = useRef<THREE.Mesh>(null);
   const paddleRightRef = useRef<THREE.Mesh>(null);
+  const particlesRef = useRef<THREE.Points>(null);
 
-  const [scoreLabel, setScoreLabel] = useState<string>(
-    computeScoreLabel(gameRef.current?.score ? gameRef.current.score : { player1: 0, player2: 0, round: 0 })
+  /* Logic loop */
+  const gameLoop = useCallback(
+    (delta: number): void => {
+      if (serverPongRef.current && !serverPongRef.current?.evaluated) {
+        localPongRef.current.ball.set(serverPongRef.current.pong.ball);
+        serverPongRef.current.evaluated = true;
+      }
+
+      localPongRef.current.update(delta);
+      localPongRef.current.detectCollisions();
+    },
+    [localPongRef, serverPongRef]
   );
 
-  const initGame = useCallback((gameState: GameState) => {
-    console.log("🕵🏻🕵🏻🕵🏻 initGame");
-    gameRef.current = gameState;
-  }, []);
-
-  const updateGame = useCallback((gameState: GameState) => {
-    // console.log("Received gameState:", gameState);
-
-    if (!gameState) {
-      return console.log("⛔️ Error");
-    }
-
-    const { ball, paddleLeft, paddleRight, score, play } = gameState;
-
-    // Update refs
-    paddleLeftRef.current?.position.set(paddleLeft.posX, paddleLeft.posY, paddleLeft.posZ);
-    paddleRightRef.current?.position.set(paddleRight.posX, paddleRight.posY, paddleRight.posZ);
-    ballRef.current?.position.set(ball.posX, ball.posY, ball.posZ);
-    // ballRef.current?.rotateZ(ball.rot);
-
-    // Update state
-    gameRef.current = { ball, paddleRight, paddleLeft, score, play };
-  }, []);
-
-  const resetGame = useCallback(() => {
-    // console.log("🏁 resetGame");
-    overlayRef?.current?.resetGame();
-  }, [overlayRef]);
-
-  const updateScore = useCallback((gameState: GameState) => {
-    // console.log("📌 updateScore");
-    const { score } = gameState;
-    setScoreLabel(computeScoreLabel(score));
-  }, []);
+  const timeRef = useRef<number>(Date.now());
 
   useEffect(() => {
-    const socket = socketRef.current;
-    if (!socket) {
-      return;
-    }
-
-    socket.on("initGame", initGame);
-    console.log("🐙 yoyoy in useEffect");
-    socket.on("updateGame", updateGame);
-    socket.on("updateScore", updateScore);
-    socket.on("resetGame", resetGame);
+    const intervalId = setInterval(() => {
+      const currentTime = Date.now();
+      const deltaTime = currentTime - timeRef.current;
+      if (!playRef.current.paused) {
+        gameLoop(deltaTime);
+      }
+      timeRef.current = currentTime;
+    }, REFRESH_RATE);
 
     return () => {
-      socket.off("initGame");
-      socket.off("updateGame");
-      socket.off("updateScore");
-      socket.off("resetGame");
+      clearInterval(intervalId);
     };
-  }, [socketRef, initGame, updateGame, updateScore, resetGame]);
+  }, [gameLoop, playRef]);
 
-  return { gameRef, paddleLeftRef, paddleRightRef, ballRef, scoreLabel };
+  /* Render loop */
+  useFrame(({ clock }) => {
+    if (playRef.current.paused) {
+      return;
+    }
+    const { ball, paddleRight, paddleLeft } = localPongRef.current.getState();
+
+    paddleLeftRef.current?.position.set(paddleLeft.pos.x, paddleLeft.pos.y, paddleLeft.pos.z);
+    paddleRightRef.current?.position.set(paddleRight.pos.x, paddleRight.pos.y, paddleRight.pos.z);
+    ballRef.current?.position.set(ball.pos.x, ball.pos.y, ball.pos.z);
+    if (ballRef.current && gameMode === "3D") {
+      ballRef.current.rotation.set(ball.rot, ball.rot, 0);
+    }
+
+    // if (particlesRef.current && ballRef.current) {
+    //   const material = particlesRef.current.material as ParticleSystemMaterial;
+    //   material.uniforms.uTime.value = clock.elapsedTime;
+    //   material.uniforms.uBallPosition.value = new Vector3(
+    //     ballRef.current.position.x,
+    //     ballRef.current.position.y,
+    //     ballRef.current.position.z
+    //   );
+    // }
+  });
+
+  return { paddleLeftRef, paddleRightRef, ballRef, particlesRef };
 };

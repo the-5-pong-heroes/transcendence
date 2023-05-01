@@ -1,2 +1,2 @@
-export { getInitialGameState } from "./getInitialGameState";
+export { getInitialPongState } from "./getInitialPongState";
 export { computeScoreLabel } from "./computeScoreLabel";

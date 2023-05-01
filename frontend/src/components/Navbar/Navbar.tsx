@@ -1,57 +1,91 @@
-import React, { useCallback, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+
+import { AppContext } from "../../contexts";
+import { LogoWallE, LogoWallELight } from "../../assets";
+import { MenuButton } from "../MenuButton";
+
 import "./Navbar.css";
-import { menuItems } from "./menuItems";
+import { type MenuRefs, menuItems } from "./menuItems";
 
-interface NavbarProps {
-  menuItems: {
-    label: string;
-    path: string;
-    submenuItems?: {
-      label: string;
-      path: string;
-    }[];
-  }[];
-}
+export const ScrollToPage: React.FC = () => {
+  const { pathname } = useLocation();
 
-const MINUS_ONE = -1;
+  const appContext = useContext(AppContext);
+  if (appContext === undefined) {
+    throw new Error("Undefined AppContext");
+  }
+  const { homeRef, profileRef, gameRef, boardRef, chatRef } = appContext;
+
+  const refs: Record<string, React.RefObject<HTMLDivElement>> = {
+    "/": homeRef,
+    "/Game": gameRef,
+    "/Leaderboard": boardRef,
+    "/Chat": chatRef,
+    "/Profile": profileRef,
+  };
+  const ref = refs[pathname] ?? homeRef;
+
+  useEffect(() => {
+    ref.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [pathname, ref]);
+
+  return null;
+};
 
 export const Navbar: React.FC = () => {
-  const [activeIndex, setActiveIndex] = useState<number>(MINUS_ONE);
+  const [showNavbar, setShowNavbar] = useState<boolean>(false);
+  const handleShowNavbar = (): void => {
+    setShowNavbar(!showNavbar);
+    document.body.classList.toggle("open");
+  };
 
-  const handleHover = useCallback(
-    (index: number): void => {
-      setActiveIndex(index === activeIndex ? MINUS_ONE : index);
-    },
-    [activeIndex, setActiveIndex]
-  );
+  const handleScroll = (ref: React.RefObject<HTMLDivElement>): (() => void) => {
+    return () => {
+      ref.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    };
+  };
 
-  const handleClick = useCallback((): void => {
-    setActiveIndex(MINUS_ONE);
-  }, [setActiveIndex]);
+  const appContext = useContext(AppContext);
+  if (appContext === undefined) {
+    throw new Error("Undefined AppContext");
+  }
+  const { theme, homeRef, profileRef, gameRef, boardRef, chatRef } = appContext;
+
+  const menuRefs: MenuRefs = {
+    gameRef,
+    boardRef,
+    chatRef,
+    profileRef,
+  };
 
   return (
-    <div className="navbar">
-      <ul className="navbar-list">
-        {menuItems.map((item, index) => (
-          <li
-            key={item.label}
-            onMouseEnter={() => handleHover(index)}
-            onMouseLeave={() => handleHover(MINUS_ONE)}
-            onClick={handleClick}>
-            <Link to={item.path}>{item.label}</Link>
-            {item.submenuItems && (
-              <ul className={`sub-menu ${index === activeIndex ? "active" : ""}`}>
-                {item.submenuItems.map((subItem) => (
-                  <li key={subItem.label}>
-                    <Link to={subItem.path}>{subItem.label}</Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
-      </ul>
+    <div className="navbar" id="navbar">
+      <ScrollToPage />
+      <div className={`hamburger-button ${showNavbar ? "active" : ""}`} onClick={handleShowNavbar}>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <Link to="/" onClick={handleScroll(homeRef)}>
+        <img src={theme === "light" ? LogoWallELight : LogoWallE} className="logo-wall-e" />
+      </Link>
+      <div className={`nav-elements ${showNavbar ? "active" : ""}`}>
+        <ul>
+          {menuItems.map((item) => (
+            <MenuButton
+              key={item.path}
+              icon={theme === "light" ? item.iconLight : item.iconDark}
+              path={item.path}
+              label={item.label}
+              menuRef={menuRefs[item.refName]}
+              showNavbar={showNavbar}
+              handleShowNavbar={handleShowNavbar}
+            />
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

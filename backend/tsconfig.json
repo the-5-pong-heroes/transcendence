@@ -5,6 +5,9 @@
   "include": ["src/*", "test/*"],
   // TypeScript’s configuration & how the language should work
   "compilerOptions": {
+    "paths": {
+      "shared/*": ["../shared/*"]
+    },
     // which JS to use (the more recent, the less compatible)
     "target": "ESNext",
     // enforces TS
@@ -51,7 +54,7 @@
     // base directory to resolve non-absolute module names
     "baseUrl": "./",
     // includes a set of type definitions for built-in JS APIs
-    "lib": ["ESNext"],
+    "lib": ["ESNext", "dom"],
     // sets the module system for the program
     "module": "commonjs",
     // files will be emitted into this directory

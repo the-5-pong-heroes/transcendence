@@ -13,4 +13,4 @@ npx prisma migrate deploy
 echo "✅ Migration files successfully run"
 
 echo "🚀 Launching NestJS..."
-yarn run start:dev
+yarn run start:prod

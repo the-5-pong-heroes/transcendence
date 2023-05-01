@@ -46,10 +46,21 @@
     "isolatedModules": true,
     // https://www.typescriptlang.org/tsconfig#useDefineForClassFields
     "useDefineForClassFields": true,
+    // paths lets you declare how TS should resolve an import in your require/imports
+    "paths": {
+      // "shared/*": ["../shared/*"]
+      "@/*": ["./src/*", "./dist/*", ""],
+      "pages/*": ["src/pages/*"],
+      "components/*": ["src/components/*"],
+      "types/*": ["src/@types/*"],
+      "assets/*": ["src/assets/*"],
+      "contexts/*": ["src/contexts/*"],
+      "public/*": ["public/*"]
+    },
     // slower but more type-system accurate
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     // base directory to resolve non-absolute module names
-    "baseUrl": "./",
+    "baseUrl": ".",
     // includes a set of type definitions for built-in JS APIs
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     // sets the module system for the program
@@ -60,8 +71,8 @@
     "noEmit": true,
     // https://www.typescriptlang.org/tsconfig#esModuleInterop
     "esModuleInterop": false,
-    // for Node.js’ ECMAScript Module Support from TypeScript 4.7 onwards
-    "moduleResolution": "nodenext"
+    // specify the module resolution strategy
+    "moduleResolution": "node"
   },
   "references": [{ "path": "./tsconfig.vite.json" }]
 }

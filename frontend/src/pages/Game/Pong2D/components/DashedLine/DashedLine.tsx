@@ -1,23 +1,32 @@
-import React, { useRef } from "react";
-import * as THREE from "three";
+import React from "react";
+import { Vector3 } from "three";
 
-interface LineProps {
-  w: number;
-  h: number;
-  d: number;
+import { PADDLE_WIDTH, GAME_HEIGHT } from "../../../pongCore/constants";
+import { BOARD_2D_Z } from "../../../constants";
+
+interface LineParameters {
+  posY: number;
 }
 
-export const DashedLine: React.FC<LineProps> = ({ w, h, d }) => {
-  const lineWidth = 100;
-  const dashSize = 100;
-  const gapSize = 100;
-  const vertices = new THREE.BufferAttribute(new Float32Array([0, h / 2, -128.5, 0, -h / 2, -128.5]), 3);
-  const ref = useRef<THREE.Line>();
+const Line: React.FC<LineParameters> = ({ posY }) => {
+  return (
+    <mesh visible castShadow position={new Vector3(0, posY, BOARD_2D_Z)}>
+      <planeGeometry attach="geometry" args={[PADDLE_WIDTH, PADDLE_WIDTH]} />
+      <meshBasicMaterial attach="material" color={"#fff"} />
+    </mesh>
+  );
+};
+
+export const DashedLine: React.FC = () => {
+  const begin = GAME_HEIGHT / 2 - PADDLE_WIDTH;
+  const interval = 2 * PADDLE_WIDTH;
+  const linePositions = Array.from({ length: 20 }, (_, index) => begin - interval * index);
 
   return (
-    <line>
-      <bufferGeometry attributes={{ position: vertices }} />
-      <lineBasicMaterial linewidth={lineWidth} color={"white"} />
-    </line>
+    <>
+      {linePositions.map((posY) => (
+        <Line key={posY} posY={posY} />
+      ))}
+    </>
   );
 };

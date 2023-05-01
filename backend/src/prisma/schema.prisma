@@ -10,7 +10,7 @@ generator client {
 
 model User {
   id            String        @id @default(uuid()) @db.Uuid
-  name          String?       @unique
+  name          String        @unique
   avatar        String?
   status        UserStatus
   lastLogin     DateTime?
@@ -45,10 +45,9 @@ model Friendship {
 
 model Game {
   id        String     @id @default(uuid()) @db.Uuid
-  mode      GameMode   @default(PONG_2D)
   startedAt DateTime   @default(now())
   endedAt   DateTime?
-  status    GameStatus @default(STARTING)
+  status    GameStatus @default(WAITING)
 
   playerOne      User   @relation("playerOne", fields: [playerOneId], references: [id])
   playerOneId    String @db.Uuid
@@ -57,7 +56,7 @@ model Game {
   playerTwoId    String @db.Uuid
   playerTwoScore Int    @default(0)
 
-  socketId String @unique
+  socketId String
 }
 
 model Channel {
@@ -103,11 +102,6 @@ enum Role {
   OWNER
 }
 
-enum GameMode {
-  PONG_2D
-  PONG_3D
-}
-
 enum ChannelType {
   PRIVATE
   PUBLIC
@@ -115,7 +109,7 @@ enum ChannelType {
 }
 
 enum GameStatus {
-  STARTING
+  WAITING
   RUNNING
   FINISHED
 }

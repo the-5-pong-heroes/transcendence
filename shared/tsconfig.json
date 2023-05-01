@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+	 "target": "ESNext",
+	 "allowJs": false,
+	 "resolveJsonModule": true,
+	 "declaration": true,
+	 "removeComments": true,
+	 "emitDecoratorMetadata": true,
+	 "experimentalDecorators": true,
+	 "allowSyntheticDefaultImports": true,
+	 "sourceMap": true,
+	 "incremental": false,
+	 "strict": true,
+	 "strictNullChecks": true,
+	 "strictBindCallApply": true,
+	 "strictFunctionTypes": true,
+	 "noImplicitAny": true,
+	 "noImplicitThis": true,
+	 "forceConsistentCasingInFileNames": true,
+	 "noFallthroughCasesInSwitch": true,
+	 "allowUnreachableCode": false,
+	 "isolatedModules": true,
+	 "useDefineForClassFields": true,
+	 "skipLibCheck": false,
+     "module": "commonjs",
+     "outDir": "./dist",
+     "baseUrl": "./"
+  }
+}

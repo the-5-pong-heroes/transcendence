@@ -1,0 +1,119 @@
+.loader-modal {
+  height: 18vw;
+  width: 42vw;
+}
+
+.loader-wrapper {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 3;
+}
+
+.text {
+  margin: 1vw;
+  font-size: 1.5vw;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Open Sans", sans-serif;
+}
+
+.jumping-dots span {
+  position: relative;
+  bottom: 0px;
+  animation: jump 2s infinite;
+}
+.jumping-dots .dot-1 {
+  animation-delay: 100ms;
+}
+.jumping-dots .dot-2 {
+  animation-delay: 250ms;
+}
+.jumping-dots .dot-3 {
+  animation-delay: 400ms;
+}
+
+@keyframes jump {
+  0% {
+    bottom: 0px;
+  }
+  15% {
+    bottom: 2px;
+  }
+  30% {
+    bottom: 0px;
+  }
+}
+
+.loader {
+  width: 4vw;
+  height: 4vw;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 0.3vw solid #fff;
+  border-right: 0.3vw solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  margin: 1vw;
+}
+
+#light .loader {
+  border-top: 0.3vw solid #350350;
+}
+
+.loader::after {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4vw;
+  height: 4vw;
+  border-radius: 50%;
+  border-left: 0.3vw solid rgb(152, 71, 251);
+  border-bottom: 0.3vw solid transparent;
+  animation: rotation 0.5s linear infinite reverse;
+}
+
+#light .loader::after {
+  border-left: 0.3vw solid rgb(208, 173, 251);
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-height: 400px) {
+  .game-modal {
+    height: 40%;
+    width: 50%;
+  }
+
+  .loader {
+    width: 4vh;
+    height: 4vh;
+    border-top: 0.3vh solid #fff;
+    border-right: 0.3vh solid transparent;
+    margin: 1vh;
+  }
+  
+  #light .loader {
+    border-top: 0.3vh solid #350350;
+  }
+  
+  .loader::after {
+    width: 4vh;
+    height: 4vh;
+    border-left: 0.3vh solid rgb(152, 71, 251);
+    border-bottom: 0.3vh solid transparent;
+  }
+  
+  #light .loader::after {
+    border-left: 0.3vh solid rgb(208, 173, 251);
+  }
+}

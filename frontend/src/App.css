@@ -1,18 +1,34 @@
+:root {
+  --global-background-color-light: hsl(0, 3%, 93%);
+  --global-background-color-dark: hsl(220, 11%, 16%);
+  --global-game-gradient-dark: linear-gradient(45deg, hsl(311, 33%, 10%), hsl(253, 32%, 14%), hsl(296, 32%, 9%));
+  --global-game-gradient-light: linear-gradient(45deg, hsl(60, 100%, 98%), hsl(202, 100%, 95%),rgb(184, 203, 248));
+}
+
 .App {
   height: 100vh;
   width: 100vw;
-  background-color: hsl(0deg 0% 90%);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  transition: color .4s ease-in-out, background-color .4s ease-in-out;
 }
 
-.container {
-  height: 95%;
-  width: 95%;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
+#light {
+  background-color: var(--global-background-color-light);
+  color: hsl(240, 4%, 11%);
+}
+
+#dark {
+  background-color: var(--global-background-color-dark);
+  color: white;
+}
+
+.App-container {
+	z-index: 0;
+	height: 100vw;
+	width: 100vh;
+	transform: rotate(-90deg) translateX(-100vh);
+	transform-origin: top left;
+	position: absolute;
 }

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
 import { LEVELS, LEVEL_THRESHOLD } from "src/common/constants/others";
-import { GameStatus, UserStatus } from "@prisma/client";
+import { Friendship, GameStatus, User, UserStatus } from "@prisma/client";
 
 interface UserData {
   [id: string]: {
@@ -14,6 +14,18 @@ interface UserData {
     status: string;
     // friend: boolean;
   };
+}
+interface MyData {
+  id: string;
+  avatar: string;
+  name: string;
+  score: number;
+  nbGames: number;
+  wins: number;
+  defeats: number;
+  level: string;
+  status: string;
+  friendships: Friendship[];
 }
 
 @Injectable({})
@@ -113,16 +125,40 @@ export class StatsService {
       .sort((userA, userB): number => userB.score - userA.score);
   }
 
-  async getUserData() {
-    return "mon profil mon choix";
-    // avatar: string;
-    // name: string;
-    // score: number;
-    // wins: number;
-    // defeats: number;
-    // level: string;
-    // status: string;
-    //liste d'amis
-    //log out
+  async getUserData(currentuser: User) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        name: "John Doe",
+      },
+      include: { friendships: true },
+    });
+    const games = await this.getGames();
+    const myData: MyData = {
+      id: user?.id as string,
+      name: user?.name as string,
+      score: 0,
+      nbGames: 0,
+      wins: 0,
+      defeats: 0,
+      level: "human",
+      avatar: user?.avatar as string,
+      status: user?.status as string,
+      friendships: user?.friendships as Friendship[],
+    };
+    games.forEach((game) => {
+      if (user?.id === game["playerOne"]["id"] || user?.id === game["playerTwo"]?.id) {
+        myData.nbGames += 1;
+        const playerNb = user?.id === game["playerOne"]["id"] ? "One" : "Two";
+        const opponentNb = user?.id === game["playerOne"]["id"] ? "Two" : "One";
+        myData.score += game[`player${playerNb}Score`];
+        if (game[`player${playerNb}Score`] > game[`player${opponentNb}Score`]) {
+          myData.wins += 1;
+        } else if (game[`player${playerNb}Score`] < game[`player${opponentNb}Score`]) {
+          myData.defeats += 1;
+        }
+      }
+    });
+    myData.level = this.getLevel(myData.score);
+    return { ...myData };
   }
 }

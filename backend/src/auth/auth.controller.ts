@@ -11,19 +11,19 @@ export class AuthController{
     constructor(private authService: AuthService,
         private Oauth42: Oauth42Service,)  {}
 
-    //3333
-    @Get("google/login")
-    @UseGuards(GoogleAuthGuard)
-    handleLogin() {
-        return { msg: "Google Authentification "};
-    }
+    // //3333
+    // @Get("google/login")
+    // @UseGuards(GoogleAuthGuard)
+    // handleLogin() {
+    //     return { msg: "Google Authentification "};
+    // }
 
-    ///auth/google/callback
-    @Get("/google/callback")
-    @UseGuards(GoogleAuthGuard)
-    handleRedirect() {
-        return { msg: "OK"};
-    }
+    // ///auth/google/callback
+    // @Get("/google/callback")
+    // @UseGuards(GoogleAuthGuard)
+    // handleRedirect() {
+    //     return { msg: "OK"};
+    // }
 
     /***  Create the user in database from the page registration ***/
     @Get("getuserbytoken")

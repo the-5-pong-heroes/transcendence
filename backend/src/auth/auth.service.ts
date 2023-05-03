@@ -20,15 +20,18 @@ export class AuthService {
     ){
         try {
             const user = await this.prisma.user.create({
-                data: {
-                    isRegistered: isRegistered,
+                data: { 
                     name: username,
-                    email: user42.email,
-                    Auth: {
+                    auth: {
                         create: {
-                            accessToken: token
+                            accessToken: token,
+                            isRegistered: isRegistered,
+                            email: user42.email,
+                            password: 'test',
                         }
-                    }
+                    },
+                    status: "ONLINE",
+                    last_login: new Date()
                 }
             });
             return user;
@@ -71,7 +74,7 @@ export class AuthService {
     async getUserByToken(req: Request) {
         try {
                 const accessToken = req.cookies.token;
-                const user = await this.prisma.user.findFirst({
+                const user = await this.prisma.auth.findFirst({
                 where: {
                     accessToken: accessToken,
                 },

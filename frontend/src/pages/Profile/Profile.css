@@ -33,18 +33,122 @@
 	color: #c0b4f2;
 }
 
-.username {
-  font-size: 3vw;
-  margin: 0;
-  color: red;
-  justify-content: center;
+.row {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: calc(-1 * var(--bs-gutter-y));
+  margin-right: calc(-0.5 * var(--bs-gutter-x));
+  margin-left: calc(-0.5 * var(--bs-gutter-x));
 }
 
-.avatar {
-  width: 20vw;
-  height: 20vw;
+.row>* {
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+  padding-right: calc(var(--bs-gutter-x) * 0.5);
+  padding-left: calc(var(--bs-gutter-x) * 0.5);
+  margin-top: var(--bs-gutter-y);
+}
+
+.col {
+  flex: 1 0 0%;
+}
+
+.row1 {
+  width: 80vw;
+  max-width: 1000px;
+}
+
+.row1 > div:first-child {
+  width: 15vw;
+}
+
+.row2 {
+  width: 72vw;
+  max-width: 700px;
+}
+
+.row:not(:first-child) .col {
+  border: #6709b9 solid 3px;
+}
+
+.avatar > img {
+  width: 100%;
   border-radius: 50%;
   margin: 0;
   margin-top: 2vw;
   margin-bottom: 2vw;
+  outline: 3px rgb(254, 254, 254) solid;
+}
+
+.username {
+  align-self: center;
+  font-size: 2.3rem;
+  margin: 0;
+  font-family: sans-serif;
+  color: white;
+  justify-content: center;
+  text-shadow: darkblue 2px 0 10px;
+}
+
+.bullet-orange {
+  color: orange;
+  font-size: 2.7rem;
+  margin-right: 5px;
+}
+
+.bullet-green {
+  color: green;
+  font-size: 2.7rem;
+  margin-right: 5px;
+}
+
+.bullet-red {
+  color: red;
+  font-size: 2.7rem;
+  margin-right: 5px;
+}
+
+.status-text {
+}
+
+.status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  text-align: right;
+  align-self: center;
+  text-transform: lowercase;
+}
+
+.score {
+  /* TODO */
+}
+
+.level {
+  width: 15vw;
+  height: 15vw;
+}
+
+.ranking {
+  /* TODO */
+}
+
+.wins {
+  /* TODO */
+}
+
+.defeats {
+  /* TODO */
+}
+
+.nbGames {
+  /* TODO */
+}
+
+.friends {
+  /* TODO */
 }

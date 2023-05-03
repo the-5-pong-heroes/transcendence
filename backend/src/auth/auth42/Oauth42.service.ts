@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable, Req, Res } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
+import fetch from "node-fetch";
 
 @Injectable()
 export class Oauth42Service {
@@ -29,6 +30,48 @@ export class Oauth42Service {
             status: HttpStatus.BAD_REQUEST,
             error: "Error to get the user by token"},
            HttpStatus.BAD_REQUEST); 
+          };
+      }
+    async access42UserInformation(accessToken: string) {    
+      try {
+          const response = await fetch("https://api.intra.42.fr/v2/me", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${accessToken}` },
+          });
+          if (response.ok) 
+          { 
+          const data = await response.json();
+          return data;
+          }
+      }
+      catch(error) {
+          console.log("Fetch42 user doesnt work, next step is testing with googleapi")
+      }
+          return null;
+      }
+
+      async createDataBase42User(
+        user42: any,
+        token: string,
+        name: string,
+        isRegistered: boolean
+      ) {
+        try {
+          const user = await this.prisma.user.create({
+            data: {
+              accessToken: token,
+              isRegistered: isRegistered,
+              name: name,
+              email: user42.email,
+            },
+          });
+          return user;
+        } catch (error) {
+          throw new HttpException(
+          {
+            status: HttpStatus.BAD_REQUEST,
+            error: "Error to create the user to the database"
+          }, HttpStatus.BAD_REQUEST); 
           };
       }
 }

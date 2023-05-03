@@ -14,10 +14,6 @@ import { APP_FILTER } from "@nestjs/core";
 @Module({
   imports: [UserModule, StatsModule, AuthModule, PrismaModule, ConfigModule.forRoot({isGlobal: true}),],
   controllers: [AppController],
-  providers: [AppService, GoogleStrategy, PrismaService,
-    {
-      provide: APP_FILTER
-      userClass: AllExeptionFilter,
-    }],
+  providers: [AppService, GoogleStrategy, PrismaService],
 })
 export class AppModule {}

@@ -1,47 +1,113 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
-import { PrismaService } from "../database/prisma.service";
-import { AuthDto } from "./dto";
-// import * as argon from "argon2";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { Req, Res, Body, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { PrismaService } from '../database/prisma.service';
+import { Request, Response, request } from "express";
+//import { AuthDto } from './dto';
+import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
+import { UserDto } from "./dto";
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 @Injectable()
 export class AuthService {
 
-     constructor(private prisma: PrismaService) {}
-    // async signup(dto: AuthDto) { 
-    //     const hash = await argon.hash(dto.password);
+    constructor(private prisma: PrismaService,
+        private Oauth42: Oauth42Service,) {}
+
+    async createDataBase42User(
+        user42: any,
+        token: string,
+        username: string,
+        isRegistered: boolean
+    ){
+        try {
+            const user = await this.prisma.user.create({
+                data: {
+                    isRegistered: isRegistered,
+                    name: username,
+                    email: user42.email,
+                    Auth: {
+                        create: {
+                            accessToken: token
+                        }
+                    }
+                }
+            });
+            return user;
+        } catch (error) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.BAD_REQUEST,
+                    error: "Error to create the user to the database"
+                }, HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    
+    // async createDataBase42User(
+    //     user42: any,
+    //     token: string,
+    //     username: string,
+    //     isRegistered: boolean
+    //     ) {
     //     try {
     //         const user = await this.prisma.user.create({
-    //             data: {
-    //                 email: dto.email,
-    //                 hash,
+    //         data: {
+    //             accessToken: token,
+    //             isRegistered: isRegistered,
+    //             name: username,
+    //             email: user42.email,
     //         },
-    //     });
-    //     delete user.hash;
-    //     return user;
-    //     } catch(error) {
-    //         if (error instanceof PrismaClientKnownRequestError) {
-    //             if (error.code === 'P2002') {
-    //                 throw new ForbiddenException('Credentials taken',);
-    //             };
-    //         }
+    //         });
+        
+    //         return user;
+    //     } catch (error) {
+    //         throw new HttpException(
+    //         {
+    //         status: HttpStatus.BAD_REQUEST,
+    //         error: "Error to create the user to the database"
+    //         }, HttpStatus.BAD_REQUEST);
+    //         };
     //     }
-    //     throw Error;
-    // }
-
-    // async signin(dto: AuthDto) { 
-    //     const user = await this.prisma.user.findUnique({
-    //         where: {
-    //             email: dto.email,
-    //         },
-    //     });
-    //     if (!user)
-    //         throw new ForbiddenException('Credentials incorrect',);
-    //     const pwMatches = await argon.verify(user.hash, dto.password,);
-    //     if (!pwMatches)
-    //         throw new ForbiddenException('Credentials incorrect',);
-
-    //     delete user.hash;
-    //     return user;
-    // }
+        
+    async getUserByToken(req: Request) {
+        try {
+                const accessToken = req.cookies.token;
+                const user = await this.prisma.user.findFirst({
+                where: {
+                    accessToken: accessToken,
+                },
+                });
+                if (!user)
+                {
+                throw new HttpException(
+                    {
+                    status: HttpStatus.BAD_REQUEST,
+                    error: "Error to get the user by token"},
+                    HttpStatus.BAD_REQUEST);
+                    };
+                return user;
+        } catch (error) {
+            throw new HttpException(
+            {
+                status: HttpStatus.BAD_REQUEST,
+                error: "Error to get the user by token"},
+                HttpStatus.BAD_REQUEST);
+        };
+    }
+    
+    async handleDataBaseCreation(@Req() req: Request, @Res() res: Response, @Body() UserDto: UserDto) {
+        const token: string = req.cookies.token;
+        const user42infos = await this.Oauth42.access42UserInformation(token);
+        if (user42infos)
+          {
+            const finalUser = await this.Oauth42.createDataBase42User(    user42infos,
+            token,
+            req.body.name,
+            req.body.isRegistered);
+            return res.status(200).json({
+            statusCode: 200,
+            path: finalUser,
+          });
+        }
+//        await this.googleService.handleGoogleUserCreation(res, req);
+      }
 }

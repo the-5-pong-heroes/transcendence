@@ -8,9 +8,6 @@ export class UserService {
 	) {}
 
 	async getAllUsers(blockedOf: string) {
-		try {
 			const users = await this.prisma.user.findMany({});
-		} catch 
-			msg: 'Error to catch users';
-	}
+		}
 }

@@ -67,12 +67,17 @@
 
 .row2 {
   width: 72vw;
+  padding: 1rem;
   max-width: 700px;
+  border-radius: 20px;
+  background: rgb(80,75,210, 0.5);
+  background: linear-gradient(0deg, rgba(42, 45, 112, 0.5) 0%, rgba(80,75,210, 0.5) 100%);
+  margin-bottom: 2rem;
 }
 
-.row:not(:first-child) .col {
+/* .row:not(:first-child) .col {
   border: #6709b9 solid 3px;
-}
+} */
 
 .avatar > img {
   width: 100%;
@@ -111,42 +116,33 @@
   margin-right: 5px;
 }
 
-.status-text {
-}
-
 .status {
   display: flex;
   justify-content: center;
   align-items: center;
-  align-content: center;
   text-align: right;
   align-self: center;
   text-transform: lowercase;
 }
 
-.score {
-  /* TODO */
-}
-
 .level {
-  width: 15vw;
-  height: 15vw;
+  align-items: center;
+  display: flex;
 }
 
-.ranking {
-  /* TODO */
+.level > img {
+  width: 40px;
+  filter: drop-shadow(0 0 0.75rem rgb(255, 255, 255, 0.2));
+  margin-right: 5px;
 }
 
-.wins {
-  /* TODO */
+.col-details span:first-child {
+  font-style: italic;
+  margin-right: 4px;
 }
 
-.defeats {
-  /* TODO */
-}
-
-.nbGames {
-  /* TODO */
+.col-details span:not(:first-child) {
+  font-size: 1.5rem;
 }
 
 .friends {

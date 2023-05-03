@@ -4,4 +4,4 @@ export { Background, BackgroundLight, Moon, Trash1, Trash2, Trash3 } from "./bac
 export { Stars, Light, Cloud, Cloud2, Sun, MoonDayLight } from "./background";
 export { LightTheme, DarkTheme } from "./theme";
 export { DefaultAvatar } from "./avatar";
-export { Auto, Captain, Eve, Human, Mo, Walla, Walle } from "./levels";
+export { Eve, Plant, Energy, Walle } from "./levels";

@@ -27,10 +27,12 @@ model User {
 }
 
 model Auth {
-  userId   String @id 
-  user     User   @relation(fields: [userId], references: [id])
-  email    String @unique
-  password String
+  userId       String   @id 
+  user         User     @relation(fields: [userId], references: [id])
+  email        String   @unique
+  accessToken  String   @default("noToken")
+  isRegistered Boolean  @default(false)
+  password     String
 }
 
 model Friends {

@@ -1,0 +1,7 @@
+.Conversation {
+  width: 100%;
+  max-height: calc(100% - 80px);
+  display: flex;
+  flex-flow: column nowrap;
+  flex-grow: 1;
+}

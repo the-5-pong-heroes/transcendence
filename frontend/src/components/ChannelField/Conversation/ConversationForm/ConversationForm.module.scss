@@ -1,0 +1,37 @@
+.Form {
+  display: flex;
+  flex-flow: row nowrap;
+  padding: 15px 20px;
+  justify-content: space-between;
+  gap: 20px;
+
+  .ContentEditable {
+    background-color: rgba(255, 255, 255, .2);
+    width: 100%;
+    min-height: 30px;
+    height: 30px;
+    max-height: 120px;
+    border-radius: 15px;
+    padding: 2px 10px;
+    resize: none;
+    font: inherit;
+    outline: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .Submit {
+    width: 30px;
+    height: 30px;
+    align-self: flex-end;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    &:disabled {
+      cursor: auto;
+    }
+  }
+}

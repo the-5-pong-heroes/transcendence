@@ -1,0 +1,24 @@
+.ChannelItem {
+  width: 230px;
+  height: 100px;
+  border-radius: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-evenly;
+  margin: 10px;
+  padding: 10px;
+  overflow: hidden;
+
+  &:hover {
+    background-color: rgba(212, 212, 212, .2);
+  }
+
+  .Name {
+    font-weight: bold;
+  }
+
+  .Preview {
+  }
+}

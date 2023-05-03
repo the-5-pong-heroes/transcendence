@@ -9,26 +9,26 @@ generator client {
 }
 
 model User {
-  id            String        @id @default(uuid()) @db.Uuid
+  id            String        @id @unique @default(uuid()) @db.Uuid
   name          String        @unique
   avatar        String?
   status        UserStatus
   lastLogin     DateTime?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
-  ownedChannels Channel[]     @relation("owner")
   gamesOne      Game[]        @relation("playerOne")
   gamesTwo      Game[]        @relation("playerTwo")
   messages      Message[]
   friendships   Friendship[]  @relation("friendships")
   addedBy       Friendship[]  @relation("addedBy")
   channelUsers  ChannelUser[]
+  channelBans   ChannelBan[]
   auth          Auth?
 }
 
 model Auth {
   user     User   @relation(fields: [userId], references: [id])
-  userId   String @id @db.Uuid
+  userId   String @id @unique @db.Uuid
   email    String @unique
   password String
 }
@@ -61,13 +61,14 @@ model Game {
 
 model Channel {
   id          String        @id @default(uuid()) @db.Uuid
+  name        String
   createdAt   DateTime      @default(now())
-  channelType ChannelType
+  lastMessage DateTime      @default(now())
+  type        ChannelType
   password    String?
-  owner       User          @relation("owner", fields: [ownerId], references: [id])
-  ownerId     String        @db.Uuid
   messages    Message[]
   users       ChannelUser[]
+  banned      ChannelBan[]
 }
 
 model ChannelUser {
@@ -78,22 +79,32 @@ model ChannelUser {
   channel   Channel @relation(fields: [channelId], references: [id])
   channelId String  @db.Uuid
 
-  role Role
+  role Role     @default(USER)
 
-  isBlocked   Boolean   @default(false)
-  isBanned    Boolean   @default(false)
-  bannedUntil DateTime?
-  isMuted     Boolean   @default(false)
+  isAuthorized  Boolean   @default(false)
+  isMuted       Boolean   @default(false)
+  mutedUntil    DateTime?
+}
+
+model ChannelBan {
+  id     String @id @default(uuid()) @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.Uuid
+
+  channel   Channel @relation(fields: [channelId], references: [id])
+  channelId String  @db.Uuid
+  
+  bannedUntil DateTime
 }
 
 model Message {
   id        String   @id @default(uuid()) @db.Uuid
   content   String
-  sender    User     @relation(fields: [senderId], references: [id])
+  sender    User?    @relation(fields: [senderId], references: [id])
+  senderId  String?  @db.Uuid
   channel   Channel  @relation(fields: [channelId], references: [id])
   channelId String   @db.Uuid
-  senderId  String   @db.Uuid
-  sentAt    DateTime @default(now())
+  createdAt DateTime @default(now())
 }
 
 enum Role {

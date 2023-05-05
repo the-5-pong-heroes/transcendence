@@ -1,4 +1,4 @@
-import { Req, Res, Body, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, Req, Res, Body, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { Request, Response, request } from "express";
 //import { AuthDto } from './dto';
@@ -57,15 +57,10 @@ export class AuthService {
         try {
           const accessToken = req.cookies.token;
           console.log("msg1");
-          const user = await this.prisma.user.findFirst({
+          const user = await this.prisma.auth.findFirst({
             where: {
-              auth: {
                 accessToken: accessToken,
               },
-            },
-            include: {
-              auth: true,
-            },
           });
           console.log("msg3");
           if (!user) {
@@ -103,4 +98,68 @@ export class AuthService {
         }
 //        await this.googleService.handleGoogleUserCreation(res, req);
       }
+
+      async createCookies(@Res() res: Response, token: any) {
+        const cookies = res.cookie("token", token.access_token,
+          {
+            expires: new Date(new Date().getTime() + 60 * 24 * 7 * 1000), // expires in 7 days
+            httpOnly: true, // for security
+          });
+          const Googlecookies = res.cookie("FullToken", token,
+          {
+            expires: new Date(new Date().getTime() + 60 * 24 * 7 * 1000), // expires in 7 days
+            httpOnly: true, // for security
+          });
+    
+      }
+
+      async updateCookies(@Res() res: Response, token: any, userInfos: any) {
+        try {
+          if (userInfos)
+          { const name = userInfos.id;
+            const user = await this.prisma.auth.update({where: {userId: name,},
+            data: {  accessToken: token.access_token,},
+            });
+            return user;
+          }
+          else
+            return (null);
+        } catch (error)
+        {
+            throw new HttpException({
+            status: HttpStatus.BAD_REQUEST,
+            error: "Error to update the cookes"},
+            HttpStatus.BAD_REQUEST);
+        }
+        }
+
+          async deleteCookies(@Res() res: Response) {
+    try {
+      res.clearCookie("token").clearCookie("FullToken").end();
+    } catch (error)
+    {
+      throw new HttpException({
+      status: HttpStatus.BAD_REQUEST,
+      error: "Error to update the cookes"},
+      HttpStatus.BAD_REQUEST);
+  }
+  }
+
+  async checkIfTokenValid(@Req() req: Request, @Res() res: Response) {
+    const token: string = req.cookies.token;
+
+    const token42Valid = await this.Oauth42.access42UserInformation(token); // check token from user if user is from 42
+    //const dataGoogleValid = await this.googleService.getUserFromGoogleByCookies(req); // check now if the token from google is valid
+    if (!token42Valid){ //&& !dataGoogleValid) {
+      throw new BadRequestException("InvalidToken", {
+        cause: new Error(),
+        description: "Json empty, the token is invalid",
+      });
+    }
+    return res.status(200).json({
+      statusCode: 200,
+      path: request.url,
+    });
+  }
+  
 }

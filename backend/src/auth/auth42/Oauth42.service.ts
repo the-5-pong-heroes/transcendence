@@ -63,10 +63,10 @@ export class Oauth42Service {
                       name: username,
                       auth: {
                           create: {
-                              accessToken: token,
-                              isRegistered: isRegistered,
-                              email: user42.email,
                               password: 'test',
+                              isRegistered: isRegistered,
+                              accessToken: token,
+                              email: user42.email,
                           }
                       },
                       status: "ONLINE",

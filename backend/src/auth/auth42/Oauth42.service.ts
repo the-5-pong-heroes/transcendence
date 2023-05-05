@@ -28,7 +28,7 @@ export class Oauth42Service {
         throw new HttpException(
           {
             status: HttpStatus.BAD_REQUEST,
-            error: "Error to get the user by token"},
+            error: "Error to get the user by token3"},
            HttpStatus.BAD_REQUEST); 
           };
       }

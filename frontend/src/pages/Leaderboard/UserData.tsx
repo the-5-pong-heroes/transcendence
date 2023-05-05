@@ -1,5 +1,5 @@
 import { DefaultAvatar } from "../../assets";
-import { Plant, Walle, Eve, Energy } from "../../assets";
+import { UserLevel } from "./UserLevel";
 import { UserStatus } from "./UserStatus";
 
 const UserData = ({users}: any) => {
@@ -17,7 +17,7 @@ const UserData = ({users}: any) => {
               <div className="col">{score}</div>
               <div className="col">{wins}</div>
               <div className="col">{defeats}</div>
-              <div className="col">{level}</div>
+              <UserLevel myClassName="col level" level={level} />
               <UserStatus myClassName="col status" status={status} />
               <div className="col">{friend}</div>
               <div className="col">{ranking}</div>

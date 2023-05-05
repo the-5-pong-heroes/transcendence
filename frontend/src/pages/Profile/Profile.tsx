@@ -3,6 +3,7 @@ import "./Profile.css";
 import { DefaultAvatar } from "../../assets";
 import { Plant, Walle, Eve, Energy } from "../../assets";
 import { UserStatus } from "../Leaderboard/UserStatus";
+import { UserLevel } from "../Leaderboard/UserLevel";
 
 
 interface ProfileProps {
@@ -49,10 +50,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
           <span>Score: </span>
           <span>{user.score}</span>
         </div>
-        <div className="column level">
-          <img src={user.levelPicture} alt="levelPicture" />
-          <span>{user.level}</span>
-        </div>
+        <UserLevel myClassName="column level" level={user.level} />
         <div className="column column-details">
           <span>Ranking: </span>
           {/* TODO */}

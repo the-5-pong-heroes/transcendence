@@ -3,13 +3,15 @@ import { AuthService } from "./auth.service";
 import { GoogleAuthGuard } from './google/guards';
 import { Request, Response } from "express";
 import { UserDto } from "./dto";
+import { UserService } from "src/users/users.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
 
 
 @Controller("auth")
 export class AuthController{
     constructor(private authService: AuthService,
-        private Oauth42: Oauth42Service,)  {}
+        private Oauth42: Oauth42Service,
+        private userService: UserService,)  {}
 
     // //3333
     // @Get("google/login")
@@ -26,7 +28,7 @@ export class AuthController{
     // }
 
     /***  Create the user in database from the page registration ***/
-    @Get("getuserbytoken")
+    @Get("/Oauth42/login")
     async getUserByToken(@Req() req: Request) {
         return await this.authService.getUserByToken(req);
     }
@@ -40,14 +42,12 @@ export class AuthController{
     async getToken(@Req() req: Request, @Res() res: Response) {
         const codeFromUrl = req.query.code as string;
         const token = await this.Oauth42.accessToken(codeFromUrl);
-        const user42infos = await this.Oauth42.access42UserInformation(
-        token.access_token
-        );
+        const user42infos = await this.Oauth42.access42UserInformation(token.access_token);
 
 //         this.authService.createCookies(res, token);
-//         const userExists = await this.userService.getUserByEmail(user42infos.email);
+         const userExists = await this.userService.getUserByEmail(user42infos.email);
 //         this.authService.updateCookies(res, token, userExists);
-//         this.authService.RedirectConnectingUser(req,res, userExists?.email);
+         this.authService.RedirectConnectingUser(req,res, userExists?.email);
      }
 
 //   @Get("token")

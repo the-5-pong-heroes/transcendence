@@ -43,59 +43,49 @@ export class AuthService {
                 }, HttpStatus.BAD_REQUEST);
         }
     }
-    
-    
-    // async createDataBase42User(
-    //     user42: any,
-    //     token: string,
-    //     username: string,
-    //     isRegistered: boolean
-    //     ) {
-    //     try {
-    //         const user = await this.prisma.user.create({
-    //         data: {
-    //             accessToken: token,
-    //             isRegistered: isRegistered,
-    //             name: username,
-    //             email: user42.email,
-    //         },
-    //         });
+
+    async RedirectConnectingUser(
+        @Req() req: Request,
+        @Res() res: Response,
+        email: string | null | undefined
+      ) {
+        if (!email) res.redirect(301, `http://e1r2p7.clusters.42paris.fr:5173/registration`);
+        else res.redirect(301, `http://e1r2p7.clusters.42paris.fr:5173/`);
+      }
         
-    //         return user;
-    //     } catch (error) {
-    //         throw new HttpException(
-    //         {
-    //         status: HttpStatus.BAD_REQUEST,
-    //         error: "Error to create the user to the database"
-    //         }, HttpStatus.BAD_REQUEST);
-    //         };
-    //     }
-        
-    async getUserByToken(req: Request) {
+      async getUserByToken(req: Request) {
         try {
-                const accessToken = req.cookies.token;
-                const user = await this.prisma.auth.findFirst({
-                where: {
-                    accessToken: accessToken,
-                },
-                });
-                if (!user)
-                {
-                throw new HttpException(
-                    {
-                    status: HttpStatus.BAD_REQUEST,
-                    error: "Error to get the user by token"},
-                    HttpStatus.BAD_REQUEST);
-                    };
-                return user;
-        } catch (error) {
-            throw new HttpException(
-            {
+          const accessToken = req.cookies.token;
+          console.log("msg1");
+          const user = await this.prisma.user.findFirst({
+            where: {
+              auth: {
+                accessToken: accessToken,
+              },
+            },
+            include: {
+              auth: true,
+            },
+          });
+          console.log("msg3");
+          if (!user) {
+            throw new HttpException({
                 status: HttpStatus.BAD_REQUEST,
-                error: "Error to get the user by token"},
-                HttpStatus.BAD_REQUEST);
+                error: "Error to get the user by token1"
+              },
+              HttpStatus.BAD_REQUEST
+            );
+          };
+          return user;
+        } catch (error) {
+          throw new HttpException({
+              status: HttpStatus.BAD_REQUEST,
+              error: "Error to get the user by token2"
+            },
+            HttpStatus.BAD_REQUEST
+          );
         };
-    }
+      }
     
     async handleDataBaseCreation(@Req() req: Request, @Res() res: Response, @Body() UserDto: UserDto) {
         const token: string = req.cookies.token;

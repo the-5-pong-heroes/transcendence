@@ -10,4 +10,15 @@ export class UserService {
 	async getAllUsers(blockedOf: string) {
 			const users = await this.prisma.user.findMany({});
 		}
+
+	async getUserByEmail(email: string) {
+		try {
+			const user = await this.prisma.auth.findFirst({
+				where: {
+					email: email,
+				},
+			});
+			return user;
+		} catch (error) {}
+	}
 }

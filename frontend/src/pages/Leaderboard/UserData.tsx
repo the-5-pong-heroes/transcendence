@@ -1,18 +1,27 @@
+import { DefaultAvatar } from "../../assets";
+import { Plant, Walle, Eve, Energy } from "../../assets";
+import { UserStatus } from "./UserStatus";
+
 const UserData = ({users}: any) => {
   return (
     <>
       {
         users.map((curUser : any, i: number) => {
-          const {avatar, name, score, wins, defeats, level} = curUser;
+          const {avatar, name, score, wins, defeats, level, status, friend, ranking} = curUser;
           return (
-            <tr key={i}>
-              <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">{avatar}</td>
-              <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">{name}</td>
-              <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">{score}</td>
-              <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">{wins}</td>
-              <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">{defeats}</td>
-              <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">{level}</td>
-            </tr>
+            <div className="row" key={i}>
+              <div className="col">
+                <img src={DefaultAvatar} alt="profilePicture" />
+              </div>
+              <div className="col">{name}</div>
+              <div className="col">{score}</div>
+              <div className="col">{wins}</div>
+              <div className="col">{defeats}</div>
+              <div className="col">{level}</div>
+              <UserStatus myClassName="col status" status={status} />
+              <div className="col">{friend}</div>
+              <div className="col">{ranking}</div>
+            </div>
           )
         })
       }

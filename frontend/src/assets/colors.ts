@@ -1,0 +1,9 @@
+const PURPLE_1: string = "#504bd2";
+const PURPLE_2: string = "#292669";
+const PURPLE_3: string = "#775d9e";
+const PINK: string = "#e2aaab";
+const BLUE_1: string = "#4b4b95";
+const BLUE_2: string = "#333679";
+const BLUE_3: string = "#3d3d85";
+const DARK_BLUE: string = "#011f37";
+const RED: string = "#e71e24";

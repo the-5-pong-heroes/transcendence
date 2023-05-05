@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Profile.css";
 import { DefaultAvatar } from "../../assets";
 import { Plant, Walle, Eve, Energy } from "../../assets";
+import { UserStatus } from "../Leaderboard/UserStatus";
 
 
 interface ProfileProps {
@@ -34,45 +35,40 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
 
   return (
     <div ref={profileRef} id="Profile" className="Profile">
-      <div className="row row1">
-        <div className="col avatar">
+      <div className="profile-block block1">
+        <div className="avatar">
           <img src={DefaultAvatar} alt="profilePicture" />
         </div>
-        <div className="col username">
+        <div className="column username">
           {user.name}
         </div>
-        <div className="col status">
-          <span className={ user.status === 'ONLINE' ? "bullet-green" : (user.status === "PLAYING" ? 'bullet-orange' : 'bullet-red' ) }>
-            { user.status !== "PLAYING" ? "•" : "◦" }
-          </span>
-          <span>{user.status}</span>
-        </div>
+        <UserStatus myClassName="column status" status={user.status} />
       </div>
-      <div className="row row2">
-        <div className="col col-details">
+      <div className="profile-block block2">
+        <div className="column column-details">
           <span>Score: </span>
           <span>{user.score}</span>
         </div>
-        <div className="col level">
+        <div className="column level">
           <img src={user.levelPicture} alt="levelPicture" />
           <span>{user.level}</span>
         </div>
-        <div className="col col-details">
+        <div className="column column-details">
           <span>Ranking: </span>
           {/* TODO */}
           <span>17th</span>
         </div>
       </div>
-      <div className="row row2">
-        <div className="col col-details">
+      <div className="profile-block block2">
+        <div className="column column-details">
           <span>Wins: </span>
           <span>{user.wins}</span>
         </div>
-        <div className="col col-details">
+        <div className="column column-details">
           <span>Defeats: </span>
           <span>{user.defeats}</span>
         </div>
-        <div className="col col-details">
+        <div className="column column-details">
           <span>Games: </span>
           <span>{user.nbGames}</span>
         </div>

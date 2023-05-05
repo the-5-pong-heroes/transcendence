@@ -27,26 +27,20 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
 
   return (
     <div ref={boardRef} id="Leaderboard" className="Leaderboard">
-      <div className="group">
-        <h1 className="title">Leaderboard</h1>
-        <table className="table-auto">
-        <thead>
-          <tr>
-            <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Avatar</th>
-            <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Username</th>
-            <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Score</th>
-            <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Wins</th>
-            <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Defeats</th>
-            <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Level</th>
-            <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Online</th>
-            <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Friend</th>
-          </tr>
-        </thead>
-        <tbody className="bg-white dark:bg-slate-800">
-          <UserData users={users} />
-        </tbody>
-      </table>
+      <div className="row firstRow">
+        <div className="col">Avatar</div>
+        <div className="col">Username</div>
+        <div className="col">Score</div>
+        <div className="col">Wins</div>
+        <div className="col">Defeats</div>
+        <div className="col">Level</div>
+        <div className="col">Status</div>
+        <div className="col">Friend</div>
+        <div className="col">Ranking</div>
       </div>
+      <UserData users={users} />
     </div>
   );
 };
+
+  {/* <h1 className="title">Leaderboard</h1> */}

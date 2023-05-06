@@ -1,16 +1,18 @@
 import { BadRequestException, Req, Res, Body, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { Request, Response, request } from "express";
-//import { AuthDto } from './dto';
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
 import { UserDto } from "./dto";
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { GoogleService } from "src/auth/google/google.service";
+
 
 @Injectable()
 export class AuthService {
 
     constructor(private prisma: PrismaService,
-        private Oauth42: Oauth42Service,) {}
+        private Oauth42: Oauth42Service,
+        private googleService: GoogleService,
+        ) {}
 
     async createDataBase42User(
         user42: any,
@@ -53,34 +55,34 @@ export class AuthService {
         else res.redirect(301, `http://e1r2p7.clusters.42paris.fr:5173/`);
       }
         
-      async getUserByToken(req: Request) {
-        try {
-          const accessToken = req.cookies.token;
-          console.log("msg1");
-          const user = await this.prisma.auth.findFirst({
-            where: {
-                accessToken: accessToken,
-              },
-          });
+    async getUserByToken(req: Request) {
+      try {
+        const accessToken = req.cookies.token;
+        console.log(accessToken);
+        const user = await this.prisma.auth.findFirst({
+          where: {
+              accessToken: accessToken,
+            },
+            });
           console.log("msg3");
-          if (!user) {
-            throw new HttpException({
-                status: HttpStatus.BAD_REQUEST,
-                error: "Error to get the user by token1"
-              },
-              HttpStatus.BAD_REQUEST
-            );
-          };
-          return user;
-        } catch (error) {
+        if (!user) {
           throw new HttpException({
               status: HttpStatus.BAD_REQUEST,
-              error: "Error to get the user by token2"
+              error: "Error to get the user by token1"
             },
             HttpStatus.BAD_REQUEST
           );
         };
-      }
+          return user;
+      } catch (error) {
+        throw new HttpException({
+            status: HttpStatus.BAD_REQUEST,
+            error: "Error to get the user by token2"
+          },
+          HttpStatus.BAD_REQUEST
+        );
+      };
+    }
     
     async handleDataBaseCreation(@Req() req: Request, @Res() res: Response, @Body() UserDto: UserDto) {
         const token: string = req.cookies.token;
@@ -96,7 +98,7 @@ export class AuthService {
             path: finalUser,
           });
         }
-//        await this.googleService.handleGoogleUserCreation(res, req);
+        await this.googleService.handleGoogleUserCreation(res, req);
       }
 
       async createCookies(@Res() res: Response, token: any) {
@@ -133,7 +135,7 @@ export class AuthService {
         }
         }
 
-          async deleteCookies(@Res() res: Response) {
+    async deleteCookies(@Res() res: Response) {
     try {
       res.clearCookie("token").clearCookie("FullToken").end();
     } catch (error)
@@ -149,8 +151,8 @@ export class AuthService {
     const token: string = req.cookies.token;
 
     const token42Valid = await this.Oauth42.access42UserInformation(token); // check token from user if user is from 42
-    //const dataGoogleValid = await this.googleService.getUserFromGoogleByCookies(req); // check now if the token from google is valid
-    if (!token42Valid){ //&& !dataGoogleValid) {
+    const dataGoogleValid = await this.googleService.getUserFromGoogleByCookies(req); // check now if the token from google is valid
+    if (!token42Valid && !dataGoogleValid) {
       throw new BadRequestException("InvalidToken", {
         cause: new Error(),
         description: "Json empty, the token is invalid",

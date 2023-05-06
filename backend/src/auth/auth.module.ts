@@ -5,11 +5,12 @@ import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { Oauth42Service } from "./auth42/Oauth42.service";
 import { GoogleStrategy } from "./google/google.strategy";
+import { GoogleService } from "./google/google.service";
 
 
 @Module({
     imports: [PrismaModule],
     controllers: [AuthController],
-    providers: [GoogleStrategy, AuthService, Oauth42Service, UserService],
+    providers: [GoogleStrategy, GoogleService, AuthService, Oauth42Service, UserService],
 })
 export class AuthModule {}

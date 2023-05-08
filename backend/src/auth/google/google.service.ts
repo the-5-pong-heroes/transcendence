@@ -95,7 +95,7 @@ export class GoogleService {
                 }
             },
             status: "ONLINE",
-            last_login: new Date()
+            lastLogin: new Date()
         },
       });
       return user;

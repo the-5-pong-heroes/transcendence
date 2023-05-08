@@ -1,4 +1,5 @@
 import { NestFactory, HttpAdapterHost } from "@nestjs/core";
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from "./app.module";
 import * as session from "express-session";
 import * as cookieParser from 'cookie-parser';

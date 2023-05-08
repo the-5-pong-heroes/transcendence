@@ -34,21 +34,17 @@ export class Oauth42Service {
       }
     async access42UserInformation(accessToken: string) {    
       try {
-          console.log("access42Userinfo1");
           const response = await fetch("https://api.intra.42.fr/v2/me", {
           method: "GET",
           headers: { Authorization: `Bearer ${accessToken}` },
           });
-          console.log("access42Userinfo2");
           if (response.ok) 
           { 
-            console.log("access42Userinfo3");
           const data = await response.json();
           return data;
           }
       }
       catch(error) {
-        console.log("access42Userinfo4");
           console.log("Fetch42 user doesnt work, next step is testing with googleapi")
       }
           return null;

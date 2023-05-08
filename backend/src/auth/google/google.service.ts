@@ -17,21 +17,19 @@ export class GoogleService {
     try {
       const userGoogleInfos = await this.getUserFromGoogleByCookies(req)
       if (userGoogleInfos) {
-        const finalUser = await this.createDataBaseUserFromGoogle
-      (
+        const finalUser = await this.createDataBaseUserFromGoogle(
         res,
         userGoogleInfos,
         req.body.name,
         req.body.isRegistered
       )
-        return res.status(200).json(
-        {
+        return res.status(200).json({
           statusCode: 200,
           path: finalUser,
         });
-    }} catch (error) {
-      throw new HttpException(
-        {
+      }
+    } catch (error) {
+      throw new HttpException({
           status: HttpStatus.BAD_REQUEST,
           error: "Error to create the user to the database"
         }, HttpStatus.BAD_REQUEST);
@@ -83,7 +81,6 @@ export class GoogleService {
     userGoogle: any,
     name: string,
     isRegistered: boolean
-
   ) {
     try {    
       const user = await this.prisma.user.create({
@@ -114,9 +111,7 @@ export class GoogleService {
 async getTokenFromGoogle(code :string)
 {  
   const oauth2Client = await this.getOauth2ClientGoogle();
-  console.log(oauth2Client);
   const {tokens} = await oauth2Client.getToken(code);
-  console.log(tokens);
   const token = {
     access_token: tokens.access_token,
   }

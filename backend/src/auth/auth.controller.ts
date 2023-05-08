@@ -43,13 +43,14 @@ export class AuthController{
    }
 
    @Get("google/callback")
-     async handleGoogleRedirection(@Req() req: Request, @Res() res: Response) {        const codeFromUrl = req.query.code as string;
-     const token: any = await this.googleService.getTokenFromGoogle(codeFromUrl);
-     const userInfos : any = await this.googleService.getUserFromGoogle(token);
-     this.authService.createCookies(res, userInfos);
-     const userExists = await this.userService.getUserByEmail(userInfos.email);
-     this.authService.updateCookies(res, token, userExists);
-     this.authService.RedirectConnectingUser(req, res, userExists?.email);
+     async handleGoogleRedirection(@Req() req: Request, @Res() res: Response) {
+      const codeFromUrl = req.query.code as string;
+      const token: any = await this.googleService.getTokenFromGoogle(codeFromUrl);
+      const userInfos : any = await this.googleService.getUserFromGoogle(token);
+      this.authService.createCookies(res, userInfos);
+      const userExists = await this.userService.getUserByEmail(userInfos.email);
+      this.authService.updateCookies(res, token, userExists);
+      this.authService.RedirectConnectingUser(req, res, userExists?.email);
    }
 
 //    @Get("logout")

@@ -58,13 +58,11 @@ export class AuthService {
     async getUserByToken(req: Request) {
       try {
         const accessToken = req.cookies.token;
-        console.log(accessToken);
         const user = await this.prisma.auth.findFirst({
           where: {
               accessToken: accessToken,
             },
             });
-          console.log("msg3");
         if (!user) {
           throw new HttpException({
               status: HttpStatus.BAD_REQUEST,

@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
 import {PrismaService} from '../database/prisma.service';
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+
 
 @Injectable({})
 export class UserService {
@@ -21,4 +22,5 @@ export class UserService {
 			return user;
 		} catch (error) {}
 	}
+
 }

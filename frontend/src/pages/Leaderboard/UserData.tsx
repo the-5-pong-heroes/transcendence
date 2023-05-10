@@ -7,7 +7,7 @@ const UserData = ({users}: any) => {
     <>
       {
         users.map((curUser : any, i: number) => {
-          const {avatar, name, score, wins, defeats, level, status, friend, isMe} = curUser;
+          const {avatar, name, score, wins, defeats, level, status, friend, isMe, rank} = curUser;
           return (
             <div className={`row${isMe ? " me" : ""}`} key={i}>
               <div className="col">
@@ -20,9 +20,9 @@ const UserData = ({users}: any) => {
               <UserLevel myClassName="col level" level={level} />
               <UserStatus myClassName="col status" status={status} />
               <div className="col">
-                <span className={friend ? "friend" : "not-friend"}>{friend ? "✓" : "✗"}</span>
+                <span className={friend ? "friend" : "not-friend"}>{friend ? "✓" : (isMe ? "-" : "✗")}</span>
               </div>
-              <div className="col">{i+1}</div>
+              <div className="col">{rank}</div>
             </div>
           )
         })

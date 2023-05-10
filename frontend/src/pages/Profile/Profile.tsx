@@ -53,8 +53,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
         <UserLevel myClassName="column level" level={user.level} />
         <div className="column column-details">
           <span>Ranking: </span>
-          {/* TODO */}
-          <span>17th</span>
+          <span>{user.rank}</span>
         </div>
       </div>
       <div className="profile-block block2">

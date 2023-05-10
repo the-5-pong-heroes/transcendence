@@ -7,9 +7,9 @@ const UserData = ({users}: any) => {
     <>
       {
         users.map((curUser : any, i: number) => {
-          const {avatar, name, score, wins, defeats, level, status, friend} = curUser;
+          const {avatar, name, score, wins, defeats, level, status, friend, isMe} = curUser;
           return (
-            <div className="row" key={i}>
+            <div className={`row${isMe ? " me" : ""}`} key={i}>
               <div className="col">
                 <img src={DefaultAvatar} alt="profilePicture" />
               </div>

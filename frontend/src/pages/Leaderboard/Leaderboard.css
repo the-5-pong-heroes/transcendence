@@ -71,6 +71,10 @@
   background: linear-gradient(0deg, #504bd2 0%, rgba(80, 75, 210, 0.5) 100%)!important;
 }
 
+.row.me {
+  border: 3px solid #011f37;
+}
+
 .row:not(.firstRow) {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;

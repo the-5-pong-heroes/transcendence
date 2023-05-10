@@ -9,8 +9,8 @@ export class StatsController {
   constructor(private statsService: StatsService) {}
 
   @Get()
-  getStatsData() {
-    return this.statsService.getStatsData();
+  getStatsData(@CurrentUser("") user: User) {
+    return this.statsService.getStatsData(user);
   }
 
   // @Get(":id")

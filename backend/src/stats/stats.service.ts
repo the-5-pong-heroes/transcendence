@@ -13,6 +13,7 @@ interface UserData {
     level: string;
     status: string;
     friend: boolean;
+    isMe: boolean;
   };
 }
 interface MyData {
@@ -79,11 +80,12 @@ export class StatsService {
     return friendships.map((item: any) => item.user.id).includes(user_id);
   }
 
-  async getStatsData() {
+  async getStatsData(currentUser: User) {
     const games = await this.getGames();
     const users: UserData = {};
     // initialization
-    const friendships = (await this.getFriends("011500e7-4c91-4f97-b41f-d2678a8e773e"))?.addedBy;
+    const myId = "4e0e94c6-f526-4346-b2f5-b51c7ea9ba5c"; // TODO currentUser.id
+    const friendships = (await this.getFriends(myId))?.addedBy;
     games.forEach((item) => {
       const userId1: string = item["playerOne"]["id"];
       const userId2: string = item["playerTwo"]?.id as string;
@@ -97,6 +99,7 @@ export class StatsService {
           avatar: "",
           status: UserStatus.OFFLINE,
           friend: this.isFriend(friendships, userId1),
+          isMe: userId1 == myId,
         };
       if (!(userId2 in users))
         users[userId2] = {
@@ -108,6 +111,7 @@ export class StatsService {
           avatar: "",
           status: UserStatus.OFFLINE,
           friend: this.isFriend(friendships, userId2),
+          isMe: userId2 == myId,
         };
     });
     games.forEach((item) => {
@@ -141,7 +145,7 @@ export class StatsService {
     return output;
   }
 
-  async getUserData(currentuser: User) {
+  async getUserData(currentUser: User) {
     // TEMPORAIRE
     const user = await this.getFriends("bb7d87d5-dba5-4461-b462-e577a210e827");
     const games = await this.getGames();

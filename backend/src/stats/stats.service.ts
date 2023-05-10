@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
 import { LEVELS, LEVEL_THRESHOLD } from "src/common/constants/others";
-import { Friendship, GameStatus, User, UserStatus } from "@prisma/client";
+import { GameStatus, User, UserStatus } from "@prisma/client";
 
 interface UserData {
   [id: string]: {
@@ -12,7 +12,7 @@ interface UserData {
     defeats: number;
     level: string;
     status: string;
-    // friend: boolean;
+    friend: boolean;
   };
 }
 interface MyData {
@@ -31,6 +31,16 @@ interface MyData {
 @Injectable({})
 export class StatsService {
   constructor(private prisma: PrismaService) {}
+
+  async getFriends(user_id: string) {
+    const data = await this.prisma.user.findUnique({
+      where: {
+        id: user_id,
+      },
+      include: { addedBy: { select: { user: { select: { name: true, id: true } } } } },
+    });
+    return data;
+  }
 
   async getGames() {
     return await this.prisma.game.findMany({
@@ -65,10 +75,15 @@ export class StatsService {
     return LEVELS[level_number];
   }
 
+  isFriend(friendships: any, user_id: string) {
+    return friendships.map((item: any) => item.user.id).includes(user_id);
+  }
+
   async getStatsData() {
     const games = await this.getGames();
     const users: UserData = {};
     // initialization
+    const friendships = (await this.getFriends("011500e7-4c91-4f97-b41f-d2678a8e773e"))?.addedBy;
     games.forEach((item) => {
       const userId1: string = item["playerOne"]["id"];
       const userId2: string = item["playerTwo"]?.id as string;
@@ -81,7 +96,7 @@ export class StatsService {
           level: LEVELS[0],
           avatar: "",
           status: UserStatus.OFFLINE,
-          // friend: 0,
+          friend: this.isFriend(friendships, userId1),
         };
       if (!(userId2 in users))
         users[userId2] = {
@@ -92,7 +107,7 @@ export class StatsService {
           level: LEVELS[0],
           avatar: "",
           status: UserStatus.OFFLINE,
-          // friend: 0,
+          friend: this.isFriend(friendships, userId2),
         };
     });
     games.forEach((item) => {
@@ -118,22 +133,17 @@ export class StatsService {
       users[user_id]["level"] = this.getLevel(users[user_id]["score"]);
     });
     // by default, we sort the users by their score
-    return Object.keys(users)
-      .map((id) => {
+    const output = Object.keys(users)
+      .map((id: string) => {
         return { id: id, ...users[id] };
       })
       .sort((userA, userB): number => userB.score - userA.score);
+    return output;
   }
 
   async getUserData(currentuser: User) {
     // TEMPORAIRE
-    const user = await this.prisma.user.findUnique({
-      where: {
-        // name: "John Doe",
-        name: "Jane Smith",
-      },
-      include: { addedBy: { select: { user: { select: { name: true, id: true } } } } },
-    });
+    const user = await this.getFriends("bb7d87d5-dba5-4461-b462-e577a210e827");
     const games = await this.getGames();
     const myData: MyData = {
       id: user?.id as string,

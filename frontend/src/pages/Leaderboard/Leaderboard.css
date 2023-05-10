@@ -53,6 +53,7 @@
 .col {
   align-self: center;
   flex: 1 0 0%;
+  text-align: center;
 }
 
 .col.status {
@@ -79,64 +80,19 @@
   width: 60px;
 }
 
-
-/*
-.title {
-  z-index: 8;
-  color: #9d8ce0;
-  font-size: 2rem;
+.row .col:last-child,
+.row .col:nth-last-child(2) {
+  font-size: 1.1rem;
 }
 
-.group {
-  position: absolute;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+.friend {
+  color: green;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
-.item {
-  position: relative;
-  width: 55vw;
-  height: 5vh;
-  background-position: center;
-  background-size: adapt;
-  margin: 2vh;
-  padding: 20px;
-  border-radius: 4vh;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  transition: ease-out 0.2s;
-  background: linear-gradient(135deg, #295fd5, #9d8ce0);
+.not-friend {
+  color: #011f37;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
-
-.item:hover {
-  height: 10vh;
-}
-
-.Infos {
-  display: flex;
-  opacity: 0;
-  width: 0;
-  justify-content: space-between;
-  flex-direction: row;
-  flex-grow: 0;
-  transition: opacity 0.1s ease, width 1s ease 0.1s;
-}
-
-.item .Player {
-  font-weight: bold;
-  color: #9d8ce0;
-  flex-grow: 1;
-  transition: ease 1s;
-}
-
-.item:hover .Infos {
-  width: 35vw;
-  opacity: 1;
-  transition: opacity 0.1s ease 1s, width 1s ease;
-} */

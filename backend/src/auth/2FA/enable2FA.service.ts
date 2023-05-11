@@ -25,7 +25,7 @@ export class EnableService {
         HttpStatus.BAD_REQUEST);
     }
   }
-
+  
   async updateUser(@Req() req: Request) {
 		try {
 			const { userName } = req.body;

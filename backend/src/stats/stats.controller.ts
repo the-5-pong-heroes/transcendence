@@ -1,6 +1,5 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post } from "@nestjs/common";
-import { StatsService } from "./stats.service";
-import { PrismaService } from "src/database/prisma.service";
+import { Controller, Get } from "@nestjs/common";
+import { StatsService, UserData } from "./stats.service";
 import { User } from "@prisma/client";
 import { CurrentUser } from "src/models/users/current-user.decorator";
 
@@ -9,8 +8,8 @@ export class StatsController {
   constructor(private statsService: StatsService) {}
 
   @Get()
-  getStatsData(@CurrentUser("") user: User) {
-    return this.statsService.getStatsData(user);
+  getStatsData(@CurrentUser("") user: User): Promise<UserData> {
+    return this.statsService.getUserStats(user); // FIXME
   }
 
   // @Get(":id")
@@ -25,7 +24,7 @@ export class MyProfileController {
 
   @Get()
   getUserData(@CurrentUser("") user: User) {
-    return this.statsService.getUserData(user);
+    return this.statsService.getUserStats(user);
   }
 
   // @Get(":uuid")

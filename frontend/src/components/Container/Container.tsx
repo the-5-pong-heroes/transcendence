@@ -39,7 +39,7 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
     <div onScroll={handleScroll} className="container">
       <div className="wrap">
         <div className="background">
-          <img src={theme === "light" ? BackgroundLight : Background} />
+          <img src={theme === "light" ? BackgroundLight : Background} className="background-img" />
         </div>
         <Parallax className="layer stars" translateX={["-300px", "0px"]}>
           <img src={Stars} />

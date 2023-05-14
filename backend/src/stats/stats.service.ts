@@ -16,6 +16,7 @@ export interface GamesStats {
     wins: number;
     defeats: number;
     rank: number;
+    nbGames: number;
   };
 }
 
@@ -42,6 +43,7 @@ export interface UserStats {
   score: number;
   wins: number;
   defeats: number;
+  nbGames: number;
   friends: { name: string; id: string }[];
   level: string;
   isFriend: boolean;
@@ -52,16 +54,9 @@ export interface UserStats {
 export class StatsService {
   constructor(private prisma: PrismaService) {}
 
-  getLevel(score: number): string {
-    const level_number = Math.min(LEVELS.length - 1, Math.floor(score / LEVEL_THRESHOLD));
-    return LEVELS[level_number];
-  }
+  // ############################### DB queries ###############################
 
-  isFriend(friends: { name: string; id: string }[], userId: string): boolean {
-    return friends.map((item: any) => item.id).includes(userId);
-  }
-
-  async extractGamesData(): Promise<GameData[]> {
+  private async extractGamesData(): Promise<GameData[]> {
     const rawData = await this.prisma.game.findMany({
       where: { status: GameStatus.FINISHED },
       select: {
@@ -74,15 +69,57 @@ export class StatsService {
     return rawData as GameData[];
   }
 
-  async getGamesStats(): Promise<GamesStats> {
+  private async extractUsersData(): Promise<UserData[]> {
+    const rawData = await this.prisma.user.findMany({
+      include: { addedBy: { select: { user: { select: { name: true, id: true } } } } },
+    });
+    return rawData;
+  }
+
+  private async extractUserData(myUserId: string, userId: string): Promise<UserStats> {
+    const { addedBy, ...data } = await this.prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      include: { addedBy: { select: { user: { select: { name: true, id: true } } } } },
+    });
+    const friends: { name: string; id: string }[] = [];
+    addedBy.forEach((friend) => {
+      friends.push({ name: friend.user.name, id: friend.user.id });
+    });
+    const otherInfo = {
+      rank: 1,
+      score: 0,
+      wins: 0,
+      defeats: 0,
+      nbGames: 0,
+      level: "",
+      isMe: myUserId === userId,
+      isFriend: this.isFriend(friends, userId),
+    };
+    return { ...data, friends, ...otherInfo };
+  }
+
+  // ################################# Utils ##################################
+
+  private getLevel(score: number): string {
+    const level_number = Math.min(LEVELS.length - 1, Math.floor(score / LEVEL_THRESHOLD));
+    return LEVELS[level_number];
+  }
+
+  private isFriend(friends: { name: string; id: string }[], userId: string): boolean {
+    return friends.map((item: any) => item.id).includes(userId);
+  }
+
+  private async getGamesStats(): Promise<GamesStats> {
     const gamesStats: GamesStats = {};
     const rawData = await this.extractGamesData();
     rawData.forEach((game) => {
       const { playerOne, playerOneScore, playerTwo, playerTwoScore } = game;
-      const playerOneData = gamesStats[playerOne.id] || { rank: 0, score: 0, wins: 0, defeats: 0 };
-      const playerTwoData = gamesStats[playerTwo.id] || { rank: 0, score: 0, wins: 0, defeats: 0 };
+      const playerOneData = gamesStats[playerOne.id] || { nbGames: 0, rank: 0, score: 0, wins: 0, defeats: 0 };
+      const playerTwoData = gamesStats[playerTwo.id] || { nbGames: 0, rank: 0, score: 0, wins: 0, defeats: 0 };
       playerOneData.score += playerOneScore;
+      playerOneData.nbGames += 1;
       playerTwoData.score += playerTwoScore;
+      playerTwoData.nbGames += 1;
       if (playerOneScore > playerTwoScore) {
         playerOneData.wins += 1;
         playerTwoData.defeats += 1;
@@ -97,46 +134,26 @@ export class StatsService {
       return gamesStats[b].score - gamesStats[a].score;
     });
     let previousId = "";
-    ranks.forEach((userId) => {
+    ranks.forEach((userId, index) => {
       if (!previousId) {
-        gamesStats[userId].rank = 1;
+        gamesStats[userId].rank = index + 1;
       } else if (gamesStats[userId].score === gamesStats[previousId].score) {
         gamesStats[userId].rank = gamesStats[previousId].rank;
       } else {
-        gamesStats[userId].rank = gamesStats[previousId].rank + 1;
+        gamesStats[userId].rank = index + 1;
       }
       previousId = userId;
     });
     return gamesStats;
   }
 
-  async extractUserData(myUserId: string, userId: string): Promise<UserStats> {
-    const { addedBy, ...data } = await this.prisma.user.findUniqueOrThrow({
-      where: { id: userId },
-      include: { addedBy: { select: { user: { select: { name: true, id: true } } } } },
-    });
-    const friends: { name: string; id: string }[] = [];
-    addedBy.forEach((friend) => {
-      friends.push({ name: friend.user.name, id: friend.user.id });
-    });
-    const otherInfo = {
-      rank: 1,
-      score: 0,
-      wins: 0,
-      defeats: 0,
-      level: "",
-      isMe: myUserId === userId,
-      isFriend: this.isFriend(friends, userId),
-    };
-    return { ...data, friends, ...otherInfo };
-  }
-
-  addGamesStatsToUser(user: UserStats, games: GamesStats): UserStats {
+  private addGamesStatsToUser(user: UserStats, games: GamesStats): UserStats {
     if (user.id in games) {
       user.rank = games[user.id].rank;
       user.score = games[user.id].score;
       user.wins = games[user.id].wins;
       user.defeats = games[user.id].defeats;
+      user.nbGames = games[user.id].nbGames;
     } else if (Object.keys(games).length) {
       const {
         score: lowestScore,
@@ -145,11 +162,13 @@ export class StatsService {
       } = Object.values(games).sort((a, b) => {
         return a.score - b.score;
       })[0];
-      user.rank = lowestScore === 0 ? maxRank : maxRank + 1;
+      user.rank = lowestScore === 0 ? maxRank : Object.values(games).length + 1;
     }
     user.level = this.getLevel(user.score);
     return user;
   }
+
+  // ################ Public functions called by a controller #################
 
   async getUserStats(currentUser: User, targetUser: User): Promise<UserStats> {
     const user = await this.extractUserData(currentUser.id, targetUser.id);
@@ -157,35 +176,33 @@ export class StatsService {
     return this.addGamesStatsToUser(user, games);
   }
 
-  async extractUsersData(): Promise<UserData[]> {
-    const rawData = await this.prisma.user.findMany({
-      include: { addedBy: { select: { user: { select: { name: true, id: true } } } } },
-    });
-    return rawData;
-  }
-
   async getUsersStats(currentUser: User): Promise<UserStats[]> {
     const myUserId = currentUser.id;
     const rawData = await this.extractUsersData();
     const games = await this.getGamesStats();
-    const users: UserStats[] = rawData.map((userRawData) => {
-      const { addedBy, ...rest } = userRawData;
-      const friends: { name: string; id: string }[] = [];
-      addedBy.forEach((friend) => {
-        friends.push({ name: friend.user.name, id: friend.user.id });
+    const users: UserStats[] = rawData
+      .map((userRawData) => {
+        const { addedBy, ...rest } = userRawData;
+        const friends: { name: string; id: string }[] = [];
+        addedBy.forEach((friend) => {
+          friends.push({ name: friend.user.name, id: friend.user.id });
+        });
+        const otherInfo = {
+          rank: 1,
+          score: 0,
+          wins: 0,
+          defeats: 0,
+          nbGames: 0,
+          level: "",
+          isMe: userRawData.id === myUserId,
+          isFriend: this.isFriend(friends, myUserId),
+        };
+        const user = { ...rest, friends, ...otherInfo };
+        return this.addGamesStatsToUser(user, games);
+      })
+      .sort((a, b) => {
+        return a.rank - b.rank;
       });
-      const otherInfo = {
-        rank: 1,
-        score: 0,
-        wins: 0,
-        defeats: 0,
-        level: "",
-        isMe: userRawData.id === myUserId,
-        isFriend: this.isFriend(friends, myUserId),
-      };
-      const user = { ...rest, friends, ...otherInfo };
-      return this.addGamesStatsToUser(user, games);
-    });
     return users;
   }
 }

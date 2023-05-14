@@ -54,6 +54,30 @@ async function createGames() {
         status: "FINISHED",
         socketId: "socketId",
       },
+      {
+        playerOneId: "4e0e94c6-f526-4346-b2f5-b51c7ea9ba5c",
+        playerOneScore: 2,
+        playerTwoId: "bb7d87d5-dba5-4461-b462-e577a210e827",
+        playerTwoScore: 4,
+        status: "FINISHED",
+        socketId: "socketId",
+      },
+      {
+        playerOneId: "011500e7-4c91-4f97-b41f-d2678a8e773e",
+        playerOneScore: 2,
+        playerTwoId: "bb7d87d5-dba5-4461-b462-e577a210e827",
+        playerTwoScore: 7,
+        status: "FINISHED",
+        socketId: "socketId",
+      },
+      {
+        playerOneId: "011500e7-4c91-4f97-b41f-d2678a8e773e",
+        playerOneScore: 2,
+        playerTwoId: "bb7d87d5-dba5-4461-b462-e577a210e827",
+        playerTwoScore: 0,
+        status: "FINISHED",
+        socketId: "socketId",
+      },
     ],
   });
 }

@@ -3,10 +3,10 @@ import { PrismaService } from "src/database/prisma.service";
 import { LEVELS, LEVEL_THRESHOLD } from "src/common/constants/others";
 import { GameStatus, User } from "@prisma/client";
 
-interface GameData {
-  playerOne: { id: string };
+export interface GameData {
+  playerOne: { id: string; name: string };
   playerOneScore: number;
-  playerTwo: { id: string };
+  playerTwo: { id: string; name: string };
   playerTwoScore: number;
 }
 
@@ -60,9 +60,9 @@ export class StatsService {
     const rawData = await this.prisma.game.findMany({
       where: { status: GameStatus.FINISHED },
       select: {
-        playerOne: { select: { id: true } },
+        playerOne: { select: { id: true, name: true } },
         playerOneScore: true,
-        playerTwo: { select: { id: true } },
+        playerTwo: { select: { id: true, name: true } },
         playerTwoScore: true,
       },
     });
@@ -204,5 +204,12 @@ export class StatsService {
         return a.rank - b.rank;
       });
     return users;
+  }
+
+  async getHistory(currentUser: User, targetUser: User): Promise<GameData[]> {
+    const matches = await this.extractGamesData();
+    return matches.filter((match) => {
+      return targetUser.id === match.playerOne.id || targetUser.id === match.playerTwo.id;
+    });
   }
 }

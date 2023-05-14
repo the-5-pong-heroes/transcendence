@@ -1,5 +1,5 @@
 import { Controller, Get } from "@nestjs/common";
-import { StatsService, UserStats } from "./stats.service";
+import { GameData, StatsService, UserStats } from "./stats.service";
 import { User } from "@prisma/client";
 import { CurrentUser } from "./current-user.decorator";
 
@@ -18,12 +18,23 @@ export class MyProfileController {
   constructor(private statsService: StatsService) {}
 
   @Get() // TODO ":uuid"
-  getUserData(@CurrentUser() user: User) {
+  getUserData(@CurrentUser() user: User): Promise<UserStats> {
     return this.statsService.getUserStats(user, user);
   }
+  @Get(":uuid/history")
+  getHistory(@CurrentUser() user: User): Promise<GameData[]> {
+    return this.statsService.getHistory(user, user);
+  }
+
+  /*
+
+  monsite.fr/profile/           => données agrégées
+  monsite.fr/profile/uuid/history    => détails des matchs
+
+
+
 
   // @Get(":uuid")
-  /*
   monsite.fr/profile/011500e7-4c91-4f97-b41f-d2678a8e773e
   monsite.fr/profile/43209837-4c91-4f97-b41f-d2678a8e773e
   monsite.fr/profile/99999999-4c91-4f97-b41f-d2678a8e773e

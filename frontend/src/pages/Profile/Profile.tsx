@@ -4,6 +4,7 @@ import { DefaultAvatar } from "../../assets";
 import { Plant, Walle, Eve, Energy } from "../../assets";
 import { UserStatus } from "../Leaderboard/UserStatus";
 import { UserLevel } from "../Leaderboard/UserLevel";
+import { MatchHistory } from "./MatchHistory";
 
 
 interface ProfileProps {
@@ -12,6 +13,7 @@ interface ProfileProps {
 
 export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
 
+  const [history, setHistory] = useState("");
 
   const [user, setUser] = useState("");
 
@@ -28,11 +30,19 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
     } catch (err) {
       console.error(err);
     }
+    try {
+      const resp = await fetch("http://localhost:3000/profile/4e0e94c6-f526-4346-b2f5-b51c7ea9ba5c/history");
+      const data = await resp.json();
+      if (data) setHistory(data);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   useEffect(() => {
     fetchUser();
   }, []);
+
 
   return (
     <div ref={profileRef} id="Profile" className="Profile">
@@ -70,6 +80,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
           <span>{user.nbGames}</span>
         </div>
       </div>
+      <MatchHistory history={history} />
       {/* <div className="friends">{user.friend}</div> */}
     </div>
   );

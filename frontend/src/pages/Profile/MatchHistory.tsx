@@ -1,4 +1,12 @@
 export const MatchHistory = ({history}: any) => {
+  if (history.length == 0) {
+    return (
+      <div className="block3 noMatchYet">
+        <span>No match yet! 🤷‍♀️</span>
+      </div>
+    )
+  }
+
 return (
   <div className="block3">
   {

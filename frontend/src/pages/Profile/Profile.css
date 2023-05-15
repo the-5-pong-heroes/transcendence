@@ -181,6 +181,11 @@
   font-size: 1.5rem;
 }
 
+.noMatchYet {
+  text-align: center;
+  font-weight: 500;
+}
+
 .friends {
   /* TODO */
 }

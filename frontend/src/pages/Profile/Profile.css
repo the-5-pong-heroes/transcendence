@@ -84,7 +84,7 @@
   max-height: 30vh;
   overflow: auto;
   scrollbar-color: darkblue lightblue;
-  scrollbar-width: thin
+  scrollbar-width: thin;
 }
 
 ::-webkit-scrollbar {

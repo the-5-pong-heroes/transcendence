@@ -4,7 +4,7 @@ import { UserStatus } from "./UserStatus";
 
 const UserData = ({users}: any) => {
   return (
-    <>
+    <div className="scroll-div">
       {
         users.map((curUser : any, i: number) => {
           const {avatar, name, score, wins, defeats, level, status, friend, isMe, rank} = curUser;
@@ -27,7 +27,7 @@ const UserData = ({users}: any) => {
           )
         })
       }
-    </>
+    </div>
   )
 }
 

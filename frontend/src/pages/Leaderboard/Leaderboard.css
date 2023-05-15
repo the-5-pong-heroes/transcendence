@@ -25,14 +25,19 @@
   }
 }
 
+.scroll-div {
+  max-height: 60vh;
+  overflow: auto;
+  scrollbar-color: darkblue lightblue;
+  scrollbar-width: thin;
+}
+
 .row {
   --bs-gutter-x: 1.5rem;
   --bs-gutter-y: 0;
   display: flex;
   flex-wrap: wrap;
   margin-top: calc(-1 * var(--bs-gutter-y));
-  margin-right: calc(-0.5 * var(--bs-gutter-x));
-  margin-left: calc(-0.5 * var(--bs-gutter-x));
   border-radius: 20px;
   background: linear-gradient(0deg, rgba(42, 45, 112, 0.5) 0%, rgba(80, 75, 210, 0.5) 100%);
   margin-bottom: 0.8rem;

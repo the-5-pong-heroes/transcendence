@@ -13,7 +13,7 @@ interface ProfileProps {
 
 export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
 
-  const [history, setHistory] = useState("");
+  const [history, setHistory] = useState([]);
 
   const [user, setUser] = useState("");
 
@@ -42,7 +42,6 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
   useEffect(() => {
     fetchUser();
   }, []);
-
 
   return (
     <div ref={profileRef} id="Profile" className="Profile">

@@ -74,6 +74,47 @@
   margin-bottom: 2rem;
 }
 
+.block3 {
+  width: 72vw;
+  padding: 1rem;
+  max-width: 700px;
+  border-radius: 20px;
+  background: linear-gradient(0deg, rgba(42, 45, 112, 0.5) 0%, rgba(80,75,210, 0.5) 100%);
+  margin-bottom: 2rem;
+  max-height: 30vh;
+  overflow: auto;
+  scrollbar-color: darkblue lightblue;
+  scrollbar-width: thin
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: lightblue; /* Set the color of the thumb */
+  border-radius: 5px; /* Set the border radius of the thumb */
+}
+
+.score1 {
+  text-align: right;
+  text-shadow: darkblue 2px 0 10px;
+  max-width: 12%;
+}
+
+.score2 {
+  text-align: left;
+  text-shadow: darkblue 2px 0 10px;
+  max-width: 12%;
+
+}
+
+.player1, .player2 {
+  text-align: center;
+  text-shadow: darkblue 2px 0 10px;
+}
+
+
 .avatar > img {
   width: 200px;
   border-radius: 50%;

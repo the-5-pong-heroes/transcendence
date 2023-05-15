@@ -1,15 +1,17 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Redirect, Param } from "@nestjs/common";
 import { GameData, StatsService, UserStats } from "./stats.service";
 import { User } from "@prisma/client";
 import { CurrentUser } from "./current-user.decorator";
+import { UserByIdPipe } from "./user-by-id.pipe";
 
 @Controller("leaderboard")
 export class StatsController {
   constructor(private statsService: StatsService) {}
 
   @Get()
-  getStatsData(@CurrentUser() user: User): Promise<UserStats[]> {
-    return this.statsService.getUsersStats(user);
+  async getStatsData(@CurrentUser() user: User): Promise<UserStats[]> {
+    const tmp = await this.statsService.getUsersStats(user);
+    return [...tmp, ...tmp];
   }
 }
 
@@ -17,32 +19,26 @@ export class StatsController {
 export class MyProfileController {
   constructor(private statsService: StatsService) {}
 
-  @Get() // TODO ":uuid"
-  getUserData(@CurrentUser() user: User): Promise<UserStats> {
-    return this.statsService.getUserStats(user, user);
-  }
-  @Get(":uuid/history")
-  getHistory(@CurrentUser() user: User): Promise<GameData[]> {
-    return this.statsService.getHistory(user, user);
+  @Get("")
+  @Redirect("/")
+  redirectToProfile(@CurrentUser() user: User) {
+    // the "/profile" route redirects the user its profile
+    return { url: `/profile/${user.id}` };
   }
 
-  /*
+  @Get("history")
+  @Redirect("/")
+  redirectToHistory(@CurrentUser() user: User) {
+    return { url: `/profile/history/${user.id}` };
+  }
 
-  monsite.fr/profile/           => données agrégées
-  monsite.fr/profile/uuid/history    => détails des matchs
+  @Get(":uuid")
+  getUserData(@CurrentUser() user: User, @Param("uuid", UserByIdPipe) targetUser: User): Promise<UserStats> {
+    return this.statsService.getUserStats(user, targetUser);
+  }
 
-
-
-
-  // @Get(":uuid")
-  monsite.fr/profile/011500e7-4c91-4f97-b41f-d2678a8e773e
-  monsite.fr/profile/43209837-4c91-4f97-b41f-d2678a8e773e
-  monsite.fr/profile/99999999-4c91-4f97-b41f-d2678a8e773e
-  -> redirection vers monsite.fr/myprofile
-  */
-
-  /*
-  TODO ordre du leaderboard
-  TODO nbGames
-  */
+  @Get("history/:uuid")
+  getHistory(@CurrentUser() myUser: User, @Param("uuid", UserByIdPipe) targetUser: User): Promise<GameData[]> {
+    return this.statsService.getHistory(myUser, targetUser);
+  }
 }

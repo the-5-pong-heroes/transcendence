@@ -5,6 +5,7 @@ import { Plant, Walle, Eve, Energy } from "../../assets";
 import { UserStatus } from "../Leaderboard/UserStatus";
 import { UserLevel } from "../Leaderboard/UserLevel";
 import { MatchHistory } from "./MatchHistory";
+import { useParams } from "react-router-dom";
 
 
 interface ProfileProps {
@@ -13,27 +14,33 @@ interface ProfileProps {
 
 export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
 
+  const { uuid } = useParams();
+
   const [history, setHistory] = useState([]);
 
   const [user, setUser] = useState("");
 
+
+  const fetchHistory = async () => {
+    try {
+      const resp = await fetch(`http://localhost:3000/profile/history/${uuid ? uuid : ""}`);
+      const data = await resp.json();
+      if (data) setHistory(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const fetchUser = async () => {
     try {
-      const resp = await fetch("http://localhost:3000/profile");
+      const resp = await fetch(`http://localhost:3000/profile/${uuid ? uuid : ""}`);
       const data = await resp.json();
       if (data) {
         const LEVELS: string[] = ["plant", "walle", "eve", "energy"];
         data.levelPicture = [Plant, Walle, Eve, Energy][LEVELS.indexOf(data.level)];
         data.status = (data.status === "IN_GAME" ? "PLAYING" : data.status);
-        setUser(data);
+        setUser(data)
       }
-    } catch (err) {
-      console.error(err);
-    }
-    try {
-      const resp = await fetch("http://localhost:3000/profile/4e0e94c6-f526-4346-b2f5-b51c7ea9ba5c/history");
-      const data = await resp.json();
-      if (data) setHistory(data);
     } catch (err) {
       console.error(err);
     }
@@ -41,6 +48,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
 
   useEffect(() => {
     fetchUser();
+    fetchHistory();
   }, []);
 
   return (

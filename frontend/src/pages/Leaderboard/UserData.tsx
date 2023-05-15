@@ -7,13 +7,13 @@ const UserData = ({users}: any) => {
     <div className="scroll-div">
       {
         users.map((curUser : any, i: number) => {
-          const {avatar, name, score, wins, defeats, level, status, friend, isMe, rank} = curUser;
+          const {id, avatar, name, score, wins, defeats, level, status, friend, isMe, rank} = curUser;
           return (
             <div className={`row${isMe ? " me" : ""}`} key={i}>
               <div className="col">
                 <img src={DefaultAvatar} alt="profilePicture" />
               </div>
-              <div className="col">{name}</div>
+              <div className="col"><a className="link-prof" href={`/profile/${id}`}>{name}</a></div>
               <div className="col">{score}</div>
               <div className="col">{wins}</div>
               <div className="col">{defeats}</div>

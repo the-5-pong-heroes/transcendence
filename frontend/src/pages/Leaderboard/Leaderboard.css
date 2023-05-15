@@ -105,3 +105,8 @@
   font-size: 1.2rem;
   font-weight: 600;
 }
+
+.link-prof:hover{
+  cursor: pointer;
+  color: #011f37;
+}

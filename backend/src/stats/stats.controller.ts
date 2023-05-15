@@ -10,8 +10,7 @@ export class StatsController {
 
   @Get()
   async getStatsData(@CurrentUser() user: User): Promise<UserStats[]> {
-    const tmp = await this.statsService.getUsersStats(user);
-    return [...tmp, ...tmp];
+    return this.statsService.getUsersStats(user);
   }
 }
 

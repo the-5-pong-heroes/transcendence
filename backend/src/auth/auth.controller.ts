@@ -25,7 +25,7 @@ export class AuthController{
         await this.authService.handleDataBaseCreation(req, res, UserDto);
     }
 
-    @Get("auth42/callback")
+    @Get("Oauth42/callback")
     async getToken(@Req() req: Request, @Res() res: Response) {
         const codeFromUrl = req.query.code as string;
         const token = await this.Oauth42.accessToken(codeFromUrl);

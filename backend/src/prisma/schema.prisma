@@ -33,7 +33,7 @@ model Auth {
   accessToken   String   @default("noToken")
   isRegistered  Boolean  @default(false)
   password      String
-  otp_Enabled   Boolean?  @default(false)
+  otp_enabled   Boolean?  @default(false)
   otp_verified  Boolean?  @default(false)
   otp_validated Boolean?  @default(false)
 }

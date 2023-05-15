@@ -11,7 +11,7 @@ const App: React.FC = () => {
   if (appContext === undefined) {
     throw new Error("Undefined AppContext");
   }
-  const { theme, homeRef, profileRef, gameRef, boardRef, chatRef } = appContext;
+  const { theme, homeRef, profileRef, gameRef, boardRef, chatRef, loginRef } = appContext;
 
   return (
     <SocketProvider>
@@ -26,6 +26,7 @@ const App: React.FC = () => {
               <Route path="/Game" element={<Game gameRef={gameRef} />} />
               <Route path="/Leaderboard" element={<Leaderboard boardRef={boardRef} />} />
               <Route path="/Chat" element={<Chat chatRef={chatRef} />} />
+              <Route path="/Login" element={<Chat chatRef={loginRef} />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Container>

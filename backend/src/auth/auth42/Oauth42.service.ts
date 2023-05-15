@@ -11,7 +11,7 @@ export class Oauth42Service {
         const response = await fetch("https://api.intra.42.fr/oauth/token", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: `grant_type=authorization_code&client_id=u-s4t2ud-336830374cf2f365e2cb188d4bd30d634a75c69a6bc284c027c9cb6732f3a842&client_secret=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&code=/auth/auth42/callback`,
+          body: `grant_type=authorization_code&client_id=u-s4t2ud-1f837ff40c5bf2060ef73b6c1d0ef7ea8d1a9cfcde44e0ac29fff0b2049f91ef&client_secret=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&code=/auth/auth42/callback`,
         });
         const data = await response.json();      
         if (!data)

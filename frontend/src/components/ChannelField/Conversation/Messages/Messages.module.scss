@@ -1,0 +1,64 @@
+.Messages {
+  height: 100%;
+  padding: 10px 30px;
+  display: flex;
+  flex-flow: column-reverse nowrap;
+  align-items: flex-start;
+  overflow: auto;
+  gap: 10px;
+
+  .Message {
+    padding: 7px 12px;
+    border-radius: 19px;
+    max-width: 80%;
+    flex-shrink: 0;
+    display: flex;
+    flex-flow: column nowrap;
+    word-wrap: break-word;
+    white-space: pre-line;
+
+    span {
+      color: #606060;
+      font-size: 12px;
+    }
+  }
+
+  .Mine {
+    align-self: flex-end;
+  }
+
+  .Server {
+    align-self: center;
+    background-color: lightgray;
+    border-radius: 7px;
+    text-align: center;
+  }
+}
+
+.MessagesLight {
+  .Message {
+    background-color: rgba(172, 103, 189, .9);
+  }
+
+  .Mine {
+    background-color: rgba(119, 150, 207, .9);
+  }
+
+  .Server {
+    background-color: rgba(240, 240, 240, .9);
+  }
+}
+
+.MessagesDark {
+  .Message {
+    background-color: rgba(101, 0, 134, .9);
+  }
+
+  .Mine {
+    background-color: rgba(3, 83, 159, .9);
+  }
+
+  .Server {
+    background-color: rgba(50, 50, 50, .9);
+  }
+}

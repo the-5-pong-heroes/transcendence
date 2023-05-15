@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import { Navbar, ThemeButton, Container } from "./components";
-import { Home, Profile, Game, Leaderboard, Chat, NotFound } from "./pages";
+import { Home, Profile, Game, Leaderboard, Chat, Login, Signup, NotFound } from "./pages";
 import "./App.css";
 import { SocketProvider, AppContext } from "./contexts";
 
@@ -11,7 +11,7 @@ const App: React.FC = () => {
   if (appContext === undefined) {
     throw new Error("Undefined AppContext");
   }
-  const { theme, homeRef, profileRef, gameRef, boardRef, chatRef } = appContext;
+  const { theme, homeRef, profileRef, gameRef, boardRef, chatRef, logRef, signupRef } = appContext;
 
   return (
     <SocketProvider>
@@ -27,6 +27,8 @@ const App: React.FC = () => {
               <Route path="/Game" element={<Game gameRef={gameRef} />} />
               <Route path="/Leaderboard" element={<Leaderboard boardRef={boardRef} />} />
               <Route path="/Chat" element={<Chat chatRef={chatRef} />} />
+              <Route path="/Login" element={<Login logRef={logRef} />} />
+              <Route path="/Signup" element={<Signup signupRef={signupRef} />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Container>

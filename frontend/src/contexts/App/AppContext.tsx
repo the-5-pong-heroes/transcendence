@@ -9,6 +9,8 @@ interface ContextParameters {
   gameRef: React.RefObject<HTMLDivElement>;
   boardRef: React.RefObject<HTMLDivElement>;
   chatRef: React.RefObject<HTMLDivElement>;
+  logRef: React.RefObject<HTMLDivElement>;
+  signupRef: React.RefObject<HTMLDivElement>;
   profileRef: React.RefObject<HTMLDivElement>;
   gameIsRunning: React.RefObject<boolean>;
 }

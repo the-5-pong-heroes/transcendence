@@ -1,0 +1,23 @@
+.Chat {
+  width: 100vw;
+  height: calc(96vh - 62px);
+  margin-top: calc(4vh + 62px);
+  display: flex;
+  flex-flow: row nowrap;
+  z-index: 10;
+
+  @media screen and (max-width: 680px) {
+    height: calc(96vh - 50px);
+    margin-top: calc(4vh + 50px);
+  }
+
+  @media screen and (max-height: 350px) {
+    height: calc(96vh - 42px);
+    margin-top: calc(4vh + 42px);
+  }
+
+  @media screen and (max-width: 680px) and (max-height: 350px) {
+    height: calc(96vh - 35px);
+    margin-top: calc(4vh + 35px);
+  }
+}

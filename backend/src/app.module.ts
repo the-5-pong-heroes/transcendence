@@ -3,10 +3,13 @@ import { ConfigModule } from "@nestjs/config";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 //import { UserModule } from "./api/users/users.module.ts";
-import { UserModule } from "./user/user.module";
+//import { UserModule } from "./user/user.module";
+import { UsersModule } from "./users_paul/users.module"; // TEMPORAIRE
 import { GameApiModule, GameSocketModule } from "./game";
 import { StatsModule } from "./stats/stats.module";
-import { AuthModule } from "./auth/auth.module";
+//import { AuthModule } from "./auth/auth.module";
+import { AuthModule } from "./auth_paul/auth.module"; // TEMPORAIRE
+import { ChannelsModule } from "./channels/channels.module";
 import { PrismaModule } from "./database/prisma.module";
 import { ScheduleModule } from "@nestjs/schedule";
 
@@ -15,8 +18,10 @@ import { ScheduleModule } from "@nestjs/schedule";
     StatsModule,
     AuthModule,
     GameSocketModule,
-    UserModule,
+    //UserModule,
+    UsersModule, // TEMPORAIRE
     GameApiModule,
+    ChannelsModule,
     PrismaModule,
     ScheduleModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true }),

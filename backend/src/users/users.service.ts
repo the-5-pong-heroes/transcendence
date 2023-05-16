@@ -22,5 +22,4 @@ export class UserService {
 			return user;
 		} catch (error) {}
 	}
-
 }

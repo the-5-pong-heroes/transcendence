@@ -87,7 +87,7 @@ export class AuthService {
         const user42infos = await this.Oauth42.access42UserInformation(token);
         if (user42infos)
           {
-            const finalUser = await this.Oauth42.createDataBase42User(    user42infos,
+            const finalUser = await this.Oauth42.createDataBase42User(user42infos,
             token,
             req.body.name,
             req.body.isRegistered);

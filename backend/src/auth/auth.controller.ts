@@ -20,18 +20,19 @@ export class AuthController{
     async getUserByToken(@Req() req: Request) {
         return await this.authService.getUserByToken(req);
     }
+    
     @Post("Oauth")
     async userOauthCreationInDataBase(@Req() req: Request, @Res() res: Response, @Body() UserDto: UserDto) {
         await this.authService.handleDataBaseCreation(req, res, UserDto);
     }
 
-    @Get("Oauth42/callback")
+    @Get("auth42/callback")
     async getToken(@Req() req: Request, @Res() res: Response) {
         const codeFromUrl = req.query.code as string;
+        console.log("request = ",req);
         const token = await this.Oauth42.accessToken(codeFromUrl);
         const user42infos = await this.Oauth42.access42UserInformation(token.access_token);
-
-         this.authService.createCookies(res, token);
+        this.authService.createCookies(res, token);
          const userExists = await this.userService.getUserByEmail(user42infos.email);
          this.authService.updateCookies(res, token, userExists);
          this.authService.RedirectConnectingUser(req,res, userExists?.email);

@@ -10,8 +10,9 @@ export const Home: React.FC<HomeProps> = ({ homeRef }) => {
   const navigate = useNavigate();
 
   const handleAuth42 = () => {
-    navigate("/auth/42");
-  };
+    let url = "localhost:3333/auth/Oauth42/callback";
+    window.open(url, "_self");
+    };
 
   const handleAuthGoogle = () => {
     navigate("/auth/google");

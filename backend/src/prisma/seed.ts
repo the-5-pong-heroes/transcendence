@@ -9,13 +9,11 @@ async function main() {
         name: "John Doe",
         avatar: "https://example.com/avatar1.jpg",
         status: "ONLINE",
-        last_login: new Date(),
       },
       {
         name: "Jane Smith",
         avatar: "https://example.com/avatar2.jpg",
         status: "OFFLINE",
-        last_login: new Date(),
       },
     ],
   });

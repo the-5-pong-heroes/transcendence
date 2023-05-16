@@ -16,6 +16,20 @@
   animation-fill-mode: forwards;
 }
 
+.signOut-button {
+  margin: 30px;
+  color: rgb(32, 29, 35);
+  border-radius: 20px;
+  padding: 5px 20px;
+  background-color: #e0c7f3;
+}
+
+.signOut-button:hover,
+.signOut-button:focus {
+  font-weight: bold;
+  transform: translateY(-0.1rem);
+}
+
 @keyframes fadeInAnimation {
   0% {
     opacity: 0;

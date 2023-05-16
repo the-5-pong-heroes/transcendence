@@ -1,2 +1,2 @@
-export { AppContext, type ThemeMode } from "./AppContext";
+export { AppContext } from "./AppContext";
 export { AppProvider } from "./AppProvider";

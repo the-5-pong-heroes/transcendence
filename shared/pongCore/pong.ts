@@ -6,13 +6,26 @@ import {
   GAME_DEPTH,
   RIGHT_PADDLE_X,
   LEFT_PADDLE_X,
-  BALL_OFFSET_RATIO,
   PADDLE_VELOCITY,
-  PADDLE_WIDTH,
+  BALL_ACC_X,
 } from "./constants";
-import type { PaddleSide, CollisionSide, PaddleMove, PongState } from "./@types";
+import type {
+  PaddleSide,
+  CollisionSide,
+  PaddleMove,
+  PongState,
+} from "./@types";
 import { Ball } from "./ball";
 import { Paddle } from "./paddle";
+import {
+  reachedRightPaddle,
+  reachedLeftPaddle,
+  reachedRight,
+  reachedLeft,
+  reachedBottom,
+  reachedTop,
+  getRandomRotFactor,
+} from "./helpers";
 
 export class Pong {
   width: number;
@@ -21,6 +34,7 @@ export class Pong {
   ball: Ball;
   paddle: { [Side in PaddleSide]: Paddle<Side> };
   rotFactor: number;
+  firstPaddleCollision: boolean;
 
   constructor() {
     this.width = GAME_WIDTH;
@@ -42,17 +56,25 @@ export class Pong {
         y: 0,
       }),
     };
-    this.rotFactor = 0.0;
+    this.rotFactor = 0.001;
+    this.firstPaddleCollision = false;
   }
 
   initRound(round: number): void {
+    this.rotFactor = 0.001;
     this.ball.initRound(round);
     this.paddle.right.move({ y: 0, gameHeight: this.height });
     this.paddle.left.move({ y: 0, gameHeight: this.height });
+    this.firstPaddleCollision = false;
   }
 
   public update(delta: number): void {
-    this.ball.update({ delta, rotFactor: this.rotFactor });
+    this.ball.update({
+      delta,
+      rotFactor: this.rotFactor,
+      paddleRight: this.paddle.right,
+      paddleLeft: this.paddle.left,
+    });
     this.paddle.right.update({
       delta,
       gameHeight: this.height,
@@ -87,72 +109,56 @@ export class Pong {
   }
 
   detectCollisions = (): CollisionSide => {
-    const reachedRightPaddle =
-      this.ball.posX + this.ball.radius >= this.paddle.right.posX - PADDLE_WIDTH / 2 &&
-      this.ball.posY + this.ball.radius * BALL_OFFSET_RATIO >= this.paddle.right.posY - this.paddle.right.height / 2 &&
-      this.ball.posY - this.ball.radius * BALL_OFFSET_RATIO <= this.paddle.right.posY + this.paddle.right.height / 2;
-
-    const reachedRight = this.ball.posX + this.ball.radius >= this.width / 2 + 50;
-
-    const reachedLeftPaddle =
-      this.ball.posX - this.ball.radius <= this.paddle.left.posX + PADDLE_WIDTH / 2 &&
-      this.ball.posY + this.ball.radius * BALL_OFFSET_RATIO >= this.paddle.left.posY - this.paddle.left.height / 2 &&
-      this.ball.posY - this.ball.radius * BALL_OFFSET_RATIO <= this.paddle.left.posY + this.paddle.left.height / 2;
-
-    const reachedLeft = this.ball.posX - this.ball.radius <= -this.width / 2 - 50;
-
-    const reachedBottom = this.ball.posY + this.ball.radius >= this.height / 2;
-
-    const reachedTop = this.ball.posY - this.ball.radius <= -this.height / 2;
-
     /* Missed paddle */
-    if (reachedRight) {
+    if (reachedRight(this.ball)) {
       return "right";
     }
-    if (reachedLeft) {
+    if (reachedLeft(this.ball)) {
       return "left";
     }
 
     /* Reached paddle */
-    if (reachedRightPaddle) {
+    if (reachedRightPaddle(this.ball, this.paddle.right)) {
       this.handlePaddleCollision("right");
     }
-    if (reachedLeftPaddle) {
+
+    if (reachedLeftPaddle(this.ball, this.paddle.left)) {
       this.handlePaddleCollision("left");
     }
 
     /* Reached wall */
-    if (reachedBottom) {
+    if (reachedBottom(this.ball)) {
       this.ball.velY = -Math.abs(this.ball.velY);
       this.ball.accX = -Math.abs(this.ball.accY);
+      this.rotFactor = getRandomRotFactor();
     }
-    if (reachedTop) {
+    if (reachedTop(this.ball)) {
       this.ball.velY = Math.abs(this.ball.velY);
       this.ball.accY = Math.abs(this.ball.accY);
+      this.rotFactor = getRandomRotFactor();
     }
 
     return "none";
   };
 
   handlePaddleCollision = (collision: CollisionSide): void => {
-    let paddleCenter: number;
-    let dist: number;
+    if (!this.firstPaddleCollision) {
+      this.firstPaddleCollision = true;
+      this.ball.velX *= 3;
+    }
 
     if (collision === "right") {
-      paddleCenter = this.paddle.right.posY + this.paddle.right.height / 2;
-      dist = (paddleCenter - this.ball.posY) / (this.paddle.right.height / 2);
-
       this.ball.velX = -Math.abs(this.ball.velX);
+      this.ball.accX += BALL_ACC_X;
       this.ball.accX = -Math.abs(this.ball.accX);
     }
     if (collision === "left") {
-      paddleCenter = this.paddle.left.posY + this.paddle.left.height / 2;
-      dist = (paddleCenter - this.ball.posY) / (this.paddle.left.height / 2);
-
       this.ball.velX = Math.abs(this.ball.velX);
+      this.ball.accX += BALL_ACC_X;
       this.ball.accX = Math.abs(this.ball.accX);
     }
-  };
+    this.rotFactor = getRandomRotFactor();
+  }; 
 
   public paddleLastMove(paddleSide: PaddleSide): PaddleMove {
     if (paddleSide === "right") {

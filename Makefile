@@ -1,38 +1,32 @@
+RED=\033[0;31m
+END=\033[0m
 
-BLACK		:= $(shell tput -Txterm setaf 0)
-RED			:= $(shell tput -Txterm setaf 1)
-GREEN		:= $(shell tput -Txterm setaf 2)
-YELLOW		:= $(shell tput -Txterm setaf 3)
-LIGHTPURPLE	:= $(shell tput -Txterm setaf 4)
-PURPLE		:= $(shell tput -Txterm setaf 5)
-BLUE		:= $(shell tput -Txterm setaf 6)
-WHITE		:= $(shell tput -Txterm setaf 7)
-RESET		:= $(shell tput -Txterm sgr0)
+include ./env/docker.example.env
+export $(shell sed 's/=.*//' ./env/docker.example.env)
 
-DIR_CHECK := $(shell grep POSTGRES_DIR example.env > /dev/null; echo $$?)
+ifneq ($(shell docker compose version 2>/dev/null),)
+  DOCKER_COMPOSE=docker compose
+else
+  DOCKER_COMPOSE=docker-compose
+endif
 
 all: run
 
-run:
-ifeq ($(DIR_CHECK), 1)
-	@read -p "Enter Postgres path: " POSTGRES_DIR; \
-	sudo mkdir -p $$POSTGRES_DIR; \
-	echo "POSTGRES_DIR=$$POSTGRES_DIR" >> example.env
-endif
-	@cp example.env .env
-	@sudo docker-compose up -d
+check-env:
+	@ if [ "${DOCKER_COMPOSE}" = "docker-compose" ]; then \
+		echo "$(RED)⚠ Warning: you're using a old version of docker compose, please upgrade to v2.17 or above.$(END)"; \
+		sleep 1; \
+	fi
+
+run: check-env
+	$(DOCKER_COMPOSE) up --build --remove-orphans --force-recreate
 
 list:
 	@sudo docker container ps -a ; sudo docker images
 
 clean:
-ifeq ($(DIR_CHECK), 0)
-	@sed -i "$$(grep -n POSTGRES_DIR example.env | cut -f1 -d:)d" example.env
-	@echo POSTGRES_DIR var removed from example.env
-endif
-	@sudo docker-compose down
+	@sudo $(DOCKER_COMPOSE) down
 	@sudo docker container prune --force
-	sudo rm -rf $${POSTGRES_DIR}
 
 fclean: clean
 	-sudo docker stop `sudo docker ps -qa`
@@ -41,7 +35,6 @@ fclean: clean
 	-sudo docker volume rm `sudo docker volume ls -q`
 	-sudo docker network rm `sudo docker network ls -q 2>/dev/null`
 	sudo rm .env
-	sudo rm -rf $${POSTGRES_DIR}
 
 re: fclean run
 

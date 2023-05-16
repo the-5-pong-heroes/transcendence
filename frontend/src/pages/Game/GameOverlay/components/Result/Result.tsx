@@ -1,52 +1,64 @@
 import React from "react";
 
 import "./Result.css";
-import type { LobbyMode, GameResult, GameMode } from "../../../@types";
+import type { GameResult, GameContextParameters } from "@Game/@types";
+import { useGameContext } from "@Game/hooks";
 
 interface ResultProps {
   result: GameResult | undefined;
-  setResult: React.Dispatch<React.SetStateAction<GameResult | undefined>>;
-  setLobbyMode: React.Dispatch<React.SetStateAction<LobbyMode | undefined>>;
-  setGameMode(arg0: React.SetStateAction<GameMode | undefined>): void;
+  winner?: string;
+  index: number;
 }
 
-export const Result: React.FC<ResultProps> = ({ result, setResult, setLobbyMode, setGameMode }) => {
+export const Result: React.FC<ResultProps> = ({ result, winner = "The bot", index }) => {
+  const { overlayRef }: GameContextParameters = useGameContext();
+
   if (!result) {
     return null;
   }
 
+  const victoryMessages = [
+    "Congratulations! You won 🎉",
+    "Wow, what a game! You're the winner 🏆",
+    "Victory is yours! 🥳",
+    "Incredible! You're on fire! 🔥",
+    "You are the champion, my friend 🎶",
+  ];
+
+  const defeatMessages = [
+    "Sorry, you lost... 🥺",
+    "Better luck next time! 🤷‍♂️",
+    "Don't worry, losing is just a part of the game 😌",
+    "Tough luck... but don't give up! 💪",
+    "Don't let this defeat bring you down. Get up and try again! 🙌🏼",
+  ];
+
   return (
-    <div className="modal-result">
+    <div className="game-modal result-modal">
+      <div className="close-button-wrapper">
+        <button className="close-button" onClick={() => overlayRef?.current?.resetGame()}></button>
+      </div>
       <div>
         {result === "Winner" && (
           <>
-            <span className="result">You win !</span>
+            <span className="result">{victoryMessages[index]}</span>
           </>
         )}
         {result === "Loser" && (
           <>
-            <span className="result">You lose...</span>
+            <span className="result">{defeatMessages[index]}</span>
           </>
         )}
-        <div className="button-wrapper">
-          <button
-            className="button-result"
-            onClick={() => {
-              setLobbyMode(undefined);
-              setResult(undefined);
-            }}>
-            PLAY AGAIN
-          </button>
-          <button
-            className="button-result"
-            onClick={() => {
-              setResult(undefined);
-              setLobbyMode(undefined);
-              setGameMode(undefined);
-            }}>
-            RETURN
-          </button>
-        </div>
+        {result === "None" && (
+          <>
+            <span className="result">{winner} won the game! 🏆</span>
+          </>
+        )}
+        {result === undefined && (
+          <>
+            <span className="result">Unexpected end... 🤷‍♂️</span>
+          </>
+        )}
       </div>
     </div>
   );

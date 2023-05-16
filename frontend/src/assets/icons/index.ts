@@ -6,7 +6,6 @@ export { default as GameLight } from "./gameLight.png";
 export { default as GameDark } from "./gameDark.png";
 export { default as LeaderboardLight } from "./leaderboardLight.png";
 export { default as LeaderboardDark } from "./leaderboardDark.png";
-export { default as MenuLight } from "./menuLight.png";
-export { default as MenuDark } from "./menuDark.png";
 export { default as LogoWallE } from "./logoWallE.png";
 export { default as LogoWallELight } from "./logoWallELight.png";
+export { default as PauseIcon } from "./pause.png";

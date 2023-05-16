@@ -1,22 +1,14 @@
-/* eslint-disable no-magic-numbers */
-
-import { useRef, useEffect, useCallback, useContext } from "react";
-import { Vector3 } from "three";
+import { useRef, useEffect, useCallback } from "react";
 import { useFrame } from "@react-three/fiber";
 
-import type { Pong } from "../pongCore";
-import { GameContext } from "../context";
-import type { PlayState, ServerPong } from "../@types";
+import type { GameContextParameters } from "../@types";
+import { REFRESH_RATE } from "../constants";
 
+import { useGameContext } from "./useGameContext";
 import { useControlledPaddle } from "./useControlledPaddle";
 
-const REFRESH_RATE = 1000 / 60;
-
-interface GameLoopParameters {
-  playRef: React.MutableRefObject<PlayState>;
-  localPongRef: React.MutableRefObject<Pong>;
-  serverPongRef: React.MutableRefObject<ServerPong | undefined>;
-}
+import type { GameState } from "@types";
+import { useAppContext } from "@hooks";
 
 interface GameLoopValues {
   ballRef: React.RefObject<THREE.Mesh>;
@@ -36,11 +28,8 @@ interface ParticleSystemMaterial extends THREE.ShaderMaterial {
 }
 
 export const useGameLoop = (): GameLoopValues => {
-  const gameContext = useContext(GameContext);
-  if (gameContext === undefined) {
-    throw new Error("Undefined GameContext");
-  }
-  const { playRef, localPongRef, serverPongRef }: GameLoopParameters = gameContext;
+  const { playRef, localPongRef, serverPongRef, gameMode }: GameContextParameters = useGameContext();
+  const { isRunning }: GameState = useAppContext().gameState;
 
   useControlledPaddle();
 
@@ -50,18 +39,6 @@ export const useGameLoop = (): GameLoopValues => {
   const particlesRef = useRef<THREE.Points>(null);
 
   /* Logic loop */
-  // const gameLoop = useCallback(
-  //   (delta: number): void => {
-  //     if (serverPongRef.current && !serverPongRef.current?.evaluated) {
-  //       localPongRef.current.ball.set(serverPongRef.current.pong.ball);
-  //       serverPongRef.current.evaluated = true;
-  //     }
-
-  //     localPongRef.current.update(delta);
-  //   },
-  //   [localPongRef, serverPongRef]
-  // );
-
   const gameLoop = useCallback(
     (delta: number): void => {
       if (serverPongRef.current && !serverPongRef.current?.evaluated) {
@@ -89,8 +66,9 @@ export const useGameLoop = (): GameLoopValues => {
 
     return () => {
       clearInterval(intervalId);
+      isRunning.current = false;
     };
-  }, [gameLoop, playRef]);
+  }, [gameLoop, playRef, isRunning]);
 
   /* Render loop */
   useFrame(({ clock }) => {
@@ -102,16 +80,19 @@ export const useGameLoop = (): GameLoopValues => {
     paddleLeftRef.current?.position.set(paddleLeft.pos.x, paddleLeft.pos.y, paddleLeft.pos.z);
     paddleRightRef.current?.position.set(paddleRight.pos.x, paddleRight.pos.y, paddleRight.pos.z);
     ballRef.current?.position.set(ball.pos.x, ball.pos.y, ball.pos.z);
-
-    if (particlesRef.current && ballRef.current) {
-      const material = particlesRef.current.material as ParticleSystemMaterial;
-      material.uniforms.uTime.value = clock.elapsedTime;
-      material.uniforms.uBallPosition.value = new Vector3(
-        ballRef.current.position.x,
-        ballRef.current.position.y,
-        ballRef.current.position.z
-      );
+    if (ballRef.current && gameMode === "3D") {
+      ballRef.current.rotation.set(ball.rot, ball.rot, 0);
     }
+
+    // if (particlesRef.current && ballRef.current) {
+    //   const material = particlesRef.current.material as ParticleSystemMaterial;
+    //   material.uniforms.uTime.value = clock.elapsedTime;
+    //   material.uniforms.uBallPosition.value = new Vector3(
+    //     ballRef.current.position.x,
+    //     ballRef.current.position.y,
+    //     ballRef.current.position.z
+    //   );
+    // }
   });
 
   return { paddleLeftRef, paddleRightRef, ballRef, particlesRef };

@@ -1,0 +1,68 @@
+.Login {
+	z-index: 20;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	background: var(--global-game-gradient-dark);
+}
+
+#light .Login {
+	background: var(--global-game-gradient-light);
+}
+
+.form {
+	margin: auto;
+	width: clamp(200px, 600px, 40%);
+	background-color: rgb(92, 73, 125);
+	padding: 30px;
+	border-radius: 10px;
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	align-items: stretch;
+	gap: 20px;
+	box-shadow: 5px 8px 10px 3px rgba(0, 0, 0, 0.2);
+	color: black;
+}
+
+#light .form {
+	color:rgb(255, 255, 255);
+	background-color: rgb(171, 175, 243);
+}
+
+.form h2 {
+	margin: 0;
+	margin-bottom: 10px;
+}
+
+.input {
+	height: 30px;
+	border-radius: 5px;
+	text-indent: 8px;
+
+}
+
+.submit {
+	margin: auto;
+	padding-top: 8px;
+	width: 120px;
+	height: 40px;
+	border-radius: 8px;
+	border: 0px solid black;
+	font: inherit;
+	font-size: 20px;
+	line-height: 0;
+	color: rgb(255, 255, 255);
+	background-color: lightslategray;
+	cursor: pointer;
+}
+
+#light .submit {
+	color: white;
+}
+
+.err-message {
+	color: red;
+	font-size: 15px;
+	text-align: center;
+}

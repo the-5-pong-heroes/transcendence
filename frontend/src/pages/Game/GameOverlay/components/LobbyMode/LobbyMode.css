@@ -1,27 +1,37 @@
-.modal-lobby {
-  background: linear-gradient(127deg, hsl(155, 35%, 10%), hsl(248, 34%, 13%), hsl(315, 38%, 10%));
-  z-index: 2;
-  height: 150px;
-  width: 480px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 1rem;
-  border: 1px solid #5e5e5e;
-  transition: 0.5s ease-out;
-  box-shadow: 0px 0px 22px 0px rgba(118, 118, 118, 0.75);
+.close-button-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0px 12px;
 }
 
-@media (max-width: 680px) {
-  .modal-lobby {
-    height: 80px;
-    width: 300px;
-  }
+.close-button {
+  width: 20px;
+  height: 20px;
+  opacity: 0.3;
 }
 
-@media (max-height: 400px) {
-  .modal-lobby {
-    height: 80px;
-    width: 260px;
-  }
+.close-button:hover {
+  opacity: 1;
+}
+
+.close-button:before, .close-button:after {
+  position: absolute;
+  content: ' ';
+  height: 20px;
+  width: 2px;
+  background-color: #ffffff;
+}
+
+.close-button:before {
+  transform: rotate(45deg);
+}
+
+.close-button:after {
+  transform: rotate(-45deg);
+}
+
+.game-button-wrapper {
+  /* background-color: red; */
+  margin: 0;
 }

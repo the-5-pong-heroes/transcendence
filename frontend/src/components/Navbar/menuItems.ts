@@ -7,7 +7,7 @@ import {
   GameDark,
   LeaderboardLight,
   LeaderboardDark,
-} from "../../assets";
+} from "@assets";
 
 export interface MenuRefs {
   gameRef: React.RefObject<HTMLDivElement>;

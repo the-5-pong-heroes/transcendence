@@ -1,0 +1,11 @@
+.pause-container {
+  z-index: 10;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 10px;
+}
+
+.pause-icon {
+  height: 20px;
+}

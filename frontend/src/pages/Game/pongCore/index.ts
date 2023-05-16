@@ -1,6 +1,4 @@
 export { Pong } from "./pong";
-export { Ball } from "./ball";
-export { Paddle } from "./paddle";
 export {
   GAME_WIDTH,
   GAME_HEIGHT,

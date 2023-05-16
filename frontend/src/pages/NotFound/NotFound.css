@@ -1,0 +1,28 @@
+.notFound {
+  height: 100vh;
+  width: 100vw;
+  z-index: 11;
+  /* position: absolute;
+  top: 0;
+  left: 50%; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+#light .notFound {
+  color: black;
+}
+
+.notFound-text {
+  font-size: 3vw;
+  margin: 20px;
+}
+
+#video {
+  width: 90vw;
+  object-fit: "cover";
+  border-radius: 1.0rem;
+}

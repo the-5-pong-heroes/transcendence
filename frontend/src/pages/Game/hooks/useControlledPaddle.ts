@@ -1,40 +1,33 @@
-import { useCallback, useContext } from "react";
+import { useCallback } from "react";
 
-import { SocketContext } from "../../../contexts";
-import { GameContext } from "../context/GameContext";
-import { ClientEvents } from "../@types";
+import { ClientEvents, type GameContextParameters } from "../@types";
 
+import { useGameContext } from "./useGameContext";
 import { useKeyboard } from "./useKeyboard";
 
-export const useControlledPaddle = (): void => {
-  const socketContext = useContext(SocketContext);
-  if (socketContext === undefined) {
-    throw new Error("Undefined SocketContext");
-  }
-  const { socketRef } = socketContext;
+import { useSocketContext } from "@hooks";
+import type { SocketContextParameters } from "@types";
 
-  const gameContext = useContext(GameContext);
-  if (gameContext === undefined) {
-    throw new Error("Undefined GameContext");
-  }
-  const { localPongRef, paddleSideRef } = gameContext;
+export const useControlledPaddle = (): void => {
+  const { socketRef }: SocketContextParameters = useSocketContext();
+  const { localPongRef, paddleSideRef }: GameContextParameters = useGameContext();
 
   const moveUp = useCallback(() => {
-    if (localPongRef.current.paddleLastMove(paddleSideRef.current) !== "up") {
+    if (paddleSideRef.current && localPongRef.current.paddleLastMove(paddleSideRef.current) !== "up") {
       socketRef.current?.emit(ClientEvents.UserMove, { move: "up" });
       localPongRef.current.updatePaddleVelocity(paddleSideRef.current, "up");
     }
   }, [socketRef, localPongRef, paddleSideRef]);
 
   const moveDown = useCallback(() => {
-    if (localPongRef.current.paddleLastMove(paddleSideRef.current) !== "down") {
+    if (paddleSideRef.current && localPongRef.current.paddleLastMove(paddleSideRef.current) !== "down") {
       socketRef.current?.emit(ClientEvents.UserMove, { move: "down" });
       localPongRef.current.updatePaddleVelocity(paddleSideRef.current, "down");
     }
   }, [socketRef, localPongRef, paddleSideRef]);
 
   const stop = useCallback(() => {
-    if (localPongRef.current.paddleLastMove(paddleSideRef.current) !== "stop") {
+    if (paddleSideRef.current && localPongRef.current.paddleLastMove(paddleSideRef.current) !== "stop") {
       socketRef.current?.emit(ClientEvents.UserMove, { move: "stop" });
       localPongRef.current.updatePaddleVelocity(paddleSideRef.current, "stop");
     }

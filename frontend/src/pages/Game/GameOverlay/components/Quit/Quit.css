@@ -1,0 +1,22 @@
+.game-modal {
+  flex-direction: column;
+  position: absolute;
+}
+
+.quit-text {
+  font-size: 1em;
+  padding-top: 20px;
+  text-align: center;
+  /* background-color: red; */
+}
+
+@media (max-width: 680px) {
+  .quit-text {
+    font-size: 3vw;
+  }
+
+  .modal-quit {
+    height: 25vw;
+    width: 60vw;
+  }
+}

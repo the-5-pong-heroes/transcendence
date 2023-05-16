@@ -2,7 +2,7 @@ import React from "react";
 import { Vector3 } from "three";
 import { type Vec3 } from "cannon-es";
 
-import { BALL_RADIUS } from "../../../pongCore/constants";
+import { BALL_RADIUS } from "@Game/pongCore/constants";
 
 interface BallProps {
   ballRef: React.RefObject<THREE.Mesh>;
@@ -11,7 +11,7 @@ interface BallProps {
 
 export const Ball: React.FC<BallProps> = ({ ballRef, initialPos }) => {
   return (
-    <mesh ref={ballRef} position={new Vector3(initialPos.x, initialPos.y, initialPos.z)}>
+    <mesh ref={ballRef} position={new Vector3(initialPos.x, initialPos.y, initialPos.z)} rotation={[0, 0, 0]}>
       <planeGeometry attach="geometry" args={[BALL_RADIUS, BALL_RADIUS]} />
       <meshBasicMaterial attach="material" color="white" />
     </mesh>

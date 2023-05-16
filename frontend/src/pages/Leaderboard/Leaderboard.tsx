@@ -1,47 +1,68 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
 import "./Leaderboard.css";
+import UserData from "./UserData";
 
 interface LeaderboardProps {
   boardRef: React.RefObject<HTMLDivElement>;
 }
 
 export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
+  const [users, setUSers] = useState([]);
+
+  const fetchUsers = async () => {
+    try {
+      const resp = await fetch("http://localhost:3000/leaderboard");
+      const data = await resp.json();
+      if (data.length > 0) {
+        setUSers(data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   return (
     <div ref={boardRef} id="Leaderboard" className="Leaderboard">
       <div className="group">
         <h1 className="title">Leaderboard</h1>
-        <div className="item">
-          <div className="Player">Bob</div>{" "}
-          <div className="Infos">
-            <span>1260pts</span>
-            <span>Rank: 1</span>
-            <span>V/D: 4</span>
-            <span>Friends: Nope</span>
-            <span>Team: Walle</span>
-          </div>
-        </div>
-        <div className="item">
-          <div className="Player">Marion</div>{" "}
-          <div className="Infos">
-            <span>832pts</span>
-            <span>Rank: 2</span>
-            <span>V/D: 2</span>
-            <span>Friends: Yes</span>
-            <span>Team: Eve</span>
-          </div>
-        </div>
-        <div className="item">
-          <div className="Player">Tom</div>{" "}
-          <div className="Infos">
-            <span>624pts</span>
-            <span>Rank: 3</span>
-            <span>V/D: 1</span>
-            <span>Friends: Yes</span>
-            <span>Team: Eve</span>
-          </div>
-        </div>
-        <div className="item" style={{ backgroundColor: "white" }}></div>
-        <div className="item" style={{ backgroundColor: "white" }}></div>
+        <table className="table-auto">
+          <thead>
+            <tr>
+              <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+                Avatar
+              </th>
+              <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+                Username
+              </th>
+              <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+                Score
+              </th>
+              <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+                Wins
+              </th>
+              <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+                Defeats
+              </th>
+              <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+                Level
+              </th>
+              <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+                Online
+              </th>
+              <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+                Friend
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white dark:bg-slate-800">
+            <UserData users={users} />
+          </tbody>
+        </table>
       </div>
     </div>
   );

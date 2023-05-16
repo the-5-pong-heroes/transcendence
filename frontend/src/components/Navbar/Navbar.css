@@ -1,18 +1,18 @@
 .navbar {
   position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	padding: 2vh 5vw;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 2vh 5vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   z-index: 20;
 }
 
 .logo-wall-e {
   position: relative;
-	height: 60px;
+  height: 60px;
   cursor: pointer;
 }
 
@@ -21,13 +21,53 @@ ul img {
   height: 50px;
 }
 
-.menu-icon {
+.hamburger-button {
   display: none;
+  position: relative;
+  transition: 0.3s ease-in-out;
+  width: 35px;
+  height: 15px;
 }
 
-.burger {
-  height: 6vh;
-  z-index: 6;
+.hamburger-button span {
+  position: absolute;
+  height: 3px;
+  border-radius: 4px;
+  background-color: #030303;
+  width: 100%;
+  top: 0;
+  transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+#dark .hamburger-button span {
+  background-color: #ffffff;
+}
+
+.hamburger-button span:nth-child(1) {
+  top: 0px;
+}
+
+.hamburger-button span:nth-child(2),
+.hamburger-button span:nth-child(3) {
+  top: 10px;
+}
+
+.hamburger-button span:nth-child(4) {
+  top: 20px;
+}
+
+/* 2. Style the active state and create the cross. */
+.hamburger-button.active span:nth-child(1),
+.hamburger-button.active span:nth-child(4) {
+  opacity: 0;
+}
+
+.hamburger-button.active span:nth-child(2) {
+  transform: rotate(45deg);
+}
+
+.hamburger-button.active span:nth-child(3) {
+  transform: rotate(-45deg);
 }
 
 .nav-elements ul {
@@ -49,9 +89,9 @@ ul img {
 .nav-item:focus {
   opacity: 1;
   background: rgba(227, 24, 54, 0.9);
-	color: white;
-	border-radius: 20px;
-	cursor: pointer;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
 }
 
 #light .nav-item:hover,
@@ -65,19 +105,20 @@ ul img {
     justify-content: space-between;
   }
 
-  .menu-icon {
+  .hamburger-button {
     display: block;
     cursor: pointer;
-    margin-left: 5px;
+    margin-left: 3vw;
   }
 
   .logo-wall-e {
-	  height: 50px;
+    height: 50px;
   }
 
-body.open .navbar li {
-  animation: appear 0.7s backwards;
-}
+  body.open .navbar li {
+    animation: appear 0.7s backwards;
+  }
+
   .nav-elements {
     position: absolute;
     left: 0;
@@ -87,14 +128,14 @@ body.open .navbar li {
     display: flex;
     justify-content: center;
     z-index: 10;
-    margin-left: 1vw;
+    margin-left: 2vw;
   }
 
   .nav-elements ul {
     display: none;
     opacity: 0;
   }
-  
+
   .nav-elements.active ul {
     display: flex;
     flex-direction: column;
@@ -110,8 +151,8 @@ body.open .navbar li {
   }
 
   ul img {
-    /* height: 45px; */
-    height: 8vh;
+    height: 9vh;
+    max-height: 45px;
     transition: all 2s ease-in-out;
   }
 }
@@ -122,7 +163,7 @@ body.open .navbar li {
   }
 
   .logo-wall-e {
-	  height: 35px;
+    height: 35px;
   }
 
   .nav-elements ul {
@@ -130,12 +171,45 @@ body.open .navbar li {
   }
 
   .navbar li {
-    margin: 0px 10px;
+    margin: 0px 14px;
     padding: 6px 6px;
   }
 
   ul img {
     height: 30px;
+  }
+}
+
+@media (max-width: 680px) and (max-height: 350px) {
+  .hamburger-button {
+    display: block;
+    cursor: pointer;
+    margin-left: 12px;
+    width: 28px;
+    height: 12px;
+  }
+
+  .hamburger-button span {
+    height: 2.5px;
+  }
+
+  .hamburger-button span:nth-child(1) {
+    top: 0px;
+  }
+
+  .hamburger-button span:nth-child(2),
+  .hamburger-button span:nth-child(3) {
+    top: 8px;
+  }
+
+  .hamburger-button span:nth-child(4) {
+    top: 16px;
+  }
+}
+
+@media (max-width: 300px) {
+  .logo-wall-e {
+    display: none;
   }
 }
 

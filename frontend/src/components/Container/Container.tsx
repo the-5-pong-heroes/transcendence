@@ -1,7 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Parallax } from "react-scroll-parallax";
 
-import { AppContext } from "../../contexts";
+import { useAppContext } from "@hooks";
+import type { AppContextParameters } from "@types";
 import "./Container.css";
 import {
   Background,
@@ -15,18 +16,14 @@ import {
   Cloud,
   Cloud2,
   MoonDayLight,
-} from "../../assets";
+} from "@assets";
 
 interface ContainerProps {
   children: React.ReactNode;
 }
 
 export const Container: React.FC<ContainerProps> = ({ children }) => {
-  const appContext = useContext(AppContext);
-  if (appContext === undefined) {
-    throw new Error("Undefined AppContext");
-  }
-  const { theme } = appContext;
+  const { theme }: AppContextParameters = useAppContext();
 
   const [x, setX] = useState<number>(0);
 
@@ -40,7 +37,6 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
       <div className="wrap">
         <div className="background">
           <img src={theme === "light" ? BackgroundLight : Background} />
-          {/* <Image /> */}
         </div>
         <Parallax className="layer stars" translateX={["-200px", "10px"]}>
           <img src={Stars} />
@@ -63,7 +59,7 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
         <Parallax className="layer trash" translateX={["40%", "-20%"]}>
           <img src={Trash1} />
         </Parallax>
-        <Parallax className="layer trash" speed={130}>
+        <Parallax className="layer trash" speed={30}>
           <img src={Trash2} />
         </Parallax>
         <Parallax className="layer trash" translateX={["50%", "-20%"]}>

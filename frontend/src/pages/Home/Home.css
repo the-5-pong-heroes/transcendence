@@ -8,6 +8,7 @@
   align-items: center;
   justify-content: center;
   position: absolute;
+  flex-direction: column;
   top: 0;
   left: 0;
 }
@@ -16,10 +17,26 @@
   font-size: 7vw;
 }
 
-#light .home h1 {
+#light .home {
   color: #070c76;
 }
 
 #dark .home h1 {
   color: #ffffff;
+}
+
+.home-play-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 10vh;
+  width: 50vw;
+  font-size: 1.5rem;
+  margin: 30px;
+}
+
+.game-link:hover,
+.game-link:focus {
+  color: hsl(271, 73%, 31%);
+  font-weight: bold;
 }

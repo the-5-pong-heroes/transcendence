@@ -28,8 +28,7 @@ export const getInitialPongState = (): PongState => ({
     height: PADDLE_HEIGHT,
     width: PADDLE_WIDTH,
     depth: PADDLE_DEPTH,
-    pos: new Vec3(GAME_WIDTH / 2, 0, 0),
-    // pos: new Vec3(GAME_WIDTH / 2 - PADDLE_WIDTH * 2.5, 0, 0),
+    pos: new Vec3(GAME_WIDTH / 2 - PADDLE_WIDTH * 2.5, 0, 0),
     velocity: PADDLE_VELOCITY,
   },
   paddleLeft: {
@@ -38,8 +37,7 @@ export const getInitialPongState = (): PongState => ({
     height: PADDLE_HEIGHT,
     width: PADDLE_WIDTH,
     depth: PADDLE_DEPTH,
-    // pos: new Vec3(-GAME_WIDTH / 2 + PADDLE_WIDTH * 2.5, 0, 0),
-    pos: new Vec3(-GAME_WIDTH / 2, 0, 0),
+    pos: new Vec3(-GAME_WIDTH / 2 + PADDLE_WIDTH * 2.5, 0, 0),
     velocity: PADDLE_VELOCITY,
   },
 });

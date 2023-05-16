@@ -1,6 +1,8 @@
 {
     "name": "shared",
     "version": "1.0.0",
+    "main": "dist/index.js",
+    "module": "dist/index.js",
     "dependencies": {
         "cannon-es": "^0.20.0"
     }

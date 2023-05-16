@@ -1,8 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import "./LobbyMode.css";
 
-import { SocketContext } from "../../../../../contexts";
-import { ClientEvents, type GameMode, type LobbyMode } from "../../../@types";
+import { ClientEvents, type GameMode, type LobbyMode, type GameContextParameters } from "@Game/@types";
+import { useSocketContext, useUser } from "@hooks";
+import type { SocketContextParameters } from "@types";
+import { useGameContext } from "@Game/hooks";
 
 interface LobbyModeProps {
   gameMode: GameMode | undefined;
@@ -11,11 +13,8 @@ interface LobbyModeProps {
 }
 
 export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode, setLobbyMode }) => {
-  const socketContext = useContext(SocketContext);
-  if (socketContext === undefined) {
-    throw new Error("Undefined SocketContext");
-  }
-  const { socketRef } = socketContext;
+  const { socketRef }: SocketContextParameters = useSocketContext();
+  const { overlayRef }: GameContextParameters = useGameContext();
 
   if (lobbyMode) {
     return null;
@@ -27,7 +26,10 @@ export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode,
   };
 
   return (
-    <div className="modal-lobby">
+    <div className="game-modal-cross">
+      <div className="close-button-wrapper">
+        <button className="close-button" onClick={() => overlayRef?.current?.resetGame()}></button>
+      </div>
       <div className="game-button-wrapper">
         <button
           className="game-button"

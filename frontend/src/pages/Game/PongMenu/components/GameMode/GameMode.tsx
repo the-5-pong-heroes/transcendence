@@ -1,6 +1,7 @@
 import React from "react";
 
-import type { GameMode } from "../../../@types";
+import "./GameMode.css";
+import type { GameMode } from "@Game/@types";
 
 interface GameModeProps {
   setGameMode: (mode: GameMode) => void;
@@ -8,7 +9,7 @@ interface GameModeProps {
 
 export const GameModeButton: React.FC<GameModeProps> = ({ setGameMode }) => {
   return (
-    <div className="game-button-wrapper">
+    <div className="game-button-wrapper" id="game-mode">
       <button
         className="game-button"
         onClick={() => {

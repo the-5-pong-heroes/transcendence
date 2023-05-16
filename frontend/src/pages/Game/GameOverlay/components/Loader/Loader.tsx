@@ -1,34 +1,25 @@
 import React from "react";
 import "./Loader.css";
-import "./LoaderOldPong.scss";
+
+import { type GameContextParameters } from "@Game/@types";
+import { useGameContext } from "@Game/hooks";
 
 interface LoaderParameters {
   loader: boolean;
 }
 
-// const OldPongLoader: React.FC = () => (
-//   <div>
-//     <div className="wrapper">
-//       <div className="main">
-//         <div className="inner">
-//           <div className="screen">
-//             <div className="pong">loading...</div>
-//           </div>
-//         </div>
-//         <div className="side"></div>
-//       </div>
-//     </div>
-//     <div className="shade"></div>
-//   </div>
-// );
-
 export const Loader: React.FC<LoaderParameters> = ({ loader }) => {
+  const { overlayRef }: GameContextParameters = useGameContext();
+
   if (!loader) {
     return null;
   }
 
   return (
-    <div className="modal-loader">
+    <div className="game-modal loader-modal">
+      <div className="close-button-wrapper">
+        <button className="close-button" onClick={() => overlayRef?.current?.resetGame()}></button>
+      </div>
       <div className="loader-wrapper">
         <div className="loader"></div>
         <div className="text">

@@ -8,7 +8,7 @@ import { MatchHistory } from "./MatchHistory";
 import { useParams } from "react-router-dom";
 import { UserStats } from "../Leaderboard/Leaderboard";
 import { Friends } from "./Friends";
-import { Setting } from '../../assets';
+import { Setting, addFriend, GameLight, ChatLight } from '../../assets';
 import { Link } from "react-router-dom";
 
 export interface GameData {
@@ -79,9 +79,10 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
         </div>
         <div className="column username">
           {user.name}
-          <Link to={"/Settings"}>
-            <img src={Setting}/>
-          </Link>
+          { user.isMe && <Link to={"/Settings"}><img src={Setting}/></Link>}
+          { !user.isMe && <img src={ChatLight}/>}
+          { !user.isMe && <img src={GameLight}/>}
+          { !user.isMe && <img src={addFriend}/>}
         </div>
         <UserStatus myClassName="column status" status={user.status} />
       </div>

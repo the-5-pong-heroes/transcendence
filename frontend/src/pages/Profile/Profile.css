@@ -139,8 +139,12 @@
   text-shadow: darkblue 2px 0 10px;
 }
 
+.username img:last-child {
+  height: 20px !important;
+}
+
 .username img {
-  height: 20px;
+  height: 25px;
   display: inline;
   margin-left: 20px;
   filter: brightness(0) invert(1);

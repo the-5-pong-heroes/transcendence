@@ -12,6 +12,7 @@ interface ContextParameters {
   logRef: React.RefObject<HTMLDivElement>;
   signupRef: React.RefObject<HTMLDivElement>;
   profileRef: React.RefObject<HTMLDivElement>;
+  settingsRef: React.RefObject<HTMLDivElement>;
   gameIsRunning: React.RefObject<boolean>;
 }
 

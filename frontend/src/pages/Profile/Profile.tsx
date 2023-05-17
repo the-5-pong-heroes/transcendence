@@ -8,6 +8,8 @@ import { MatchHistory } from "./MatchHistory";
 import { useParams } from "react-router-dom";
 import { UserStats } from "../Leaderboard/Leaderboard";
 import { Friends } from "./Friends";
+import { Setting } from '../../assets';
+import { Link } from "react-router-dom";
 
 export interface GameData {
   playerOne: { id: string; name: string };
@@ -77,6 +79,9 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
         </div>
         <div className="column username">
           {user.name}
+          <Link to={"/Settings"}>
+            <img src={Setting}/>
+          </Link>
         </div>
         <UserStatus myClassName="column status" status={user.status} />
       </div>

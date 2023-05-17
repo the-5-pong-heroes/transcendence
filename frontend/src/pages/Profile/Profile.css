@@ -136,8 +136,15 @@
   margin: 0 0 0 1rem;
   font-family: sans-serif;
   color: white;
-  justify-content: center;
   text-shadow: darkblue 2px 0 10px;
+}
+
+.username img {
+  height: 20px;
+  display: inline;
+  margin-left: 20px;
+  filter: brightness(0) invert(1);
+  align-self: center
 }
 
 .bullet-orange {

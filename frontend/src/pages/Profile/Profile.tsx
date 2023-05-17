@@ -58,6 +58,10 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
     fetchHistory();
   }, []);
 
+  function SwitchLastBlock() {
+    console.log("i'm here");
+  }
+
   return (
     <div ref={profileRef} id="Profile" className="Profile">
       <div className="profile-block block1">
@@ -96,6 +100,9 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
       </div>
       <MatchHistory history={history} />
       {/* <div className="friends">{user.friend}</div> */}
+      <button onClick={SwitchLastBlock}>
+          show friends
+        </button>
     </div>
   );
 };

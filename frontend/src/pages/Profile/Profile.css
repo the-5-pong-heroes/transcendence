@@ -189,3 +189,19 @@
 .friends {
   /* TODO */
 }
+
+#Profile button {
+  font-style: italic;
+  /*
+  border-radius: 0.5rem;
+  border: 1px solid darkblue;
+  background: linear-gradient(0deg, rgba(42, 45, 112, 0.5) 0%, rgba(80, 75, 210, 0.5) 100%);
+  padding: 15px;
+  */
+}
+
+#Profile button:hover {
+  cursor: pointer;
+  /* color: #011f37; */
+  /* border: 1px solid black; */
+}

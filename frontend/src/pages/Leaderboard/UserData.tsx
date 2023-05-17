@@ -1,13 +1,14 @@
 import { DefaultAvatar } from "../../assets";
+import { UserStats } from "./Leaderboard";
 import { UserLevel } from "./UserLevel";
 import { UserStatus } from "./UserStatus";
 
-const UserData = ({users}: any) => {
+const UserData = ({users}: {users: UserStats[]}) => {
   return (
     <div className="scroll-div">
       {
-        users.map((curUser : any, i: number) => {
-          const {id, avatar, name, score, wins, defeats, level, status, friend, isMe, rank} = curUser;
+        users.map((curUser : UserStats, i: number) => {
+          const {id, avatar, name, score, wins, defeats, level, status, isFriend, isMe, rank} = curUser;
           return (
             <div className={`row${isMe ? " me" : ""}`} key={i}>
               <div className="col">
@@ -20,7 +21,7 @@ const UserData = ({users}: any) => {
               <UserLevel myClassName="col level" level={level} />
               <UserStatus myClassName="col status" status={status} />
               <div className="col">
-                <span className={friend ? "friend" : "not-friend"}>{friend ? "✓" : (isMe ? "-" : "✗")}</span>
+                <span className={isFriend ? "friend" : "not-friend"}>{isFriend ? "✓" : (isMe ? "-" : "✗")}</span>
               </div>
               <div className="col">{rank}</div>
             </div>

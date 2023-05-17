@@ -1,4 +1,8 @@
-export const MatchHistory = ({history}: any) => {
+import { GameData } from "./Profile"
+
+
+
+export const MatchHistory = ({history} :{history: GameData[]} ) => {
   if (history.length == 0) {
     return (
       <div className="block3 noMatchYet">
@@ -10,7 +14,7 @@ export const MatchHistory = ({history}: any) => {
 return (
   <div className="block3">
   {
-    history.map((match, i: number) => {
+    history.map((match : GameData, i: number) => {
       return (
         <div key={i} className="profile-block">
           <div className="column player1">

@@ -1,4 +1,4 @@
-export const UserStatus = ({ myClassName, status }) => {
+export const UserStatus = ({ myClassName, status}: {myClassName: string; status: string}) => {
 
   if (status === "IN_GAME")
     status = "PLAYING";

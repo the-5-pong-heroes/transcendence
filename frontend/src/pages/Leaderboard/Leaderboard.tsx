@@ -6,8 +6,27 @@ interface LeaderboardProps {
   boardRef: React.RefObject<HTMLDivElement>;
 }
 
+export interface UserStats {
+  id: string;
+  name: string;
+  avatar: string | null;
+  status: string;
+  lastLogin: null | Date;
+  createdAt: Date;
+  updatedAt: Date;
+  rank: number;
+  score: number;
+  wins: number;
+  defeats: number;
+  nbGames: number;
+  friends: { name: string; id: string }[];
+  level: string;
+  isFriend: boolean;
+  isMe: boolean;
+}
+
 export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([] as UserStats[]);
 
   const fetchUsers = async () => {
     try {

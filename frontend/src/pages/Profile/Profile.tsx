@@ -6,7 +6,14 @@ import { UserStatus } from "../Leaderboard/UserStatus";
 import { UserLevel } from "../Leaderboard/UserLevel";
 import { MatchHistory } from "./MatchHistory";
 import { useParams } from "react-router-dom";
+import { UserStats } from "../Leaderboard/Leaderboard";
 
+export interface GameData {
+  playerOne: { id: string; name: string };
+  playerOneScore: number;
+  playerTwo: { id: string; name: string };
+  playerTwoScore: number;
+}
 
 interface ProfileProps {
   profileRef: React.RefObject<HTMLDivElement>;
@@ -16,9 +23,9 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
 
   const { uuid } = useParams();
 
-  const [history, setHistory] = useState([]);
+  const [history, setHistory] = useState([] as GameData[]);
 
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState({} as UserStats);
 
 
   const fetchHistory = async () => {

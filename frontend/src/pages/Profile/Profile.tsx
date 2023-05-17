@@ -7,6 +7,7 @@ import { UserLevel } from "../Leaderboard/UserLevel";
 import { MatchHistory } from "./MatchHistory";
 import { useParams } from "react-router-dom";
 import { UserStats } from "../Leaderboard/Leaderboard";
+import { Friends } from "./Friends";
 
 export interface GameData {
   playerOne: { id: string; name: string };
@@ -27,6 +28,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
 
   const [user, setUser] = useState({} as UserStats);
 
+  const [currentTab, setCurrentTab] = useState("Match history");
 
   const fetchHistory = async () => {
     try {
@@ -58,8 +60,13 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
     fetchHistory();
   }, []);
 
-  function SwitchLastBlock() {
-    console.log("i'm here");
+  function switchTab(event: any) {
+    const tabText: string = event.target.innerText;
+    if (tabText === "Match history") {
+      setCurrentTab("Match history");
+    } else {
+      setCurrentTab("Friends");
+    }
   }
 
   return (
@@ -98,11 +105,17 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
           <span>{user.nbGames}</span>
         </div>
       </div>
-      <MatchHistory history={history} />
-      {/* <div className="friends">{user.friend}</div> */}
-      <button onClick={SwitchLastBlock}>
-          show friends
-        </button>
+      <div className="block3">
+        <ul className="tab tabs">
+          <li className={`tab-item${currentTab === "Match history" ? " tab-active": ""}`} onClick={switchTab}>
+            <div className="tab-link">Match history</div>
+          </li>
+          <li className={`tab-item${currentTab === "Friends" ? " tab-active": ""}`} onClick={switchTab}>
+            <div className="tab-link">Friends</div>
+          </li>
+        </ul>
+        {currentTab === "Match history" ? <MatchHistory history={history} /> : <Friends user={user} />}
+      </div>
     </div>
   );
 };

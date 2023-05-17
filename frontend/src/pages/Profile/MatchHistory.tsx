@@ -5,14 +5,14 @@ import { GameData } from "./Profile"
 export const MatchHistory = ({history} :{history: GameData[]} ) => {
   if (history.length == 0) {
     return (
-      <div className="block3 noMatchYet">
+      <div className="noMatchYet">
         <span>No match yet! 🤷‍♀️</span>
       </div>
     )
   }
 
 return (
-  <div className="block3">
+  <div>
   {
     history.map((match : GameData, i: number) => {
       return (

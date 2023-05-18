@@ -10,6 +10,7 @@ import { StatsModule } from "./stats/stats.module";
 //import { AuthModule } from "./auth/auth.module";
 import { AuthModule } from "./auth_paul/auth.module"; // TEMPORAIRE
 import { ChannelsModule } from "./channels/channels.module";
+import { UserSettingsModule } from "./user-settings/user-settings.module";
 import { PrismaModule } from "./database/prisma.module";
 import { ScheduleModule } from "@nestjs/schedule";
 
@@ -22,6 +23,7 @@ import { ScheduleModule } from "@nestjs/schedule";
     UsersModule, // TEMPORAIRE
     GameApiModule,
     ChannelsModule,
+    UserSettingsModule,
     PrismaModule,
     ScheduleModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true }),

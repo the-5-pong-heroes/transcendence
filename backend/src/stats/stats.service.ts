@@ -50,7 +50,7 @@ export interface UserStats {
   isMe: boolean;
 }
 
-@Injectable({})
+@Injectable()
 export class StatsService {
   constructor(private prisma: PrismaService) {}
 

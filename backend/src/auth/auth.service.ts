@@ -51,9 +51,10 @@ export class AuthService {
         @Res() res: Response,
         email: string | null | undefined
       ) {
-        if (!email) res.redirect(301, `http://e1r2p7.clusters.42paris.fr:5173/registration`);
-        else res.redirect(301, `http://e1r2p7.clusters.42paris.fr:5173/`);
-      }
+        if (!email) res.redirect(301, `http://localhost:5173/Login`);
+        else 
+          res.redirect(301, `http://localhost:5173/`);
+        }
         
     async getUserByToken(req: Request) {
       try {
@@ -128,7 +129,7 @@ export class AuthService {
         {
             throw new HttpException({
             status: HttpStatus.BAD_REQUEST,
-            error: "Error to update the cookes"},
+            error: "Error to update the cookies"},
             HttpStatus.BAD_REQUEST);
         }
         }

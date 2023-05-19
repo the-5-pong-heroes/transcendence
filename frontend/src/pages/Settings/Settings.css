@@ -1,6 +1,82 @@
-
 .settings {
-  height: 100vh;
-  width: 100vw;
   z-index: 7;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-flow: column nowrap;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.settings-block {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: calc(-1 * var(--bs-gutter-y));
+  margin-right: calc(-0.5 * var(--bs-gutter-x));
+  margin-left: calc(-0.5 * var(--bs-gutter-x));
+  width: 80vw;
+  padding: 1rem;
+  max-width: 700px;
+  border-radius: 20px;
+  background: linear-gradient(0deg, rgba(42, 45, 112, 0.5) 0%, rgba(80, 75, 210, 0.5) 100%);
+  margin-bottom: 2rem;
+}
+
+.settings-col {
+  flex: 1 0 0%;
+  padding: 1rem;
+  text-align: left;
+}
+
+.settings-header {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  margin-top: calc(-1 * var(--bs-gutter-y));
+  margin-right: calc(-0.5 * var(--bs-gutter-x));
+  margin-left: calc(-0.5 * var(--bs-gutter-x));
+  }
+
+
+
+.update-username input {
+  background-color: #ffffff30;
+  height: 2rem;
+  margin-top: 1rem;
+  border-radius: 20px;
+  padding: 15px;
+  text-align: center;
+}
+
+.update-avatar button {
+  border-radius: 1rem;
+  margin-top: 1rem;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background: rgba(42, 45, 112, 0.5);
+  border: 1px solid darkblue;
+}
+
+.update-avatar button:hover {
+  background-color: darkblue;
+}
+
+.friends-list .cross {
+  color: #e71e24 !important;
+  margin-left: 5px;
+}
+
+.leave {
+  cursor: pointer;
 }

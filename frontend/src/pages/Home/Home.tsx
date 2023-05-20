@@ -10,7 +10,7 @@ export const Home: React.FC<HomeProps> = ({ homeRef }) => {
   const navigate = useNavigate();
 
   const handleAuth42 = () => {
-    let url = "localhost:3333/auth/Oauth42/callback";
+    let url = `${import.meta.env.VITE_API42_URI}`;
     window.open(url, "_self");
     };
 
@@ -23,7 +23,6 @@ export const Home: React.FC<HomeProps> = ({ homeRef }) => {
     <h1>Home</h1>
     <div className="button-group">
         <button className="button" onClick={handleAuth42}>Connect with 42</button>
-        <button className="button google-button" onClick={handleAuthGoogle}>Connect with Google</button>
       </div>
   </div>
   );

@@ -15,25 +15,30 @@ export class AuthService {
         ) {}
 
     async createDataBase42User(
-        user42: any,
-        token: string,
+        user42: string,
+        token: any,
         username: string,
         isRegistered: boolean
     ){
+        console.log("user42=", user42);
+        console.log("token=", token);
+        console.log("username=", username);
+        console.log("isRegistered=", isRegistered);
+
         try {
             const user = await this.prisma.user.create({
                 data: { 
                     name: username,
+                    status: "ONLINE",
+                    lastLogin: new Date(),
                     auth: {
                         create: {
-                            accessToken: token,
+                            accessToken: token.access_token,
                             isRegistered: isRegistered,
-                            email: user42.email,
-                            password: 'test',
+                            email: user42,
+                            password: 'password',
                         }
                     },
-                    status: "ONLINE",
-                    lastLogin: new Date()
                 }
             });
             return user;
@@ -51,7 +56,7 @@ export class AuthService {
         @Res() res: Response,
         email: string | null | undefined
       ) {
-        if (!email) res.redirect(301, `http://localhost:5173/Login`);
+        if (!email) res.redirect(301, `http://localhost:5173/Profile`);
         else 
           res.redirect(301, `http://localhost:5173/`);
         }

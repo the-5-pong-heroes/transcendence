@@ -14,11 +14,14 @@ export class UserService {
 
 	async getUserByEmail(email: string) {
 		try {
-			const user = await this.prisma.auth.findFirst({
+			const user = await this.prisma.user.findFirst({
 				where: {
-					email: email,
+					auth: {
+						email: email,
+					},
 				},
 			});
+			console.log(email);
 			return user;
 		} catch (error) {}
 	}

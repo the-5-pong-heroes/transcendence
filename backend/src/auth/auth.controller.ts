@@ -29,13 +29,23 @@ export class AuthController{
     @Get("auth42/callback")
     async getToken(@Req() req: Request, @Res() res: Response) {
         const codeFromUrl = req.query.code as string;
-        console.log("request = ",req);
         const token = await this.Oauth42.accessToken(codeFromUrl);
         const user42infos = await this.Oauth42.access42UserInformation(token.access_token);
         this.authService.createCookies(res, token);
-         const userExists = await this.userService.getUserByEmail(user42infos.email);
-         this.authService.updateCookies(res, token, userExists);
-         this.authService.RedirectConnectingUser(req,res, userExists?.email);
+        if (!user42infos.email)
+            res.redirect(`${process.env.FRONTEND_URL}/login`);
+        else
+        {
+            const userExists = await this.userService.getUserByEmail(user42infos.email);
+            if (!userExists)
+            {
+                const user42 = await this.authService.createDataBase42User(user42infos.email, token, user42infos.login, false);
+            }
+            else
+                this.authService.updateCookies(res, token, userExists);
+        }
+            res.redirect(`${process.env.FRONTEND_URL}/Profile`);
+        //this.authService.RedirectConnectingUser(req,res, userExists?.auth.email);
      }
 
    @Get("token")
@@ -51,7 +61,7 @@ export class AuthController{
       this.authService.createCookies(res, userInfos);
       const userExists = await this.userService.getUserByEmail(userInfos.email);
       this.authService.updateCookies(res, token, userExists);
-      this.authService.RedirectConnectingUser(req, res, userExists?.email);
+      //this.authService.RedirectConnectingUser(req, res, userExists?.email);
    }
 
 //    @Get("logout")

@@ -11,9 +11,8 @@ export class Oauth42Service {
         const response = await fetch("https://api.intra.42.fr/oauth/token", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: `grant_type=authorization_code&client_id=u-s4t2ud-1f837ff40c5bf2060ef73b6c1d0ef7ea8d1a9cfcde44e0ac29fff0b2049f91ef&client_secret=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&code=${req}&redirect_uri=https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-1f837ff40c5bf2060ef73b6c1d0ef7ea8d1a9cfcde44e0ac29fff0b2049f91ef&redirect_uri=http%3A%2F%2Flocalhost%3A3333%2Fauth%2Fauth42%2Fcallback&response_type=code`,
+          body: `grant_type=authorization_code&client_id=${process.env.VITE_API42_ID}&client_secret=${process.env.VITE_API42_SECRET}&code=${req}&redirect_uri=${process.env.VITE_API42_URI}`,
         });
-        console.log("response = ", response);
         const data = await response.json(); 
         if (!data)
         {
@@ -24,7 +23,6 @@ export class Oauth42Service {
             },
              HttpStatus.BAD_REQUEST); 
           };
-          console.log("data =", data);
         return data;
       } catch (error) {
         throw new HttpException(

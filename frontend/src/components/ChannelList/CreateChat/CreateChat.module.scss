@@ -1,0 +1,69 @@
+.CreateChat {
+  position: relative;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-end;
+
+  .Button {
+    width: 30px;
+    height: 30px;
+    padding-bottom: 1px;
+    text-align: center;
+    border-radius: 50%;
+  }
+
+  .ButtonLight {
+    outline: solid 1px black;
+  }
+
+  .ButtonDark {
+    outline: solid 1px white;
+  }
+
+  .Form {
+    position: absolute;
+    z-index: 1;
+    margin-top: 50px;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 5px;
+    
+    .InputName {
+      background-color: inherit;
+      outline: none;
+    }
+
+    .Type {
+      display: flex;
+      flex-flow: column nowrap;
+
+      .TypeLabel {
+        display: flex;
+        gap: 8px;
+      }
+    }
+
+    .Password {
+      background-color: inherit;
+      outline: none;
+    }
+
+    .Submit {
+      cursor: pointer;
+
+      &:hover {
+        outline: solide 1px white;
+      }
+    }
+  }
+
+  .FormLight {
+    background-color: rgb(160, 200, 240);
+  }
+
+  .FormDark {
+    background-color: rgb(60, 60, 120);
+  }
+}

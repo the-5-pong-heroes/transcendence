@@ -1,0 +1,179 @@
+import { Injectable } from "@nestjs/common";
+import { CreateChannelDto } from "./dto/create-channel.dto";
+import { PrismaService } from "../database/prisma.service";
+import { Channel, ChannelUser } from "@prisma/client";
+import { UpdateChannelDto } from "./dto/update-channel.dto";
+
+@Injectable()
+export class ChannelsService {
+  constructor(private readonly prismaService: PrismaService) {}
+
+  async create(createChannelDto: CreateChannelDto): Promise<Channel> {
+    const { users, ...data } = createChannelDto;
+    return this.prismaService.channel.create({
+      data: {
+        ...data,
+        users: {
+          create: [
+            {
+              ...users,
+              role: "OWNER",
+            },
+          ],
+        },
+      },
+    });
+  }
+
+  async addUser(payload: any): Promise<void> {
+    await this.prismaService.channelUser.create({
+      data: { ...payload },
+    });
+  }
+
+  async findAll(userId: string): Promise<Channel[]> {
+    const channels = await this.prismaService.channel.findMany({
+      where: {
+        users: {
+          some: {
+            userId,
+          },
+        },
+      },
+      include: {
+        messages: {
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 1,
+        },
+        users: {
+          select: {
+            id: true,
+            role: true,
+            isAuthorized: true,
+            isMuted: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+        banned: {
+          select: {
+            id: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            bannedUntil: true,
+          },
+        },
+      },
+      orderBy: { lastMessage: "desc" },
+    });
+    channels.map((channel) => {
+      if (
+        channel.type === "PROTECTED" &&
+        channel.users.find((user) => user.user.id === userId)?.isAuthorized === false
+      ) {
+        channel.password = null;
+        channel.messages = [];
+      }
+      return channel;
+    });
+    return channels;
+  }
+
+  async findOne(id: string): Promise<any> {
+    return this.prismaService.channel.findUnique({
+      where: { id },
+      include: {
+        users: true,
+      },
+    });
+  }
+
+  async findOneWithOwner(id: string): Promise<(Channel & { users: ChannelUser[] }) | null> {
+    return this.prismaService.channel.findUnique({
+      where: { id },
+      include: {
+        users: {
+          where: {
+            role: "OWNER",
+          },
+        },
+      },
+    });
+  }
+
+  async searchAll(payload: any): Promise<Channel[]> {
+    const channels = await this.prismaService.channel.findMany({
+      where: {
+        name: {
+          startsWith: payload.channelName,
+          mode: "insensitive",
+        },
+        type: { in: ["PUBLIC", "PROTECTED"] },
+        users: { none: { userId: payload.userId } },
+        NOT: {
+          banned: {
+            some: {
+              userId: payload.userId,
+            },
+          },
+        },
+      },
+      orderBy: { name: "asc" },
+      take: 5,
+    });
+    if (channels.length >= 5) return channels;
+    const endChannels = await this.prismaService.channel.findMany({
+      where: {
+        name: {
+          contains: payload.channelName,
+          mode: "insensitive",
+        },
+        type: { in: ["PUBLIC", "PROTECTED"] },
+        users: { none: { userId: payload.userId } },
+        NOT: {
+          OR: [
+            {
+              id: {
+                in: channels.map((channel) => channel.id),
+              },
+            },
+            {
+              banned: {
+                some: {
+                  userId: payload.userId,
+                },
+              },
+            },
+          ],
+        },
+      },
+      orderBy: { name: "asc" },
+      take: 5 - channels.length,
+    });
+    return [...channels, ...endChannels];
+  }
+
+  async update(updateChannelDto: UpdateChannelDto) {
+    const { users, banned, ...data } = updateChannelDto;
+    return this.prismaService.channel.update({
+      where: { id: updateChannelDto.id },
+      data: {
+        ...data,
+      },
+    });
+  }
+
+  delete(id: string) {
+    return this.prismaService.channel.delete({ where: { id } });
+  }
+}

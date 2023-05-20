@@ -1,0 +1,43 @@
+.ChannelOptions {
+  max-height: calc(100% - 80px);
+  padding: max(50px, 20vh) 30px;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  gap: 20px;
+  flex-grow: 1;
+  overflow: auto;
+
+  
+  .UserList {
+    height: clamp(50px, 10vh, 200px);
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 10px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 8px;
+  }
+
+  .Button {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    padding: 10px 15px;
+    background-color: #d38ce5;
+    font-weight: bold;
+    //font-size: 1em;
+    border-radius: 8px;
+    box-shadow: 1px 2px 5px -3px black;
+  }
+
+  .ErrMessage {
+    font-size: .9em;
+    color: red;
+  }
+
+  .SuccessMessage {
+    font-size: .9em;
+    color: green;
+  }
+}

@@ -21,7 +21,6 @@ export class UserService {
 					},
 				},
 			});
-			console.log(email);
 			return user;
 		} catch (error) {}
 	}

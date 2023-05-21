@@ -15,17 +15,13 @@ export class AuthService {
         ) {}
 
     async createDataBase42User(
-        user42: string,
+        user42: any,
         token: any,
         username: string,
         isRegistered: boolean
     ){
-        console.log("user42=", user42);
-        console.log("token=", token);
-        console.log("username=", username);
-        console.log("isRegistered=", isRegistered);
-
         try {
+          console.log("vefore create");
             const user = await this.prisma.user.create({
                 data: { 
                     name: username,
@@ -35,12 +31,15 @@ export class AuthService {
                         create: {
                             accessToken: token.access_token,
                             isRegistered: isRegistered,
-                            email: user42,
-                            password: 'password',
+                            email: user42.email,
+                            password: "test",
+                            otp_enabled: false,
+                            otp_validated: false,
+                            otp_verified: false,
                         }
-                    },
-                }
-            });
+                    }
+                },
+              });
             return user;
         } catch (error) {
             throw new HttpException(
@@ -64,9 +63,11 @@ export class AuthService {
     async getUserByToken(req: Request) {
       try {
         const accessToken = req.cookies.token;
-        const user = await this.prisma.auth.findFirst({
+        const user = await this.prisma.user.findFirst({
           where: {
-              accessToken: accessToken,
+              auth: {
+                accessToken: accessToken,
+              }
             },
             });
         if (!user) {
@@ -111,11 +112,11 @@ export class AuthService {
             expires: new Date(new Date().getTime() + 60 * 24 * 7 * 1000), // expires in 7 days
             httpOnly: true, // for security
           });
-          const Googlecookies = res.cookie("FullToken", token,
-          {
-            expires: new Date(new Date().getTime() + 60 * 24 * 7 * 1000), // expires in 7 days
-            httpOnly: true, // for security
-          });
+          // const Googlecookies = res.cookie("FullToken", token,
+          // {
+          //   expires: new Date(new Date().getTime() + 60 * 24 * 7 * 1000), // expires in 7 days
+          //   httpOnly: true, // for security
+          // });
     
       }
 
@@ -123,9 +124,16 @@ export class AuthService {
         try {
           if (userInfos)
           { const name = userInfos.id;
-            const user = await this.prisma.auth.update({where: {userId: name,},
-            data: {  accessToken: token.access_token,},
-            });
+            const user = await this.prisma.user.update(
+              { where: {
+                  name: name,
+                },
+                data: {  
+                  auth: {
+                   // accessToken: token.access_token,
+                  },
+                },
+              });
             return user;
           }
           else

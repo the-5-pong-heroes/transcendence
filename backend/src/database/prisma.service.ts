@@ -8,9 +8,12 @@ export class PrismaService extends PrismaClient {
         super({
             datasources: {
                 db: {
-                    url: "postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB"
+                    url: config.get('POSTGRES_URL'),
                 },
-        }
+        },
         });
     }
+    async onModuleDestroy() {
+    	await this.$disconnect();
+  	}
 }

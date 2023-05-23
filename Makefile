@@ -28,7 +28,7 @@ clean:
 	@sudo $(DOCKER_COMPOSE) down
 	@sudo docker container prune --force
 
-fclean: clean
+fclean:
 	-sudo docker stop `sudo docker ps -qa`
 	-sudo docker rm `sudo docker ps -qa`
 	-sudo docker rmi -f `sudo docker images -qa`

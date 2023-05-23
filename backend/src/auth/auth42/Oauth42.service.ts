@@ -63,7 +63,6 @@ export class Oauth42Service {
                       name: username,
                       auth: {
                           create: {
-                              password: 'test',
                               isRegistered: isRegistered,
                               accessToken: token,
                               email: user42.email,

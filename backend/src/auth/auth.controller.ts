@@ -38,13 +38,17 @@ export class AuthController{
         {
             const userExists = await this.userService.getUserByEmail(user42infos.email);
             if (!userExists)
-            {
-                const user42 = await this.authService.createDataBase42User(user42infos, token, user42infos.login, false);
-            }
+                this.authService.createDataBase42User(user42infos, token, user42infos.login, false);
             else
+            {
                 this.authService.updateCookies(res, token, userExists);
+                if (!userExists.auth?.twoFAactivated)
+                    res.redirect(301, `http://localhost:5173/`);
+                else
+                    res.redirect(301, `http://localhost:5173/`);
+            }
         }
-            res.redirect(`http://localhost:${process.env.FRONTEND_PORT}/Profile`);
+        res.redirect(301, `http://localhost:5173/`);
         //this.authService.RedirectConnectingUser(req,res, userExists?.auth.email);
      }
 

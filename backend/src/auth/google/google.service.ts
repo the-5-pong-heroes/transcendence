@@ -88,7 +88,6 @@ export class GoogleService {
             name: name,
             auth: {
                 create: {
-                    password: 'test',
                     isRegistered: isRegistered,
                     accessToken: userGoogle.access_token,
                     email: userGoogle.email,

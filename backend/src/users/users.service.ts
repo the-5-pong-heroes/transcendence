@@ -20,6 +20,9 @@ export class UserService {
 						email: email,
 					},
 				},
+				include: {
+					auth: true,
+				  },
 			});
 			return user;
 		} catch (error) {}

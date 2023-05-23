@@ -52,6 +52,15 @@ services:
             - backend
         networks:
             - ft_transcendence
+    
+    adminer:
+        container_name: adminer
+        image: adminer
+        restart: always
+        ports:
+            - "8080:8080"
+        networks:
+            - ft_transcendence
 
 # --------------- NETWORKS --------------#
 networks:

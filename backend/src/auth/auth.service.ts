@@ -21,7 +21,6 @@ export class AuthService {
         isRegistered: boolean
     ){
         try {
-          console.log("vefore create");
             const user = await this.prisma.user.create({
                 data: { 
                     name: username,
@@ -32,12 +31,15 @@ export class AuthService {
                             accessToken: token.access_token,
                             isRegistered: isRegistered,
                             email: user42.email,
-                            password: "test",
+                            twoFAactivated: false,
                             otp_enabled: false,
                             otp_validated: false,
-                            otp_verified: false,
-                        }
-                    }
+                            otp_verified: false
+                        },
+                    },
+                },
+                include: {
+                  auth: true,
                 },
               });
             return user;
@@ -73,7 +75,7 @@ export class AuthService {
         if (!user) {
           throw new HttpException({
               status: HttpStatus.BAD_REQUEST,
-              error: "Error to get the user by token1"
+              error: "Error to get the user by token"
             },
             HttpStatus.BAD_REQUEST
           );
@@ -82,7 +84,7 @@ export class AuthService {
       } catch (error) {
         throw new HttpException({
             status: HttpStatus.BAD_REQUEST,
-            error: "Error to get the user by token2"
+            error: "Error to get the user by token"
           },
           HttpStatus.BAD_REQUEST
         );
@@ -123,15 +125,14 @@ export class AuthService {
       async updateCookies(@Res() res: Response, token: any, userInfos: any) {
         try {
           if (userInfos)
-          { const name = userInfos.id;
-            const user = await this.prisma.user.update(
+          { 
+            const name = userInfos.id;
+            const user = await this.prisma.auth.update(
               { where: {
-                  name: name,
+                  userId: name,
                 },
                 data: {  
-                  auth: {
-                   // accessToken: token.access_token,
-                  },
+                    accessToken: token.access_token,                      
                 },
               });
             return user;

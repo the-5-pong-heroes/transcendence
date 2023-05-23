@@ -33,7 +33,7 @@ export class AuthController{
         const user42infos = await this.Oauth42.access42UserInformation(token.access_token);
         this.authService.createCookies(res, token);
         if (!user42infos.email)
-            res.redirect(`${process.env.FRONTEND_URL}/login`);
+            res.redirect(301, `http://localhost:5173/`);
         else
         {
             const userExists = await this.userService.getUserByEmail(user42infos.email);
@@ -43,12 +43,12 @@ export class AuthController{
             {
                 this.authService.updateCookies(res, token, userExists);
                 if (!userExists.auth?.twoFAactivated)
-                    res.redirect(301, `http://localhost:5173/`);
+                    res.redirect(301, `http://localhost:5173/`); // ou /Profile ?
                 else
-                    res.redirect(301, `http://localhost:5173/`);
+                    res.redirect(301, `http://localhost:5173/`); //2FA page
             }
         }
-        res.redirect(301, `http://localhost:5173/`);
+        //res.redirect(301, `http://localhost:5173/`);
         //this.authService.RedirectConnectingUser(req,res, userExists?.auth.email);
      }
 
@@ -57,17 +57,17 @@ export class AuthController{
      return this.authService.checkIfTokenValid(req, res);
    }
 
-   @Get("google/callback")
-     async handleGoogleRedirection(@Req() req: Request, @Res() res: Response) {
-      const codeFromUrl = req.query.code as string;
-      const token: any = await this.googleService.getTokenFromGoogle(codeFromUrl);
-      const userInfos : any = await this.googleService.getUserFromGoogle(token);
-      this.authService.createCookies(res, userInfos);
-      const userExists = await this.userService.getUserByEmail(userInfos.email);
-      this.authService.updateCookies(res, token, userExists);
-      //this.authService.RedirectConnectingUser(req, res, userExists?.email);
-   }
-
+//    @Get("google/callback")
+//      async handleGoogleRedirection(@Req() req: Request, @Res() res: Response) {
+//       const codeFromUrl = req.query.code as string;
+//       const token: any = await this.googleService.getTokenFromGoogle(codeFromUrl);
+//       const userInfos : any = await this.googleService.getUserFromGoogle(token);
+//       this.authService.createCookies(res, userInfos);
+//       const userExists = await this.userService.getUserByEmail(userInfos.email);
+//       this.authService.updateCookies(res, token, userExists);
+//       //this.authService.RedirectConnectingUser(req, res, userExists?.email);
+//    }
+  
 //    @Get("logout")
 //    async deleteCookies(@Req() req: Request, @Res() res: Response) {
 //      await this.authService.deleteCookies(res);

@@ -1,70 +1,64 @@
-import { PrismaService } from "../../database/prisma.service";
-import { Request, Response } from "express";
 import { HttpException, HttpStatus, Injectable, Req, Res } from '@nestjs/common';
-import * as speakeasy from 'speakeasy';
+import { PrismaService } from 'src/database/prisma.service';
+import { Request, Response } from 'express';
+import * as bcrypt from 'bcrypt';
+
+
 
 @Injectable()
-export class VerifyService {
-	constructor(private readonly prisma: PrismaService) {}
+export class Mail2FaValidateService {
+	constructor( private readonly prisma: PrismaService) {}
 
-	async verifyCode(@Req() req: Request, @Res() res: Response) {
+	async validate2FA(@Req() req: Request, @Res() res: Response)
+	{
 		try {
-			const { userName, token } = req.body;
-			const auth = await this.prisma.auth.findUnique({
-				where: { email: userName }
-			});
 
-			if (!auth) {
-				throw new HttpException({
-					status: HttpStatus.NOT_FOUND,
-					error: "User not found"
-				}, HttpStatus.NOT_FOUND);
-			}
-
-			if (!auth.otp_activated) {
-				throw new HttpException({
-					status: HttpStatus.BAD_REQUEST,
-					error: "OTP not activated"
-				}, HttpStatus.BAD_REQUEST);
-			}
-
-			const secret = auth.password;
-			const verified = speakeasy.totp.verify({
-				secret: secret,
-				encoding: 'base32',
-				token: token,
-				window: 1
-			});
-
-			if (verified) {
-				await this.updateAuth(userName, true, true);
-				return res.status(200).json({
-					message: "Verification successful"
-				});
-			} else {
-				return res.status(400).json({
-					error: "Invalid code"
-				});
-			}
-		} catch (error) {
+			const { userName} = req.body;
+			const user = await this.prisma.user.findUnique({ where: { name : userName.userName} }); // to change by the name or real ID
+			await this.handleErrorToken(req, user);
+			await this.updateUser(userName)
+			res.status(200).json({otp_verified: true,})
+		}catch(e) {
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
-				error: "Failed to verify OTP"
-			}, HttpStatus.BAD_REQUEST);
+				error: "Impossible to validate 2FA"},
+				 HttpStatus.BAD_REQUEST);
+			}
+
+	}
+
+	async updateUser(userName : any)
+	{
+		try {
+		const updatedUser = await this.prisma.user.update({
+			where: { name : userName.userName },
+			data: {
+			  otp_enabled: true,
+			  otp_verified: true,
+			  otp_validated : true,
+			},
+		  });
+		  console.log("data", updatedUser);
+
+		}
+		catch(error){
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: "Impossible to update user in validate2FA"},
+				 HttpStatus.BAD_REQUEST);
 		}
 	}
 
-	async updateAuth(email: string, otp_verified: boolean, otp_validated: boolean) {
-		try {
-			await this.prisma.auth.update({
-				where: { email },
-				data: { otp_verified, otp_validated }
-			});
-		} catch (error) {
-			throw new HttpException({
-				status: HttpStatus.BAD_REQUEST,
-				error: "Failed to update OTP status"
-			}, HttpStatus.BAD_REQUEST);
-		}
+	async handleErrorToken(@Req() req: Request, user: any){
+		const {token} = req.body;
+		const token_mail = user?.token_mail;
+		const isMatch = await bcrypt.compare(token, token_mail);
+		if (!isMatch)
+	   {
+			   throw new HttpException({
+			   status: HttpStatus.BAD_REQUEST,
+			   error: "errorCodeIsfalse"},
+				HttpStatus.BAD_REQUEST);
+	   }
 	}
 }

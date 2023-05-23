@@ -24,7 +24,7 @@ export const backend = {
 		return await response.json();
 	},
 
-    async generate2FA(user: unknown): Promise<any> {
+	async generate2FA(user: unknown): Promise<any> {
 		const response = await api.post('/2FA/sendEmail', user);
 		return await response.json();
 	},
@@ -35,5 +35,6 @@ export const backend = {
 	async disable2FA(user: unknown): Promise<any> {
 		const response = await api.post('/2FA/disable', user);
 		return await response.json();
+	},
 	},
 }

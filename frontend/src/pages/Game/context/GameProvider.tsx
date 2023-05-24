@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState, useEffect } from "react";
+import { Pong } from "@shared/pongCore";
 
-import { Pong } from "../pongCore";
 import type { GameMode, PaddleSide, ServerPong, GameContextParameters, LobbyState } from "../@types";
 import { ClientEvents } from "../@types";
 import { type GameOverlayRef } from "../GameOverlay";
@@ -8,7 +8,7 @@ import { useGameSize, usePause, useGameList } from "../hooks";
 
 import { GameContext } from "./GameContext";
 
-import type { SocketContextParameters, GameState } from "@types";
+import type { SocketParameters, GameState } from "@types";
 import { useAppContext, useSocketContext } from "@hooks";
 
 interface ProviderParameters {
@@ -26,7 +26,7 @@ export const GameProvider: React.FC<ProviderParameters> = ({ children }) => {
   const serverPongRef = useRef<ServerPong>();
   const { gameList } = useGameList();
 
-  const { socketRef }: SocketContextParameters = useSocketContext();
+  const { socket }: SocketParameters = useSocketContext();
   const { quitGame, setQuitGame }: GameState = useAppContext().gameState;
 
   const isMounted = useRef<boolean>(false);
@@ -36,10 +36,9 @@ export const GameProvider: React.FC<ProviderParameters> = ({ children }) => {
       overlayRef?.current?.showQuitModal();
       setQuitGame(false);
     }
-  }, [quitGame, setQuitGame, socketRef, playRef]);
+  }, [quitGame, setQuitGame, socket, playRef]);
 
   useEffect(() => {
-    const socket = socketRef.current;
     isMounted.current = true;
     socket?.emit(ClientEvents.GameConnect);
 
@@ -48,7 +47,7 @@ export const GameProvider: React.FC<ProviderParameters> = ({ children }) => {
       isMounted.current = false;
       socket?.emit(ClientEvents.GameDisconnect);
     };
-  }, [socketRef]);
+  }, [socket]);
 
   const gameContext = useMemo(
     (): GameContextParameters => ({

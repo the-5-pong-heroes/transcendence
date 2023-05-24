@@ -8,13 +8,18 @@ import type { GameOverlayRef } from "./@types";
 import { Loader, LobbyModeButton, Result, Countdown, QuitModal, Pause, Players } from "./components";
 import "./GameOverlay.css";
 
-import type { SocketContextParameters } from "@types";
+import type { SocketParameters } from "@types";
 import { useSocketContext } from "@hooks";
+
+interface Players {
+  player1: string;
+  player2: string;
+}
 
 const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef> = () => {
   const { height, width, overlayRef, gameMode, setGameMode, playRef, paddleSideRef }: GameContextParameters =
     useGameContext();
-  const { socketRef }: SocketContextParameters = useSocketContext();
+  const { socket }: SocketParameters = useSocketContext();
 
   const containerStyle: React.CSSProperties = {
     height,
@@ -29,6 +34,7 @@ const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef> = () => {
   const [gameWinner, setGameWinner] = useState<string | undefined>(undefined);
   const [lobbyMode, setLobbyMode] = useState<LobbyMode | undefined>(undefined);
   const [pause, setPause] = useState<boolean>(false);
+  const [players, setPlayers] = useState<Players>({ player1: "", player2: "" });
 
   useImperativeHandle(overlayRef, () => ({
     showLoader: (value: boolean) => {
@@ -44,7 +50,7 @@ const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef> = () => {
     },
     pauseGame: () => {
       if (playRef.current.started && paddleSideRef.current) {
-        socketRef.current?.emit(ClientEvents.GamePause);
+        socket?.emit(ClientEvents.GamePause);
         setPause((paused) => !paused);
       }
     },
@@ -55,7 +61,7 @@ const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef> = () => {
     },
     showQuitModal: (): boolean => {
       if (playRef.current.started && !playRef.current.paused && paddleSideRef.current) {
-        socketRef.current?.emit(ClientEvents.GamePause);
+        socket?.emit(ClientEvents.GamePause);
         setPause((paused) => !paused);
       }
       setCountdown(0);
@@ -64,7 +70,7 @@ const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef> = () => {
       return quitGame;
     },
     resetGame: () => {
-      socketRef.current?.emit(ClientEvents.LobbyLeave);
+      socket?.emit(ClientEvents.LobbyLeave);
       setLoader(false);
       setQuitGame(false);
       setQuitModal(false);
@@ -87,6 +93,9 @@ const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef> = () => {
       setLobbyMode(mode);
       setGameMode(gameMode);
     },
+    setGamePlayers: (user1: string, user2: string) => {
+      setPlayers({ player1: user1, player2: user2 });
+    },
   }));
 
   if (!gameMode) {
@@ -95,7 +104,7 @@ const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef> = () => {
 
   return (
     <div className="overlay" style={containerStyle}>
-      {playRef.current.started && <Players />}
+      <Players player1={players.player1} player2={players.player2} />
       <Loader loader={loader} />
       {countdown > 0 && <Countdown countdown={countdown} setCountdown={setCountdown} />}
       <LobbyModeButton gameMode={gameMode} lobbyMode={lobbyMode} setLobbyMode={setLobbyMode} />

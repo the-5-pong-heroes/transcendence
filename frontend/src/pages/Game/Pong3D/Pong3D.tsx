@@ -1,10 +1,10 @@
 import React, { Suspense } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
+import { GAME_DEPTH, GAME_HEIGHT, GAME_WIDTH } from "@shared/pongCore/constants";
 
 import "./Pong3D.css";
 
-import { GAME_DEPTH, GAME_HEIGHT, GAME_WIDTH } from "../pongCore/constants";
 import { CAMERA_3D_Z } from "../constants";
 import { useGameLoop, useScoreLabel, useGameContext } from "../hooks";
 import { type GameContextParameters } from "../@types";

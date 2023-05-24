@@ -8,14 +8,14 @@ import { ThemeButton } from "./ThemeButton";
 import { Container } from "./Container";
 import { InvitationModal } from "./Invitation";
 
-import { type UserAuth } from "@types";
+import { type User } from "@types";
 
 interface AppLayoutProps {
-  userAuth: UserAuth | null;
+  user: User | null;
 }
 
-export const AppLayout: React.FC<AppLayoutProps> = ({ userAuth }) => {
-  return userAuth ? (
+export const AppLayout: React.FC<AppLayoutProps> = ({ user }) => {
+  return user ? (
     <SocketProvider>
       <Navbar />
       <ThemeButton />

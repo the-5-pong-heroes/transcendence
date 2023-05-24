@@ -69,14 +69,22 @@ export class UserService {
     return user;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<void> {
+    const user = await this.findUserById(id);
+    if (!user) {
+      return;
+    }
     await this.prisma.user.update({
       where: { id: id },
       data: { ...updateUserDto },
     });
   }
 
-  async updateStatus(id: string, status: UserStatus) {
+  async updateStatus(id: string, status: UserStatus): Promise<void> {
+    const user = await this.findUserById(id);
+    if (!user) {
+      return;
+    }
     await this.prisma.user.update({
       where: { id: id },
       data: { status: status },

@@ -10,4 +10,5 @@ export interface GameOverlayRef {
   resetGame: () => void;
   initGame: () => void;
   startGame: (mode: LobbyMode, gameMode: GameMode) => void;
+  setGamePlayers: (user1: string, user2: string) => void;
 }

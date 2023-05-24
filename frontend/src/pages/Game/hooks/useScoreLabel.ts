@@ -7,7 +7,7 @@ import { ServerEvents } from "../@types";
 import { useGameContext } from "./useGameContext";
 
 import { useSocketContext } from "@hooks";
-import type { SocketContextParameters } from "@types";
+import type { SocketParameters } from "@types";
 
 interface ScoreUpdateParameters {
   score: ScoreState;
@@ -15,7 +15,7 @@ interface ScoreUpdateParameters {
 }
 
 export const useScoreLabel = (): string => {
-  const { socketRef }: SocketContextParameters = useSocketContext();
+  const { socket }: SocketParameters = useSocketContext();
   const { playRef, localPongRef }: GameContextParameters = useGameContext();
 
   const [scoreLabel, setScoreLabel] = useState<string>(computeScoreLabel({ player1: 0, player2: 0, round: 0 }));
@@ -32,7 +32,6 @@ export const useScoreLabel = (): string => {
   );
 
   useEffect(() => {
-    const socket = socketRef.current;
     if (!socket) {
       return;
     }
@@ -41,7 +40,7 @@ export const useScoreLabel = (): string => {
     return () => {
       socket.off(ServerEvents.ScoreUpdate);
     };
-  }, [socketRef, updateScore]);
+  }, [socket, updateScore]);
 
   return scoreLabel;
 };

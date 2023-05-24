@@ -1,8 +1,7 @@
 import React from "react";
 import { Vector3 } from "three";
 import { type Vec3 } from "cannon-es";
-
-import { BALL_RADIUS } from "@Game/pongCore/constants";
+import { BALL_RADIUS } from "@shared/pongCore/constants";
 
 interface BallProps {
   ballRef: React.RefObject<THREE.Mesh>;

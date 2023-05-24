@@ -1,4 +1,5 @@
-import type { Pong } from "../pongCore";
+import type { Pong } from "@shared/pongCore";
+
 import { type GameOverlayRef } from "../GameOverlay";
 
 import type { ServerPong } from "./ServerPong";

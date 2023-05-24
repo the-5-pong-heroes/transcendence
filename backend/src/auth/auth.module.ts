@@ -6,9 +6,15 @@ import { AuthService } from "./auth.service";
 import { LocalStrategy } from "./strategy/local.strategy";
 import { JwtStrategy } from "./strategy/jwt.strategy";
 import { UserModule } from "../user/user.module";
+import { Oauth42Service } from "./auth42/Oauth42.service";
+import { GoogleStrategy } from "./google/google.strategy";
+import { GoogleService } from "./google/google.service";
+import { PrismaModule } from "src/database/prisma.module";
+import { UserService } from "src/user/user.service";
 
 @Module({
   imports: [
+    PrismaModule,
     UserModule,
     PassportModule,
     JwtModule.register({
@@ -17,7 +23,7 @@ import { UserModule } from "../user/user.module";
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy, GoogleService, Oauth42Service, UserService],
   exports: [AuthService],
 })
 export class AuthModule {}

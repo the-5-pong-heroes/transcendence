@@ -6,7 +6,7 @@ import { useSocketEvents } from "./useSocketEvents";
 
 import { ClientEvents } from "@Game/@types";
 
-const ENDPOINT = "http://localhost:3000";
+const ENDPOINT = "ws://localhost:3000";
 
 interface SocketProps {
   setSocketReady: React.Dispatch<React.SetStateAction<boolean>>;
@@ -17,24 +17,25 @@ interface SocketValues {
 }
 
 export const useSocket = ({ setSocketReady }: SocketProps): SocketValues => {
-  const { userAuth } = useUser();
+  const { user } = useUser();
   const socketRef = useRef<Socket>();
   useSocketEvents({ socketRef });
 
   useEffect(() => {
-    if (userAuth) {
+    if (user) {
       socketRef.current = io(ENDPOINT, {
         autoConnect: false,
+        withCredentials: true,
         transportOptions: {
           polling: {
             extraHeaders: {
-              Authorization: `Bearer ${userAuth.accessToken}`,
+              // Authorization: `Bearer ${user.accessToken}`,
             },
           },
         },
         auth: {
-          name: userAuth?.user.name,
-          id: userAuth?.user.id,
+          name: user?.name,
+          id: user?.id,
         },
       });
       socketRef.current.on("connect", () => {
@@ -49,7 +50,7 @@ export const useSocket = ({ setSocketReady }: SocketProps): SocketValues => {
     return () => {
       socketRef.current?.disconnect();
     };
-  }, [userAuth, setSocketReady]);
+  }, [user, setSocketReady]);
 
   return { socketRef };
 };

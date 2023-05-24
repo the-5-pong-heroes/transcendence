@@ -1,5 +1,5 @@
 export interface UserAuth {
-  accessToken: string;
+  message: string;
   user: User;
 }
 
@@ -14,11 +14,3 @@ export type User = {
   createdAt: Date;
   updatedAt: Date;
 };
-
-// export interface hUser {
-//   accessToken: string;
-//   user: {
-//     name: string;
-//     id: string;
-//   };
-// }

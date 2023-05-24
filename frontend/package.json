@@ -33,7 +33,7 @@
     "react-toastify": "^9.1.2",
     "sass": "^1.57.1",
     "semantic-ui-react": "^2.1.4",
-    "shared": "file:./../shared",
+    "shared": "file:../shared",
     "socket.io-client": "^4.5.4",
     "three": "^0.150.1"
   },

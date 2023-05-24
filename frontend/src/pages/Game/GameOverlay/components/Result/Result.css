@@ -7,3 +7,9 @@
   margin: 10px;
   text-align: center;
 }
+
+#result-modal {
+  height: 150px;
+  width: 400px;
+  font-size: 1.2em;
+}

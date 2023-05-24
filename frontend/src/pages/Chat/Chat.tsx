@@ -2,14 +2,17 @@ import React from "react";
 import { useQuery } from "react-query";
 
 import { ClientEvents } from "@Game/@types";
-import type { User, SocketContextParameters } from "@types";
+import type { User } from "@types";
 import { ResponseError } from "@/helpers";
 import { useSocketContext, useUser } from "@hooks";
+import { BASE_URL } from "@/constants";
 
 import "./Chat.css";
 
 async function fetchUsers(): Promise<User[]> {
-  const response = await fetch("http://localhost:3000/users");
+  const response = await fetch(`${BASE_URL}/users`, {
+    credentials: "include",
+  });
   if (!response.ok) {
     throw new ResponseError("Failed on get user request", response);
   }
@@ -19,13 +22,13 @@ async function fetchUsers(): Promise<User[]> {
 }
 
 export const ListOfUsers: React.FC = () => {
-  const { socketRef }: SocketContextParameters = useSocketContext();
-  const { data, status } = useQuery<User[]>("users", fetchUsers);
-  const { userAuth } = useUser();
-  const userId = userAuth?.user.id;
+  const { socket } = useSocketContext();
+  const { data, status } = useQuery<User[]>("users_query", fetchUsers);
+  const { user } = useUser();
+  const userId = user?.id;
 
   const sendInvite = (userId: string): void => {
-    socketRef.current?.emit(ClientEvents.GameInvite, { userId: userId });
+    socket?.emit(ClientEvents.GameInvite, { userId: userId });
   };
 
   return (
@@ -38,7 +41,9 @@ export const ListOfUsers: React.FC = () => {
             (user) =>
               user.id !== userId && (
                 <div className="user-item" key={user.id}>
-                  <div>{user.name}</div>
+                  <div>
+                    {user.name} [{user.status}]
+                  </div>
                   <button onClick={() => sendInvite(user.id)}>Invite</button>
                 </div>
               )

@@ -1,0 +1,38 @@
+.ChannelHeader {
+  height: 80px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 20px 30px;
+  box-shadow: 1px -100px 130px -170px rgba(0,0,0,0.5) inset;
+  -webkit-box-shadow: 1px -100px 130px -170px rgba(0,0,0,0.5) inset;
+  -moz-box-shadow: 1px -100px 130px -170px rgba(0,0,0,0.5) inset;
+
+  .ChannelName {
+    font-weight: bold;
+  }
+
+  .Options {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 5px;
+
+    .Button {
+      width: 25px;
+      height: 25px;
+      border: none;
+      background-color: transparent;
+      background-size: cover;
+      margin: 0 5px;
+      padding: 0;
+      cursor: pointer;
+      outline: none;
+
+      &:disabled {
+        cursor: auto;
+      }
+    }
+  }
+}

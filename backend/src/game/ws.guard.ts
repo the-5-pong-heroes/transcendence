@@ -1,29 +1,30 @@
 import { Injectable, CanActivate } from "@nestjs/common";
-import { WsException } from "@nestjs/websockets";
-import { JwtService } from "@nestjs/jwt";
-import { User } from "@prisma/client";
-import { UserService } from "src/user/user.service";
+import { Socket } from "socket.io";
+
+import { AuthService } from "src/auth/auth.service";
+import { parse } from "cookie";
 
 @Injectable()
 export class WsGuard implements CanActivate {
-  constructor(private jwtService: JwtService, private userService: UserService) {}
+  constructor(private authService: AuthService) {}
 
-  canActivate(context: any): boolean | any | Promise<boolean> {
-    const bearerToken = context.args[0].handshake.headers.authorization.split(" ")[1];
-    try {
-      const payload = this.jwtService.verify(bearerToken, { secret: "secret" }) as any;
-      return new Promise((resolve, reject) => {
-        return this.userService.findUserById(payload.sub).then((user: User | null) => {
-          if (user) {
-            resolve(user);
-          } else {
-            reject(false);
-            throw new WsException("Unauthorized");
-          }
-        });
-      });
-    } catch (ex) {
-      throw new WsException("Unauthorized");
+  async canActivate(context: any): Promise<boolean> {
+    const client: Socket = context;
+    const cookieHeader = client.handshake.headers.cookie;
+    if (!cookieHeader || !client.handshake.auth) {
+      client.disconnect();
+      return false;
     }
+    const cookies = parse(cookieHeader);
+    const access_token = cookies.access_token;
+    const user = await this.authService.validateUser(access_token);
+    if (!user) {
+      client.disconnect();
+      return false;
+    }
+    client.data.userName = client.handshake.auth.name;
+    client.data.userId = client.handshake.auth.id;
+    client.data.readyToPlay = false;
+    return true;
   }
 }

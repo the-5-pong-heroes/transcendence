@@ -4,21 +4,21 @@ import "./ListOfGames.css";
 import { type GameContextParameters, type LobbyState, ClientEvents } from "@Game/@types";
 import { useGameContext } from "@Game/hooks";
 import { useSocketContext, useUser } from "@hooks";
-import type { SocketContextParameters } from "@types";
+import type { SocketParameters } from "@types";
 
 export const ListOfGames: React.FC = () => {
-  const { socketRef }: SocketContextParameters = useSocketContext();
+  const { socket }: SocketParameters = useSocketContext();
   const { gameList, overlayRef }: GameContextParameters = useGameContext();
-  const { userAuth } = useUser();
-  const userName = userAuth?.user.name;
+  const { user } = useUser();
+  const userName = user?.name;
 
   const onClick = (game: LobbyState): void => {
     if (game.status === "waiting") {
-      if (socketRef.current) {
-        socketRef.current?.emit(ClientEvents.GameJoin, { lobbyId: game.id });
+      if (socket) {
+        socket?.emit(ClientEvents.GameJoin, { lobbyId: game.id });
       }
     } else {
-      socketRef.current?.emit(ClientEvents.GameView, { lobbyId: game.id });
+      socket?.emit(ClientEvents.GameView, { lobbyId: game.id });
     }
     overlayRef?.current?.startGame(game.mode, game.gameMode);
   };
@@ -39,7 +39,6 @@ export const ListOfGames: React.FC = () => {
             <div>
               [ <span className={game.status}>{game.status}</span> ]
             </div>
-            {/* <div> {game.id.substring(0, 10) + "..."} </div> */}
             <button onClick={() => onClick(game)}>
               {game.status === "waiting"
                 ? userName !== game.userLeft && userName !== game.userRight

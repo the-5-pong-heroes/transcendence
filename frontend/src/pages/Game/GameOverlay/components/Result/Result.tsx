@@ -34,7 +34,7 @@ export const Result: React.FC<ResultProps> = ({ result, winner = "The bot", inde
   ];
 
   return (
-    <div className="game-modal result-modal">
+    <div id="result-modal" className="game-modal">
       <div className="close-button-wrapper">
         <button className="close-button" onClick={() => overlayRef?.current?.resetGame()}></button>
       </div>

@@ -2,8 +2,8 @@ import React from "react";
 import "./LobbyMode.css";
 
 import { ClientEvents, type GameMode, type LobbyMode, type GameContextParameters } from "@Game/@types";
-import { useSocketContext, useUser } from "@hooks";
-import type { SocketContextParameters } from "@types";
+import { useSocketContext } from "@hooks";
+import type { SocketParameters } from "@types";
 import { useGameContext } from "@Game/hooks";
 
 interface LobbyModeProps {
@@ -13,7 +13,7 @@ interface LobbyModeProps {
 }
 
 export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode, setLobbyMode }) => {
-  const { socketRef }: SocketContextParameters = useSocketContext();
+  const { socket }: SocketParameters = useSocketContext();
   const { overlayRef }: GameContextParameters = useGameContext();
 
   if (lobbyMode) {
@@ -22,7 +22,7 @@ export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode,
 
   const handleSendEvent = (lobbyMode: LobbyMode): void => {
     setLobbyMode(lobbyMode);
-    socketRef.current?.emit(ClientEvents.LobbyJoin, { lobbyMode: lobbyMode, gameMode: gameMode });
+    socket?.emit(ClientEvents.LobbyJoin, { lobbyMode: lobbyMode, gameMode: gameMode });
   };
 
   return (

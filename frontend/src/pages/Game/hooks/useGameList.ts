@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 
 import { ServerEvents, type LobbyState } from "@Game/@types";
 import { useSocketContext } from "@hooks";
-import type { SocketContextParameters } from "@types";
+import type { SocketParameters } from "@types";
 
 interface GameListValues {
   gameList: LobbyState[];
 }
 
 export const useGameList = (): GameListValues => {
-  const { socketRef }: SocketContextParameters = useSocketContext();
+  const { socket }: SocketParameters = useSocketContext();
   const [gameList, setGameList] = useState<LobbyState[]>([]);
 
   const handleGameList = (games: LobbyState[]): void => {
@@ -17,7 +17,6 @@ export const useGameList = (): GameListValues => {
   };
 
   useEffect(() => {
-    const socket = socketRef.current;
     if (!socket) {
       return;
     }
@@ -26,7 +25,7 @@ export const useGameList = (): GameListValues => {
     return (): void => {
       socket.off(ServerEvents.GameList);
     };
-  }, [socketRef]);
+  }, [socket]);
 
   return { gameList };
 };

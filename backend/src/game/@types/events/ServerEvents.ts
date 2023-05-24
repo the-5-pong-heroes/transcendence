@@ -1,4 +1,6 @@
 export const ServerEvents = {
+  Disconnect: "server.user.disconnect",
+  Connect: "server.user.connected",
   LobbyState: "server.lobby.state",
   GameInit: "server.game.init",
   GameStart: "server.game.start",
@@ -11,7 +13,6 @@ export const ServerEvents = {
   GameInvite: "server.game.invite",
   GameInviteStart: "server.game.invite.start",
   LobbyMessage: "server.lobby.message",
-  UserAlreadyConnected: "user.already.connected",
   PlayerAlreadySet: "player.already.set",
 } as const;
 

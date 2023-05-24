@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useAppContext } from "./useAppContext";
 
+import { useSignOut } from "@/pages/Login/hooks";
 import type { InvitationState } from "@types";
 import { ServerEvents } from "@Game/@types";
 
@@ -26,6 +27,7 @@ interface SocketEventsProps {
 export const useSocketEvents = ({ socketRef }: SocketEventsProps): void => {
   const { setInvitation, senderSocket, senderName }: InvitationState = useAppContext().invitationState;
   const navigate = useNavigate();
+  const signOut = useSignOut();
 
   useEffect(() => {
     const socket = socketRef.current;
@@ -60,18 +62,25 @@ export const useSocketEvents = ({ socketRef }: SocketEventsProps): void => {
       navigate("/Game");
     };
 
-    socket.on(ServerEvents.UserAlreadyConnected, handleAlreadyConnected);
+    const disconnect = (): void => {
+      console.log("--- DISCONNECT ---");
+      signOut();
+    };
+
+    socket.on(ServerEvents.Connect, handleAlreadyConnected);
     socket.on(ServerEvents.GameInvite, handleGameInvite);
     socket.on(ServerEvents.GameInviteStart, startGameInvite);
     socket.on(ServerEvents.LobbyMessage, displayMessage);
+    socket.on(ServerEvents.Disconnect, disconnect);
     socket.on("exception", handleError);
 
     return (): void => {
-      socket.off(ServerEvents.UserAlreadyConnected);
+      socket.off(ServerEvents.Connect);
       socket.off(ServerEvents.GameInvite);
       socket.off(ServerEvents.GameInviteStart);
       socket.off(ServerEvents.LobbyMessage);
+      socket.off(ServerEvents.Disconnect);
       socket.off("exception");
     };
-  }, [socketRef, navigate, setInvitation, senderSocket, senderName]);
+  }, [socketRef, navigate, setInvitation, senderSocket, senderName, signOut]);
 };

@@ -12,12 +12,12 @@ import { Socket, Server } from "socket.io";
 import { UserMoveDto, LobbyJoinDto, GameJoinDto, GameInviteDto, GameInviteResponseDto } from "./dto";
 import { GameService } from "./game.service";
 import { AuthenticatedSocket, ClientEvents } from "./@types";
-import { JwtService } from "@nestjs/jwt";
-import { UserService } from "src/user/user.service";
+import { WsGuard } from "./ws.guard";
+import { ALLOWED_ORIGINS } from "src/common/constants";
 
 @WebSocketGateway({
   cors: {
-    origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
+    origin: ALLOWED_ORIGINS,
     credentials: true,
   },
 })
@@ -25,11 +25,7 @@ import { UserService } from "src/user/user.service";
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger: Logger = new Logger(GameGateway.name);
 
-  constructor(
-    private jwtService: JwtService,
-    private userService: UserService,
-    private readonly gameService: GameService,
-  ) {}
+  constructor(private readonly gameService: GameService, private readonly wsGuard: WsGuard) {}
 
   afterInit(server: Server) {
     this.gameService.server = server;
@@ -37,18 +33,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   async handleConnection(client: Socket): Promise<void> {
-    if (client.handshake.headers.authorization) {
-      const token = client.handshake.headers.authorization?.split(" ")[1];
-      const payload = this.jwtService.verify(token, { secret: "secret" });
-      const user = await this.userService.findUserById(payload.sub);
-      if (user !== null) {
-        this.gameService.setupClient(client as AuthenticatedSocket);
-      } else {
-        client.disconnect();
-      }
-    } else {
-      client.disconnect();
-    }
+    await this.wsGuard.canActivate(client);
+    this.gameService.setupClient(client as AuthenticatedSocket);
   }
 
   async handleDisconnect(client: AuthenticatedSocket) {

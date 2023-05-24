@@ -1,4 +1,4 @@
-/* eslint max-lines: ["warn", 150] */
+/* eslint max-lines: ["warn", 170] */
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 
@@ -17,7 +17,7 @@ import { ServerEvents } from "../@types";
 
 import { useGameContext } from "./useGameContext";
 
-import type { SocketContextParameters, GameState } from "@types";
+import type { SocketParameters, GameState } from "@types";
 import { useSocketContext, useAppContext } from "@hooks";
 
 const DELAY_START_ROUND = 500;
@@ -35,23 +35,23 @@ interface InitGameParameters {
 
 interface GameEndParameters {
   result: GameResult;
-  winner: string;
+  winnerName: string;
 }
 
 export const useGameEvents = (): void => {
   const { overlayRef, playRef, localPongRef, paddleSideRef, serverPongRef, lobbyRef }: GameContextParameters =
     useGameContext();
-  const { socketRef }: SocketContextParameters = useSocketContext();
+  const { socket }: SocketParameters = useSocketContext();
   const { isRunning, quitGame }: GameState = useAppContext().gameState;
 
   useEffect(() => {
-    const socket = socketRef.current;
     if (!socket) {
       return;
     }
 
     const handleLobbyState = (lobby: LobbyState): void => {
       lobbyRef.current = lobby;
+      overlayRef?.current?.setGamePlayers(lobby.userLeft, lobby.userRight);
       if (lobbyRef.current.status === "waiting") {
         overlayRef?.current?.showLoader(true);
       } else {
@@ -102,7 +102,7 @@ export const useGameEvents = (): void => {
         playRef.current.started = false;
         playRef.current.paused = true;
       }
-      overlayRef?.current?.setResult(gameResult.result, gameResult.winner);
+      overlayRef?.current?.setResult(gameResult.result, gameResult.winnerName);
       localPongRef.current.initRound(0);
     };
 
@@ -146,5 +146,5 @@ export const useGameEvents = (): void => {
         clearTimeout(timeoutId);
       }
     };
-  }, [socketRef, paddleSideRef, playRef, overlayRef, localPongRef, serverPongRef, isRunning, quitGame, lobbyRef]);
+  }, [socket, paddleSideRef, playRef, overlayRef, localPongRef, serverPongRef, isRunning, quitGame, lobbyRef]);
 };

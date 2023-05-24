@@ -1,13 +1,16 @@
 import { useContext } from "react";
 
 import { SocketContext } from "@/contexts/Socket";
-import type { SocketContextParameters } from "@types";
+import type { SocketParameters } from "@types";
 
-export const useSocketContext = (): SocketContextParameters => {
+export const useSocketContext = (): SocketParameters => {
   const socketContext = useContext(SocketContext);
   if (socketContext === undefined) {
     throw new Error("Undefined SocketContext");
   }
 
-  return socketContext;
+  return {
+    socket: socketContext.socketRef.current,
+    socketReady: socketContext.socketReady,
+  };
 };

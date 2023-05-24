@@ -16,7 +16,7 @@ export const Loader: React.FC<LoaderParameters> = ({ loader }) => {
   }
 
   return (
-    <div className="game-modal loader-modal">
+    <div className="game-modal">
       <div className="close-button-wrapper">
         <button className="close-button" onClick={() => overlayRef?.current?.resetGame()}></button>
       </div>

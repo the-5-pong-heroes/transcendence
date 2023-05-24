@@ -1,0 +1,64 @@
+.ChannelBan {
+  position: relative;
+  width: 80%;
+
+  .Title {
+    padding: 10px 20px;
+    font-weight: bold;
+  }
+
+  .ChannelBanTable {
+    background-color: white;
+    border-radius: 10px;
+    padding: 5px;
+
+    .ChannelUserItem {
+      cursor: pointer;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      align-items: center;
+      margin: 5px;
+      padding: 10px 15px;
+      border-radius: 10px;
+
+      &:hover {
+        background-color: #e8e8e8;
+      }
+
+      select {
+        cursor: pointer;
+        background: none;
+        outline: none;
+        border: none;
+      }
+    }
+
+    .ActiveUser {
+      background-color: lightgray;
+
+      &:hover {
+        background-color: lightgray;
+      }
+    }
+  }
+
+  .Button {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    padding: 10px 15px;
+    background-color: #d38ce5;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 1px 2px 5px -3px black;
+  }
+
+  .ChannelBanOptions {
+    margin: 10px 5px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

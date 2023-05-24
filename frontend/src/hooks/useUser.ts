@@ -1,57 +1,33 @@
-import { useEffect } from "react";
 import { useQuery } from "react-query";
 
-import { ResponseError } from "../helpers";
-import * as userLocalStorage from "../helpers/localStorage";
+import { USER_QUERY_KEY, BASE_URL } from "@/constants";
+import type { UserAuth, User } from "@types";
 
-import { USER_QUERY_KEY } from "@/constants";
-import type { UserAuth } from "@types";
-
-async function fetchUser(userAuth: UserAuth | null | undefined): Promise<UserAuth | null> {
-  if (!userAuth) {
-    return null;
-  }
-  const response = await fetch(`http://localhost:3000/users/${userAuth.user.id}`, {
-    headers: {
-      Authorization: `Bearer ${userAuth.accessToken}`,
-    },
+async function fetchUser(): Promise<User | null> {
+  const response = await fetch(`${BASE_URL}/auth/user`, {
+    credentials: "include",
   });
   if (!response.ok) {
-    throw new ResponseError("Failed on get user request", response);
+    return null;
   }
   const data: UserAuth = (await response.json()) as UserAuth;
+  console.log("🫵🏻 message: ", data.message);
 
-  return data;
+  return data.user;
 }
 
 interface IUseUser {
-  userAuth: UserAuth | null;
+  user: User | null;
 }
 
 export function useUser(): IUseUser {
-  const { data: userAuth } = useQuery<UserAuth | null>(
-    [USER_QUERY_KEY],
-    async (): Promise<UserAuth | null> => fetchUser(userAuth),
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      initialData: userLocalStorage.getUser,
-      onError: () => {
-        userLocalStorage.removeUser();
-      },
-    }
-  );
-
-  useEffect(() => {
-    if (!userAuth) {
-      userLocalStorage.removeUser();
-    } else {
-      userLocalStorage.saveUser(userAuth);
-    }
-  }, [userAuth]);
+  const { data: user } = useQuery<User | null>([USER_QUERY_KEY], async (): Promise<User | null> => fetchUser(), {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 
   return {
-    userAuth: userAuth ?? null,
+    user: user ?? null,
   };
 }

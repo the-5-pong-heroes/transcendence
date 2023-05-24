@@ -10,17 +10,15 @@ interface ProfileProps {
 }
 
 export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
-  const { userAuth } = useUser();
+  const { user } = useUser();
   const signOut = useSignOut();
 
   return (
     <div ref={profileRef} id="Profile" className="Profile">
-      <h1 className="profile-title">Profile</h1>
-      {userAuth && (
-        <button className="signOut-button" onClick={() => signOut()}>
-          Sign out
-        </button>
-      )}
+      <h1 className="profile-title">{user?.name}</h1>
+      <button className="signOut-button" onClick={() => signOut()}>
+        Sign out
+      </button>
     </div>
   );
 };

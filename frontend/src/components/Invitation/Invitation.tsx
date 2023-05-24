@@ -1,17 +1,17 @@
 import React from "react";
 
 import { ClientEvents } from "@Game/@types";
-import type { SocketContextParameters, InvitationState } from "@types";
+import type { SocketParameters, InvitationState } from "@types";
 import { useSocketContext, useAppContext } from "@hooks";
 
 import "./Invitation.css";
 
 export const InvitationModal: React.FC = () => {
   const { invitation, setInvitation, senderSocket, senderName }: InvitationState = useAppContext().invitationState;
-  const { socketRef }: SocketContextParameters = useSocketContext();
+  const { socket }: SocketParameters = useSocketContext();
 
   const sendResponse = (response: boolean): void => {
-    socketRef.current?.emit(ClientEvents.GameInviteResponse, { response: response, senderId: senderSocket.current });
+    socket?.emit(ClientEvents.GameInviteResponse, { response: response, senderId: senderSocket.current });
     setInvitation(false);
   };
 

@@ -1,14 +1,19 @@
-RED=\033[0;31m
-END=\033[0m
-
 include ./env/docker.example.env
-export $(shell sed 's/=.*//' ./env/docker.example.env)
+export $(sed 's/=.*//' ./env/docker.example.env)
+
+DOCKER_ENV_FILE		= ./env/docker.example.env
 
 ifneq ($(shell docker compose version 2>/dev/null),)
-  DOCKER_COMPOSE=docker compose
+  DOCKER_COMPOSE	= docker compose --env-file ${DOCKER_ENV_FILE}
 else
-  DOCKER_COMPOSE=docker-compose
+  DOCKER_COMPOSE	= docker-compose --env-file ${DOCKER_ENV_FILE}
 endif
+
+DATABASE_VOLUME		= ft_transcendence_postgresql_data
+
+RM					= rm -rf
+
+SUDO 				= @sudo
 
 all: run
 
@@ -22,20 +27,37 @@ run: check-env
 	$(DOCKER_COMPOSE) up --build --remove-orphans --force-recreate
 
 list:
-	@sudo docker container ps -a ; sudo docker images
+	${SUDO} docker container ps -a
+	${SUDO} docker images
+	${SUDO} docker volume ls
 
-clean:
-	@sudo $(DOCKER_COMPOSE) down
-	@sudo docker container prune --force
+stop:
+	${SUDO} $(DOCKER_COMPOSE) stop
+
+down:
+	${SUDO} $(DOCKER_COMPOSE) down
+
+clean:  down
+	${SUDO} docker container prune --force
 
 fclean: clean
-	-sudo docker stop `sudo docker ps -qa`
-	-sudo docker rm `sudo docker ps -qa`
-	-sudo docker rmi -f `sudo docker images -qa`
-	-sudo docker volume rm `sudo docker volume ls -q`
-	-sudo docker network rm `sudo docker network ls -q 2>/dev/null`
-	sudo rm .env
+	${SUDO} docker system prune --all --force
+	${SUDO} docker volume rm $(DATABASE_VOLUME)
+	${SUDO} ${RM} ./backend/dist
+	${SUDO} ${RM} ./backend/node_modules
+	${SUDO} ${RM} ./frontend/node_modules
+	@printf "$(UP)"
 
-re: fclean run
+re: fclean all
 
 .PHONY: run up debug list list_volumes clean
+
+RESET		= \033[0m
+RED			= \033[1;31m
+GREEN		= \033[1;32m
+YELLOW		= \033[1;33m
+BLUE		= \033[1;34m
+WHITE		= \033[1;37m
+ORANGE		= \033[0;38;5;208m
+UP			= \033[A
+CUT			= \033[K

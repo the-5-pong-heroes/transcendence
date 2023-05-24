@@ -52,6 +52,15 @@ export class GameLobby extends EventEmitter {
 
   /***************     SETUP    ***************/
 
+  public addViewer(client: AuthenticatedSocket): void {
+    this.addClient(client);
+    client.emit(ServerEvents.ScoreUpdate, {
+      score: this.gameLoop.score.getState(),
+      play: this.gameLoop.play.getState(),
+    });
+    client.emit(ServerEvents.LobbyState, this.getState());
+  }
+
   public addClient(client: AuthenticatedSocket): void {
     this.clients.set(client.id, client);
     client.join(this.id);
@@ -91,24 +100,7 @@ export class GameLobby extends EventEmitter {
     this.gameLoop.start();
   }
 
-  /***************    CLEANUP    ***************/
-
-  public removeClient(client: AuthenticatedSocket): void {
-    this.updatePlayerStatus(client.data.paddle?.side, "ONLINE");
-    this.clients.delete(client.id);
-    client.leave(this.id);
-    if (this.status === "running" && client.data.paddle !== undefined) {
-      this.displayMessage(client, `${client.data.userName} left the game`);
-      /* If game is in pause, resume game for other clients */
-      if (this.gameLoop.isInPause()) {
-        this.gameLoop.pause();
-      }
-    } else if (this.clients.size === 0) {
-      this.gameService.removeLobby(this.id);
-    }
-    client.data.lobby = undefined;
-    client.data.paddle = undefined;
-  }
+  /**************   END GAME   **************/
 
   public endGame(winner: PaddleSide, loser: PaddleSide): void {
     const winnerName = this.player[winner] ? this.player[winner]?.name : "The bot";
@@ -124,7 +116,25 @@ export class GameLobby extends EventEmitter {
       this.server.to(clientId).emit(ServerEvents.GameEnd, { result: result, winnerName: winnerName });
       this.removeClient(client);
     }
+    this.gameService.removeLobby(this.id);
     // this.displayGames();
+  }
+
+  /***************    CLEANUP    ***************/
+
+  public removeClient(client: AuthenticatedSocket): void {
+    this.updatePlayerStatus(client.data.paddle?.side, "ONLINE");
+    this.clients.delete(client.id);
+    client.leave(this.id);
+    if (this.status === "running" && client.data.paddle !== undefined) {
+      this.displayMessage(client, `${client.data.userName} left the game`);
+      /* If game is in pause, resume game for other clients */
+      if (this.gameLoop.isInPause()) {
+        this.gameLoop.pause();
+      }
+    }
+    client.data.lobby = undefined;
+    client.data.paddle = undefined;
   }
 
   /************   PRISMA OPERATIONS   ************/
@@ -191,22 +201,22 @@ export class GameLobby extends EventEmitter {
     }
   }
 
-  private updatePlayersStatus(status: UserStatus): void {
+  private async updatePlayersStatus(status: UserStatus): Promise<void> {
     if (this.player["right"]) {
-      this.userService.updateStatus(this.player["right"].id, status);
+      await this.userService.updateStatus(this.player["right"].id, status);
     }
     if (this.player["left"]) {
-      this.userService.updateStatus(this.player["left"].id, status);
+      await this.userService.updateStatus(this.player["left"].id, status);
     }
   }
 
-  private updatePlayerStatus(paddleSide: PaddleSide | undefined, status: UserStatus): void {
+  private async updatePlayerStatus(paddleSide: PaddleSide | undefined, status: UserStatus): Promise<void> {
     if (paddleSide === undefined || this.player[paddleSide] === undefined) {
       return;
     }
     const id = this.player[paddleSide]?.id;
     if (id !== undefined) {
-      this.userService.updateStatus(id, status);
+      await this.userService.updateStatus(id, status);
     }
   }
 
@@ -220,17 +230,24 @@ export class GameLobby extends EventEmitter {
   }
 
   public getState(): LobbyState {
-    const userLeft = this.player["left"]?.name;
-    const userRight = this.player["right"]?.name;
-
     return {
       id: this.id,
-      userLeft: userLeft ? userLeft : "user1",
-      userRight: userRight ? userRight : "user2",
+      userLeft: this.getLeftPlayerName(),
+      userRight: this.getRightPlayerName(),
       status: this.status,
       mode: this.lobbyMode,
       gameMode: this.gameMode,
     };
+  }
+
+  public getRightPlayerName(): string {
+    const name = this.player["right"]?.name;
+    return name ? name : "...";
+  }
+
+  public getLeftPlayerName(): string {
+    const name = this.player["left"]?.name;
+    return name ? name : this.lobbyMode === "solo" ? "Bot" : "...";
   }
 
   async displayGames(): Promise<void> {
@@ -245,8 +262,6 @@ export class GameLobby extends EventEmitter {
         console.log(`Status: ${game.status}`);
         console.log("=============================");
       });
-    } else {
-      console.log("No games found.");
     }
   }
 }

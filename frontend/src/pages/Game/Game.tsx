@@ -9,7 +9,7 @@ import { PongMenu } from "./PongMenu";
 import { GameProvider } from "./context/GameProvider";
 import { useGameSize, useGameEvents } from "./hooks";
 
-import type { SocketContextParameters } from "@types";
+import type { SocketParameters } from "@types";
 import { useSocketContext } from "@hooks";
 
 interface GameProps {
@@ -41,7 +41,7 @@ const Pong: React.FC = () => {
 export const Game: React.FC<GameProps> = ({ gameRef }) => {
   const { height, width } = useGameSize();
   const gameStyle: React.CSSProperties = { width, height };
-  const { socketReady }: SocketContextParameters = useSocketContext();
+  const { socketReady }: SocketParameters = useSocketContext();
 
   return (
     <div ref={gameRef} id="Game" className="game-container">

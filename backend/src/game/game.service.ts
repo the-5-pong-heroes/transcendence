@@ -1,10 +1,12 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UseGuards } from "@nestjs/common";
 import { Cron } from "@nestjs/schedule";
 import { Server, Socket } from "socket.io";
 import { LobbyMode, GameMode, AuthenticatedSocket, ServerEvents, LobbyState, PaddleMove } from "./@types";
 import { GameLobby } from "./game.lobby";
 import { PrismaService } from "../database/prisma.service";
 import { UserService } from "src/user/user.service";
+import { AuthService } from "src/auth/auth.service";
+import { parse } from "cookie";
 
 const LOBBY_MAX_LIFETIME = 1000 * 60 * 60;
 
@@ -21,7 +23,11 @@ export class GameService {
     AuthenticatedSocket
   >();
 
-  constructor(private readonly prisma: PrismaService, private readonly userService: UserService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
 
   /***************     SETUP    ***************/
 
@@ -35,23 +41,16 @@ export class GameService {
     client.data.readyToPlay = false;
   }
 
-  public setupClient(client: AuthenticatedSocket): void {
-    if (!client.handshake.auth) {
-      return;
-    }
+  public async setupClient(client: AuthenticatedSocket): Promise<void> {
     for (const [, socket] of this.connectedSockets) {
       if (socket.data.userId === client.handshake.auth.id) {
-        client.emit(ServerEvents.UserAlreadyConnected);
+        client.emit(ServerEvents.Connect);
         break;
       }
     }
     this.connectedSockets.set(client.id, client);
-    client.data.userName = client.handshake.auth.name;
-    client.data.userId = client.handshake.auth.id;
-    client.data.readyToPlay = false;
-    this.userService.updateStatus(client.data.userId, "ONLINE");
+    await this.userService.updateStatus(client.data.userId, "ONLINE");
     client.emit(ServerEvents.GameList, this.getListOfLobbies());
-    // this.broadcastLobbies();
   }
 
   private createLobby(lobbyMode: LobbyMode, gameMode: GameMode, client: AuthenticatedSocket): GameLobby {
@@ -69,13 +68,15 @@ export class GameService {
     if (lobbyMode === "solo") {
       lobby = this.createLobby(lobbyMode, gameMode, client);
       lobby.status = "running";
-      return this.startGame(lobby);
+      this.startGame(lobby);
+      return;
     }
     lobby = this.findLobbyToJoin(gameMode, client);
     if (lobby) {
       lobby.addPlayer(client, "left");
       lobby.displayMessage(client, `${client.data.userName} joined the game`);
-      return this.startGame(lobby);
+      this.startGame(lobby);
+      return;
     }
     lobby = this.createLobby(lobbyMode, gameMode, client);
     lobby.dispatchLobbyState();
@@ -88,9 +89,7 @@ export class GameService {
       if (lobbyToJoin.checkOpponentId(client)) {
         lobbyToJoin.addPlayer(client, "left");
         lobbyToJoin.displayMessage(client, `${client.data.userName} joined the game`);
-        lobbyToJoin.startGame();
-        lobbyToJoin.dispatchLobbyState();
-        this.broadcastLobbies();
+        this.startGame(lobbyToJoin);
       } else {
         client.emit(ServerEvents.PlayerAlreadySet);
       }
@@ -109,7 +108,8 @@ export class GameService {
 
   /************    START GAME    ************/
 
-  private startGame(lobby: GameLobby): void {
+  private async startGame(lobby: GameLobby): Promise<void> {
+    await this.delay(1000);
     lobby.startGame();
     lobby.dispatchLobbyState();
     this.broadcastLobbies();
@@ -120,7 +120,7 @@ export class GameService {
   public viewGame(lobbyId: string, client: AuthenticatedSocket): void {
     const lobby = this.lobbies.get(lobbyId);
     if (lobby) {
-      lobby.addClient(client);
+      lobby.addViewer(client);
     }
   }
 
@@ -177,7 +177,6 @@ export class GameService {
     return new Promise<void>((resolve) => {
       const interval = setInterval(async () => {
         const clientStatus = await this.userService.getStatus(client?.data.userId);
-        console.log("🙇‍♀️ senderStatus", clientStatus);
         if (clientStatus === "ONLINE") {
           clearInterval(interval);
           resolve();
@@ -224,11 +223,16 @@ export class GameService {
     this.broadcastLobbies();
   }
 
-  public removeSocket(client: AuthenticatedSocket): void {
+  public async removeSocket(client: AuthenticatedSocket): Promise<void> {
     const lobby = client.data.lobby;
     lobby?.removeClient(client);
     this.connectedSockets.delete(client.id);
-    this.userService.updateStatus(client.data.userId, "OFFLINE");
+    await this.userService.updateStatus(client.data.userId, "OFFLINE"); // PROBLEM HERE
+    for (const [socketId, socket] of this.connectedSockets) {
+      if (client.data.userId === socket.data.userId) {
+        this.server.to(socketId).emit(ServerEvents.Disconnect, null);
+      }
+    }
   }
 
   public removeClient(client: AuthenticatedSocket): void {
@@ -253,11 +257,15 @@ export class GameService {
 
   /**************     UTILS     **************/
 
+  public delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   private getListOfLobbies(): LobbyState[] {
     const listOfLobbies: LobbyState[] = Array.from(this.lobbies.values()).map((lobby) => ({
       id: lobby.id,
-      userLeft: lobby.player["left"] ? lobby.player["left"]?.name : "user1",
-      userRight: lobby.player["right"] ? lobby.player["right"]?.name : "user2",
+      userLeft: lobby.getLeftPlayerName(),
+      userRight: lobby.getRightPlayerName(),
       status: lobby.status,
       mode: lobby.lobbyMode,
       gameMode: lobby.gameMode,

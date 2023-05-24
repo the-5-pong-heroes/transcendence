@@ -3,22 +3,27 @@ import React, { useEffect, useState } from "react";
 import "./Leaderboard.css";
 import UserData from "./UserData";
 
+import { ResponseError } from "@/helpers";
+import { BASE_URL } from "@/constants";
+
 interface LeaderboardProps {
   boardRef: React.RefObject<HTMLDivElement>;
 }
 
 export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
   const [users, setUSers] = useState([]);
-
-  const fetchUsers = async () => {
+  const fetchUsers = async (): Promise<void> => {
     try {
-      const resp = await fetch("http://localhost:3000/leaderboard");
+      const resp = await fetch(`${BASE_URL}//leaderboard`);
+      if (!resp.ok) {
+        throw new ResponseError("Failed on fetch users request", resp);
+      }
       const data = await resp.json();
       if (data.length > 0) {
         setUSers(data);
       }
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
   };
 

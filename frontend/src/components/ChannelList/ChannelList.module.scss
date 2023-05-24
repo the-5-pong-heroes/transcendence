@@ -1,0 +1,48 @@
+.ChannelList {
+  width: 250px;
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  flex-shrink: 0;
+  overflow: auto;
+  border-right: 1px solid black;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .Header {
+    width: 250px;
+    height: 130px;
+    flex-shrink: 0;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid black;
+
+    .Top {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+
+      .Username {
+        text-align: center;
+      }
+    }
+
+    .Title {
+      align-self: center;
+      font-size: 30px;
+      font-weight: bold;
+    }
+  }
+
+  .HeaderLight {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .HeaderDark {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+}

@@ -1,5 +1,7 @@
 import { Body, Controller, Get, UseGuards, Req, Res, Post} from "@nestjs/common";
 import { AuthService } from "./auth.service";
+import { Generate2FAService } from "./2FA/generate.service";
+import { EnableService } from "./2FA/enable2FA.service";
 import { GoogleAuthGuard } from './google/guards';
 import { Request, Response } from "express";
 import { UserDto } from "./dto";
@@ -13,7 +15,9 @@ export class AuthController{
     constructor(private authService: AuthService,
         private Oauth42: Oauth42Service,
         private userService: UserService,
-        private googleService: GoogleService
+        private googleService: GoogleService,
+        private Generate2FA: Generate2FAService, 
+        private enable2FAService: EnableService,
         )  {}
 
     @Get("Oauth42/login")
@@ -45,7 +49,7 @@ export class AuthController{
                 if (!userExists.auth?.twoFAactivated)
                     res.redirect(301, `http://localhost:5173/`); // ou /Profile ?
                 else
-                    res.redirect(301, `http://localhost:5173/`); //2FA page
+                    this.Generate2FA.sendActivationMail(userExists); //2FA page
             }
         }
         //res.redirect(301, `http://localhost:5173/`);
@@ -55,6 +59,11 @@ export class AuthController{
    @Get("token")
    async checkIfTokenValid(@Req() req: Request, @Res() res: Response) {
      return this.authService.checkIfTokenValid(req, res);
+   }
+
+   @Get("2FA")
+   async enable2FA(@Req() req: Request, @Res() res: Response) {
+     return this.enable2FAService.EnableService(req, res);
    }
 
 //    @Get("google/callback")

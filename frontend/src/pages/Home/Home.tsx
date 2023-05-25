@@ -19,7 +19,7 @@ export const Home: React.FC<HomeProps> = ({ homeRef }) => {
   };
 
   const handle2FA = () => {
-    navigate("/2FA");
+    navigate("/auth/2FA");
     };
 
   return (
@@ -27,7 +27,7 @@ export const Home: React.FC<HomeProps> = ({ homeRef }) => {
     <h1>Home</h1>
     <div className="button-group">
         <button className="button" onClick={handleAuth42}>Connect with 42</button>
-        <button className="button" onClick={handle2FA}>Connect with 42</button>
+        <button className="button" onClick={handle2FA}>2FA</button>
       </div>
   </div>
   );

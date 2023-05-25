@@ -10,18 +10,19 @@ export class EnableService {
   async EnableService(@Req() req: Request, @Res() res: Response) {
     try{
         const updatedUser = await this.updateUser(req);
-        res.status(200).json({
-        user: {
-          id: updatedUser.id,
-          name: updatedUser.name,
-          email: updatedUser.email,
-          otp_enabled: updatedUser.otp_enabled,
-      },
-      });
+    //     res.status(200).json({
+    //     user: {
+    //       id: updatedUser.id,
+    //       name: updatedUser.name,
+	// 	  auth: {
+	// 		twoFAactivated: updatedUser.twoFAactivated,
+	// 	  }
+    //   },
+    //   });
     } catch (error) {
       throw new HttpException({
         status: HttpStatus.BAD_REQUEST,
-        error: "Error to disable the 2FA"},
+        error: "Error to enable the 2FA"},
         HttpStatus.BAD_REQUEST);
     }
   }
@@ -32,11 +33,17 @@ export class EnableService {
 			const updatedUser = await this.prisma.user.update({
 			where: {name : userName},
 			data: {
-				otp_enabled: false,
-				otp_validated : false,
+				auth: {
+					update: {
+						twoFAactivated: true,
+					}
+				}
 			},
+			include: {
+				auth: true,
+			  },
 			});
-			console.log(updatedUser.otp_enabled, updatedUser.otp_validated);
+			console.log(updatedUser.auth);
 			return updatedUser;
 		}
 		catch(error)

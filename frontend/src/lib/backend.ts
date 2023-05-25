@@ -36,5 +36,4 @@ export const backend = {
 		const response = await api.post('/2FA/disable', user);
 		return await response.json();
 	},
-	},
 }

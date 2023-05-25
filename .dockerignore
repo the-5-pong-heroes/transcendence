@@ -11,6 +11,7 @@
 !backend/tsconfig.json
 !backend/package.json
 !backend/yarn.lock
+!backend/index.html
 
 !frontend/index.html
 !frontend/src/

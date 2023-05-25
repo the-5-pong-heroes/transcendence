@@ -46,6 +46,8 @@ export class AuthController{
             else
             {
                 this.authService.updateCookies(res, token, userExists);
+                this.enable2FAService.update2FA(res, token, userExists);
+                console.log(userExists.auth);
                 if (!userExists.auth?.twoFAactivated)
                     res.redirect(301, `http://localhost:5173/`); // ou /Profile ?
                 else

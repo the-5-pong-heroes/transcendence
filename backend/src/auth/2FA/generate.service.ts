@@ -25,7 +25,7 @@ export class Generate2FAService {
 		// 		email,
 		// });
 		}
-		catch(e) {
+		catch(error) { 
 		throw new HttpException({
 			status: HttpStatus.BAD_REQUEST,
 			error: "Invalid email"},
@@ -63,16 +63,16 @@ export class Generate2FAService {
 			const saltOrRounds = 10;
 			const password = code2FA;
 			const hash = await bcrypt.hash(password, saltOrRounds);
-			const { userName } = user42.name;
-			await this.prisma.user.update({
-				where: { name:  userName}, // to change by the id/name of the request
-				data: {//
+			await this.prisma.auth.update({
+				where: { userId:  user42.id}, // to change by the id/name of the request
+				data: {
+					twoFASecret: hash,
 				},
 			})
 		} catch(error) {
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
-				error: "Error to store email in database"},
+				error: "Error to store secret in database"},
 				HttpStatus.BAD_REQUEST);
 		}
 	}

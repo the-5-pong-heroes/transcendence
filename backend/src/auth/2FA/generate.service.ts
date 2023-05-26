@@ -1,9 +1,10 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Catch, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Req, Res } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import * as bcrypt from 'bcrypt';
 import * as fs from 'fs';
 import * as path from 'path';
+import { Request, Response } from "express";
 
 const myHTML = fs.readFileSync("./index.html", "utf8");
 
@@ -13,17 +14,38 @@ export class Generate2FAService {
 	constructor(private readonly mailerService : MailerService,
 		private prisma: PrismaService) {}
 
-/* SEND 2FA ACTIVATION EMAIL in settings page */
+	async generateService(@Req() req: Request, @Res() res: Response)
+	{
+		console.log("in generate");
+		const accessToken = req.cookies.token;
+        const user = await this.prisma.user.findFirst({
+          where: {
+              auth: {
+                accessToken: accessToken,
+              }
+            },
+			include: {
+				auth: true,
+			  },
+            });
+		if (user?.auth?.twoFAactivated == true)
+		{
+			await this.sendActivationMail(user);			
+			return res.json({
+				user,
+			});
+		}
+	}
+	
+
 	async sendActivationMail(user42: any)
 	{
 		try {
-			const email = user42.email;
+			const email = user42.auth.email;
 			const code2FA = this.generateRandomCode(6);
+			console.log("sending to ", email);
 			this.sendEmailToUser(email, user42, code2FA);
 			await this.storeCodeToDataBase(code2FA, user42)
-		// 	res.status(200).json({
-		// 		email,
-		// });
 		}
 		catch(error) { 
 		throw new HttpException({
@@ -32,7 +54,6 @@ export class Generate2FAService {
 			 HttpStatus.BAD_REQUEST);
 		}
 	}
-		// update the database and hash the passwor
 
 	generateRandomCode(length: number): string {
 		let result = '';
@@ -45,6 +66,8 @@ export class Generate2FAService {
 	  }
 
 	async sendEmailToUser(email: string, user42: any, code2FA: string) {
+		console.log("code2FA =", code2FA);
+		console.log("username = ", user42.name);
 		let htmlWithCode = myHTML.replace('{{code2FA}}', code2FA);
   		htmlWithCode = htmlWithCode.replace('{{userName}}', user42.name);
 

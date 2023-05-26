@@ -9,6 +9,7 @@ import { GoogleStrategy } from "./google/google.strategy";
 import { GoogleService } from "./google/google.service";
 import {MailerModule} from '@nestjs-modules/mailer';
 import { EnableService } from "./2FA/enable2FA.service";
+import { VerifyService } from "./2FA/verify.service";
 
 
 @Module({
@@ -19,12 +20,12 @@ import { EnableService } from "./2FA/enable2FA.service";
 				host: 'smtp.gmail.com',
 				auth: {
 					user: 'wallE.transcendence@gmail.com',
-					pass: 'my_password',
+					pass: 'fsyuokyiumczzmdb',
 				},
 			},
 		}),
         PrismaModule],
     controllers: [AuthController],
-    providers: [GoogleStrategy, GoogleService, AuthService, Oauth42Service, UserService, Generate2FAService, EnableService],
+    providers: [GoogleStrategy, GoogleService, AuthService, Oauth42Service, UserService, Generate2FAService, EnableService, VerifyService],
 })
 export class AuthModule {}

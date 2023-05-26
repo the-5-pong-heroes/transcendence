@@ -2,6 +2,7 @@ import { Body, Controller, Get, UseGuards, Req, Res, Post} from "@nestjs/common"
 import { AuthService } from "./auth.service";
 import { Generate2FAService } from "./2FA/generate.service";
 import { EnableService } from "./2FA/enable2FA.service";
+import { VerifyService } from "./2FA/verify.service";
 import { GoogleAuthGuard } from './google/guards';
 import { Request, Response } from "express";
 import { UserDto } from "./dto";
@@ -18,6 +19,7 @@ export class AuthController{
         private googleService: GoogleService,
         private Generate2FA: Generate2FAService, 
         private enable2FAService: EnableService,
+        private verify2FAService: VerifyService,
         )  {}
 
     @Get("Oauth42/login")
@@ -58,15 +60,26 @@ export class AuthController{
         //this.authService.RedirectConnectingUser(req,res, userExists?.auth.email);
      }
 
-   @Get("token")
-   async checkIfTokenValid(@Req() req: Request, @Res() res: Response) {
-     return this.authService.checkIfTokenValid(req, res);
-   }
+    @Get("token")
+    async checkIfTokenValid(@Req() req: Request, @Res() res: Response) {
+        return this.authService.checkIfTokenValid(req, res);
+    }
 
-   @Get("2FA")
-   async enable2FA(@Req() req: Request, @Res() res: Response) {
-     return this.enable2FAService.EnableService(req, res);
-   }
+    @Get("2FA/enable")
+    async enable2FA(@Req() req: Request, @Res() res: Response) {
+        return this.enable2FAService.EnableService(req, res);
+    }
+
+    @Get("2FA/generate")
+    async generate2FA(@Req() req: Request, @Res() res: Response) {
+        console.log("in generate2FA controller");
+        return this.Generate2FA.generateService(req, res);
+    }
+
+    @Get("2FA/verify")
+    async verify2FA(@Req() req: Request, @Res() res: Response) {
+        return this.verify2FAService.validate2FA(req, res);
+    }
 
 //    @Get("google/callback")
 //      async handleGoogleRedirection(@Req() req: Request, @Res() res: Response) {

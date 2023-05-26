@@ -18,15 +18,25 @@ export const Home: React.FC<HomeProps> = ({ homeRef }) => {
     navigate("/auth/google");
   };
 
-  const handle2FA = () => {
-    navigate("/auth/2FA");
-    };
+  async function handle2FA(): Promise<any> {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}` + '/auth/2FA/generate', {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			//body: JSON.stringify({ twoFACode: twoFACode, token: cookieToken })
+		});
+		const data = await response.json();
+		if (data === true)
+		{
+      console.log("success");
+    }
+    return data;
+  };
+//        <button className="button" onClick={handleAuth42}>Connect with 42</button>
 
   return (
     <div ref={homeRef} id="Home" className="home">
     <h1>Home</h1>
     <div className="button-group">
-        <button className="button" onClick={handleAuth42}>Connect with 42</button>
         <button className="button" onClick={handle2FA}>2FA</button>
       </div>
   </div>

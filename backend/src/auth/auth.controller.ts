@@ -72,7 +72,6 @@ export class AuthController{
 
     @Post("2FA/generate")
     async generate2FA(@Req() req: Request, @Res() res: Response) {
-        console.log("in generate2FA controller");
         return this.Generate2FA.generateService(req, res);
     }
 

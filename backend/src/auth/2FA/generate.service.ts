@@ -16,7 +16,6 @@ export class Generate2FAService {
 
 	async generateService(@Req() req: Request, @Res() res: Response)
 	{
-		console.log("in generate");
 		const accessToken = req.cookies.token;
         const user = await this.prisma.user.findFirst({
           where: {
@@ -30,9 +29,10 @@ export class Generate2FAService {
             });
 		if (user?.auth?.twoFAactivated == true)
 		{
-			await this.sendActivationMail(user);			
+			const code = await this.sendActivationMail(user);	
+			const twoFAactivated = true;
 			return res.json({
-				user,
+				code, twoFAactivated,
 			});
 		}
 	}
@@ -43,9 +43,9 @@ export class Generate2FAService {
 		try {
 			const email = user42.auth.email;
 			const code2FA = this.generateRandomCode(6);
-			console.log("sending to ", email);
 			this.sendEmailToUser(email, user42, code2FA);
 			await this.storeCodeToDataBase(code2FA, user42)
+			return code2FA;
 		}
 		catch(error) { 
 		throw new HttpException({
@@ -66,8 +66,6 @@ export class Generate2FAService {
 	  }
 
 	async sendEmailToUser(email: string, user42: any, code2FA: string) {
-		console.log("code2FA =", code2FA);
-		console.log("username = ", user42.name);
 		let htmlWithCode = myHTML.replace('{{code2FA}}', code2FA);
   		htmlWithCode = htmlWithCode.replace('{{userName}}', user42.name);
 

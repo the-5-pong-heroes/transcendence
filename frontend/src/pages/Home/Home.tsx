@@ -83,7 +83,7 @@ export const Home: React.FC<HomeProps> = ({ homeRef }) => {
 //        <button className="button" onClick={handleAuth42}>Connect with 42</button>
   return (
     <div ref={homeRef} id="Home" className="home">
-      <h1>Home</h1>
+      <h1>Login</h1>
       <button onClick={handle2FA}>2FA</button>
       <div id="popup" style={{ display: "none" }}>
         <h3>Entrez le code de vérification :</h3>

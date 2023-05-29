@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import { Navbar, ThemeButton, Container } from "./components";
-import { Home, Profile, Game, Leaderboard, Chat, NotFound } from "./pages";
+import { Home, Profile, Game, Leaderboard, Chat, NotFound, Login } from "./pages";
 import "./App.css";
 import { SocketProvider, AppContext } from "./contexts";
 

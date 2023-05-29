@@ -39,12 +39,12 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
     <div onScroll={handleScroll} className="container">
       <div className="wrap">
         <div className="background">
-          <img src={theme === "light" ? BackgroundLight : Background} />
+          <img src={theme === "light" ? BackgroundLight : Background} className="background-img" />
         </div>
-        <Parallax className="layer stars" translateX={["-200px", "10px"]}>
+        <Parallax className="layer stars" translateX={["-300px", "0px"]}>
           <img src={Stars} />
         </Parallax>
-        <Parallax className="layer light" speed={120}>
+        <Parallax className="layer light" speed={120} translateX={["-400px", "100px"]}>
           <img src={Light} />
         </Parallax>
         <Parallax className="layer moon" speed={20}>

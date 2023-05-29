@@ -1,11 +1,3 @@
-export let LEVELS: string[] = [
-  "human",
-  "captain",
-  "m-o",
-  "eve",
-  "wall-e",
-  "wall-a",
-  "auto",
-];
+export const LEVELS: string[] = ["plant", "walle", "eve", "energy"];
 
-export const LEVEL_THRESHOLD: number = 4;
+export const LEVEL_THRESHOLD = 4;

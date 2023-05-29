@@ -18,6 +18,7 @@ module.exports = {
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "prettier/prettier": 2, // Means error
+    "@typescript-eslint/no-unused-vars": ["error", { ignoreRestSiblings: true }],
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {

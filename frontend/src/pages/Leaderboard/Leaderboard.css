@@ -25,62 +25,88 @@
   }
 }
 
-.title {
-  z-index: 8;
-  color: #9d8ce0;
-  font-size: 2rem;
+.scroll-div {
+  max-height: 60vh;
+  overflow: auto;
+  scrollbar-color: darkblue lightblue;
+  scrollbar-width: thin;
 }
 
-.group {
-  position: absolute;
+.row {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: calc(-1 * var(--bs-gutter-y));
+  border-radius: 20px;
+  background: linear-gradient(0deg, rgba(42, 45, 112, 0.5) 0%, rgba(80, 75, 210, 0.5) 100%);
+  margin-bottom: 0.8rem;
+  padding: 1rem;
+  width: 82vw;
+  max-width: 1000px;
+}
+
+.row>* {
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+  padding-right: calc(var(--bs-gutter-x) * 0.5);
+  padding-left: calc(var(--bs-gutter-x) * 0.5);
+  margin-top: var(--bs-gutter-y);
+}
+
+.col {
+  align-self: center;
+  flex: 1 0 0%;
   text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
 }
 
-.item {
-  position: relative;
-  width: 55vw;
-  height: 5vh;
-  background-position: center;
-  background-size: adapt;
-  margin: 2vh;
-  padding: 20px;
-  border-radius: 4vh;
+.col.status {
   display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  text-align: right;
+  align-self: center;
+  text-transform: lowercase;
+}
+
+.firstRow {
+  font-weight: 600;
+  font-size: 1.1rem;
+  background: linear-gradient(0deg, #504bd2 0%, rgba(80, 75, 210, 0.5) 100%)!important;
+}
+
+.row.me {
+  border: 3px solid #011f37;
+}
+
+.row:not(.firstRow) {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+:not(.firstRow) >.col:first-child >img{
+  width: 60px;
+}
+
+.row .col:last-child,
+.row .col:nth-last-child(2) {
+  font-size: 1.1rem;
+}
+
+.friend {
+  color: green;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.not-friend {
+  color: #011f37;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.link-prof:hover{
   cursor: pointer;
-  transition: ease-out 0.2s;
-  background: linear-gradient(135deg, #295fd5, #9d8ce0);
-}
-
-.item:hover {
-  height: 10vh;
-}
-
-.Infos {
-  display: flex;
-  opacity: 0;
-  width: 0;
-  justify-content: space-between;
-  flex-direction: row;
-  flex-grow: 0;
-  transition: opacity 0.1s ease, width 1s ease 0.1s;
-}
-
-.item .Player {
-  font-weight: bold;
-  color: #9d8ce0;
-  flex-grow: 1;
-  transition: ease 1s;
-}
-
-.item:hover .Infos {
-  width: 35vw;
-  opacity: 1;
-  transition: opacity 0.1s ease 1s, width 1s ease;
+  color: #011f37;
 }

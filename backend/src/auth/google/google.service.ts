@@ -88,14 +88,13 @@ export class GoogleService {
             name: name,
             auth: {
                 create: {
-                    password: 'test',
                     isRegistered: isRegistered,
                     accessToken: userGoogle.access_token,
                     email: userGoogle.email,
                 }
             },
             status: "ONLINE",
-            last_login: new Date()
+            lastLogin: new Date()
         },
       });
       return user;

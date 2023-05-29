@@ -16,7 +16,7 @@ export class AuthService {
 
     async createDataBase42User(
         user42: any,
-        token: string,
+        token: any,
         username: string,
         isRegistered: boolean
     ){
@@ -24,18 +24,24 @@ export class AuthService {
             const user = await this.prisma.user.create({
                 data: { 
                     name: username,
+                    status: "ONLINE",
+                    lastLogin: new Date(),
                     auth: {
                         create: {
-                            accessToken: token,
+                            accessToken: token.access_token,
                             isRegistered: isRegistered,
                             email: user42.email,
-                            password: 'test',
-                        }
+                            twoFAactivated: false,
+                            otp_enabled: false,
+                            otp_validated: false,
+                            otp_verified: false
+                        },
                     },
-                    status: "ONLINE",
-                    last_login: new Date()
-                }
-            });
+                },
+                include: {
+                  auth: true,
+                },
+              });
             return user;
         } catch (error) {
             throw new HttpException(
@@ -51,22 +57,25 @@ export class AuthService {
         @Res() res: Response,
         email: string | null | undefined
       ) {
-        if (!email) res.redirect(301, `http://e1r2p7.clusters.42paris.fr:5173/registration`);
-        else res.redirect(301, `http://e1r2p7.clusters.42paris.fr:5173/`);
-      }
+        if (!email) res.redirect(301, `http://localhost:5173/Profile`);
+        else 
+          res.redirect(301, `http://localhost:5173/`);
+        }
         
     async getUserByToken(req: Request) {
       try {
         const accessToken = req.cookies.token;
-        const user = await this.prisma.auth.findFirst({
+        const user = await this.prisma.user.findFirst({
           where: {
-              accessToken: accessToken,
+              auth: {
+                accessToken: accessToken,
+              }
             },
             });
         if (!user) {
           throw new HttpException({
               status: HttpStatus.BAD_REQUEST,
-              error: "Error to get the user by token1"
+              error: "Error to get the user by token"
             },
             HttpStatus.BAD_REQUEST
           );
@@ -75,7 +84,7 @@ export class AuthService {
       } catch (error) {
         throw new HttpException({
             status: HttpStatus.BAD_REQUEST,
-            error: "Error to get the user by token2"
+            error: "Error to get the user by token"
           },
           HttpStatus.BAD_REQUEST
         );
@@ -87,7 +96,7 @@ export class AuthService {
         const user42infos = await this.Oauth42.access42UserInformation(token);
         if (user42infos)
           {
-            const finalUser = await this.Oauth42.createDataBase42User(    user42infos,
+            const finalUser = await this.Oauth42.createDataBase42User(user42infos,
             token,
             req.body.name,
             req.body.isRegistered);
@@ -105,21 +114,27 @@ export class AuthService {
             expires: new Date(new Date().getTime() + 60 * 24 * 7 * 1000), // expires in 7 days
             httpOnly: true, // for security
           });
-          const Googlecookies = res.cookie("FullToken", token,
-          {
-            expires: new Date(new Date().getTime() + 60 * 24 * 7 * 1000), // expires in 7 days
-            httpOnly: true, // for security
-          });
+          // const Googlecookies = res.cookie("FullToken", token,
+          // {
+          //   expires: new Date(new Date().getTime() + 60 * 24 * 7 * 1000), // expires in 7 days
+          //   httpOnly: true, // for security
+          // });
     
       }
 
       async updateCookies(@Res() res: Response, token: any, userInfos: any) {
         try {
           if (userInfos)
-          { const name = userInfos.id;
-            const user = await this.prisma.auth.update({where: {userId: name,},
-            data: {  accessToken: token.access_token,},
-            });
+          { 
+            const name = userInfos.id;
+            const user = await this.prisma.auth.update(
+              { where: {
+                  userId: name,
+                },
+                data: {  
+                    accessToken: token.access_token,                      
+                },
+              });
             return user;
           }
           else
@@ -128,7 +143,7 @@ export class AuthService {
         {
             throw new HttpException({
             status: HttpStatus.BAD_REQUEST,
-            error: "Error to update the cookes"},
+            error: "Error to update the cookies"},
             HttpStatus.BAD_REQUEST);
         }
         }

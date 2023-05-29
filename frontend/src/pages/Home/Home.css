@@ -3,6 +3,7 @@
 	width: 100vw;
   z-index: 7;
   color: #fff;
+  flex-flow: column nowrap;
   font-size: 50px;
   display: flex;
   align-items: center;

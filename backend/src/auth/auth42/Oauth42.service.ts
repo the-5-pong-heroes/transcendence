@@ -11,9 +11,9 @@ export class Oauth42Service {
         const response = await fetch("https://api.intra.42.fr/oauth/token", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: `grant_type=authorization_code&client_id=u-s4t2ud-336830374cf2f365e2cb188d4bd30d634a75c69a6bc284c027c9cb6732f3a842&client_secret=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&code=/auth/auth42/callback`,
+          body: `grant_type=authorization_code&client_id=${process.env.VITE_API42_ID}&client_secret=${process.env.VITE_API42_SECRET}&code=${req}&redirect_uri=${process.env.VITE_API42_URI}`,
         });
-        const data = await response.json();      
+        const data = await response.json(); 
         if (!data)
         {
           throw new HttpException(
@@ -35,11 +35,11 @@ export class Oauth42Service {
     async access42UserInformation(accessToken: string) {    
       try {
           const response = await fetch("https://api.intra.42.fr/v2/me", {
-          method: "GET",
-          headers: { Authorization: `Bearer ${accessToken}` },
+            method: "GET",
+            headers: { Authorization: `Bearer ${accessToken}` },
           });
           if (response.ok) 
-          { 
+          {
           const data = await response.json();
           return data;
           }
@@ -63,14 +63,13 @@ export class Oauth42Service {
                       name: username,
                       auth: {
                           create: {
-                              password: 'test',
                               isRegistered: isRegistered,
                               accessToken: token,
                               email: user42.email,
                           }
                       },
                       status: "ONLINE",
-                      last_login: new Date()
+                      lastLogin: new Date()
                   }
               });
               return user;

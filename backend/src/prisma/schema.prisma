@@ -27,19 +27,16 @@ model User {
 }
 
 model Auth {
-<<<<<<< HEAD
-  userId       String   @id @db.Uuid
-  user         User     @relation(fields: [userId], references: [id])
-  email        String   @unique
-  accessToken  String   @default("noToken")
-  isRegistered Boolean  @default(false)
-  password     String
-=======
-  user     User   @relation(fields: [userId], references: [id])
-  userId   String @id @unique @db.Uuid
-  email    String @unique
-  password String
->>>>>>> 457084007a22c2b9158358bcad2b2769e499ca6a
+  userId          String   @id @db.Uuid
+  user            User     @relation(fields: [userId], references: [id])
+  email           String   @unique
+  accessToken     String   @default("noToken")
+  isRegistered    Boolean  @default(false)
+  twoFAactivated  Boolean?  @default(false)
+  twoFASecret     String?
+  otp_enabled     Boolean?  @default(false)
+  otp_verified    Boolean?  @default(false)
+  otp_validated   Boolean?  @default(false)
 }
 
 model Friendship {

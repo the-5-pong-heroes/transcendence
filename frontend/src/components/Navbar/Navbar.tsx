@@ -15,10 +15,11 @@ export const ScrollToPage: React.FC = () => {
   if (appContext === undefined) {
     throw new Error("Undefined AppContext");
   }
-  const { homeRef, profileRef, gameRef, boardRef, chatRef } = appContext;
+  const { homeRef, profileRef, gameRef, boardRef, chatRef, loginRef } = appContext;
 
   const refs: Record<string, React.RefObject<HTMLDivElement>> = {
     "/": homeRef,
+    "/Login": loginRef,
     "/Game": gameRef,
     "/Leaderboard": boardRef,
     "/Chat": chatRef,

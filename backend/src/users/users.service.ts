@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
 import {PrismaService} from '../database/prisma.service';
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+
 
 @Injectable({})
 export class UserService {
@@ -13,10 +14,15 @@ export class UserService {
 
 	async getUserByEmail(email: string) {
 		try {
-			const user = await this.prisma.auth.findFirst({
+			const user = await this.prisma.user.findFirst({
 				where: {
-					email: email,
+					auth: {
+						email: email,
+					},
 				},
+				include: {
+					auth: true,
+				  },
 			});
 			return user;
 		} catch (error) {}

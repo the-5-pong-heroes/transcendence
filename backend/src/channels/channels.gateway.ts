@@ -8,7 +8,7 @@ import { Message } from "@prisma/client";
 import { Socket, Server } from "socket.io";
 import { ChannelUsersService } from "../channel-users/channel-users.service";
 import { PrismaService } from "../database/prisma.service";
-import { UsersService } from "../users_paul/users.service";
+import { UserService } from "../users/users.service";
 import { CreateMessageDto } from "../messages/dto/create-message.dto";
 import { MessagesService } from "../messages/messages.service";
 import { ChannelsService } from "./channels.service";
@@ -25,7 +25,7 @@ export class ChannelsGateway {
     private channelsService: ChannelsService,
     private messagesService: MessagesService,
     private channelUsersService: ChannelUsersService,
-    private usersService: UsersService,
+    private usersService: UserService,
   ) {}
 
   @WebSocketServer() server!: Server;

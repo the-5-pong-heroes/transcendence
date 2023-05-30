@@ -27,4 +27,23 @@ export class UserService {
 			return user;
 		} catch (error) {}
 	}
+
+	async findOne(name: string){
+		return this.prisma.user.findUnique({ where: { name } });
+	}
+
+	async findOneById(id: string | undefined){
+	if (!id) return null;
+		return this.prisma.user.findUnique({ where: { id } });
+	}
+
+	async remove(id: string) {
+		const user = await this.prisma.user.findUnique({
+			where: { id },
+	});
+
+	if (!user) await this.prisma.user.delete({ where: { name: id } });
+		else await this.prisma.user.delete({ where: { id } });
+	}
+
 }

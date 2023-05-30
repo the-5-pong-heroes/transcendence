@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
 interface LoginProps {
-  LoginRef: React.RefObject<HTMLDivElement>;
+  logRef: React.RefObject<HTMLDivElement>;
 }
 
-export const Login: React.FC<LoginProps> = ({ LoginRef }) => {
+export const Login: React.FC<LoginProps> = ({ logRef }) => {
   const navigate = useNavigate();
   const twoFACode = React.useState('');
   const isActivated = React.useState(false);
@@ -82,7 +82,7 @@ export const Login: React.FC<LoginProps> = ({ LoginRef }) => {
 
 //        <button className="button" onClick={handleAuth42}>Connect with 42</button>
   return (
-    <div ref={LoginRef} id="Login" className="Login">
+    <div ref={logRef} id="Login" className="Login">
       <h1>Login</h1>
       <button onClick={handle2FA}>2FA</button>
       <div id="popup" style={{ display: "none" }}>

@@ -13,7 +13,6 @@ interface ContextParameters {
   signupRef: React.RefObject<HTMLDivElement>;
   profileRef: React.RefObject<HTMLDivElement>;
   gameIsRunning: React.RefObject<boolean>;
-  loginRef: React.RefObject<HTMLDivElement>;
 }
 
 export const AppContext = React.createContext<ContextParameters | undefined>(undefined);

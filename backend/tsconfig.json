@@ -29,6 +29,8 @@
     "incremental": false,
     // stronger guarantees of program correctness
     "strict": true,
+    // TS won't raise an error when a class property isn't set in the constructor
+    "strictPropertyInitialization": false,
     // null and undefined have their own distinct types
     "strictNullChecks": true,
     // call, bind, apply should be invoked with correct argument

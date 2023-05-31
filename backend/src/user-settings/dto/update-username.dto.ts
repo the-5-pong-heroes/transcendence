@@ -1,11 +1,7 @@
-import { Length, IsAlphanumeric } from "class-validator";
+import { Length, IsString } from "class-validator";
 
 export class UpdateUsernameDto {
   @Length(3, 20)
-  @IsAlphanumeric()
-  // @IsNotEmpty()
+  @IsString()
   name: string;
 }
-
-//unique
-//longueur

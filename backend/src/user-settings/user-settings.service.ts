@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ConflictException, Injectable } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { PrismaService } from "src/database/prisma.service";
 // import { CreateUserSettingDto } from "./dto/create-user-setting.dto";
@@ -36,6 +36,19 @@ export class UserSettingsService {
       friends.push({ name: friend.user.name, id: friend.user.id });
     });
     return { ...data, friends };
+  }
+
+  async updateUsername(user: User, username: string) {
+    let updateUser;
+    try {
+      updateUser = await this.prisma.user.update({
+        where: { id: user.id },
+        data: { name: username },
+      });
+    } catch (error) {
+      throw new ConflictException("Username already taken!");
+    }
+    return updateUser;
   }
 }
 

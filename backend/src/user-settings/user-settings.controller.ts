@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Patch } from "@nestjs/common";
 import { UserSettingsService } from "./user-settings.service";
 // import { CreateUserSettingDto } from "./dto/create-user-setting.dto";
-// import { UpdateUserSettingDto } from "./dto/update-user-setting.dto";
+import { UpdateUsernameDto } from "./dto/update-username.dto";
 import { UserSettings } from "./user-settings.service";
 import { CurrentUser } from "src/stats/current-user.decorator";
 import { User } from "@prisma/client";
@@ -16,8 +16,8 @@ export class UserSettingsController {
     return this.userSettingsService.getUserSettings(user);
   }
 
-  // @Patch()
-  // create(@Body() createUserDto: UpdateUsernameDto) {
-  //   return "This action adds a new user";
-  // }
+  @Patch()
+  create(@CurrentUser() user: User, @Body() updateDto: UpdateUsernameDto) {
+    return this.userSettingsService.updateUsername(user, updateDto.name);
+  }
 }

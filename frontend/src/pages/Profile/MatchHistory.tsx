@@ -3,7 +3,7 @@ import { GameData } from "./Profile"
 
 
 export const MatchHistory = ({history} :{history: GameData[]} ) => {
-  if (history.length == 0) {
+  if (!history || history.length == 0) {
     return (
       <div className="noMatchYet">
         <span>No match yet! 🤷‍♀️</span>

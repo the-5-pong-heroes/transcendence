@@ -1,7 +1,7 @@
 import { UserStats } from "../Leaderboard/Leaderboard"
 
 export const Friends = ({user} :{user: UserStats} ) => {
-  if (user.friends.length == 0) {
+  if (!user || !user.friends || user.friends.length == 0) {
     return (
       <div className="noMatchYet">
         <span>No friend yet! 🤷‍♀️</span>

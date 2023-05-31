@@ -75,7 +75,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
     <div ref={profileRef} id="Profile" className="Profile">
       <div className="profile-block block1">
         <div className="avatar">
-          <img src={DefaultAvatar} alt="profilePicture" />
+          <img src={user.avatar ? user.avatar : DefaultAvatar} alt="profilePicture" />
         </div>
         <div className="column username">
           {user.name}

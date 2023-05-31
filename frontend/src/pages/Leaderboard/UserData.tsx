@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { DefaultAvatar } from "../../assets";
 import { UserStats } from "./Leaderboard";
 import { UserLevel } from "./UserLevel";
@@ -14,7 +15,7 @@ const UserData = ({users}: {users: UserStats[]}) => {
               <div className="col">
                 <img src={DefaultAvatar} alt="profilePicture" />
               </div>
-              <div className="col"><a className="link-prof" href={`/profile/${id}`}>{name}</a></div>
+              <div className="col"><Link to={`/profile/${id}`} className="link-prof">{name}</Link></div>
               <div className="col">{score}</div>
               <div className="col">{wins}</div>
               <div className="col">{defeats}</div>

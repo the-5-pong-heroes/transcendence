@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { UserStats } from "../Leaderboard/Leaderboard"
 
 export const Friends = ({user} :{user: UserStats} ) => {
@@ -14,7 +15,11 @@ return (
     {
       user.friends.map((friend : {name: string, id: string}, i: number) => {
         return (
-          <div key={i} className="friends-list">{friend.name}</div>
+          <div key={i} className="friends-list">
+            <Link to={`/profile/${friend.id}`}>
+              <span>{friend.name}</span>
+            </Link>
+          </div>
         )
       })
     }

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { UserSettings } from "./Settings"
 
 export const Unfollow = ({settings} :{settings: UserSettings} ) => {
@@ -18,9 +19,9 @@ return (
     {
       settings.friends.map((friend : {name: string, id: string}, i: number) => {
         return (
-          <div key={i} className="friends-list" onClick={() => { window.confirm( 'Are you sure you want to remove this friend?', ) && removeFriend() }}>
-            <span>{friend.name}</span>
-            <span className="cross">✗</span>
+          <div key={i} className="friends-list">
+            <Link to={`/Profile/${friend.id}`}><span>{friend.name}</span></Link>
+            <span className="cross" onClick={() => { window.confirm( 'Are you sure you want to remove this friend?', ) && removeFriend() }}>✗</span>
           </div>
         )
       })

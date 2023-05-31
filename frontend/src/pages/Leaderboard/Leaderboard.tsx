@@ -61,5 +61,3 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
     </div>
   );
 };
-
-  {/* <h1 className="title">Leaderboard</h1> */}

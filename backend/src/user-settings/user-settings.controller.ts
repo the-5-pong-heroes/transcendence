@@ -17,20 +17,6 @@ import { UserSettings } from "./user-settings.service";
 import { CurrentUser } from "src/stats/current-user.decorator";
 import { User } from "@prisma/client";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { diskStorage } from "multer";
-import path from "path";
-
-export const storage = {
-  storage: diskStorage({
-    destination: "./uploads/profileimages",
-    filename: (req, file, cb) => {
-      const filename: string = path.parse(file.originalname).name.replace(/\s/g, "") + uuidv4();
-      const extension: string = path.parse(file.originalname).ext;
-
-      cb(null, `${filename}${extension}`);
-    },
-  }),
-};
 
 @Controller("settings")
 export class UserSettingsController {

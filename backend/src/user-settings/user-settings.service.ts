@@ -39,65 +39,33 @@ export class UserSettingsService {
   }
 
   async updateUsername(user: User, username: string) {
-    let updateUser;
+    let updatedUser;
     try {
-      updateUser = await this.prisma.user.update({
+      updatedUser = await this.prisma.user.update({
         where: { id: user.id },
         data: { name: username },
       });
     } catch (error) {
       throw new ConflictException("Username already taken!");
     }
-    return updateUser;
+    return updatedUser;
   }
 
   async updateAvatar(user: User, avatar: Express.Multer.File) {
     const formData = new FormData();
     formData.append("image", avatar.buffer.toString("base64"));
-    const { data: imageData } = await firstValueFrom(
-      this.httpService
-        .post(`https://api.imgbb.com/1/upload?expiration=600&key=${process.env.IMG_API_KEY}`, formData)
-        .pipe(
-          catchError((error: AxiosError) => {
-            throw error;
-          }),
-        ),
-    );
-    user.updateOne({ avatar: imageData.data.url }).exec();
+    let data;
+    try {
+      const url = "https://api.imgbb.com/1/upload?key=135105238adbeae913034e9d697c8e96";
+      const resp = await fetch(url, { method: "POST", body: formData });
+      data = await resp.json();
+    } catch (err) {
+      throw err;
+    }
+    const updatedUser = await this.prisma.user.update({
+      where: { id: user.id },
+      data: { avatar: data.data.url },
+    });
+    return updatedUser;
   }
 }
-
-/*
-async updateUser(id: number, user: User): Promise<User> {
-  if (!user) throw new HttpException('Body null', HttpStatus.NOT_FOUND);
-  await this.getUser(id);
-
-  const can: Array<string> = ['username', 'followed', 'blocked'];
-
-  for (const key of Object.keys(user))
-    if (can.indexOf(key) == -1)
-      throw new HttpException(
-        'Value cannot be modified',
-        HttpStatus.FORBIDDEN,
-      );
-
-  if (user.username) {
-    user.username = user.username.replace(/\s+/g, '');
-    if (!user.username.length)
-      throw new HttpException(
-        'Username cannot be empty',
-        HttpStatus.FORBIDDEN,
-      );
-  }
-
-  try {
-    user.id = id;
-    if (user.username) user.profileCompleted = true;
-    await this.userRepository.update(id, user);
-  } catch (error) {
-    throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-  }
-  delete user.id;
-  return user;
-}
-*/

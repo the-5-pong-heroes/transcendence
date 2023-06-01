@@ -3,29 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { ResponseError } from "@/helpers";
-import { USER_QUERY_KEY, BASE_URL } from "@/constants";
+import { USER_QUERY_KEY } from "@/constants";
 import type { UserAuth, User } from "@types";
+import * as fetch from "@/helpers/fetch";
 
-interface ErrorMessage {
-  message: string;
-}
+type SignInBody = {
+  email: string;
+  password: string;
+};
 
 async function signIn(email: string, password: string): Promise<User> {
-  const response = await fetch(`${BASE_URL}/auth/signin`, {
-    method: "POST",
-    credentials: "include",
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-    },
-    body: JSON.stringify({ email, password }),
-  });
-  if (!response.ok) {
-    const { message } = (await response.json()) as ErrorMessage;
-    throw new ResponseError(message, response);
-  }
-  const data: UserAuth = (await response.json()) as UserAuth;
-  console.log("🫵🏻 message: ", data.message);
+  const signInBody = {
+    email: email,
+    password: password,
+  };
+  const data = await fetch.post<SignInBody, UserAuth>("/auth/signin", signInBody);
 
   return data.user;
 }
@@ -47,7 +39,6 @@ export function useSignIn(): IUseSignIn {
     ({ email, password }) => signIn(email, password),
     {
       onSuccess: (data) => {
-        console.log("🫴🏻 data: ", data);
         queryClient.setQueryData([USER_QUERY_KEY], data);
         toast.success("🎉 Signed in successfully!");
         navigate("/");

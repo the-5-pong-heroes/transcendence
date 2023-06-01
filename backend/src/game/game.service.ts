@@ -4,7 +4,7 @@ import { Server, Socket } from "socket.io";
 import { LobbyMode, GameMode, AuthenticatedSocket, ServerEvents, LobbyState, PaddleMove } from "./@types";
 import { GameLobby } from "./game.lobby";
 import { PrismaService } from "../database/prisma.service";
-import { UserService } from "src/user/user.service";
+import { UsersService } from "src/users/users.service";
 import { AuthService } from "src/auth/auth.service";
 import { parse } from "cookie";
 
@@ -25,7 +25,7 @@ export class GameService {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly userService: UserService,
+    private readonly usersService: UsersService,
     private readonly authService: AuthService,
   ) {}
 
@@ -49,12 +49,12 @@ export class GameService {
       }
     }
     this.connectedSockets.set(client.id, client);
-    await this.userService.updateStatus(client.data.userId, "ONLINE");
+    await this.usersService.updateStatus(client.data.userId, "ONLINE");
     client.emit(ServerEvents.GameList, this.getListOfLobbies());
   }
 
   private createLobby(lobbyMode: LobbyMode, gameMode: GameMode, client: AuthenticatedSocket): GameLobby {
-    const lobby = new GameLobby(this.server, gameMode, lobbyMode, this, this.prisma, this.userService);
+    const lobby = new GameLobby(this.server, gameMode, lobbyMode, this, this.prisma, this.usersService);
     this.lobbies.set(lobby.id, lobby);
     lobby.addPlayer(client, "right");
     return lobby;
@@ -80,7 +80,7 @@ export class GameService {
     }
     lobby = this.createLobby(lobbyMode, gameMode, client);
     lobby.dispatchLobbyState();
-    this.broadcastLobbies();
+    // this.broadcastLobbies();
   }
 
   public joinLobbyById(lobbyId: string, client: AuthenticatedSocket): void {
@@ -112,7 +112,7 @@ export class GameService {
     await this.delay(1000);
     lobby.startGame();
     lobby.dispatchLobbyState();
-    this.broadcastLobbies();
+    // this.broadcastLobbies();
   }
 
   /************     VIEW GAME    ************/
@@ -127,10 +127,14 @@ export class GameService {
   /************    INVITE GAME   ************/
 
   public async inviteToGame(userId: string, client: AuthenticatedSocket): Promise<void> {
+    if (userId === client.data.userId) {
+      return;
+    }
     for (const [socketId, socket] of this.connectedSockets) {
       if (userId === socket.data.userId) {
         await this.waitForClientIsOnline(socket);
         this.server.to(socketId).emit(ServerEvents.GameInvite, { socketId: client.id, userName: client.data.userName });
+        break;
       }
     }
   }
@@ -142,7 +146,7 @@ export class GameService {
         client.emit(ServerEvents.LobbyMessage, "Too late, the sender of the invitation is no longer available...");
       return;
     }
-    const senderStatus = await this.userService.getStatus(sender?.data.userId);
+    const senderStatus = await this.usersService.getStatus(sender?.data.userId);
     if (senderStatus !== "ONLINE") {
       response &&
         client.emit(ServerEvents.LobbyMessage, "Too late, the sender of the invitation is no longer available...");
@@ -168,7 +172,7 @@ export class GameService {
   /************   WAIT FOR CLIENT   ************/
 
   async waitForClientIsOnline(client: AuthenticatedSocket): Promise<void> {
-    const clientStatus = await this.userService.getStatus(client?.data.userId);
+    const clientStatus = await this.usersService.getStatus(client?.data.userId);
 
     if (clientStatus === "ONLINE") {
       return; // Player is already ready, no need to wait
@@ -176,7 +180,7 @@ export class GameService {
 
     return new Promise<void>((resolve) => {
       const interval = setInterval(async () => {
-        const clientStatus = await this.userService.getStatus(client?.data.userId);
+        const clientStatus = await this.usersService.getStatus(client?.data.userId);
         if (clientStatus === "ONLINE") {
           clearInterval(interval);
           resolve();
@@ -220,14 +224,14 @@ export class GameService {
 
   public removeLobby(lobbyId: string): void {
     this.lobbies.delete(lobbyId);
-    this.broadcastLobbies();
+    // this.broadcastLobbies();
   }
 
   public async removeSocket(client: AuthenticatedSocket): Promise<void> {
     const lobby = client.data.lobby;
     lobby?.removeClient(client);
     this.connectedSockets.delete(client.id);
-    await this.userService.updateStatus(client.data.userId, "OFFLINE"); // PROBLEM HERE
+    await this.usersService.updateStatus(client.data.userId, "OFFLINE"); // PROBLEM HERE
     for (const [socketId, socket] of this.connectedSockets) {
       if (client.data.userId === socket.data.userId) {
         this.server.to(socketId).emit(ServerEvents.Disconnect, null);

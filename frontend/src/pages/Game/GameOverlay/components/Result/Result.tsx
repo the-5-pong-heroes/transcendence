@@ -1,8 +1,9 @@
 import React from "react";
 
 import "./Result.css";
-import type { GameResult, GameContextParameters } from "@Game/@types";
-import { useGameContext } from "@Game/hooks";
+import { CloseButton } from "../CloseButton";
+
+import type { GameResult } from "@Game/@types";
 
 interface ResultProps {
   result: GameResult | undefined;
@@ -11,8 +12,6 @@ interface ResultProps {
 }
 
 export const Result: React.FC<ResultProps> = ({ result, winner = "The bot", index }) => {
-  const { overlayRef }: GameContextParameters = useGameContext();
-
   if (!result) {
     return null;
   }
@@ -34,10 +33,8 @@ export const Result: React.FC<ResultProps> = ({ result, winner = "The bot", inde
   ];
 
   return (
-    <div id="result-modal" className="game-modal">
-      <div className="close-button-wrapper">
-        <button className="close-button" onClick={() => overlayRef?.current?.resetGame()}></button>
-      </div>
+    <div id="result-modal" className="game-modal-cross">
+      <CloseButton />
       <div>
         {result === "Winner" && (
           <>

@@ -1,11 +1,11 @@
-import { Injectable, NotFoundException, ConflictException } from "@nestjs/common";
+import { Injectable, NotFoundException, ConflictException, HttpException, HttpStatus } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { PrismaService } from "src/database/prisma.service";
 import { User, UserStatus, Auth } from "@prisma/client";
 
 @Injectable()
-export class UserService {
+export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -45,11 +45,11 @@ export class UserService {
     return result;
   }
 
-  async findUserById(id: string): Promise<User | null> {
-    const result: User | null = await this.prisma.user.findUnique({
-      where: { id: id },
-    });
-    return result;
+  async findOneById(id: string | undefined): Promise<User | null> {
+    if (!id) {
+      return null;
+    }
+    return this.prisma.user.findUnique({ where: { id } });
   }
 
   async findUserByName(name: string): Promise<User | null> {
@@ -60,6 +60,9 @@ export class UserService {
   }
 
   async findUserAuthByEmail(email: string): Promise<Auth | null> {
+    if (!email) {
+      return null;
+    }
     const user = this.prisma.auth.findUnique({
       where: {
         email: email,
@@ -70,7 +73,7 @@ export class UserService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<void> {
-    const user = await this.findUserById(id);
+    const user = await this.findOneById(id);
     if (!user) {
       return;
     }
@@ -81,7 +84,7 @@ export class UserService {
   }
 
   async updateStatus(id: string, status: UserStatus): Promise<void> {
-    const user = await this.findUserById(id);
+    const user = await this.findOneById(id);
     if (!user) {
       return;
     }
@@ -106,9 +109,10 @@ export class UserService {
       const result: User = await this.prisma.user.delete({
         where: { id: id },
       });
+      console.log("💥 User removed");
       return result;
     } catch (e) {
-      throw new NotFoundException(e);
+      throw new HttpException("Failed to remove user", HttpStatus.NOT_FOUND, { cause: e as Error });
     }
   }
 }

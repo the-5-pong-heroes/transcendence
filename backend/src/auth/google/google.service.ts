@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable, Req, Res } from "@nestjs/common";
-import { UserService } from "src/user/user.service";
+import { UsersService } from "src/users/users.service";
 import { PrismaService } from "src/database/prisma.service";
 import { Request, Response } from "express";
 import { google } from "googleapis";
@@ -12,7 +12,7 @@ interface Token {
 
 @Injectable({})
 export class GoogleService {
-  constructor(private prisma: PrismaService, private userService: UserService) {}
+  constructor(private prisma: PrismaService, private usersService: UsersService) {}
 
   async handleGoogleUserCreation(@Res() res: Response, @Req() req: Request) {
     try {
@@ -45,30 +45,6 @@ export class GoogleService {
     const data = await this.getUserFromGoogle(token);
     return data;
   }
-
-  // async getUserFromGoogle(token: any) {
-  //   const oauth2Client = await this.getOauth2ClientGoogle();
-  //   console.log("✨✨✨");
-  //   await oauth2Client.setCredentials(token);
-  //   console.log("🌈 oauth2Client.credentials.access_token: ", oauth2Client.credentials.access_token);
-  //   if (oauth2Client.credentials.access_token) {
-  //     const tokenInfo = await oauth2Client.getTokenInfo(oauth2Client.credentials.access_token);
-  //     console.log("💥💥💥 tokenInfo: ", tokenInfo);
-  //   }
-  //   const userInfoClient = google.oauth2("v2").userinfo;
-  //   // const { data } = await google.oauth2("v2").userinfo.get({ auth: oauth2Client });
-  //   // console.log("🍄🍄🍄 userInfoClient: ", userInfoClient);
-  //   const userInfoResponse = await userInfoClient.get({
-  //     auth: oauth2Client,
-  //   });
-  //   console.log("🌻 userInfoResponse: ", userInfoResponse);
-  //   // const userInfos = {
-  //   //   email: data.email,
-  //   //   access_token: tokens.access_token,
-  //   // };
-  //   // return userInfos;
-  //   return null;
-  // }
 
   async getUserFromGoogle(tokens: any) {
     try {

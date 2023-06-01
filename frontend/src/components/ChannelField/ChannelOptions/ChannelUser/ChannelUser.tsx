@@ -5,6 +5,7 @@ import styles from "./ChannelUser.module.scss";
 import { type IChannelUser } from "@/interfaces";
 import { useUser, useSocketContext, useAppContext } from "@hooks";
 import type { SocketParameters, AppContextParameters } from "@types";
+import { ClientEvents } from "@Game/@types";
 
 interface IChannelUserProps {
   users: [IChannelUser];
@@ -25,8 +26,7 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
   const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     const { value } = event.target;
 
-    const token = localStorage.getItem("access_token");
-    if (!token || !activeUser) {
+    if (!activeUser) {
       return;
     }
     socket?.emit("updateChannelUser", { id: activeUser.id, role: value });
@@ -34,8 +34,7 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
 
   const toggleMuteUser = (event: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
-    const token = localStorage.getItem("access_token");
-    if (!token || !activeUser) {
+    if (!activeUser) {
       return;
     }
     socket?.emit("updateChannelUser", {
@@ -48,8 +47,7 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
   };
 
   const kickUser = (): void => {
-    const token = localStorage.getItem("access_token");
-    if (!token || !activeUser) {
+    if (!activeUser) {
       return;
     }
     socket?.emit("kickChannelUser", { id: activeUser.id });
@@ -57,13 +55,16 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
 
   const banUser = (event: React.FormEvent<HTMLFormElement>): void => {
     event?.preventDefault();
-    const token = localStorage.getItem("access_token");
-    if (!token || !activeUser) {
+    if (!activeUser) {
       return;
     }
     socket?.emit("banChannelUser", { id: activeUser.id, bannedUntil: new Date(Date.now() + untilNumber * 60000) });
     setUntilOption("");
     setUntilNumber(0);
+  };
+
+  const inviteToPlay = (id: string): void => {
+    socket?.emit(ClientEvents.GameInvite, { userId: id });
   };
 
   useEffect(() => {
@@ -92,7 +93,9 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
               key={usr.user.id}
               className={`${styles.ChannelUserItem} ${activeUser === usr ? styles.ActiveUser : ""}`}
               onClick={() => setActiveUser(usr)}>
-              <div>{usr.user.id}</div>
+              {/* <div>{usr.user.id}</div> */}
+              <div>{usr.user.name}</div>
+              {user?.id !== usr.user.id && <button onClick={() => inviteToPlay(usr.user.id)}>Invite to play</button>}
               <select
                 name="role"
                 value={usr.role}

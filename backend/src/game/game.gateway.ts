@@ -34,11 +34,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   async handleConnection(client: Socket): Promise<void> {
     await this.wsGuard.canActivate(client);
-    this.gameService.setupClient(client as AuthenticatedSocket);
+    await this.gameService.setupClient(client as AuthenticatedSocket);
   }
 
-  async handleDisconnect(client: AuthenticatedSocket) {
-    this.gameService.removeSocket(client);
+  async handleDisconnect(client: AuthenticatedSocket): Promise<void> {
+    await this.gameService.removeSocket(client);
   }
 
   @SubscribeMessage(ClientEvents.GameConnect)

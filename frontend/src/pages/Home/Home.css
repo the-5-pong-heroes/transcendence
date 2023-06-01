@@ -1,6 +1,6 @@
 .home {
-	height: 100vh;
-	width: 100vw;
+  height: 100vh;
+  width: 100vw;
   z-index: 7;
   color: #fff;
   font-size: 50px;
@@ -18,7 +18,7 @@
 }
 
 #light .home {
-  color: #070c76;
+  color: #000000;
 }
 
 #dark .home h1 {
@@ -30,13 +30,77 @@
   align-items: center;
   justify-content: center;
   height: 10vh;
-  width: 50vw;
+  width: 60vw;
   font-size: 1.5rem;
   margin: 30px;
+  color: #111;
 }
 
-.game-link:hover,
-.game-link:focus {
-  color: hsl(271, 73%, 31%);
-  font-weight: bold;
+#light .home-play-button {
+  color: white;
+}
+
+.game-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: auto;
+  padding: 19px 22px;
+  transition: all .2s ease;
+}
+
+.game-link:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  border-radius: 28px;
+  /* background-color: rgba(227, 24, 24, 0.7); */
+  background-color: rgba(237, 123, 255, 0.5);
+  width: 56px;
+  height: 56px;
+  transition: all .3s ease;
+}
+
+.game-link span {
+  position: relative;
+  font-size: 16px;
+  line-height: 18px;
+  font-weight: 900;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.game-link svg {
+  position: relative;
+  top: 0;
+  margin-left: 10px;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke: #111;
+  stroke-width: 2;
+  transform: translateX(-5px);
+  transition: all .3s ease;
+}
+
+#light .game-link svg {
+  stroke: white; 
+}
+
+.game-link:hover:before {
+  width: 100%;
+  /* background-color: rgb(227, 24, 24, 0.9); */
+  background-color: rgb(237, 123, 255, 0.6);
+}
+
+.game-link:hover svg {
+  transform: translateX(0);
+}
+
+.game-link:active {
+  transform: scale(0.96);
 }

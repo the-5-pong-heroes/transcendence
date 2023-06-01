@@ -5,3 +5,5 @@ export { Countdown } from "./Countdown";
 export { QuitModal } from "./Quit";
 export { Pause } from "./Pause";
 export { Players } from "./Players";
+export { CloseButton } from "./CloseButton";
+export { GameButton } from "./GameButton";

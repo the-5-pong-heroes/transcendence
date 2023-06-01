@@ -5,39 +5,9 @@
   justify-content: center;
   align-items: center;
   z-index: 3;
-}
-
-.close-button-wrapper {
-  position: absolute;
-  top: 0;
-  right: 0;
-  /* background-color: green; */
-}
-
-.close-button {
-  width: 20px;
-  height: 20px;
-  opacity: 0.3;
-}
-
-.close-button:hover {
-  opacity: 1;
-}
-
-.close-button:before, .close-button:after {
-  position: absolute;
-  content: ' ';
-  height: 20px;
-  width: 2px;
-  background-color: #ffffff;
-}
-
-.close-button:before {
-  transform: rotate(45deg);
-}
-
-.close-button:after {
-  transform: rotate(-45deg);
+  font-size: 0.9rem;
+  font-weight: 300;
+  letter-spacing: 0.1rem;
 }
 
 .text {

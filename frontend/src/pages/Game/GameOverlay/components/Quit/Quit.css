@@ -1,16 +1,17 @@
-.game-modal {
+/* .game-modal {
   flex-direction: column;
   position: absolute;
-}
+} */
 
 .quit-text {
-  font-size: 1em;
-  padding-top: 20px;
+  margin-top: 30px;
+  font-size: 1rem;
   text-align: center;
-  /* background-color: red; */
+  font-weight: 200;
+  letter-spacing: 0.05rem;
 }
 
-@media (max-width: 680px) {
+@media (max-width: 600px) {
   .quit-text {
     font-size: 3vw;
   }

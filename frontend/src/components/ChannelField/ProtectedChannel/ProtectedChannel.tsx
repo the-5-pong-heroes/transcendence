@@ -22,8 +22,7 @@ export const ProtectedChannel: React.FC<IProtectedChannelProps> = ({ activeChann
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    const token = window.localStorage.getItem("access_token");
-    if (!token || !user?.id || !activeChannel || password === "") {
+    if (!user?.id || !activeChannel || password === "") {
       return;
     }
     const data = { channelId: activeChannel.id, userId: user?.id, password };

@@ -12,7 +12,16 @@ import "./App.css";
 const App: React.FC = () => {
   const { theme, pageRefs }: AppContextParameters = useAppContext();
   const { homeRef, profileRef, gameRef, boardRef, chatRef, notFoundRef }: PageRefs = pageRefs;
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
+
+  if (isLoading) {
+    // Show loading state while user data is being fetched
+    return (
+      <div className="loading-app">
+        <div>Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="App" id={theme}>

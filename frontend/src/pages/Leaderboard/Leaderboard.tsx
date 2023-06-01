@@ -14,7 +14,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
   const [users, setUSers] = useState([]);
   const fetchUsers = async (): Promise<void> => {
     try {
-      const resp = await fetch(`${BASE_URL}//leaderboard`);
+      const resp = await fetch(`${BASE_URL}/leaderboard`);
       if (!resp.ok) {
         throw new ResponseError("Failed on fetch users request", resp);
       }

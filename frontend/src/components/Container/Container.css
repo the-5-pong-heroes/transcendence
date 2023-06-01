@@ -55,7 +55,10 @@ body.open .container {
   background-repeat: repeat;
 }
 
-.light,
+.light {
+  z-index: 7;
+}
+
 .trash {
   z-index: 6;
 }

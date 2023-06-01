@@ -48,10 +48,6 @@ export const CreateChat: React.FC = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
 
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      return;
-    }
     socket?.emit("create", channel);
     setChannel((prev: IChannel) => ({ users: prev.users, name: "", type: "PUBLIC" }));
     setShowForm(false);

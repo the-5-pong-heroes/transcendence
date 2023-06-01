@@ -1,10 +1,12 @@
 import React from "react";
-import "./LobbyMode.css";
 
-import { ClientEvents, type GameMode, type LobbyMode, type GameContextParameters } from "@Game/@types";
+import "./LobbyMode.css";
+import { GameButton } from "../GameButton";
+import { CloseButton } from "../CloseButton";
+
+import { ClientEvents, type GameMode, type LobbyMode } from "@Game/@types";
 import { useSocketContext } from "@hooks";
 import type { SocketParameters } from "@types";
-import { useGameContext } from "@Game/hooks";
 
 interface LobbyModeProps {
   gameMode: GameMode | undefined;
@@ -14,7 +16,6 @@ interface LobbyModeProps {
 
 export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode, setLobbyMode }) => {
   const { socket }: SocketParameters = useSocketContext();
-  const { overlayRef }: GameContextParameters = useGameContext();
 
   if (lobbyMode) {
     return null;
@@ -27,24 +28,40 @@ export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode,
 
   return (
     <div className="game-modal-cross">
-      <div className="close-button-wrapper">
-        <button className="close-button" onClick={() => overlayRef?.current?.resetGame()}></button>
-      </div>
+      <CloseButton />
       <div className="game-button-wrapper">
-        <button
-          className="game-button"
+        <GameButton
+          text="ONE PLAYER"
+          onClick={() => {
+            handleSendEvent("solo");
+          }}
+        />
+        <GameButton
+          text="TWO PLAYER"
+          onClick={() => {
+            handleSendEvent("duo");
+          }}
+        />
+        {/* <button
+          className="lobby-btn btn-1"
           onClick={() => {
             handleSendEvent("solo");
           }}>
+          <svg>
+            <rect x="0" y="0" fill="none" width="100%" height="100%" rx="20" />
+          </svg>
           ONE PLAYER
         </button>
         <button
-          className="game-button"
+          className="lobby-btn btn-1"
           onClick={() => {
             handleSendEvent("duo");
           }}>
+          <svg>
+            <rect x="0" y="0" fill="none" width="100%" height="100%" rx="20" />
+          </svg>
           TWO PLAYER
-        </button>
+        </button> */}
       </div>
     </div>
   );

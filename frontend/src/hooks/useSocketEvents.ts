@@ -63,7 +63,6 @@ export const useSocketEvents = ({ socketRef }: SocketEventsProps): void => {
     };
 
     const disconnect = (): void => {
-      console.log("--- DISCONNECT ---");
       signOut();
     };
 

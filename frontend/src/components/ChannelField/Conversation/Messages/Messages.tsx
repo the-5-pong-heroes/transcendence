@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useQuery } from "react-query";
 
 import styles from "./Messages.module.scss";
 
@@ -27,10 +26,6 @@ export const Messages: React.FC<IMessagesProps> = ({ activeChannel }) => {
   const { user } = useUser();
   const { socket }: SocketParameters = useSocketContext();
   const { theme }: AppContextParameters = useAppContext();
-  const { data } = useQuery<IMessage[] | null>(
-    "messages_query",
-    async (): Promise<IMessage[] | null> => fetchMessages()
-  );
 
   useEffect(() => {
     const handleMessage = (message: IMessage): void => {
@@ -46,43 +41,23 @@ export const Messages: React.FC<IMessagesProps> = ({ activeChannel }) => {
     };
   }, [activeChannel, socket]);
 
-  async function fetchMessages(): Promise<IMessage[] | null> {
-    if (!activeChannel) {
-      setMessages([]);
+  useEffect(() => {
+    const fetchData = async (): Promise<void> => {
+      const response = await fetch(`${BASE_URL}/chat/${activeChannel.id}`, {
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new ResponseError("Failed on fetch messages request", response);
+      }
+      const data = (await response.json()) as IMessage[];
+      setMessages(data);
+    };
 
-      return null;
-    }
-    const response = await fetch(`${BASE_URL}/chat/${activeChannel.id}`, {
-      credentials: "include",
+    fetchData().catch((error) => {
+      // Handle the error here
+      console.error(error);
     });
-    if (!response.ok) {
-      throw new ResponseError("Failed on get messages request", response);
-    }
-    const data = (await response.json()) as IMessage[];
-    setMessages(data);
-
-    return data;
-  }
-
-  // useEffect(() => {
-  //   const fetchData = async (): Promise<void> => {
-  //     const token = localStorage.getItem("access_token");
-  //     if (!token || !activeChannel) {
-  //       return setMessages([]);
-  //     }
-  //     const config = { headers: { Authorization: token } };
-  //     const response = await fetch(`${BASE_URL}/chat/${activeChannel.id}`, config);
-  //     if (!response.ok) {
-  //       console.log(response);
-
-  //       return;
-  //     }
-  //     const data = (await response.json()) as IMessage[];
-  //     setMessages(data);
-  //   };
-
-  //   fetchData();
-  // }, [activeChannel]);
+  }, [activeChannel]);
 
   return (
     <div className={`${styles.Messages} ${theme === "light" ? styles.MessagesLight : styles.MessagesDark}`}>

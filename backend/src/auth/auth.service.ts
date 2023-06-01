@@ -4,9 +4,9 @@ import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 
 import { Auth } from "@prisma/client";
-import { UserService } from "../user/user.service";
+import { UsersService } from "src/users/users.service";
 import { SignInDto, SignUpDto } from "./dto";
-import { CreateUserDto } from "../user/dto";
+import { CreateUserDto } from "../users/dto";
 import { User } from "@prisma/client";
 import { PrismaService } from "../database/prisma.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
@@ -29,22 +29,32 @@ interface GoogleUserInfos {
 export class AuthService {
   constructor(
     private jwtService: JwtService,
-    private userService: UserService,
+    private usersService: UsersService,
     private prisma: PrismaService,
     private Oauth42: Oauth42Service,
     private googleService: GoogleService,
   ) {}
 
+  async findOne(email: string): Promise<Auth | null> {
+    if (!email) {
+      return null;
+    }
+    const result = await this.prisma.auth.findUnique({
+      where: { email: email },
+    });
+    return result;
+  }
+
   async signUp(@Res({ passthrough: true }) res: Response, data: SignUpDto): Promise<void> {
     const { name, email, password } = data;
 
-    const userByName = await this.userService.findUserByName(name);
+    const userByName = await this.usersService.findUserByName(name);
     if (userByName) {
       res.status(HttpStatus.CONFLICT).json({ message: "User already exists" });
       return;
     }
-    const userByEmail = await this.userService.findUserAuthByEmail(email);
-    if (userByEmail) {
+    const userAuth = await this.findOne(email);
+    if (userAuth) {
       res.status(HttpStatus.CONFLICT).json({ message: "Email already used" });
       return;
     }
@@ -52,9 +62,9 @@ export class AuthService {
     const hash = await bcrypt.hash(password, salt);
 
     const newUser = new CreateUserDto(name, email, hash);
-    const createdUser = await this.userService.create(newUser);
+    const createdUser = await this.usersService.create(newUser);
 
-    const payload = { name: createdUser.name, sub: createdUser.id };
+    const payload = { email: email, sub: createdUser.id };
     const accessToken = this.jwtService.sign(payload);
     await this.prisma.user.update({
       where: { id: createdUser.id },
@@ -79,7 +89,7 @@ export class AuthService {
 
   async validateUserJwt(signInDto: SignInDto): Promise<any> {
     const { email, password } = signInDto;
-    const userAuth = await this.userService.findUserAuthByEmail(email);
+    const userAuth = await this.findOne(email);
     if (!userAuth) {
       throw new BadRequestException("User doesn't exist");
     }
@@ -93,7 +103,7 @@ export class AuthService {
 
   async signIn(@Res({ passthrough: true }) res: Response, auth: Auth): Promise<void> {
     const payload = { email: auth.email, sub: auth.userId };
-    const user = await this.userService.findOne(auth.userId);
+    const user = await this.usersService.findOne(auth.userId);
     const accessToken = this.jwtService.sign(payload);
 
     res
@@ -108,10 +118,10 @@ export class AuthService {
   }
 
   async signInGoogle(@Res() res: Response, userInfos: GoogleUserInfos): Promise<void> {
-    const userByEmail = await this.userService.findUserAuthByEmail(userInfos.email);
+    const userByEmail = await this.findOne(userInfos.email);
     let user;
     if (userByEmail) {
-      console.log("🌪️ User already exists !", userByEmail.userId);
+      // console.log("🌪️ User already exists !", userByEmail.userId);
       await this.prisma.auth.update({
         where: {
           userId: userByEmail.userId,
@@ -120,7 +130,7 @@ export class AuthService {
           accessToken: userInfos.accessToken,
         },
       });
-      user = await this.userService.findOne(userByEmail.userId);
+      user = await this.usersService.findOne(userByEmail.userId);
     } else {
       user = await this.googleService.createDataBaseUserFromGoogle(
         userInfos.accessToken,
@@ -166,7 +176,7 @@ export class AuthService {
         return null;
       }
     }
-    const user = await this.userService.findOne(userId);
+    const user = await this.usersService.findOne(userId);
     return user;
   }
 
@@ -175,13 +185,11 @@ export class AuthService {
     if (!access_token) {
       return res.status(200).json({ message: "User not connected", user: null });
     }
-    console.log("  ");
-    console.log("🔐 GET USER 🔐");
     const user = await this.validateUser(access_token);
     if (!user) {
       return res.status(404).json({ message: "Invalid token" });
     }
-    console.log("🙇🏼‍♀️", user);
+    // console.log("🙇🏼‍♀️", user);
     res.status(200).json({ message: "Successfully fetched user", user: user });
   }
 

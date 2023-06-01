@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import "./Quit.css";
+import { GameButton } from "../GameButton";
 
 import { useGameContext } from "@Game/hooks";
 import type { LobbyMode, GameContextParameters } from "@Game/@types";
@@ -33,21 +34,19 @@ export const QuitModal: React.FC<QuitProps> = ({ setQuitModal }) => {
   return (
     <div className="game-modal">
       <div className="quit-text">Do you wish to leave the current game ?</div>
-      <div className="game-button-wrapper">
-        <button
-          className="game-button"
+      <div className="game-button-wrapper-text">
+        <GameButton
+          text="CONFIRM"
           onClick={() => {
             quitGame();
-          }}>
-          CONFIRM
-        </button>
-        <button
-          className="game-button"
+          }}
+        />
+        <GameButton
+          text="CANCEL"
           onClick={() => {
             resumeGame();
-          }}>
-          CANCEL
-        </button>
+          }}
+        />
       </div>
     </div>
   );

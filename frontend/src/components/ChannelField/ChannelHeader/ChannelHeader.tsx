@@ -17,8 +17,7 @@ export const ChannelHeader: React.FC<IChannelHeader> = ({ activeChannel, setShow
   const { socket }: SocketParameters = useSocketContext();
 
   const leaveChannel = (): void => {
-    const token = localStorage.getItem("access_token");
-    if (!token || !activeChannel) {
+    if (!activeChannel) {
       return;
     }
     socket?.emit("quit", { channelId: activeChannel.id, userId: user?.id });

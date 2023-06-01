@@ -1,25 +1,20 @@
 import React from "react";
-import "./Loader.css";
 
-import { type GameContextParameters } from "@Game/@types";
-import { useGameContext } from "@Game/hooks";
+import "./Loader.css";
+import { CloseButton } from "../CloseButton";
 
 interface LoaderParameters {
   loader: boolean;
 }
 
 export const Loader: React.FC<LoaderParameters> = ({ loader }) => {
-  const { overlayRef }: GameContextParameters = useGameContext();
-
   if (!loader) {
     return null;
   }
 
   return (
-    <div className="game-modal">
-      <div className="close-button-wrapper">
-        <button className="close-button" onClick={() => overlayRef?.current?.resetGame()}></button>
-      </div>
+    <div className="game-modal-cross">
+      <CloseButton />
       <div className="loader-wrapper">
         <div className="loader"></div>
         <div className="text">

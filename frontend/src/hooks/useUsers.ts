@@ -1,17 +1,11 @@
 import { useQuery } from "react-query";
 
-import { USERS_QUERY_KEY, BASE_URL } from "@/constants";
+import { USERS_QUERY_KEY } from "@/constants";
 import type { User } from "@types";
-import { ResponseError } from "@/helpers";
+import * as fetch from "@/helpers/fetch";
 
 async function fetchUsers(): Promise<User[]> {
-  const response = await fetch(`${BASE_URL}/users`, {
-    credentials: "include",
-  });
-  if (!response.ok) {
-    throw new ResponseError("Failed on get user request", response);
-  }
-  const data: User[] = (await response.json()) as User[];
+  const data = await fetch.get<User[]>("/users");
 
   return data;
 }

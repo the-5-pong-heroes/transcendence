@@ -1,12 +1,13 @@
 .Profile {
   z-index: 7;
+  padding-top: 80px;
   width: 100vw;
   height: 100vh;
   display: flex;
   flex-flow: column nowrap;
   margin: 0;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   user-select: none;
   position: absolute;
   top: 0;
@@ -16,18 +17,30 @@
   animation-fill-mode: forwards;
 }
 
+.profile-title {
+  margin: 50px;
+}
+
 .signOut-button {
+  color: white;
+  border: 1px solid white;
   margin: 30px;
-  color: rgb(32, 29, 35);
   border-radius: 20px;
   padding: 5px 20px;
-  background-color: #e0c7f3;
+}
+
+.delete-button {
+  text-decoration: underline;
+  font-size: 0.9em;
+  margin: 8px;
 }
 
 .signOut-button:hover,
 .signOut-button:focus {
   font-weight: bold;
-  transform: translateY(-0.1rem);
+  background-color: #e0c7f3;
+  color: rgb(32, 29, 35);
+  /* transform: translateY(-0.1rem); */
 }
 
 @keyframes fadeInAnimation {

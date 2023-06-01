@@ -18,8 +18,7 @@ export const ConversationForm: React.FC<IConversationFormProps> = ({ activeChann
   const { socket }: SocketParameters = useSocketContext();
 
   const submit = (): void => {
-    const token = localStorage.getItem("access_token");
-    if (!token || message === "" || !activeChannel || !user) {
+    if (message === "" || !activeChannel || !user) {
       return; // TODO faire une redirection
     }
     const sentMessage = {

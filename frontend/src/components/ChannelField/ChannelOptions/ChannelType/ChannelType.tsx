@@ -51,8 +51,7 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ activeChannel, setRet
 
   const handleSubmit = (event: React.ChangeEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    const token = window.localStorage.getItem("access_token");
-    if (!token || !newChannel) {
+    if (!newChannel) {
       return;
     }
     if (newChannel.type === activeChannel.type && newChannel.password == activeChannel.password) {

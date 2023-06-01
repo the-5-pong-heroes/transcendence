@@ -3,29 +3,27 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { ResponseError } from "@/helpers";
-import { USER_QUERY_KEY, BASE_URL } from "@/constants";
+import { USER_QUERY_KEY } from "@/constants";
 import type { UserAuth, User } from "@types";
+import * as fetch from "@/helpers/fetch";
+
+type SignUpBody = {
+  name: string;
+  email: string;
+  password: string;
+};
 
 interface ErrorMessage {
   message: string;
 }
 
 async function signUp(name: string, email: string, password: string): Promise<User> {
-  const response = await fetch(`${BASE_URL}/auth/signup`, {
-    method: "POST",
-    credentials: "include",
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-    },
-    body: JSON.stringify({ name, email, password }),
-  });
-  if (!response.ok) {
-    const { message } = (await response.json()) as ErrorMessage;
-    throw new ResponseError(message, response);
-  }
-  const data: UserAuth = (await response.json()) as UserAuth;
-  console.log("🫵🏻 message: ", data.message);
+  const signUpBody = {
+    name: name,
+    email: email,
+    password: password,
+  };
+  const data = await fetch.post<SignUpBody, UserAuth>("/auth/signup", signUpBody);
 
   return data.user;
 }

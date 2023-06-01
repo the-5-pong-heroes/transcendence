@@ -3,10 +3,10 @@ import { Request, Response } from "express";
 
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
-import { CreateUserDto } from "../user/dto";
+import { CreateUserDto } from "../users/dto";
 import { User } from "@prisma/client";
 import { UserDto } from "./dto";
-import { UserService } from "src/user/user.service";
+import { UsersService } from "src/users/users.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
 import { GoogleService } from "src/auth/google/google.service";
 
@@ -23,7 +23,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private Oauth42: Oauth42Service,
-    private userService: UserService,
+    private usersService: UsersService,
     private googleService: GoogleService,
   ) {}
 
@@ -79,7 +79,7 @@ export class AuthController {
     const token = await this.Oauth42.accessToken(codeFromUrl);
     const user42infos = await this.Oauth42.access42UserInformation(token.access_token);
     this.authService.createCookies(res, token);
-    const userExists = await this.userService.findUserAuthByEmail(user42infos.email);
+    const userExists = await this.usersService.findUserAuthByEmail(user42infos.email);
     this.authService.updateCookies(res, token, userExists);
     this.authService.RedirectConnectingUser(req, res, userExists?.email);
   }
@@ -94,10 +94,9 @@ export class AuthController {
   //   const codeFromUrl = req.query.code as string;
   //   const token: any = await this.googleService.getTokenFromGoogle(codeFromUrl);
   //   const userInfos: any = await this.googleService.getUserFromGoogle(token);
-  //   console.log("🌞 userInfos: ", userInfos);
   //   if (userInfos) {
   //     this.authService.createCookies(res, userInfos);
-  //     const userExists = await this.userService.findUserAuthByEmail(userInfos.email);
+  //     const userExists = await this.usersService.findUserAuthByEmail(userInfos.email);
   //     this.authService.updateCookies(res, token, userExists);
   //     this.authService.RedirectConnectingUser(req, res, userExists?.email);
   //   }

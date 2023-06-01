@@ -3,6 +3,7 @@ import React from "react";
 import { ClientEvents } from "@Game/@types";
 import type { SocketParameters, InvitationState } from "@types";
 import { useSocketContext, useAppContext } from "@hooks";
+import { GameButton } from "@Game/GameOverlay/components";
 
 import "./Invitation.css";
 
@@ -26,13 +27,9 @@ export const InvitationModal: React.FC = () => {
           <div>You received an invitation to play from {senderName.current} !</div>
           <div>Do you accept it ?</div>
         </div>
-        <div className="game-button-wrapper">
-          <button className="game-button" onClick={() => sendResponse(true)}>
-            ACCEPT
-          </button>
-          <button className="game-button" onClick={() => sendResponse(false)}>
-            DECLINE
-          </button>
+        <div className="game-button-wrapper-text">
+          <GameButton text="ACCEPT" onClick={() => sendResponse(true)} />
+          <GameButton text="DECLINE" onClick={() => sendResponse(false)} />
         </div>
       </div>
     </div>

@@ -8,10 +8,8 @@ export class UserByIdPipe implements PipeTransform<string, Promise<User>> {
 
   async transform(myUuid: string, metadata: ArgumentMetadata): Promise<User> {
     if (myUuid === undefined || !myUuid) {
-      console.log("🏆 myUuid", myUuid);
       throw new BadRequestException("User ID is required");
     }
-    console.log("🎖️ myUuid", myUuid);
     const user: User | null = await this.prisma.user.findUnique({ where: { id: myUuid } });
 
     if (!user) {

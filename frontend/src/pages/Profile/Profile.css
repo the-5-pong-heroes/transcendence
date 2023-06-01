@@ -17,14 +17,11 @@
   animation-fill-mode: forwards;
 }
 
-.profile-title {
-  margin: 50px;
-}
-
 .signOut-button {
+  width: 10rem;
   color: white;
   border: 1px solid white;
-  margin: 30px;
+  margin: 10px;
   border-radius: 20px;
   padding: 5px 20px;
 }
@@ -52,16 +49,14 @@
   }
 }
 
-.profile-title {
-  font-size: 7vw;
-}
-
-#light .profile-title {
-	color: #6709b9;
-}
-
-#dark .profile-title {
-	color: #c0b4f2;
+.profile-footer {
+  width: 100%;
+  padding: 0;
+  height: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .profile-block {

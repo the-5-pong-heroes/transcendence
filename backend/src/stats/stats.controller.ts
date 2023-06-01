@@ -12,7 +12,6 @@ export class StatsController {
 
   @Get()
   async getStatsData(@CurrentUser() user: User): Promise<UserStats[]> {
-    console.log("🧄", user);
     return this.statsService.getUsersStats(user);
   }
 }

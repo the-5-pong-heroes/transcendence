@@ -24,7 +24,7 @@ export const MatchHistory = ({ history }: { history: GameData[] }) => {
               <span>{match.playerTwoScore}</span>
             </div>
             <div className="column player2">
-              <span>{match.playerTwo.name}</span>
+              <span>{match.playerTwo ? match.playerTwo.name : "Bot"}</span>
             </div>
           </div>
         );

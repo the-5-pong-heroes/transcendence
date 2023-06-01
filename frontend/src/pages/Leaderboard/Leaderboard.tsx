@@ -36,7 +36,6 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
       })
 
       const data = await resp.json();
-      console.log("🧄", data);
       if (data.length > 0) {
         setUsers(data);
       }

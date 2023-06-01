@@ -171,13 +171,13 @@ export class StatsService {
   // ################ Public functions called by a controller #################
 
   async getUserStats(currentUser: User, targetUser: User): Promise<UserStats> {
-    const user = await this.extractUserData(currentUser.id, targetUser.id);
+    const user = await this.extractUserData(currentUser?.id, targetUser?.id);
     const games = await this.getGamesStats();
     return this.addGamesStatsToUser(user, games);
   }
 
   async getUsersStats(currentUser: User): Promise<UserStats[]> {
-    const myUserId = currentUser.id;
+    const myUserId = currentUser?.id;
     const rawData = await this.extractUsersData();
     const games = await this.getGamesStats();
     const users: UserStats[] = rawData
@@ -185,7 +185,7 @@ export class StatsService {
         const { addedBy, ...rest } = userRawData;
         const friends: { name: string; id: string }[] = [];
         addedBy.forEach((friend) => {
-          friends.push({ name: friend.user.name, id: friend.user.id });
+          friends.push({ name: friend.user.name, id: friend.user?.id });
         });
         const otherInfo = {
           rank: 1,
@@ -194,7 +194,7 @@ export class StatsService {
           defeats: 0,
           nbGames: 0,
           level: "",
-          isMe: userRawData.id === myUserId,
+          isMe: userRawData?.id === myUserId,
           isFriend: this.isFriend(friends, myUserId),
         };
         const user = { ...rest, friends, ...otherInfo };
@@ -209,7 +209,7 @@ export class StatsService {
   async getHistory(currentUser: User, targetUser: User): Promise<GameData[]> {
     const matches = await this.extractGamesData();
     return matches.filter((match) => {
-      return targetUser.id === match.playerOne.id || targetUser.id === match.playerTwo?.id;
+      return targetUser?.id === match.playerOne?.id || targetUser?.id === match.playerTwo?.id;
     });
   }
 }

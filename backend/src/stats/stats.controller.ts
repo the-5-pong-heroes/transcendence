@@ -1,15 +1,18 @@
-import { Controller, Get, Redirect, Param } from "@nestjs/common";
+import { Controller, Get, Redirect, Param, UseGuards } from "@nestjs/common";
 import { GameData, StatsService, UserStats } from "./stats.service";
 import { User } from "@prisma/client";
 import { CurrentUser } from "./current-user.decorator";
 import { UserByIdPipe } from "./user-by-id.pipe";
+import { StatsGuard } from "./guard";
 
 @Controller("leaderboard")
+@UseGuards(StatsGuard)
 export class StatsController {
   constructor(private statsService: StatsService) {}
 
   @Get()
   async getStatsData(@CurrentUser() user: User): Promise<UserStats[]> {
+    console.log("🧄", user);
     return this.statsService.getUsersStats(user);
   }
 }
@@ -22,13 +25,14 @@ export class MyProfileController {
   @Redirect("/")
   redirectToProfile(@CurrentUser() user: User) {
     // the "/profile" route redirects the user its profile
-    return { url: `/profile/${user.id}` };
+    return { url: `/profile/${user?.id}` };
   }
 
   @Get("history")
+  @UseGuards(StatsGuard)
   @Redirect("/")
   redirectToHistory(@CurrentUser() user: User) {
-    return { url: `/profile/history/${user.id}` };
+    return { url: `/profile/history/${user?.id}` };
   }
 
   @Get(":uuid")

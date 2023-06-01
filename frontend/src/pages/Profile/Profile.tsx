@@ -10,7 +10,7 @@ import { type UserStats } from "../Leaderboard/Leaderboard";
 
 import { MatchHistory } from "./MatchHistory";
 
-// import * as customFetch from "@/helpers/fetch";
+import * as customFetch from "@/helpers/fetch";
 
 export interface GameData {
   playerOne: { id: string; name: string };
@@ -117,21 +117,65 @@ interface ProfileProps {
 // };
 
 import { useUser } from "@hooks";
-import * as fetch from "@/helpers/fetch";
 
 export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
-  const { user } = useUser();
+  // const { user } = useUser();
   const signOut = useSignOut();
+
+  const { uuid } = useParams();
+  console.log("🏆", uuid);
+
+  const [history, setHistory] = useState([] as GameData[]);
+
+  const [user, setUser] = useState({} as UserStats);
+
+  // const fetchHistory = async () => {
+  //   try {
+  //     const resp = await fetch(`http://localhost:3000/profile/history/${uuid ? uuid : ""}`, {
+  //       mode: "cors",
+  //       credentials: "include",
+  //     });
+  //     const data = await resp.json();
+  //     if (data) setHistory(data);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
+  const fetchUser = async () => {
+    try {
+      const resp = await fetch(`http://localhost:3000/profile/${uuid ? uuid : ""}`, {
+        mode: "cors",
+        credentials: "include",
+      });
+      const data = await resp.json();
+      if (data) {
+        const LEVELS: string[] = ["plant", "walle", "eve", "energy"];
+        data.levelPicture = [Plant, Walle, Eve, Energy][LEVELS.indexOf(data.level)];
+        data.status = data.status === "IN_GAME" ? "PLAYING" : data.status;
+        setUser(data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+    // fetchHistory();
+  }, []);
 
   if (!user) {
     return null;
   }
   const deleteUser = (): void => {
-    fetch.remove<void>(`/users/${user?.id}`).catch((error) => {
+    customFetch.remove<void>(`/users/${user?.id}`).catch((error) => {
       console.error(error);
     });
     signOut();
   };
+
+  console.log("user: ", user);
 
   return (
     <div ref={profileRef} id="Profile" className="Profile">

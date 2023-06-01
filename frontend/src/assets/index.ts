@@ -6,3 +6,5 @@ export { Stars, Light, Cloud, Cloud2, Sun, MoonDayLight } from "./background";
 export { LightTheme, DarkTheme } from "./theme";
 export { WallEPlayingPong } from "./video";
 export { Setting, Leave, Public, Protected, Private, View, Hide, Rocket } from "./chat";
+export { DefaultAvatar } from "./avatar";
+export { Eve, Plant, Energy, Walle } from "./levels";

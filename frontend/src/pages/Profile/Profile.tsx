@@ -71,6 +71,19 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
     }
   }
 
+  async function followFriend() {
+    const url= "http://localhost:3000";
+    try {
+      const response = await fetch(url + '/friendship', {
+        method: 'POST',
+        body: JSON.stringify({ newFriendId: uuid })
+      });
+      const data = await response.json();
+    } catch (err) {
+      console.error('Error adding a friend: ', err);
+    }
+  }
+
   return (
     <div ref={profileRef} id="Profile" className="Profile">
       <div className="profile-block block1">
@@ -82,7 +95,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
           { user.isMe && <Link to={"/Settings"}><img src={Setting}/></Link>}
           { !user.isMe && <Link to={"/Chat"}><img src={ChatLight}/></Link>}
           { !user.isMe && <Link to={"/Game"}><img src={GameLight}/></Link>}
-          { !user.isMe && <img src={addFriend}/>}
+          { !user.isMe && !user.isFriend && <img className="addpointer" src={addFriend} onClick={followFriend}/>}
         </div>
         <UserStatus myClassName="column status" status={user.status} />
       </div>

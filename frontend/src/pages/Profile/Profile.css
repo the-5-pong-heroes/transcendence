@@ -263,3 +263,7 @@
   cursor: pointer;
   color: #011f37;
 }
+
+.addpointer {
+  cursor: pointer;
+}

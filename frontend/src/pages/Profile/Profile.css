@@ -120,6 +120,9 @@
   text-shadow: darkblue 2px 0 10px;
 }
 
+.avatar {
+  position: relative;
+}
 
 .avatar>img {
   width: 200px;

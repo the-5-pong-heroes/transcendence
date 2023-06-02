@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import "./Settings.css";
 import { DefaultAvatar, Leave } from "@/assets";
 import { Unfollow } from "./Unfollow";
-import Toggle2FA from "./Toggle2FA";
+import { LoadingIcon } from "@/components/loading/loading";
 
 
 interface SettingsProps {

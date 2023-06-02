@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Post, Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { FriendshipService } from "./friendship.service";
 
@@ -10,5 +10,10 @@ export class FriendshipController {
   @Post()
   create(@Body() data: any, @Req() req: any) {
     this.friendshipService.create(data, req.user);
+  }
+
+  @Delete()
+  delete(@Body() data: any, @Req() req: any) {
+    this.friendshipService.delete(data, req.user);
   }
 }

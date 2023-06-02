@@ -42,6 +42,16 @@ export class UsersService {
             blockedUserId: true,
           },
         },
+        friendships: {
+          select: {
+            addedBy: true,
+          },
+        },
+        addedBy: {
+          select: {
+            userId: true,
+          },
+        },
       },
     });
   }

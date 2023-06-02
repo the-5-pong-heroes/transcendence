@@ -5,4 +5,7 @@ export interface IUser {
   blocked: {
     blockedUserId: string;
   }[];
+  addedBy: {
+    userId: string;
+  }[];
 }

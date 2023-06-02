@@ -28,7 +28,6 @@ export const SearchBar: React.FC = () => {
     if (!response.ok) return console.log(response);
     const data = await response.json();
     setPreview(data);
-    console.log(data);
   }
 
   const handlePreviewClick = (channel: ISearch) => {

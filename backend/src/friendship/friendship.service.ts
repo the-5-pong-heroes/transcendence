@@ -9,7 +9,16 @@ export class FriendshipService {
     return this.prismaService.friendship.create({
       data: {
         userId: data.newFriendId,
-        addedById: user.id,
+        addedById: user.userId,
+      },
+    });
+  }
+
+  async delete(data: any, user: any) {
+    return this.prismaService.friendship.deleteMany({
+      where: {
+        userId: data.friendId,
+        addedById: user.userId,
       },
     });
   }

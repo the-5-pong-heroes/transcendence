@@ -9,7 +9,7 @@ interface ProviderParameters {
 }
 
 export const UserProvider: React.FC<ProviderParameters> = ({ children }) => {
-  const [user, setUser] = useState<IUser>({ id: "", name: "", blocked: [] });
+  const [user, setUser] = useState<IUser>({ id: "", name: "", blocked: [], addedBy: [] });
   const navigate = useNavigate();
 
   

@@ -15,7 +15,7 @@ export const Unfollow = ({friends, handleUnfollow}: {friends: { id: string; name
   }
 
   async function removeFriend(uuid: string) {
-    const url= "http://localhost:3000/";
+    const url= "http://localhost:3000";
     try {
       handleUnfollow(uuid);
       const response = await fetch(url + '/friendship', {

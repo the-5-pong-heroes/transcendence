@@ -5,7 +5,6 @@
   flex-flow: column nowrap;
   flex-shrink: 0;
   overflow: auto;
-  border-right: 1px solid black;
 
   &::-webkit-scrollbar {
     display: none;
@@ -19,7 +18,7 @@
     flex-flow: column nowrap;
     justify-content: space-between;
     padding: 10px;
-    border-bottom: 1px solid black;
+    border-radius: 8px;
 
     .Top {
       display: flex;

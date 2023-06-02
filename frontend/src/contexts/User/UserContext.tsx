@@ -5,4 +5,4 @@ export type UserContextType = {
   user: IUser,
 }
 
-export const UserContext = React.createContext<UserContextType>({ user: { id: "", name: "" }});
+export const UserContext = React.createContext<UserContextType>({ user: { id: "", name: "", blocked: [] }});

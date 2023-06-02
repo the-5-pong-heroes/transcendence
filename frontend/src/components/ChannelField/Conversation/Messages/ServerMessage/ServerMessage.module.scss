@@ -1,0 +1,20 @@
+.ServerMessage {
+  padding: 7px 12px;
+  max-width: 80%;
+  flex-shrink: 0;
+  display: flex;
+  flex-flow: column nowrap;
+  word-wrap: break-word;
+  white-space: pre-line;
+  align-self: center;
+  border-radius: 7px;
+  text-align: center;
+}
+
+.ServerMessageLight {
+  background-color: rgba(240, 240, 240, .9);
+}
+
+.ServerMessageDark {
+  background-color: rgba(50, 50, 50, .9);
+}

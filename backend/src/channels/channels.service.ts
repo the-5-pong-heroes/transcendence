@@ -1,12 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { CreateChannelDto } from "./dto/create-channel.dto";
 import { PrismaService } from "../database/prisma.service";
+import { UsersService } from "../users_paul/users.service";
 import { Channel, ChannelUser } from "@prisma/client";
 import { UpdateChannelDto } from "./dto/update-channel.dto";
 
 @Injectable()
 export class ChannelsService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService, private readonly usersService: UsersService) {}
 
   async create(createChannelDto: CreateChannelDto): Promise<Channel> {
     const { users, ...data } = createChannelDto;
@@ -25,9 +26,11 @@ export class ChannelsService {
     });
   }
 
-  async addUser(payload: any): Promise<void> {
-    await this.prismaService.channelUser.create({
-      data: { ...payload },
+  async createDirect(data: any): Promise<Channel> {
+    return this.prismaService.channel.create({
+      data: {
+        type: data.type,
+      },
     });
   }
 
@@ -42,6 +45,13 @@ export class ChannelsService {
       },
       include: {
         messages: {
+          include: {
+            sender: {
+              select: {
+                name: true,
+              },
+            },
+          },
           orderBy: {
             createdAt: "desc",
           },
@@ -84,6 +94,10 @@ export class ChannelsService {
         channel.password = null;
         channel.messages = [];
       }
+      if (!channel.name) {
+        const newChannelName = channel.users.find((user) => user.user.id !== userId)?.user.name;
+        if (newChannelName) channel.name = newChannelName;
+      }
       return channel;
     });
     return channels;
@@ -111,8 +125,8 @@ export class ChannelsService {
     });
   }
 
-  async searchAll(payload: any): Promise<Channel[]> {
-    const channels = await this.prismaService.channel.findMany({
+  async searchFirstMatch(payload: any): Promise<any[]> {
+    return this.prismaService.channel.findMany({
       where: {
         name: {
           startsWith: payload.channelName,
@@ -130,9 +144,16 @@ export class ChannelsService {
       },
       orderBy: { name: "asc" },
       take: 5,
+      select: {
+        id: true,
+        name: true,
+        type: true,
+      },
     });
-    if (channels.length >= 5) return channels;
-    const endChannels = await this.prismaService.channel.findMany({
+  }
+
+  async searchEndMatch(payload: any, channels: any[], size: number): Promise<any[]> {
+    return this.prismaService.channel.findMany({
       where: {
         name: {
           contains: payload.channelName,
@@ -158,9 +179,28 @@ export class ChannelsService {
         },
       },
       orderBy: { name: "asc" },
-      take: 5 - channels.length,
+      take: size,
+      select: {
+        id: true,
+        name: true,
+        type: true,
+      },
     });
-    return [...channels, ...endChannels];
+  }
+
+  async searchAll(payload: any): Promise<any[]> {
+    let channels = [];
+    const firstChannels = await this.searchFirstMatch(payload);
+    channels = firstChannels;
+    if (channels.length >= 5) return channels;
+    const users = await this.usersService.searchFirstMatch(payload, 5 - channels.length);
+    channels = [...channels, ...users];
+    if (channels.length >= 5) return channels;
+    const endChannels = await this.searchEndMatch(payload, firstChannels, 5 - channels.length);
+    channels = [...channels, ...endChannels];
+    if (channels.length >= 5) return channels;
+    const endUsers = await this.usersService.searchEndMatch(payload, users, 5 - channels.length);
+    return [...channels, ...endUsers];
   }
 
   async update(updateChannelDto: UpdateChannelDto) {

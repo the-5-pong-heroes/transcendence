@@ -12,6 +12,8 @@ import { AuthModule } from "./auth_paul/auth.module"; // TEMPORAIRE
 import { ChannelsModule } from "./channels/channels.module";
 import { PrismaModule } from "./database/prisma.module";
 import { ScheduleModule } from "@nestjs/schedule";
+import { FriendshipModule } from "./friendship/friendship.module";
+import { BlockedModule } from "./blocked/blocked.module";
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { ScheduleModule } from "@nestjs/schedule";
     UsersModule, // TEMPORAIRE
     GameApiModule,
     ChannelsModule,
+    FriendshipModule,
+    BlockedModule,
     PrismaModule,
     ScheduleModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true }),

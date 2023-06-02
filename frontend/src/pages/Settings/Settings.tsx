@@ -90,6 +90,14 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
     }
   }
 
+  function handleUnfollow(friendId: string) {
+    const updatedFriends = settings.friends.filter(friend => friend.id !== friendId);
+    setSettings(prevSettings => ({
+      ...prevSettings,
+      friends: updatedFriends
+    }));
+  };
+
   function logout() {
     // TODO
   }
@@ -124,7 +132,7 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
         <div className="settings-col update-avatar">
             Change your avatar:
           <label className="custom-file-upload">
-          <input type="file" accept=".jpg, .jpeg, .png" onChange={handleFileChange} /> Select an image
+            <input type="file" accept=".jpg, .jpeg, .png" onChange={handleFileChange} /> Select an image
           </label>
         </div>
         <div className="settings-col update-2fa">
@@ -132,7 +140,7 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
         </div>
       </div>
       <div className="settings-block block2">
-        <Unfollow settings={settings} />
+        <Unfollow friends={settings.friends} handleUnfollow={handleUnfollow} />
       </div>
     </div>
   );

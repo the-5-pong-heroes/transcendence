@@ -202,8 +202,9 @@
   font-size: 1.5rem;
 }
 
-.noMatchYet {
+.noMatchYet, .noFriendYet {
   text-align: center;
+  width: 100%;
   font-weight: 500;
 }
 

@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom"
 import { UserStats } from "../Leaderboard/Leaderboard"
+import "./Profile.css";
 
 export const Friends = ({user} :{user: UserStats} ) => {
   if (!user || !user.friends || user.friends.length == 0) {
     return (
-      <div className="noMatchYet">
+      <div className="noFriendYet">
         <span>No friend yet! 🤷‍♀️</span>
       </div>
     )

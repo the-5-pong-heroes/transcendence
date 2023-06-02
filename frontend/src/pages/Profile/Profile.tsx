@@ -60,7 +60,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
   useEffect(() => {
     fetchUser();
     fetchHistory();
-  }, []);
+  }, [uuid]);
 
   function switchTab(event: any) {
     const tabText: string = event.target.innerText;

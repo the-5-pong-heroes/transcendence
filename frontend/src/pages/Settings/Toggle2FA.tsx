@@ -1,46 +1,19 @@
-import styled from "styled-components";
-import { UserSettings } from "./Settings";
-import { useState, ChangeEvent } from "react";
+import { useState } from 'react'
+import './Toggle2FA.css'
 
+export const Toggle2FA = ({ toggled, onClick }) => {
+  const [isToggled, toggle] = useState(toggled);
 
-
-const StyledLabel = styled.label<{ checked: boolean }>`
-  cursor: pointer;
-  text-indent: -9999wpx;
-  width: 250px;
-  height: 125px;
-  background: ${({ checked }) => (checked ? "#34c759" :  "#adadad")};
-  display: block;
-  border-radius: 100px;
-  position: relative;
-
-  &:after {
-  content: "";
-  position: absolute;
-  left: ${({ checked }) => (checked ? "14px" : "calc(55% - 5px)")};
-  top: 12px;
-  width: 100px;
-  height: 100px;
-  background: #fff;
-  border-radius: 90px;
-  transition: 0.3s;
-}`;
-
-export default function Toggle2FA({settings}: {settings: UserSettings}){
-
-  const [switchState, setSwitchState] = useState(true);
-
-  function handleOnChange(e: ChangeEvent<HTMLInputElement>) {
-    setSwitchState(!switchState);
+  const callback = () => {
+    toggle(!isToggled);
+    onClick(!isToggled);
   }
 
   return (
-    <StyledLabel htmlFor="checkbox" checked={switchState}>
-      <input
-        id="checkbox"
-        type="checkbox"
-        checked={switchState}
-        onChange={handleOnChange} />
-    </StyledLabel>
-  );
+    <label className="toggle-btn">
+        <input type="checkbox" defaultChecked={isToggled} onClick={callback} />
+        <span />
+        <strong>2FA</strong>
+    </label>
+  )
 }

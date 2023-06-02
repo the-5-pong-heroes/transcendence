@@ -80,8 +80,8 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
         <div className="column username">
           {user.name}
           { user.isMe && <Link to={"/Settings"}><img src={Setting}/></Link>}
-          { !user.isMe && <img src={ChatLight}/>}
-          { !user.isMe && <img src={GameLight}/>}
+          { !user.isMe && <Link to={"/Chat"}><img src={ChatLight}/></Link>}
+          { !user.isMe && <Link to={"/Game"}><img src={GameLight}/></Link>}
           { !user.isMe && <img src={addFriend}/>}
         </div>
         <UserStatus myClassName="column status" status={user.status} />

@@ -46,30 +46,30 @@
   margin-left: calc(-0.5 * var(--bs-gutter-x));
   }
 
-
-
 .update-username input {
   background-color: #ffffff30;
-  height: 2rem;
   margin-top: 1rem;
   border-radius: 20px;
-  padding: 15px;
+  padding: 5px;
   text-align: center;
 }
 
-.update-avatar button {
-  border-radius: 1rem;
-  margin-top: 1rem;
-  padding-left: 15px;
-  padding-right: 15px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  background: rgba(42, 45, 112, 0.5);
-  border: 1px solid darkblue;
+.update-avatar input {
+  display: none;
 }
 
-.update-avatar button:hover {
-  background-color: darkblue;
+.custom-file-upload {
+  height: 2rem;
+  margin-top: 1rem;
+  display: inline-block;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #ffffff30;
+  border-radius: 20px;
 }
 
 .friends-list .cross {

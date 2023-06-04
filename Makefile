@@ -9,7 +9,7 @@ else
   DOCKER_COMPOSE	= docker-compose --env-file ${DOCKER_ENV_FILE}
 endif
 
-DATABASE_VOLUME		= ft_transcendence_postgresql_data
+DATABASE_VOLUME		= $(shell basename "$(CURDIR)_postgresql_data")
 
 RM					= rm -rf
 
@@ -33,6 +33,9 @@ list:
 
 stop:
 	${SUDO} $(DOCKER_COMPOSE) stop
+
+print:
+	@echo ${DATABASE_VOLUME}
 
 down:
 	${SUDO} $(DOCKER_COMPOSE) down

@@ -1,5 +1,6 @@
 import {PrismaService} from '../database/prisma.service';
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable, Req} from '@nestjs/common';
+import { Request } from 'express';
 
 
 @Injectable({})
@@ -18,6 +19,23 @@ export class UserService {
 				where: {
 					auth: {
 						email: email,
+					},
+				},
+				include: {
+					auth: true,
+				  },
+			});
+			return user;
+		} catch (error) {}
+	}
+
+	async getUsername(@Req() req: Request) {
+		const accessToken = req.cookies.token;
+		try {
+			const user = await this.prisma.user.findFirst({
+				where: {
+					auth: {
+						accessToken: accessToken,
 					},
 				},
 				include: {

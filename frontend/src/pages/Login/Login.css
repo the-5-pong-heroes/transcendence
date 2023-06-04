@@ -1,9 +1,28 @@
 .Login {
-	width: 100%;
-	height: calc(100vh - 80px);
-	display: flex;
-  z-index: 10;
-  color: black;
+	height: 100vh;
+	width: 100vw;
+  z-index: 7;
+  color: #fff;
+  flex-flow: column nowrap;
+  font-size: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.Login h1 {
+  font-size: 7vw;
+}
+
+#light .Login h1 {
+  color: #070c76;
+}
+
+#dark .Login h1 {
+  color: #ffffff;
 }
 
 .form {
@@ -52,3 +71,75 @@
 	font-size: 15px;
 	text-align: center;
 }
+
+.walle-button {
+	background-color: #E67E22; /* Couleur de fond */
+	color: white; /* Couleur du texte */
+	border: none; /* Suppression de la bordure */
+	border-radius: 4px; /* Arrondi des coins */
+	padding: 10px 20px; /* Espacement interne */
+	font-size: 16px; /* Taille de police */
+	font-weight: bold; /* Gras */
+	cursor: pointer; /* Curseur en forme de main */
+	transition: background-color 0.3s; /* Transition pour l'effet de survol */
+  }
+  
+  .walle-button:hover {
+	background-color: #FFA726; /* Couleur de fond au survol */
+  }
+  
+  .walle-button:active {
+	background-color: #D35400; /* Couleur de fond lors du clic */
+  }
+
+  .column {
+	flex: 1 0 0%;
+  }
+
+  .column-details span:first-child {
+	font-style: italic;
+	margin-right: 4px;
+  }
+  
+  .column-details span:not(:first-child) {
+	font-size: 1.5rem;
+  }
+  .on-off {
+	position: relative;
+	width: 80px;
+	height: 30px;
+	border-radius: 15px;
+	background-color: #ccc;
+	cursor: pointer;
+	overflow: hidden;
+  }
+  
+  .on-off .handle {
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 26px;
+	height: 26px;
+	border-radius: 50%;
+	background-color: #fff;
+	transition: transform 0.3s ease-in-out;
+  }
+  
+  .on-off.on .handle {
+	transform: translateX(50px);
+	background-color: orange; /* Couleur de fond lorsque le bouton est en position "on" */
+  }
+  
+  .on-off.off .handle {
+	background-color: #ccc; /* Couleur de fond par défaut */
+  }
+  
+  .on-off .status {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 10px;
+	color: #fff;
+  }
+  

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
@@ -9,18 +9,19 @@ interface LoginProps {
 export const Login: React.FC<LoginProps> = ({ logRef }) => {
   const navigate = useNavigate();
   const twoFACode = React.useState('');
-  const isActivated = React.useState(false);
+  const [isActivated, setIsActivated] = React.useState(false);
 
-  // const handleAuth42 = () => {
-  //   let url = `${import.meta.env.VITE_API42_URI}`;
-  //   window.open(url, "_self");
-  //   };
+  const handleAuth42 = () => {
+    let url = `${import.meta.env.VITE_API42_URI}`;
+    window.open(url, "_self");
+    };
 
   // const handleAuthGoogle = () => {
   //   navigate("/auth/google");
   // };
 
   const handle2FA = async () => {
+    setIsActivated(prevState => !prevState);
     try {
       const data = await handle2FAfunction();
       console.log(data); 
@@ -79,20 +80,26 @@ export const Login: React.FC<LoginProps> = ({ logRef }) => {
     }
   }
 
-
-//        <button className="button" onClick={handleAuth42}>Connect with 42</button>
   return (
     <div ref={logRef} id="Login" className="Login">
       <h1>Login</h1>
-      <button onClick={handle2FA}>2FA</button>
+      <div className="column column-details">
+      <button className={`walle-button on-off ${isActivated ? 'on' : 'off'}`} onClick={handle2FA}>
+          <div className="handle"></div>
+          <span className="status">{isActivated ? 'ON' : 'OFF'}</span>
+        </button>
+      </div>
+      <div className="column column-details">
+      <button className="walle-button" onClick={handleAuth42}>
+        Connect with 42
+      </button>
+      </div>
       <div id="popup" style={{ display: "none" }}>
         <h3>Entrez le code de vérification :</h3>
-        <input
-          type="text"
-          id="verificationCode"
-          style={{ color: "black" }}
-        />
-        <button onClick={submitVerificationCode}>Valider</button>
+        <input type="text" id="verificationCode" style={{ color: "black" }} />
+        <button className="walle-button" onClick={submitVerificationCode}>
+          Valider
+        </button>
       </div>
     </div>
   );

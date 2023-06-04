@@ -38,7 +38,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   async handleDisconnect(client: AuthenticatedSocket) {
-    console.log(`[Client disconnected: ${client.id}]`);
+    //console.log(`[Client disconnected: ${client.id}]`);
     this.lobbyManager.terminateSocket(client);
   }
 

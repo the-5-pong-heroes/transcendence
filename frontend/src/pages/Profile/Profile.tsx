@@ -28,34 +28,38 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
   const [user, setUser] = useState({} as UserStats);
 
 
-  const fetchHistory = async () => {
-    try {
-      const resp = await fetch(`http://localhost:3000/profile/history/${uuid ? uuid : ""}`);
-      const data = await resp.json();
-      if (data) setHistory(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  // const fetchHistory = async () => {
+  //   try {
+  //     const resp = await fetch(`http://localhost:3333/profile/history/${uuid ? uuid : ""}`);
+  //     const data = await resp.json();
+  //     if (data) setHistory(data);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   const fetchUser = async () => {
-    try {
-      const resp = await fetch(`http://localhost:3000/profile/${uuid ? uuid : ""}`);
-      const data = await resp.json();
+ //   try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}` + '/users/me/username/get', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ user : user })
+      });
+      const data = await response.json();
       if (data) {
         const LEVELS: string[] = ["plant", "walle", "eve", "energy"];
         data.levelPicture = [Plant, Walle, Eve, Energy][LEVELS.indexOf(data.level)];
         data.status = (data.status === "IN_GAME" ? "PLAYING" : data.status);
         setUser(data)
       }
-    } catch (err) {
-      console.error(err);
-    }
+    // } catch (err) {
+    //   console.error(err);
+    // }
   }
 
   useEffect(() => {
     fetchUser();
-    fetchHistory();
+  //  fetchHistory();
   }, []);
 
   return (

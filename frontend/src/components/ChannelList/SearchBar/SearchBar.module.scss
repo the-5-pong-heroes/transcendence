@@ -19,10 +19,6 @@
     display: flex;
     flex-flow: column nowrap;
     border-radius: 13px;
-<<<<<<< HEAD
-    background-color: inherit;
-=======
->>>>>>> master
     overflow-x: hidden;
     overflow-y: auto;
 
@@ -32,9 +28,6 @@
 
       &:hover {
         cursor: pointer;
-<<<<<<< HEAD
-        background-color: rgba(212, 212, 212, 0.2);
-=======
       }
     }
   }
@@ -59,7 +52,6 @@
     .PreviewItem {
       &:hover {
         background-color: rgba(55, 55, 55, 0.6);
->>>>>>> master
       }
     }
   }

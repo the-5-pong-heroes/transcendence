@@ -11,17 +11,6 @@
   padding: 10px;
   overflow: hidden;
 
-<<<<<<< HEAD
-  &:hover {
-    background-color: rgba(212, 212, 212, 0.2);
-  }
-
-  .Name {
-    font-weight: bold;
-  }
-
-  .Preview {
-=======
   .Name {
     font-weight: bold;
   }
@@ -44,6 +33,5 @@
 
   &.ActiveItem {
     background-color: rgba(0, 0, 0, .2);
->>>>>>> master
   }
 }

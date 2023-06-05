@@ -3,12 +3,7 @@ import { TextureLoader, Vector3 } from "three";
 import { Vec3 } from "cannon-es";
 import { Trail } from "@react-three/drei";
 import { useLoader } from "@react-three/fiber";
-<<<<<<< HEAD
 import { BALL_RADIUS } from "@shared/pongCore/constants";
-=======
-
-import { BALL_RADIUS } from "../../../pongCore/constants";
->>>>>>> master
 
 interface BallProps {
   ballRef: React.RefObject<THREE.Mesh>;

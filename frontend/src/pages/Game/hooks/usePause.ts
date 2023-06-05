@@ -1,13 +1,7 @@
 import { useCallback, useRef } from "react";
 
-<<<<<<< HEAD
 import { type PlayState } from "../@types";
 import type { GameOverlayRef } from "../GameOverlay";
-=======
-import { type PlayState, ClientEvents } from "../@types";
-import type { GameOverlayRef } from "../GameOverlay";
-import { SocketContext } from "../../../contexts";
->>>>>>> master
 
 import { useKeyboard } from "./useKeyboard";
 
@@ -25,15 +19,6 @@ export const getInitialPlayState = (): PlayState => ({
 });
 
 export const usePause = ({ overlayRef }: PauseParameters): PauseValues => {
-<<<<<<< HEAD
-=======
-  const socketContext = useContext(SocketContext);
-  if (socketContext === undefined) {
-    throw new Error("Undefined SocketContext");
-  }
-  const { socketRef } = socketContext;
-
->>>>>>> master
   const playRef = useRef<PlayState>(getInitialPlayState());
 
   const stopOrPlay = useCallback(() => {
@@ -43,15 +28,6 @@ export const usePause = ({ overlayRef }: PauseParameters): PauseValues => {
   const quit = useCallback(() => {
     overlayRef?.current?.showQuitModal();
   }, [overlayRef]);
-
-  const quit = useCallback(() => {
-    if (playRef.current.started) {
-      if (!playRef.current.paused) {
-        socketRef.current?.emit(ClientEvents.GamePause);
-      }
-      overlayRef?.current?.quitGame();
-    }
-  }, [socketRef, overlayRef]);
 
   useKeyboard({
     targetKey: "Space",

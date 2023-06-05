@@ -1,13 +1,8 @@
 import React from "react";
 import "./PongMenu.css";
 
-<<<<<<< HEAD
 import { type GameContextParameters } from "../@types";
 import { useGameContext } from "../hooks";
-=======
-import type { GameMode } from "../@types";
-import { GameContext } from "../context";
->>>>>>> master
 
 import { GameModeButton, ListOfGames } from "./components";
 

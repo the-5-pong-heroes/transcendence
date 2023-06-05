@@ -1,8 +1,6 @@
 export interface IUser {
   id: string;
   name: string;
-<<<<<<< HEAD
-=======
   avatar?: string;
   blocked: {
     blockedUserId: string;
@@ -10,5 +8,4 @@ export interface IUser {
   addedBy: {
     userId: string;
   }[];
->>>>>>> master
 }

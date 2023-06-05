@@ -1,9 +1,4 @@
 /* eslint-disable no-magic-numbers */
-<<<<<<< HEAD
-=======
-
-import { Vec3 } from "cannon-es";
->>>>>>> master
 
 import { Vec3 } from "cannon-es";
 import {

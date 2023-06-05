@@ -1,35 +1,15 @@
-<<<<<<< HEAD
-import React, { useEffect, useState } from "react";
-
-import { ChannelType } from "./ChannelType";
-import { ChannelUser } from "./ChannelUser";
-import { ChannelBan } from "./ChannelBan";
-import styles from "./ChannelOptions.module.scss";
-
-import { type IChannel } from "@/interfaces";
-
-interface IChannelOptionsProps {
-  activeChannel: IChannel;
-}
-=======
 import React, { useContext, useEffect, useState } from 'react';
 import { ChannelContext } from '@/contexts';
 import { ChannelType } from "./ChannelType";
 import { ChannelUser } from "./ChannelUser";
 import { ChannelBan } from "./ChannelBan";
 import styles from './ChannelOptions.module.scss';
->>>>>>> master
 
 interface IReturnMessage {
   error: boolean;
   message: string;
 }
 
-<<<<<<< HEAD
-export const ChannelOptions: React.FC<IChannelOptionsProps> = ({ activeChannel }) => {
-  const [returnMessage, setReturnMessage] = useState<IReturnMessage>({ error: true, message: "" });
-
-=======
 export const ChannelOptions: React.FC = () => {
   const [returnMessage, setReturnMessage] = useState<IReturnMessage>({ error: true, message: "" });
 
@@ -46,21 +26,11 @@ export const ChannelOptions: React.FC = () => {
     container.style.overflow = '';
   }
 
->>>>>>> master
   useEffect(() => {
     setReturnMessage((prev) => ({ ...prev, message: "" }));
   }, [activeChannel]);
 
   return (
-<<<<<<< HEAD
-    <div className={styles.ChannelOptions}>
-      <ChannelType activeChannel={activeChannel} setReturnMessage={setReturnMessage} />
-      <ChannelUser users={activeChannel.users} />
-      <ChannelBan activeChannel={activeChannel} banned={activeChannel.banned} />
-    </div>
-  );
-};
-=======
     <div
       onMouseEnter={stopOutterScroll}
       onMouseLeave={enableOutterScroll}
@@ -72,4 +42,3 @@ export const ChannelOptions: React.FC = () => {
     </div>
   );
 }
->>>>>>> master

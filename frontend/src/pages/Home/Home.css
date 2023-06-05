@@ -18,11 +18,7 @@
 }
 
 #light .home {
-<<<<<<< HEAD
   color: #000000;
-=======
-  color: #070c76;
->>>>>>> master
 }
 
 #dark .home h1 {
@@ -34,7 +30,6 @@
   align-items: center;
   justify-content: center;
   height: 10vh;
-<<<<<<< HEAD
   width: 60vw;
   font-size: 1.5rem;
   margin: 30px;
@@ -108,15 +103,4 @@
 
 .game-link:active {
   transform: scale(0.96);
-=======
-  width: 50vw;
-  font-size: 1.5rem;
-  margin: 30px;
-}
-
-.game-link:hover,
-.game-link:focus {
-  color: hsl(271, 73%, 31%);
-  font-weight: bold;
->>>>>>> master
 }

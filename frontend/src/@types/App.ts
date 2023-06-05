@@ -7,6 +7,8 @@ export interface PageRefs {
   chatRef: React.RefObject<HTMLDivElement>;
   profileRef: React.RefObject<HTMLDivElement>;
   notFoundRef: React.RefObject<HTMLDivElement>;
+  settingsRef: React.RefObject<HTMLDivElement>;
+  myProfileRef: React.RefObject<HTMLDivElement>;
 }
 
 export interface GameState {

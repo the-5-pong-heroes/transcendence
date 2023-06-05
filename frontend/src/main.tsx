@@ -2,12 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { ParallaxProvider } from "react-scroll-parallax";
-<<<<<<< HEAD
 import { ErrorBoundary } from "react-error-boundary";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-=======
->>>>>>> master
 
 import { AppProvider } from "./contexts";
 import App from "./App";
@@ -17,7 +14,6 @@ const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-<<<<<<< HEAD
     <ErrorBoundary fallback={<div className="error-fallback">Something went wrong</div>}>
       <BrowserRouter>
         <QueryClientProvider client={queryClient}>
@@ -30,15 +26,5 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         </QueryClientProvider>
       </BrowserRouter>
     </ErrorBoundary>
-=======
-    <BrowserRouter>
-      <AppProvider>
-        <ParallaxProvider scrollAxis="horizontal">
-          {/* <ParallaxProvider scrollAxis="horizontal" isDisabled> */}
-          <App />
-        </ParallaxProvider>
-      </AppProvider>
-    </BrowserRouter>
->>>>>>> master
   </React.StrictMode>
 );

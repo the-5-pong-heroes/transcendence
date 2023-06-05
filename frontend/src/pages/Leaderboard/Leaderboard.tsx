@@ -30,15 +30,11 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
 
   const fetchUsers = async () => {
     try {
-<<<<<<< HEAD
       const resp = await fetch("http://localhost:3000/leaderboard", {
         mode: "cors",
         credentials: "include",
       })
 
-=======
-      const resp = await fetch("http://localhost:3000/leaderboard");
->>>>>>> master
       const data = await resp.json();
       if (data.length > 0) {
         setUsers(data);

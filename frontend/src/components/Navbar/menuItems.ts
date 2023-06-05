@@ -7,11 +7,7 @@ import {
   GameDark,
   LeaderboardLight,
   LeaderboardDark,
-<<<<<<< HEAD
 } from "@assets";
-=======
-} from "../../assets";
->>>>>>> master
 
 export interface MenuRefs {
   gameRef: React.RefObject<HTMLDivElement>;

@@ -6,11 +6,7 @@ import type { ServerPong } from "./ServerPong";
 import type { PlayState, LobbyState } from "./states";
 
 export type GameMode = "2D" | "3D";
-<<<<<<< HEAD
 export type GameResult = "Winner" | "Loser" | "None";
-=======
-export type GameResult = "Winner" | "Loser" | "Unfinished";
->>>>>>> master
 export type PaddleSide = "left" | "right";
 export type PaddleMove = "up" | "down" | "stop";
 

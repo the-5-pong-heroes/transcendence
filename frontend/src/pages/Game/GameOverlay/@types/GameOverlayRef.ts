@@ -3,7 +3,6 @@ import type { GameResult, LobbyMode, GameMode } from "@Game/@types";
 export interface GameOverlayRef {
   showLoader: (value: boolean) => void;
   showCountdown: () => void;
-<<<<<<< HEAD
   setResult: (result: GameResult, winner: string) => void;
   pauseGame: () => void;
   setPause: (value: boolean) => void;
@@ -12,8 +11,4 @@ export interface GameOverlayRef {
   initGame: () => void;
   startGame: (mode: LobbyMode, gameMode: GameMode) => void;
   setGamePlayers: (user1: string, user2: string) => void;
-=======
-  setResult: (result: GameResult) => void;
-  quitGame: () => boolean;
->>>>>>> master
 }

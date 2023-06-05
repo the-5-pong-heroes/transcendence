@@ -23,7 +23,6 @@ export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode,
 
   const handleSendEvent = (lobbyMode: LobbyMode): void => {
     setLobbyMode(lobbyMode);
-<<<<<<< HEAD
     socket?.emit(ClientEvents.LobbyJoin, { lobbyMode: lobbyMode, gameMode: gameMode });
   };
 
@@ -45,17 +44,6 @@ export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode,
         />
         {/* <button
           className="lobby-btn btn-1"
-=======
-    // socketRef.current?.emit(ClientEvents.LobbyJoin, { lobbyMode: true, gameMode: 3 });
-    socketRef.current?.emit(ClientEvents.LobbyJoin, { lobbyMode: lobbyMode, gameMode: gameMode });
-  };
-
-  return (
-    <div className="game-modal lobby">
-      <div className="game-button-wrapper">
-        <button
-          className="game-button"
->>>>>>> master
           onClick={() => {
             handleSendEvent("solo");
           }}>
@@ -65,11 +53,7 @@ export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode,
           ONE PLAYER
         </button>
         <button
-<<<<<<< HEAD
           className="lobby-btn btn-1"
-=======
-          className="game-button"
->>>>>>> master
           onClick={() => {
             handleSendEvent("duo");
           }}>

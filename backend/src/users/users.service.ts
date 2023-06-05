@@ -45,11 +45,38 @@ export class UsersService {
     return result;
   }
 
-  async findOneById(id: string | undefined): Promise<User | null> {
-    if (!id) {
-      return null;
-    }
-    return this.prisma.user.findUnique({ where: { id } });
+  // async findOneById(id: string | undefined): Promise<User | null> {
+  //   if (!id) {
+  //     return null;
+  //   }
+  //   return this.prisma.user.findUnique({ where: { id } });
+  // }
+
+  async findOneById(id: string | undefined): Promise<any | null> {
+    if (!id) return null;
+    return this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        avatar: true,
+        blocked: {
+          select: {
+            blockedUserId: true,
+          },
+        },
+        friendships: {
+          select: {
+            addedBy: true,
+          },
+        },
+        addedBy: {
+          select: {
+            userId: true,
+          },
+        },
+      },
+    });
   }
 
   async findUserByName(name: string): Promise<User | null> {
@@ -104,15 +131,104 @@ export class UsersService {
     return null;
   }
 
-  async remove(id: string): Promise<User> {
-    try {
-      const result: User = await this.prisma.user.delete({
-        where: { id: id },
-      });
-      console.log("💥 User removed");
-      return result;
-    } catch (e) {
-      throw new HttpException("Failed to remove user", HttpStatus.NOT_FOUND, { cause: e as Error });
-    }
+  async searchFirstMatch(payload: any, size: number): Promise<any[]> {
+    return this.prisma.user.findMany({
+      where: {
+        name: {
+          startsWith: payload.channelName,
+          mode: "insensitive",
+        },
+        NOT: {
+          OR: [
+            {
+              id: payload.userId,
+            },
+            {
+              channelUsers: {
+                some: {
+                  channel: {
+                    type: "DIRECT",
+                    users: {
+                      some: {
+                        userId: payload.userId,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          ],
+        },
+      },
+      orderBy: { name: "asc" },
+      take: size,
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+  }
+
+  async searchEndMatch(payload: any, channels: any[], size: number): Promise<any[]> {
+    return this.prisma.user.findMany({
+      where: {
+        name: {
+          contains: payload.channelName,
+          mode: "insensitive",
+        },
+        NOT: {
+          OR: [
+            {
+              id: payload.userId,
+            },
+            {
+              id: {
+                in: channels.map((channel) => channel.id),
+              },
+            },
+            {
+              channelUsers: {
+                some: {
+                  channel: {
+                    type: "DIRECT",
+                    users: {
+                      some: {
+                        userId: payload.userId,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          ],
+        },
+      },
+      orderBy: { name: "asc" },
+      take: size,
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+  }
+
+  // async remove(id: string): Promise<User> {
+  //   try {
+  //     const result: User = await this.prisma.user.delete({
+  //       where: { id: id },
+  //     });
+  //     console.log("💥 User removed");
+  //     return result;
+  //   } catch (e) {
+  //     throw new HttpException("Failed to remove user", HttpStatus.NOT_FOUND, { cause: e as Error });
+  //   }
+  // }
+  async remove(id: string): Promise<void> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) await this.prisma.user.delete({ where: { name: id } });
+    else await this.prisma.user.delete({ where: { id } });
   }
 }

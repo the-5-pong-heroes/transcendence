@@ -5,12 +5,7 @@ import { ClientEvents } from "../@types";
 import { useGameContext } from "../hooks";
 
 import type { GameOverlayRef } from "./@types";
-<<<<<<< HEAD
 import { Loader, LobbyModeButton, Result, Countdown, QuitModal, Pause, Players } from "./components";
-=======
-import { Loader, LobbyModeButton, Result, Countdown, QuitButton } from "./components";
-
->>>>>>> master
 import "./GameOverlay.css";
 
 import type { SocketParameters } from "@types";
@@ -33,11 +28,7 @@ const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef> = () => {
 
   const [loader, setLoader] = useState<boolean>(false);
   const [quitGame, setQuitGame] = useState<boolean>(false);
-<<<<<<< HEAD
   const [quitModal, setQuitModal] = useState<boolean>(false);
-=======
-  const [quitButton, setQuitButton] = useState<boolean>(false);
->>>>>>> master
   const [countdown, setCountdown] = useState<number>(0);
   const [gameResult, setGameResult] = useState<GameResult | undefined>(undefined);
   const [gameWinner, setGameWinner] = useState<string | undefined>(undefined);
@@ -105,11 +96,6 @@ const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef> = () => {
     setGamePlayers: (user1: string, user2: string) => {
       setPlayers({ player1: user1, player2: user2 });
     },
-    quitGame: (): boolean => {
-      setQuitButton(true);
-
-      return quitGame;
-    },
   }));
 
   if (!gameMode) {
@@ -122,14 +108,9 @@ const _GameOverlay: React.ForwardRefRenderFunction<GameOverlayRef> = () => {
       <Loader loader={loader} />
       {countdown > 0 && <Countdown countdown={countdown} setCountdown={setCountdown} />}
       <LobbyModeButton gameMode={gameMode} lobbyMode={lobbyMode} setLobbyMode={setLobbyMode} />
-<<<<<<< HEAD
       <Result result={gameResult} winner={gameWinner} index={Math.floor(Math.random() * 5)} />
       {quitModal && <QuitModal setQuitModal={setQuitModal} setQuitGame={setQuitGame} setLobbyMode={setLobbyMode} />}
       {pause && <Pause />}
-=======
-      <Result result={gameResult} setResult={setGameResult} setLobbyMode={setLobbyMode} setGameMode={setGameMode} />
-      {quitButton && <QuitButton setQuitButton={setQuitButton} setQuitGame={setQuitGame} setLobbyMode={setLobbyMode} />}
->>>>>>> master
     </div>
   );
 };

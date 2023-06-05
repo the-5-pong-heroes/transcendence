@@ -1,21 +1,4 @@
-<<<<<<< HEAD
 /* eslint max-lines: ["warn", 300] */
-
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import "./Profile.css";
-
-import { useSignOut } from "../Login/hooks";
-import { DefaultAvatar, Plant, Walle, Eve, Energy } from "../../assets";
-import { UserStatus } from "../Leaderboard/UserStatus";
-import { UserLevel } from "../Leaderboard/UserLevel";
-import { type UserStats } from "../Leaderboard/Leaderboard";
-
-import { MatchHistory } from "./MatchHistory";
-
-import * as customFetch from "@/helpers/fetch";
-import { useUser } from "@hooks";
-=======
 import React, { useEffect, useState } from "react";
 import "./Profile.css";
 import { DefaultAvatar } from "../../assets";
@@ -28,7 +11,9 @@ import { UserStats } from "../Leaderboard/Leaderboard";
 import { Friends } from "./Friends";
 import { Setting, addFriend, GameLight, ChatLight } from '../../assets';
 import { Link } from "react-router-dom";
->>>>>>> master
+import { useSignOut } from "../Login/hooks";
+import * as customFetch from "@/helpers/fetch";
+import { useUser } from "@hooks";
 
 export interface GameData {
   playerOne: { id: string; name: string };
@@ -42,35 +27,24 @@ interface ProfileProps {
 }
 
 export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
-<<<<<<< HEAD
   const { user: userInfos } = useUser();
   const signOut = useSignOut();
 
   // const { uuid } = useParams();
   const uuid = userInfos?.id;
-=======
-
-  const { uuid } = useParams();
->>>>>>> master
 
   const [history, setHistory] = useState([] as GameData[]);
 
   const [user, setUser] = useState({} as UserStats);
 
-<<<<<<< HEAD
+  const [currentTab, setCurrentTab] = useState("Match history");
+
   const fetchHistory = async () => {
     try {
       const resp = await fetch(`http://localhost:3000/profile/history/${uuid ? uuid : ""}`, {
         mode: "cors",
         credentials: "include",
       });
-=======
-  const [currentTab, setCurrentTab] = useState("Match history");
-
-  const fetchHistory = async () => {
-    try {
-      const resp = await fetch(`http://localhost:3000/profile/history/${uuid ? uuid : ""}`);
->>>>>>> master
       const data = await resp.json();
       if (data) setHistory(data);
     } catch (err) {
@@ -80,40 +54,26 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
 
   const fetchUser = async () => {
     try {
-<<<<<<< HEAD
       const resp = await fetch(`http://localhost:3000/profile/${uuid ? uuid : ""}`, {
         mode: "cors",
         credentials: "include",
       });
-=======
-      const resp = await fetch(`http://localhost:3000/profile/${uuid ? uuid : ""}`);
->>>>>>> master
       const data = await resp.json();
       if (data) {
         const LEVELS: string[] = ["plant", "walle", "eve", "energy"];
         data.levelPicture = [Plant, Walle, Eve, Energy][LEVELS.indexOf(data.level)];
-<<<<<<< HEAD
-        data.status = data.status === "IN_GAME" ? "PLAYING" : data.status;
-        setUser(data);
-=======
         data.status = (data.status === "IN_GAME" ? "PLAYING" : data.status);
         setUser(data)
->>>>>>> master
       }
     } catch (err) {
       console.error(err);
     }
-<<<<<<< HEAD
-  };
-=======
   }
->>>>>>> master
 
   useEffect(() => {
     fetchUser();
     fetchHistory();
-<<<<<<< HEAD
-  }, []);
+  }, [uuid]);
 
   if (!user) {
     return null;
@@ -124,10 +84,6 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
     });
     signOut();
   };
-
-  // console.log("user: ", user);
-=======
-  }, [uuid]);
 
   function switchTab(event: any) {
     const tabText: string = event.target.innerText;
@@ -150,17 +106,11 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
       console.error('Error adding a friend: ', err);
     }
   }
->>>>>>> master
 
   return (
     <div ref={profileRef} id="Profile" className="Profile">
       <div className="profile-block block1">
         <div className="avatar">
-<<<<<<< HEAD
-          <img src={DefaultAvatar} alt="profilePicture" />
-        </div>
-        <div className="column username">{user.name}</div>
-=======
           <img src={user.avatar ? user.avatar : DefaultAvatar} alt="profilePicture" />
         </div>
         <div className="column username">
@@ -170,7 +120,6 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
           { !user.isMe && <Link to={"/Game"}><img src={GameLight}/></Link>}
           { !user.isMe && !user.isFriend && <img className="addpointer" src={addFriend} onClick={followFriend}/>}
         </div>
->>>>>>> master
         <UserStatus myClassName="column status" status={user.status} />
       </div>
       <div className="profile-block block2">
@@ -198,32 +147,6 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
           <span>{user.nbGames}</span>
         </div>
       </div>
-<<<<<<< HEAD
-      <MatchHistory history={history} />
-      {/* <div className="friends">{user.friend}</div> */}
-      <div className="profile-footer">
-        <button className="signOut-button" onClick={() => signOut()}>
-          Sign out
-        </button>
-        <button className="delete-button" onClick={deleteUser}>
-          Delete my account
-        </button>
-      </div>
-    </div>
-  );
-
-  // return (
-  //   <div ref={profileRef} id="Profile" className="Profile">
-  //     <h1 className="profile-title">{user.name}</h1>
-  //     <button className="signOut-button" onClick={() => signOut()}>
-  //       Sign out
-  //     </button>
-  //     <button className="delete-button" onClick={deleteUser}>
-  //       Delete my account
-  //     </button>
-  //   </div>
-  // );
-=======
       <div className="block3">
         <ul className="tab tabs">
           <li className={`tab-item${currentTab === "Match history" ? " tab-active": ""}`} onClick={switchTab}>
@@ -234,8 +157,15 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
           </li>
         </ul>
         {currentTab === "Match history" ? <MatchHistory history={history} /> : <Friends user={user} />}
+        <div className="profile-footer">
+        <button className="signOut-button" onClick={() => signOut()}>
+          Sign out
+        </button>
+        <button className="delete-button" onClick={deleteUser}>
+          Delete my account
+        </button>
+      </div>
       </div>
     </div>
   );
->>>>>>> master
 };

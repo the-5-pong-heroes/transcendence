@@ -1,9 +1,6 @@
 .ChannelOptions {
   max-height: calc(100% - 80px);
-<<<<<<< HEAD
-=======
   width: 100%;
->>>>>>> master
   padding: max(50px, 20vh) 30px;
   display: flex;
   flex-flow: column nowrap;
@@ -12,10 +9,7 @@
   flex-grow: 1;
   overflow: auto;
 
-<<<<<<< HEAD
-=======
   
->>>>>>> master
   .UserList {
     height: clamp(50px, 10vh, 200px);
     display: flex;
@@ -39,20 +33,12 @@
   }
 
   .ErrMessage {
-<<<<<<< HEAD
-    font-size: 0.9em;
-=======
     font-size: .9em;
->>>>>>> master
     color: red;
   }
 
   .SuccessMessage {
-<<<<<<< HEAD
-    font-size: 0.9em;
-=======
     font-size: .9em;
->>>>>>> master
     color: green;
   }
 }

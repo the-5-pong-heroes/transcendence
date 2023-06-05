@@ -29,18 +29,13 @@ body.open .container {
 
 .background {
   position: absolute;
-<<<<<<< HEAD
   background-size: cover;
   top: 0;
   left: 0;
   height: 100vh;
   width: 548vh;
-=======
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
->>>>>>> master
+  /* bottom: 0;
+  right: 0; */
 }
 
 .background-img {
@@ -60,53 +55,6 @@ body.open .container {
 
 .light {
   background-repeat: repeat;
-<<<<<<< HEAD
-=======
-}
-
-.light,
-.trash {
-  z-index: 6;
-}
-
-#light .stars,
-#light .moon {
-  display: none;
-}
-
-#dark .sun,
-#dark .cloud,
-#dark .moonDayLight {
-  display: none;
-}
-
-.parallax-wrapper {
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
-}
-
-.parallax-img {
-  overflow: hidden;
-}
-
-@media  (max-height: 600px) {
-  .background {
-    width: 590vh;
-  }
-  .background-img {
-    width: 590vh;
-  }
-}
-
-@media  (max-height: 350px) and (min-width: 1580px) {
-  .background {
-    width: 760vh;
-  }
-  .background-img {
-    width: 760vh;
-  }
->>>>>>> master
 }
 
 .light {

@@ -3,10 +3,6 @@
   height: calc(96vh - 62px);
   margin-top: calc(4vh + 62px);
   display: flex;
-<<<<<<< HEAD
-  flex-flow: row nowrap;
-  z-index: 10;
-=======
   justify-content: center;
   align-items: center;
   
@@ -17,7 +13,6 @@
     flex-flow: row nowrap;
     z-index: 10;
   }
->>>>>>> master
 
   @media screen and (max-width: 680px) {
     height: calc(96vh - 50px);

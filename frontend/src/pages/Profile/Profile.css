@@ -1,20 +1,13 @@
 .Profile {
   z-index: 7;
-<<<<<<< HEAD
-  padding-top: 80px;
-=======
->>>>>>> master
+  /* padding-top: 80px; */
   width: 100vw;
   height: 100vh;
   display: flex;
   flex-flow: column nowrap;
   margin: 0;
   align-items: center;
-<<<<<<< HEAD
-  justify-content: space-between;
-=======
   justify-content: center;
->>>>>>> master
   user-select: none;
   position: absolute;
   top: 0;
@@ -24,7 +17,6 @@
   animation-fill-mode: forwards;
 }
 
-<<<<<<< HEAD
 .signOut-button {
   width: 10rem;
   color: white;
@@ -48,22 +40,15 @@
   /* transform: translateY(-0.1rem); */
 }
 
-=======
->>>>>>> master
 @keyframes fadeInAnimation {
   0% {
     opacity: 0;
   }
-<<<<<<< HEAD
-=======
-
->>>>>>> master
   100% {
     opacity: 1;
   }
 }
 
-<<<<<<< HEAD
 .profile-footer {
   width: 100%;
   padding: 0;
@@ -72,14 +57,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-=======
-#light .profile-title {
-  color: #6709b9;
-}
-
-#dark .profile-title {
-  color: #c0b4f2;
->>>>>>> master
 }
 
 .profile-block {
@@ -119,29 +96,18 @@
   padding: 1rem;
   max-width: 700px;
   border-radius: 20px;
-<<<<<<< HEAD
-  background: linear-gradient(0deg, rgba(42, 45, 112, 0.5) 0%, rgba(80,75,210, 0.5) 100%);
-=======
   background: linear-gradient(0deg, rgba(42, 45, 112, 0.5) 0%, rgba(80, 75, 210, 0.5) 100%);
->>>>>>> master
   margin-bottom: 2rem;
 }
 
 .block3 {
   width: 72vw;
-<<<<<<< HEAD
-  padding: 1rem;
-  max-width: 700px;
-  border-radius: 20px;
-  background: linear-gradient(0deg, rgba(42, 45, 112, 0.5) 0%, rgba(80,75,210, 0.5) 100%);
-=======
   padding-left: 1rem;
   padding-right: 1rem;
   padding-bottom: 1rem;
   max-width: 700px;
   border-radius: 20px;
   background: linear-gradient(0deg, rgba(42, 45, 112, 0.5) 0%, rgba(80, 75, 210, 0.5) 100%);
->>>>>>> master
   margin-bottom: 2rem;
   max-height: 30vh;
   overflow: auto;
@@ -154,15 +120,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-<<<<<<< HEAD
-  background-color: lightblue; /* Set the color of the thumb */
-  border-radius: 5px; /* Set the border radius of the thumb */
-=======
   background-color: lightblue;
   /* Set the color of the thumb */
   border-radius: 5px;
   /* Set the border radius of the thumb */
->>>>>>> master
 }
 
 .score1 {
@@ -178,21 +139,12 @@
 
 }
 
-<<<<<<< HEAD
-.player1, .player2 {
-=======
 .player1,
 .player2 {
->>>>>>> master
   text-align: center;
   text-shadow: darkblue 2px 0 10px;
 }
 
-<<<<<<< HEAD
-.avatar > img {
-  width: 200px;
-  border-radius: 50%;
-=======
 .avatar {
   position: relative;
 }
@@ -201,7 +153,6 @@
   width: 200px;
   border-radius: 50%;
   aspect-ratio: 1 / 1;
->>>>>>> master
   margin: 0;
   margin-top: 2vw;
   margin-bottom: 2vw;
@@ -214,12 +165,6 @@
   margin: 0 0 0 1rem;
   font-family: sans-serif;
   color: white;
-<<<<<<< HEAD
-  justify-content: center;
-  text-shadow: darkblue 2px 0 10px;
-}
-
-=======
   text-shadow: darkblue 2px 0 10px;
 }
 
@@ -235,7 +180,6 @@
   align-self: center
 }
 
->>>>>>> master
 .bullet-orange {
   color: orange;
   font-size: 2.7rem;
@@ -268,11 +212,7 @@
   display: flex;
 }
 
-<<<<<<< HEAD
-.level > img {
-=======
 .level>img {
->>>>>>> master
   width: 40px;
   filter: drop-shadow(0 0 0.75rem rgb(255, 255, 255, 0.2));
   margin-right: 5px;
@@ -287,15 +227,6 @@
   font-size: 1.5rem;
 }
 
-<<<<<<< HEAD
-.noMatchYet {
-  text-align: center;
-  font-weight: 500;
-}
-
-.friends {
-  /* TODO */
-=======
 .noMatchYet, .noFriendYet {
   text-align: center;
   width: 100%;
@@ -360,5 +291,4 @@
 
 .addpointer {
   cursor: pointer;
->>>>>>> master
 }

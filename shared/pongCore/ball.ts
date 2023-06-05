@@ -1,16 +1,6 @@
 import { Vec3 } from "cannon-es";
 
-<<<<<<< HEAD
 import { BALL_RADIUS, BALL_VEL_X, BALL_VEL_Y, MAX_BALL_VEL_Y, GAME_HEIGHT } from "./constants";
-=======
-import {
-  BALL_RADIUS,
-  BALL_VEL_X,
-  BALL_VEL_Y,
-  MAX_BALL_VEL_Y,
-  GAME_HEIGHT,
-} from "./constants";
->>>>>>> master
 import { type BallState } from "./@types";
 import { lerp, clamp } from "./helpers";
 import { type Paddle } from "./paddle";
@@ -70,33 +60,17 @@ export class Ball {
     this.posY = y;
   }
 
-<<<<<<< HEAD
   collideWithPaddle(paddleRight: Paddle<"right">, paddleLeft: Paddle<"left">): boolean {
     if (reachedRightPaddle(this, paddleRight)) {
       this.posX = paddleRight.posX - this.radius - paddleRight.width / 2;
       const distanceFromCenter = (this.posY - paddleRight.posY) / (paddleRight.height / 2);
-=======
-  collideWithPaddle(
-    paddleRight: Paddle<"right">,
-    paddleLeft: Paddle<"left">,
-  ): boolean {
-    if (reachedRightPaddle(this, paddleRight)) {
-      this.posX = paddleRight.posX - this.radius - paddleRight.width / 2;
-      const distanceFromCenter =
-        (this.posY - paddleRight.posY) / (paddleRight.height / 2);
->>>>>>> master
       this.velY = distanceFromCenter * MAX_BALL_VEL_Y + paddleRight.velocity;
 
       return true;
     }
     if (reachedLeftPaddle(this, paddleLeft)) {
       this.posX = paddleLeft.posX + this.radius + paddleLeft.width / 2;
-<<<<<<< HEAD
       const distanceFromCenter = (this.posY - paddleLeft.posY) / (paddleLeft.height / 2);
-=======
-      const distanceFromCenter =
-        (this.posY - paddleLeft.posY) / (paddleLeft.height / 2);
->>>>>>> master
       this.velY = distanceFromCenter * MAX_BALL_VEL_Y + paddleLeft.velocity;
 
       return true;
@@ -105,29 +79,12 @@ export class Ball {
     return false;
   }
 
-<<<<<<< HEAD
   update({ delta, rotFactor, paddleRight, paddleLeft }: UpdateParameters): void {
-=======
-  update({
-    delta,
-    rotFactor,
-    paddleRight,
-    paddleLeft,
-  }: UpdateParameters): void {
->>>>>>> master
     if (!this.collideWithPaddle(paddleRight, paddleLeft)) {
       this.posX += this.velX * delta;
     }
     this.posY += this.velY * delta;
-<<<<<<< HEAD
     this.posY = clamp(-GAME_HEIGHT / 2 + BALL_RADIUS, GAME_HEIGHT / 2 - BALL_RADIUS, this.posY);
-=======
-    this.posY = clamp(
-      -GAME_HEIGHT / 2 + BALL_RADIUS,
-      GAME_HEIGHT / 2 - BALL_RADIUS,
-      this.posY,
-    );
->>>>>>> master
 
     this.velX += this.accX * delta;
     this.velY += this.accY * delta;

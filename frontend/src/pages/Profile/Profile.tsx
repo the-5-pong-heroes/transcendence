@@ -30,8 +30,10 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
   const { user: userInfos } = useUser();
   const signOut = useSignOut();
 
-  // const { uuid } = useParams();
-  const uuid = userInfos?.id;
+  let { uuid } = useParams();
+  if (uuid === undefined) {
+    uuid = userInfos?.id;
+  }
 
   const [history, setHistory] = useState([] as GameData[]);
 

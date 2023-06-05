@@ -11,8 +11,10 @@ import "./App.css";
 
 const App: React.FC = () => {
   const { theme, pageRefs }: AppContextParameters = useAppContext();
-  const { homeRef, profileRef, myProfileRef, settingsRef, gameRef, boardRef, chatRef, notFoundRef }: PageRefs = pageRefs;
+  const { homeRef, profileRef, myProfileRef, settingsRef, gameRef, boardRef, chatRef, notFoundRef }: PageRefs =
+    pageRefs;
   const { user, isLoading } = useUser();
+  const { uuid } = useParams();
 
   if (isLoading) {
     // Show loading state while user data is being fetched
@@ -34,7 +36,7 @@ const App: React.FC = () => {
         <Route element={<AppLayout user={user} />}>
           <Route path="/" element={<Home homeRef={homeRef} />} />
           <Route path="/Profile" element={<Profile key="my-profile" profileRef={myProfileRef} />}>
-            {/* <Route path=":uuid" element={<Profile key={useParams().uuid} profileRef={profileRef} />} /> */}
+            <Route path=":uuid" element={<Profile key={uuid} profileRef={profileRef} />} />
           </Route>
           <Route path="/Settings/" element={<Settings settingsRef={settingsRef} />} />
           {/* <Route path="/Profile" element={<Profile profileRef={profileRef} />} /> */}

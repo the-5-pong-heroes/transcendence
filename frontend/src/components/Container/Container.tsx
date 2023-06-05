@@ -62,7 +62,7 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
         <Parallax className="layer trash" speed={60}>
           <img src={Trash2} />
         </Parallax>
-        <Parallax className="layer trash"  speed={60}>
+        <Parallax className="layer trash" speed={60}>
           <div className="parallax-wrapper">
             <img src={Trash3} className="parallax-img" />
           </div>

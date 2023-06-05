@@ -1,5 +1,6 @@
 .ChannelOptions {
   max-height: calc(100% - 80px);
+  width: 100%;
   padding: max(50px, 20vh) 30px;
   display: flex;
   flex-flow: column nowrap;

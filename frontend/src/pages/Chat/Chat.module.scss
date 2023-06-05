@@ -3,8 +3,16 @@
   height: calc(96vh - 62px);
   margin-top: calc(4vh + 62px);
   display: flex;
-  flex-flow: row nowrap;
-  z-index: 10;
+  justify-content: center;
+  align-items: center;
+  
+  .ChatWindow {
+    width: clamp(300px, 100%, 1200px);
+    height: clamp(400px, 100%, 600px);
+    display: flex;
+    flex-flow: row nowrap;
+    z-index: 10;
+  }
 
   @media screen and (max-width: 680px) {
     height: calc(96vh - 50px);

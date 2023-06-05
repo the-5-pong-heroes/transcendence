@@ -8,6 +8,7 @@ import { PrismaService } from "../database/prisma.service";
 import { ChannelUsersService } from "../channel-users/channel-users.service";
 import { MessagesModule } from "../messages/messages.module";
 import { ChannelUsersModule } from "../channel-users/channel-users.module";
+import { BlockedService } from "src/blocked/blocked.service";
 
 @Module({
   imports: [MessagesModule, ChannelUsersModule],
@@ -18,6 +19,7 @@ import { ChannelUsersModule } from "../channel-users/channel-users.module";
     MessagesService,
     ChannelUsersService,
     UsersService,
+    BlockedService,
     PrismaService,
   ],
 })

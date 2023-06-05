@@ -1,31 +1,44 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { ChannelContext } from '@/contexts';
 import { ChannelType } from "./ChannelType";
 import { ChannelUser } from "./ChannelUser";
 import { ChannelBan } from "./ChannelBan";
-import { IChannel, IChannelBan } from '../../../interfaces';
 import styles from './ChannelOptions.module.scss';
-
-interface IChannelOptionsProps {
-  activeChannel: IChannel;
-}
 
 interface IReturnMessage {
   error: boolean;
   message: string;
 }
 
-export const ChannelOptions: React.FC<IChannelOptionsProps> = ({ activeChannel }) => {
+export const ChannelOptions: React.FC = () => {
   const [returnMessage, setReturnMessage] = useState<IReturnMessage>({ error: true, message: "" });
+
+  const { activeChannel } = useContext(ChannelContext);
+  if (activeChannel === undefined) throw new Error("Undefined Active Channel");
+
+  const stopOutterScroll = (event: any) => {
+    const container = event.target.closest('.container');
+    container.style.overflow = 'hidden';
+  }
+
+  const enableOutterScroll = (event: any) => {
+    const container = event.target.closest('.container');
+    container.style.overflow = '';
+  }
 
   useEffect(() => {
     setReturnMessage((prev) => ({ ...prev, message: "" }));
   }, [activeChannel]);
 
   return (
-    <div className={styles.ChannelOptions}>
-      <ChannelType activeChannel={activeChannel} setReturnMessage={setReturnMessage}/>
+    <div
+      onMouseEnter={stopOutterScroll}
+      onMouseLeave={enableOutterScroll}
+      className={styles.ChannelOptions}
+    >
+      <ChannelType setReturnMessage={setReturnMessage}/>
       <ChannelUser users={activeChannel.users} />
-      <ChannelBan activeChannel={activeChannel} banned={activeChannel.banned} />
+      <ChannelBan banned={activeChannel.banned} />
     </div>
   );
 }

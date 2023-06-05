@@ -1,0 +1,81 @@
+.OtherMessage {
+  position: relative;
+  max-width: 80%;
+  flex-shrink: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  word-wrap: break-word;
+  white-space: pre-line;
+  gap: 10px;
+
+  .Avatar {
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: gray;
+    cursor: pointer;
+  }
+
+  .Options {
+    cursor: pointer;
+    position: absolute;
+    margin-top: 55px;
+    margin-left: 20px;
+    padding: 5px;
+    border-radius: 8px;
+    min-width: 120px;
+    z-index: 1;
+
+    .Option {
+      border-radius: 3px;
+      user-select: none;
+      padding: 2px 4px;
+    }
+  }
+
+  .Message {
+    max-width: calc(100% - 60px);
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 7px 12px;
+    border-radius: 19px;
+
+    span {
+      color: #606060;
+      font-size: 12px;
+    }
+  }
+}
+
+.OtherMessageLight {
+  .Options {
+    background-color: rgba(200, 200, 200, .6);
+
+    .Option {
+      &:hover {
+        outline: solid 1px black;
+      }
+    }
+  }
+
+  .Message {
+    background-color: rgba(172, 103, 189, .9);
+  }
+}
+
+.OtherMessageDark {
+  .Options {
+    background-color: rgba(55, 55, 55, .6);
+
+    .Option {
+      &:hover {
+        outline: solid 1px white;
+      }
+    }
+  }
+
+  .Message {
+    background-color: rgba(101, 0, 134, .9);
+  }
+}

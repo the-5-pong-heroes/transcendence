@@ -11,14 +11,27 @@
   padding: 10px;
   overflow: hidden;
 
-  &:hover {
-    background-color: rgba(212, 212, 212, .2);
-  }
-
   .Name {
     font-weight: bold;
   }
+}
 
-  .Preview {
+.ChannelItemLight {
+  &:hover {
+    background-color: rgba(255, 255, 255, .1);
+  }
+
+  &.ActiveItem {
+    background-color: rgba(255, 255, 255, .2);
+  }
+}
+
+.ChannelItemDark {
+  &:hover {
+    background-color: rgba(0, 0, 0, .1);
+  }
+
+  &.ActiveItem {
+    background-color: rgba(0, 0, 0, .2);
   }
 }

@@ -1,0 +1,54 @@
+.Signup {
+	width: 100%;
+	height: calc(100vh - 80px);
+	display: flex;
+  z-index: 10;
+  color: black;
+}
+
+.form {
+	margin: auto;
+	width: clamp(200px, 600px, 40%);
+	background-color: white;
+	padding: 30px;
+	border-radius: 10px;
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	align-items: stretch;
+	gap: 20px;
+	box-shadow: 5px 8px 10px 3px rgba(0, 0, 0, 0.2);
+}
+
+.form h2 {
+	margin: 0;
+	margin-bottom: 10px;
+}
+
+.input {
+	height: 30px;
+	border-radius: 5px;
+	text-indent: 8px;
+
+}
+
+.submit {
+	margin: auto;
+	padding-top: 8px;
+	width: 120px;
+	height: 40px;
+	border-radius: 8px;
+	border: 0px solid black;
+	font: inherit;
+	font-size: 20px;
+	line-height: 0;
+	color: white;
+	background-color: lightslategray;
+	cursor: pointer;
+}
+
+.err-message {
+	color: red;
+	font-size: 15px;
+	text-align: center;
+}

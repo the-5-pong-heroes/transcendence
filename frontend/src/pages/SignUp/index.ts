@@ -1,1 +1,1 @@
-export { SignUp } from "./SignUp";
+export { Signup } from "./Signup";

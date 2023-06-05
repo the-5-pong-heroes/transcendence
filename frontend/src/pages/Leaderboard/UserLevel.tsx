@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 import React from "react";
 
+=======
+>>>>>>> master
 import { Plant, Walle, Eve, Energy } from "../../assets";
 
 export const UserLevel = ({ myClassName, level}: {myClassName: string; level: string}) => {

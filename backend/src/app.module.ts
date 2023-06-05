@@ -7,8 +7,10 @@ import { GameModule } from "./game/game.module";
 import { StatsModule } from "./stats/stats.module";
 import { AuthModule } from "./auth/auth.module";
 import { PrismaModule } from "./database/prisma.module";
-import { ScheduleModule } from "@nestjs/schedule";
 import { ChannelsModule } from "./channels/channels.module";
+import { UserSettingsModule } from "./user-settings/user-settings.module";
+import { FriendshipModule } from "./friendship/friendship.module";
+import { BlockedModule } from "./blocked/blocked.module";
 
 @Module({
   imports: [
@@ -17,8 +19,11 @@ import { ChannelsModule } from "./channels/channels.module";
     GameModule,
     ChannelsModule,
     UsersModule,
+    ChannelsModule,
+    UserSettingsModule,
+    FriendshipModule,
+    BlockedModule,
     PrismaModule,
-    ScheduleModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true }),
   ],
   controllers: [AppController],

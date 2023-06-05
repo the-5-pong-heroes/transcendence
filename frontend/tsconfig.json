@@ -54,7 +54,13 @@
       "@types": ["./src/@types"],
       "@assets": ["./src/assets"],
       "@contexts": ["./src/contexts"],
-      "@hooks": ["./src/hooks"]
+      "@hooks": ["./src/hooks"],
+      "pages/*": ["src/pages/*"],
+      "components/*": ["src/components/*"],
+      "types/*": ["src/@types/*"],
+      "assets/*": ["src/assets/*"],
+      "contexts/*": ["src/contexts/*"],
+      "public/*": ["public/*"]
     },
     // slower but more type-system accurate
     "skipLibCheck": true,

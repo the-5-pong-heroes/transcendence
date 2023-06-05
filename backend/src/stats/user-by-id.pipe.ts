@@ -10,7 +10,7 @@ export class UserByIdPipe implements PipeTransform<string, Promise<User>> {
     if (myUuid === undefined || !myUuid) {
       throw new BadRequestException("User ID is required");
     }
-    const user: User | null = await this.prisma.user.findUnique({ where: { id: myUuid } });
+    const user = await this.prisma.user.findUnique({ where: { id: myUuid } });
 
     if (!user) {
       throw new NotFoundException();

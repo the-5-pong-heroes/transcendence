@@ -5,7 +5,10 @@
   flex-flow: column nowrap;
   flex-shrink: 0;
   overflow: auto;
+<<<<<<< HEAD
   border-right: 1px solid black;
+=======
+>>>>>>> master
 
   &::-webkit-scrollbar {
     display: none;
@@ -19,13 +22,21 @@
     flex-flow: column nowrap;
     justify-content: space-between;
     padding: 10px;
+<<<<<<< HEAD
     border-bottom: 1px solid black;
+=======
+    border-radius: 8px;
+>>>>>>> master
 
     .Top {
       display: flex;
       flex-flow: row nowrap;
       justify-content: space-between;
+<<<<<<< HEAD
 
+=======
+      
+>>>>>>> master
       .Username {
         text-align: center;
       }
@@ -39,10 +50,18 @@
   }
 
   .HeaderLight {
+<<<<<<< HEAD
     background-color: rgba(255, 255, 255, 0.2);
   }
 
   .HeaderDark {
     background-color: rgba(0, 0, 0, 0.2);
+=======
+    background-color: rgba(255, 255, 255, .2);
+  }
+
+  .HeaderDark {
+    background-color: rgba(0, 0, 0, .2);
+>>>>>>> master
   }
 }

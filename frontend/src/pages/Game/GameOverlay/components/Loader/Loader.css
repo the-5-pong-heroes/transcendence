@@ -1,3 +1,11 @@
+<<<<<<< HEAD
+=======
+.loader-modal {
+  height: 18vw;
+  width: 42vw;
+}
+
+>>>>>>> master
 .loader-wrapper {
   position: absolute;
   display: flex;
@@ -12,6 +20,11 @@
 
 .text {
   margin: 1vw;
+<<<<<<< HEAD
+=======
+  font-size: 1.5vw;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Open Sans", sans-serif;
+>>>>>>> master
 }
 
 .jumping-dots span {

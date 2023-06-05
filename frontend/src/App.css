@@ -6,10 +6,15 @@
   --toastify-color-error: rgb(254, 124, 148);
   --global-background-color-light: hsl(0, 3%, 93%);
   --global-background-color-dark: hsl(220, 11%, 16%);
+<<<<<<< HEAD
   --global-game-gradient-dark: linear-gradient(45deg, hsl(274, 42%, 16%), hsl(266, 47%, 27%), hsl(252, 51%, 12%));
   /* --global-game-gradient-dark: linear-gradient(45deg, hsl(275, 27%, 25%), hsl(258, 35%, 20%), hsl(251, 37%, 20%)); */
   --global-game-gradient-light: linear-gradient(45deg, rgb(102, 142, 216), hsl(203, 52%, 83%), rgb(124, 161, 225));
   /* --global-game-gradient-light: linear-gradient(45deg,  hsl(270, 81%, 90%), hsl(262, 88%, 86%), rgb(148, 164, 254)); */
+=======
+  --global-game-gradient-dark: linear-gradient(45deg, hsl(311, 33%, 10%), hsl(253, 32%, 14%), hsl(296, 32%, 9%));
+  --global-game-gradient-light: linear-gradient(45deg, hsl(60, 100%, 98%), hsl(202, 100%, 95%),rgb(184, 203, 248));
+>>>>>>> master
 }
 
 .App {
@@ -33,6 +38,7 @@
 }
 
 .App-container {
+<<<<<<< HEAD
   z-index: 0;
   height: 100vw;
   width: 100vh;
@@ -49,3 +55,12 @@
   align-items: center;
   flex-direction: column;
 }
+=======
+	z-index: 0;
+	height: 100vw;
+	width: 100vh;
+	transform: rotate(-90deg) translateX(-100vh);
+	transform-origin: top left;
+	position: absolute;
+}
+>>>>>>> master

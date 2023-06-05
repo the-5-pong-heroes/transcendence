@@ -1,7 +1,6 @@
-import * as path from "path";
-
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import * as path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -15,6 +14,12 @@ export default defineConfig({
       "@assets": path.resolve(__dirname, "./src/assets"),
       "@contexts": path.resolve(__dirname, "./src/contexts"),
       "@hooks": path.resolve(__dirname, "./src/hooks"),
+      components: `${path.resolve(__dirname, "./src/components/")}`,
+      public: `${path.resolve(__dirname, "./public/")}`,
+      pages: path.resolve(__dirname, "./src/pages"),
+      assets: path.resolve(__dirname, "./src/assets"),
+      contexts: path.resolve(__dirname, "./src/contexts"),
+      types: `${path.resolve(__dirname, "./src/@types")}`,
     },
   },
   server: {

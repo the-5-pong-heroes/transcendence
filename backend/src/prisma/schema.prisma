@@ -23,6 +23,8 @@ model User {
   addedBy       Friendship[]  @relation("addedBy")
   channelUsers  ChannelUser[]
   channelBans   ChannelBan[]
+  blocked       Blocked[]     @relation("blocked")
+  blockedBy     Blocked[]     @relation("blockedBy")
   auth          Auth?
 }
 
@@ -38,10 +40,20 @@ model Auth {
   otp_validated Boolean?  @default(false)
 }
 
+model Blocked {
+  blockedUser   User      @relation("blockedBy", fields: [blockedUserId], references: [id])
+  blockedUserId String    @db.Uuid
+  user          User      @relation("blocked", fields: [userId], references: [id])
+  userId        String    @db.Uuid
+  createdAt     DateTime  @default(now())
+
+  @@id(fields: [userId, blockedUserId])
+}
+
 model Friendship {
-  user      User     @relation("friendships", fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user      User     @relation("friendships", fields: [userId], references: [id])
   userId    String   @db.Uuid
-  addedBy   User     @relation("addedBy", fields: [addedById], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  addedBy   User     @relation("addedBy", fields: [addedById], references: [id])
   addedById String   @db.Uuid
   createdAt DateTime @default(now())
 
@@ -53,7 +65,6 @@ model Game {
   startedAt DateTime   @default(now())
   endedAt   DateTime?
   status    GameStatus @default(WAITING)
-
   playerOne      User   @relation("playerOne", fields: [playerOneId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   playerOneId    String @db.Uuid
   playerOneScore Int    @default(0)
@@ -64,7 +75,7 @@ model Game {
 
 model Channel {
   id          String        @id @default(uuid()) @db.Uuid
-  name        String
+  name        String?
   createdAt   DateTime      @default(now())
   lastMessage DateTime      @default(now())
   type        ChannelType
@@ -120,6 +131,7 @@ enum ChannelType {
   PRIVATE
   PUBLIC
   PROTECTED
+  DIRECT
 }
 
 enum GameStatus {

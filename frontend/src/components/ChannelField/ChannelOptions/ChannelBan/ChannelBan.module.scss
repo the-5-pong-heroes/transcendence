@@ -8,9 +8,14 @@
   }
 
   .ChannelBanTable {
+<<<<<<< HEAD
     background-color: white;
     border-radius: 10px;
     padding: 5px;
+=======
+  border-radius: 10px;
+  padding: 5px;
+>>>>>>> master
 
     .ChannelUserItem {
       cursor: pointer;
@@ -22,10 +27,13 @@
       padding: 10px 15px;
       border-radius: 10px;
 
+<<<<<<< HEAD
       &:hover {
         background-color: #e8e8e8;
       }
 
+=======
+>>>>>>> master
       select {
         cursor: pointer;
         background: none;
@@ -33,6 +41,7 @@
         border: none;
       }
     }
+<<<<<<< HEAD
 
     .ActiveUser {
       background-color: lightgray;
@@ -41,6 +50,8 @@
         background-color: lightgray;
       }
     }
+=======
+>>>>>>> master
   }
 
   .Button {
@@ -48,7 +59,10 @@
     border: none;
     outline: none;
     padding: 10px 15px;
+<<<<<<< HEAD
     background-color: #d38ce5;
+=======
+>>>>>>> master
     font-weight: bold;
     border-radius: 8px;
     box-shadow: 1px 2px 5px -3px black;
@@ -62,3 +76,54 @@
     align-items: center;
   }
 }
+<<<<<<< HEAD
+=======
+
+.ChannelBanLight {
+  .ChannelBanTable {
+    background-color: rgba(255, 255, 255, .2);
+
+    .ChannelUserItem {
+      &:hover {
+        background-color: rgba(255, 255, 255, .4);
+      }
+    }
+
+    .ActiveUser {
+      outline: solid 2px black;
+    }
+  }
+
+  .Until {
+    background-color: rgba(255, 255, 255, .2);
+  }
+  
+  .Button {
+    background-color: rgba(255, 0, 38, .9);
+  }
+}
+
+.ChannelBanDark {
+  .ChannelBanTable {
+    background-color: rgba(0, 0, 0, .2);
+
+    .ChannelUserItem {
+      &:hover {
+        background-color: rgba(0, 0, 0, .4);
+      }
+    }
+
+    .ActiveUser {
+      outline: solid 2px white;
+    }
+  }
+
+  .Until {
+    background-color: rgba(0, 0, 0, .2);
+  }
+  
+  .Button {
+    background-color: rgba(227, 24, 54, .9);
+  }
+}
+>>>>>>> master

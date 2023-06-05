@@ -10,6 +10,7 @@ interface HomeProps {
 export const Home: React.FC<HomeProps> = ({ homeRef }) => {
   return (
     <div ref={homeRef} id="Home" className="home">
+<<<<<<< HEAD
       <h1>Welcome !</h1>
       <div className="home-play-button">
         <Link to={"/Game"} className="game-link">
@@ -18,6 +19,12 @@ export const Home: React.FC<HomeProps> = ({ homeRef }) => {
             <path d="M1,5 L11,5"></path>
             <polyline points="8 1 12 5 8 9"></polyline>
           </svg>
+=======
+      <h1>Welcome!</h1>
+      <div className="home-play-button">
+        <Link to={"/Game"} className="game-link">
+          Ready to play ?
+>>>>>>> master
         </Link>
       </div>
     </div>

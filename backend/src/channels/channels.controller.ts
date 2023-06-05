@@ -11,6 +11,7 @@ import {
   BadRequestException,
   UnauthorizedException,
 } from "@nestjs/common";
+// import { AuthGuard } from "@nestjs/passport";
 import { ChannelUser } from "@prisma/client";
 import { PrismaService } from "../database/prisma.service";
 import { MessagesService } from "../messages/messages.service";
@@ -71,7 +72,6 @@ export class ChannelsController {
   @Delete(":id")
   async remove(@Param("id") id: string, @Req() req: any) {
     const channel = await this.channelsService.findOneWithOwner(id);
-    console.log(channel);
     //if (channel.users.some((user) => user.userId !== req.user.id))
     //throw new UnauthorizedException("You are not the owner of this channel");
     //return this.channelsService.delete(id);

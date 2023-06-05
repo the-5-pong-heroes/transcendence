@@ -158,7 +158,11 @@ export class Pong {
       this.ball.accX = Math.abs(this.ball.accX);
     }
     this.rotFactor = getRandomRotFactor();
+<<<<<<< HEAD
   }; 
+=======
+  };
+>>>>>>> master
 
   public paddleLastMove(paddleSide: PaddleSide): PaddleMove {
     if (paddleSide === "right") {

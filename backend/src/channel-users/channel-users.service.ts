@@ -1,13 +1,18 @@
 import { Injectable } from "@nestjs/common";
 import { ChannelUser } from "@prisma/client";
 import { PrismaService } from "../database/prisma.service";
+import { CreateChannelUserDto } from "./dto/create-channel-user.dto";
 import { UpdateChannelUserDto } from "./dto/update-channel-user.dto";
 
 @Injectable()
 export class ChannelUsersService {
   constructor(private prismaService: PrismaService) {}
 
-  async findOne(id: string): Promise<any> {
+  async create(data: CreateChannelUserDto): Promise<ChannelUser> {
+    return this.prismaService.channelUser.create({ data });
+  }
+
+  async findOne(id: string): Promise<ChannelUser | null> {
     return this.prismaService.channelUser.findUnique({ where: { id } });
   }
 
@@ -16,6 +21,10 @@ export class ChannelUsersService {
       where: { id },
       select: { user: true, channelId: true },
     });
+  }
+
+  async findFirst(data: any): Promise<ChannelUser | null> {
+    return this.prismaService.channelUser.findFirst({ where: { ...data } });
   }
 
   async update(data: UpdateChannelUserDto): Promise<ChannelUser> {
@@ -27,5 +36,13 @@ export class ChannelUsersService {
 
   async delete(id: string) {
     return this.prismaService.channelUser.delete({ where: { id } });
+  }
+
+  async deleteAllFromChannel(channelId: string) {
+    return this.prismaService.channelUser.deleteMany({ where: { channelId } });
+  }
+
+  async deleteUser(data: any) {
+    return this.prismaService.channelUser.deleteMany({ where: { ...data } });
   }
 }

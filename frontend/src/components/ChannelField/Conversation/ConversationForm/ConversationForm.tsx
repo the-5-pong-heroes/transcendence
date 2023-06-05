@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useEffect, useState, useCallback } from "react";
 
 import styles from "./ConversationForm.module.scss";
@@ -31,16 +32,54 @@ export const ConversationForm: React.FC<IConversationFormProps> = ({ activeChann
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
+=======
+import React, { useContext, useEffect, useState } from 'react';
+import { AppContext, ChannelContext, UserContext, UserContextType } from '../../../../contexts';
+import { IChannelUser } from '../../../../interfaces';
+import { socket } from '../../../../socket';
+import { Rocket } from '../../../../assets';
+import styles from './ConversationForm.module.scss';
+
+export const ConversationForm: React.FC = () => {
+  const [message, setMessage] = useState<string>("");
+  const [isMuted, setIsMuted] = useState<boolean>(false);
+
+  const { user } = useContext(UserContext) as UserContextType;
+  const { activeChannel } = useContext(ChannelContext);
+  if (activeChannel === undefined) throw new Error("Undefined Active Channel");
+  const appContext = useContext(AppContext);
+  if (appContext === undefined) throw new Error("Undefined AppContext");
+  const { theme } = appContext;
+
+  const submit = () => {
+    const token = localStorage.getItem('access_token');
+    if (!token || message === "" || !activeChannel || !user) return; // TODO faire une redirection
+    const sentMessage = {
+      content: message,
+      channelId: activeChannel.id,
+      senderId: user.id
+    };
+    socket.emit('message', sentMessage);
+    setMessage("");
+  }
+
+  const handleChange = (event: any) => {
+>>>>>>> master
     setMessage(event.target.value);
     event.target.style.height = "30px";
     event.target.style.height = `${event.target.scrollHeight}px`;
   };
 
+<<<<<<< HEAD
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+=======
+  const handleSubmit = (event: React.ChangeEvent<HTMLFormElement>) => {
+>>>>>>> master
     event.preventDefault();
     submit();
   };
 
+<<<<<<< HEAD
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent): void => {
       const { key, shiftKey } = event;
@@ -66,6 +105,29 @@ export const ConversationForm: React.FC<IConversationFormProps> = ({ activeChann
       setIsMuted(activeUser.isMuted);
     }
   }, [activeChannel, user?.id]);
+=======
+  const handleKeyPress = (event: any) => {
+    const { charCode, shiftKey } = event;
+    const { id } = event.target;
+    if (charCode !== 13 || shiftKey || id !== "message") return;
+    event.preventDefault();
+    submit();
+    event.target.style.height = "30px";
+  }
+
+  useEffect(() => {
+    window.addEventListener("keypress", handleKeyPress);
+    return () => {
+      window.removeEventListener("keypress", handleKeyPress);
+    }
+  }, [message]);
+
+  useEffect(() => {
+    const activeUser = activeChannel.users.find((usr: IChannelUser) => usr.user.id === user.id);
+    if (activeUser)
+      setIsMuted(activeUser.isMuted);
+  }, [activeChannel]);
+>>>>>>> master
 
   return (
     <form className={styles.Form} autoComplete="off" onSubmit={handleSubmit}>
@@ -76,6 +138,7 @@ export const ConversationForm: React.FC<IConversationFormProps> = ({ activeChann
         onChange={handleChange}
         disabled={!activeChannel || isMuted}
         title={isMuted ? "You are mute" : undefined}
+<<<<<<< HEAD
         style={{ cursor: `${isMuted ? "not-allowed" : ""}` }}
       />
       <button
@@ -83,8 +146,21 @@ export const ConversationForm: React.FC<IConversationFormProps> = ({ activeChann
         title="Send"
         type="submit"
         style={{ backgroundImage: `url(${Rocket})` }}
+=======
+        style={{cursor: `${isMuted && "not-allowed"}`}}
+      />
+      <button
+        className={`${styles.Submit} ${theme === "light" ? styles.SubmitLight : styles.SubmitDark}`}
+        title="Send"
+        type="submit"
+        style={{backgroundImage: `url(${Rocket})`}}
+>>>>>>> master
         disabled={!activeChannel}
       />
     </form>
   );
+<<<<<<< HEAD
 };
+=======
+}
+>>>>>>> master

@@ -7,9 +7,12 @@ export const ClientEvents = {
   GamePause: "client.game.pause",
   LobbyLeave: "client.lobby.leave",
   GameView: "client.game.view",
+<<<<<<< HEAD
   GameJoin: "client.game.join",
   GameInvite: "client.game.invite",
   GameInviteResponse: "client.game.invite.response",
+=======
+>>>>>>> master
 } as const;
 
 export type TClientEvents = (typeof ClientEvents)[keyof typeof ClientEvents];

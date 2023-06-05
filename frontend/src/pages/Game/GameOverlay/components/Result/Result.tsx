@@ -33,8 +33,12 @@ export const Result: React.FC<ResultProps> = ({ result, winner = "The bot", inde
   ];
 
   return (
+<<<<<<< HEAD
     <div id="result-modal" className="game-modal-cross">
       <CloseButton />
+=======
+    <div className="game-modal result-modal">
+>>>>>>> master
       <div>
         {result === "Winner" && (
           <>
@@ -56,6 +60,28 @@ export const Result: React.FC<ResultProps> = ({ result, winner = "The bot", inde
             <span className="result">Unexpected end... 🤷‍♂️</span>
           </>
         )}
+<<<<<<< HEAD
+=======
+        <div className="button-wrapper">
+          <button
+            className="game-button result-button"
+            onClick={() => {
+              setLobbyMode(undefined);
+              setResult(undefined);
+            }}>
+            PLAY AGAIN
+          </button>
+          <button
+            className="game-button result-button"
+            onClick={() => {
+              setResult(undefined);
+              setLobbyMode(undefined);
+              setGameMode(undefined);
+            }}>
+            RETURN
+          </button>
+        </div>
+>>>>>>> master
       </div>
     </div>
   );

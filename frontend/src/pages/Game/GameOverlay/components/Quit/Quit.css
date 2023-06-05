@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* .game-modal {
   flex-direction: column;
   position: absolute;
@@ -12,6 +13,19 @@
 }
 
 @media (max-width: 600px) {
+=======
+.game-modal {
+  flex-direction: column;
+}
+
+.quit-text {
+  font-size: 1em;
+  margin: 5px 15px;
+  text-align: center;
+}
+
+@media (max-width: 680px) {
+>>>>>>> master
   .quit-text {
     font-size: 3vw;
   }

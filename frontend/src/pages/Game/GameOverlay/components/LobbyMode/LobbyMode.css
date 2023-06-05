@@ -1,0 +1,35 @@
+<<<<<<< HEAD
+=======
+/* .modal-lobby {
+  z-index: 2;
+  height: 150px;
+  width: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  border: 1px solid #5e5e5e;
+  transition: 0.5s ease-out;
+  box-shadow: 0px 0px 22px 0px rgba(118, 118, 118, 0.75);
+  background: var(--global-game-gradient-dark); 
+}
+
+#light .modal-lobby {
+  background: var(--global-game-gradient-light);
+  border: 1px solid #252525;
+} */
+
+/* @media (max-width: 680px) {
+  .modal-lobby {
+    height: 80px;
+    width: 300px;
+  }
+}
+
+@media (max-height: 400px) {
+  .modal-lobby {
+    height: 80px;
+    width: 260px;
+  }
+} */
+>>>>>>> master

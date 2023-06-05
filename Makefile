@@ -34,9 +34,6 @@ list:
 stop:
 	${SUDO} $(DOCKER_COMPOSE) stop
 
-print:
-	@echo ${DATABASE_VOLUME}
-
 down:
 	${SUDO} $(DOCKER_COMPOSE) down
 
@@ -46,9 +43,6 @@ clean:  down
 fclean: clean
 	${SUDO} docker system prune --all --force
 	${SUDO} docker volume rm $(DATABASE_VOLUME)
-	${SUDO} ${RM} ./backend/dist
-	${SUDO} ${RM} ./backend/node_modules
-	${SUDO} ${RM} ./frontend/node_modules
 	@printf "$(UP)"
 
 re: fclean all

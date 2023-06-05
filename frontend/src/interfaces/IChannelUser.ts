@@ -6,5 +6,9 @@ export interface IChannelUser {
   user: {
     id: string;
     name: string;
+<<<<<<< HEAD
   };
+=======
+  }
+>>>>>>> master
 }

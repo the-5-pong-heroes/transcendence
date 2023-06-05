@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 /* eslint max-lines: ["warn", 170] */
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+=======
+/* eslint max-lines: ["warn", 150] */
+
+import { useEffect, useContext } from "react";
+>>>>>>> master
 
 import type {
   PaddleMove,
@@ -19,6 +25,8 @@ import { useGameContext } from "./useGameContext";
 
 import type { SocketParameters, GameState } from "@types";
 import { useSocketContext, useAppContext } from "@hooks";
+
+const DELAY_START_ROUND = 500;
 
 const DELAY_START_ROUND = 500;
 

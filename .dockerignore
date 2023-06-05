@@ -1,0 +1,24 @@
+# ignore everything...
+**
+
+# but what we need!
+
+!shared
+
+!backend/entrypoint.sh
+!backend/src/
+!backend/nest-cli.json
+!backend/tsconfig.json
+!backend/package.json
+!backend/yarn.lock
+
+!frontend/index.html
+!frontend/src/
+!frontend/public/
+!frontend/tsconfig.json
+!frontend/vite.config.ts
+!frontend/tsconfig.vite.json
+!frontend/package.json
+!frontend/yarn.lock
+!frontend/tailwind.config.cjs
+!frontend/postcss.config.cjs

@@ -24,14 +24,13 @@ export class MyProfileController {
   @Redirect("/")
   redirectToProfile(@CurrentUser() user: User) {
     // the "/profile" route redirects the user its profile
-    return { url: `/profile/${user?.id}` };
+    return { url: `/profile/${user.id}` };
   }
 
   @Get("history")
-  @UseGuards(StatsGuard)
   @Redirect("/")
   redirectToHistory(@CurrentUser() user: User) {
-    return { url: `/profile/history/${user?.id}` };
+    return { url: `/profile/history/${user.id}` };
   }
 
   @Get(":uuid")

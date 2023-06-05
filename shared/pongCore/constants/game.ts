@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// export const GAME_WIDTH = 640;
+>>>>>>> master
 export const GAME_WIDTH = 749;
 export const GAME_HEIGHT = 480;
 export const GAME_DEPTH = 500;

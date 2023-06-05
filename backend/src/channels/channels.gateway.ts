@@ -1,14 +1,14 @@
-import { BadGatewayException } from "@nestjs/common";
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
-import { Message } from "@prisma/client";
 import { Socket, Server } from "socket.io";
 import { ChannelUsersService } from "../channel-users/channel-users.service";
 import { PrismaService } from "../database/prisma.service";
 import { UsersService } from "../users/users.service";
+// import { UsersService } from "../users_paul/users.service";
 import { CreateMessageDto } from "../messages/dto/create-message.dto";
 import { MessagesService } from "../messages/messages.service";
 import { ChannelsService } from "./channels.service";
 import { CreateChannelDto } from "./dto/create-channel.dto";
+import { BlockedService } from "src/blocked/blocked.service";
 
 @WebSocketGateway({
   cors: {
@@ -22,6 +22,7 @@ export class ChannelsGateway {
     private messagesService: MessagesService,
     private channelUsersService: ChannelUsersService,
     private usersService: UsersService,
+    private blockedService: BlockedService,
   ) {}
 
   @WebSocketServer() server!: Server;
@@ -39,8 +40,26 @@ export class ChannelsGateway {
     client.emit("updateChannels", true);
   }
 
+  async createDirectChannel(client: Socket, payload: any) {
+    const user = await this.usersService.findOneById(payload.channelId);
+    if (!user) return "User does not exist";
+    payload.type = "DIRECT";
+    const channel = await this.channelsService.createDirect(payload);
+    await this.channelUsersService.create({
+      channelId: channel.id,
+      userId: payload.userId,
+    });
+    await this.channelUsersService.create({
+      channelId: channel.id,
+      userId: payload.channelId,
+    });
+    this.server.emit("updateChannels", false);
+    client.emit("updateChannels", true);
+  }
+
   @SubscribeMessage("wantJoin")
   async wantJoin(client: Socket, payload: any) {
+    if (payload.type === undefined) return this.createDirectChannel(client, payload);
     const channel = await this.channelsService.findOne(payload.channelId);
     const banChannel = await this.prismaService.channelBan.findFirst({
       where: {
@@ -49,8 +68,9 @@ export class ChannelsGateway {
       },
     });
     if (banChannel) return;
-    if (channel.type === "PROTECTED") payload = { ...payload, isAuthorized: false };
-    await this.channelsService.addUser(payload);
+    let { type: _, ...channelUser } = payload;
+    if (channel.type === "PROTECTED") channelUser = { ...channelUser, isAuthorized: false };
+    await this.channelUsersService.create(channelUser);
     if (channel.type !== "PROTECTED") return this.confirmJoin(client, payload);
     client.emit("updateChannels", true);
   }
@@ -71,21 +91,12 @@ export class ChannelsGateway {
     const channel = await this.channelsService.findOne(payload.channelId);
     if (!channel) return "Channel does not exist.";
     if (channel.password !== payload.password) return "Password does not match.";
-    const channelUser = await this.prismaService.channelUser.findFirst({
-      where: {
-        channelId: payload.channelId,
-        userId: payload.userId,
-      },
+    const channelUser = await this.channelUsersService.findFirst({
+      channelId: payload.channelId,
+      userId: payload.userId,
     });
     if (!channelUser) return "This user is not on this channel.";
-    await this.prismaService.channelUser.update({
-      where: {
-        id: channelUser.id,
-      },
-      data: {
-        isAuthorized: true,
-      },
-    });
+    await this.channelUsersService.update({ id: channelUser.id, isAuthorized: true });
     this.confirmJoin(client, payload);
   }
 
@@ -133,7 +144,7 @@ export class ChannelsGateway {
       if (payload.isMuted) {
         setTimeout(async () => {
           const newChannelUser = await this.channelUsersService.findOne(payload.id);
-          if (!newChannelUser) return;
+          if (!newChannelUser || !newChannelUser.mutedUntil) return;
           if (new Date(newChannelUser.mutedUntil) < new Date() && newChannelUser.isMuted) {
             await this.channelUsersService.update({
               id: payload.id,
@@ -221,12 +232,10 @@ export class ChannelsGateway {
     const channel = await this.channelsService.findOneWithOwner(payload.channelId);
     if (!channel) return "This channel does not exist.";
     if (channel.users.some((user) => user.userId !== payload.userId)) return "You are not channel's owner.";
-    const deleteChanUser = this.prismaService.channelUser.deleteMany({
-      where: { channelId: payload.channelId },
-    });
-    const deleteMessages = this.messagesService.deleteAll(payload.channelId);
-    const deleteChannel = this.channelsService.delete(payload.channelId);
-    await this.prismaService.$transaction([deleteChanUser, deleteMessages, deleteChannel]);
+    await this.channelUsersService.deleteAllFromChannel(payload.channelId);
+    await this.prismaService.channelBan.deleteMany({ where: { channelId: payload.channelId } });
+    await this.messagesService.deleteAll(payload.channelId);
+    await this.channelsService.delete(payload.channelId);
     this.server.to(payload.channelId).emit("updateChannels", true);
   }
 
@@ -234,17 +243,13 @@ export class ChannelsGateway {
   async quit(client: Socket, payload: any) {
     client.leave(payload.channelId);
     const channel = await this.channelsService.findOne(payload.channelId);
-    const channelUser = await this.prismaService.channelUser.findFirst({
-      where: {
-        userId: payload.userId,
-        channelId: payload.channelId,
-      },
+    const channelUser = await this.channelUsersService.findFirst({
+      userId: payload.userId,
+      channelId: payload.channelId,
     });
-    await this.prismaService.channelUser.deleteMany({
-      where: {
-        userId: payload.userId,
-        channelId: payload.channelId,
-      },
+    await this.channelUsersService.deleteUser({
+      userId: payload.userId,
+      channelId: payload.channelId,
     });
     if (!channelUser) return "This user is not on this channel.";
     if (channel.type !== "PROTECTED" || channelUser.isAuthorized) {
@@ -269,5 +274,19 @@ export class ChannelsGateway {
     this.server.to(payload.channelId).emit("message", message);
     this.server.to(payload.channelId).emit("updateChannels", false);
     return message;
+  }
+
+  @SubscribeMessage("block")
+  async block(client: Socket, payload: any) {
+    const user = await this.usersService.findOneById(payload.userId);
+    if (!user) return;
+    const blocked = await this.usersService.findOneById(payload.blockedUserId);
+    if (!blocked) return;
+    if (payload.toBlock) {
+      await this.blockedService.create(payload);
+    } else {
+      await this.blockedService.delete(payload);
+    }
+    client.emit("reloadUser");
   }
 }

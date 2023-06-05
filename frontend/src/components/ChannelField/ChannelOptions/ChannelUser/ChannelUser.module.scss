@@ -1,4 +1,5 @@
 .ChannelUser {
+<<<<<<< HEAD
   position: relative;
   width: 80%;
 
@@ -13,10 +14,49 @@
 
     .ChannelUserItem {
       cursor: pointer;
+=======
+  width: 80%;
+
+  .ChannelUserBoard {
+    width: 100%;
+    height: 100%;
+
+    .Title {
+      padding: 10px 20px;
+      font-weight: bold;
+    }
+
+    .ChannelUserTable {
+    border-radius: 10px;
+    padding: 5px;
+
+      .ChannelUserItem {
+        cursor: pointer;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
+        margin: 5px;
+        padding: 10px 15px;
+        border-radius: 10px;
+
+        select {
+          cursor: pointer;
+          background: none;
+          outline: none;
+          border: none;
+        }
+      }
+    }
+
+    .ChannelUserOptions {
+      margin: 10px 5px;
+>>>>>>> master
       display: flex;
       flex-flow: row nowrap;
       justify-content: space-between;
       align-items: center;
+<<<<<<< HEAD
       margin: 5px;
       padding: 10px 15px;
       border-radius: 10px;
@@ -73,6 +113,12 @@
     position: absolute;
     top: 0;
     left: 0;
+=======
+    }
+  }
+
+  .Until {
+>>>>>>> master
     width: 100%;
     height: 100%;
     display: flex;
@@ -80,15 +126,93 @@
     justify-content: center;
     align-items: center;
     gap: 5px;
+<<<<<<< HEAD
     background-color: lightgray;
+=======
+>>>>>>> master
     border-radius: 8px;
     padding: 10px;
     text-align: center;
 
+<<<<<<< HEAD
+=======
+    .UntilInput {
+      background-color: transparent;
+      border-radius: 8px;
+      outline: none;
+    }
+
+>>>>>>> master
     .UntilButtons {
       display: flex;
       justify-content: space-between;
       gap: 10px;
     }
   }
+<<<<<<< HEAD
+=======
+
+  .Button {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    padding: 10px 15px;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 1px 2px 5px -3px black;
+
+    &:disabled {
+      background-color: #717171;
+      cursor: not-allowed
+    }
+  }
+}
+
+.ChannelUserLight {
+  .ChannelUserTable {
+    background-color: rgba(255, 255, 255, .2);
+
+    .ChannelUserItem {
+      &:hover {
+        background-color: rgba(255, 255, 255, .4);
+      }
+    }
+
+    .ActiveUser {
+      outline: solid 2px black;
+    }
+  }
+
+  .Until {
+    background-color: rgba(255, 255, 255, .2);
+  }
+  
+  .Button {
+    background-color: rgba(255, 0, 38, .9);
+  }
+}
+
+.ChannelUserDark {
+  .ChannelUserTable {
+    background-color: rgba(0, 0, 0, .2);
+
+    .ChannelUserItem {
+      &:hover {
+        background-color: rgba(0, 0, 0, .4);
+      }
+    }
+
+    .ActiveUser {
+      outline: solid 2px white;
+    }
+  }
+
+  .Until {
+    background-color: rgba(0, 0, 0, .2);
+  }
+  
+  .Button {
+    background-color: rgba(227, 24, 54, .9);
+  }
+>>>>>>> master
 }

@@ -13,8 +13,14 @@ export const useControlledPaddle = (): void => {
   const { localPongRef, paddleSideRef }: GameContextParameters = useGameContext();
 
   const moveUp = useCallback(() => {
+<<<<<<< HEAD
     if (paddleSideRef.current && localPongRef.current.paddleLastMove(paddleSideRef.current) !== "up") {
       socket?.emit(ClientEvents.UserMove, { move: "up" });
+=======
+    if (localPongRef.current.paddleLastMove(paddleSideRef.current) !== "up") {
+      // socketRef.current?.emit(ClientEvents.UserMove, { move: 4 });
+      socketRef.current?.emit(ClientEvents.UserMove, { move: "up" });
+>>>>>>> master
       localPongRef.current.updatePaddleVelocity(paddleSideRef.current, "up");
     }
   }, [socket, localPongRef, paddleSideRef]);

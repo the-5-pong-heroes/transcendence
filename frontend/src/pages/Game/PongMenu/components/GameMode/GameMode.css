@@ -2,6 +2,7 @@
   height: 30%;
 }
 
+<<<<<<< HEAD
 .gameMode-btn {
   margin: 15px;
   font-weight: 300;
@@ -15,6 +16,22 @@
   transition: all 400ms cubic-bezier(0.77, 0, 0.175, 1);
   cursor: pointer;
   user-select: none;
+=======
+.button {
+  height: 45px;
+  width: 180px;
+  font-size: 0.9em;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  z-index: 2;
+  border-radius: 100rem;
+  margin: 30px;
+  color: white;
+  background: transparent;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Open Sans", sans-serif;
+  border: 1px solid hsla(0, 0%, 100%, 0.4);
+>>>>>>> master
 }
 
 #light .gameMode-btn {
@@ -124,5 +141,23 @@
   }
   .gameMode-btn:hover {
     letter-spacing: 0.7rem;
+  }
+}
+
+@media (max-width: 680px) {
+  .button {
+    font-size: 0.6em;
+    height: 30px;
+    width: 110px;
+    margin: 20px;
+  }
+}
+
+@media (max-height: 400px) {
+  .button {
+    font-size: 0.6em;
+    height: 25px;
+    width: 100px;
+    margin: 10px;
   }
 }

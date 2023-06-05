@@ -11,6 +11,7 @@
   padding: 10px;
   overflow: hidden;
 
+<<<<<<< HEAD
   &:hover {
     background-color: rgba(212, 212, 212, 0.2);
   }
@@ -20,5 +21,29 @@
   }
 
   .Preview {
+=======
+  .Name {
+    font-weight: bold;
+  }
+}
+
+.ChannelItemLight {
+  &:hover {
+    background-color: rgba(255, 255, 255, .1);
+  }
+
+  &.ActiveItem {
+    background-color: rgba(255, 255, 255, .2);
+  }
+}
+
+.ChannelItemDark {
+  &:hover {
+    background-color: rgba(0, 0, 0, .1);
+  }
+
+  &.ActiveItem {
+    background-color: rgba(0, 0, 0, .2);
+>>>>>>> master
   }
 }

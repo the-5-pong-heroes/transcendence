@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 
 import { ChannelType } from "./ChannelType";
@@ -10,20 +11,48 @@ import { type IChannel } from "@/interfaces";
 interface IChannelOptionsProps {
   activeChannel: IChannel;
 }
+=======
+import React, { useContext, useEffect, useState } from 'react';
+import { ChannelContext } from '@/contexts';
+import { ChannelType } from "./ChannelType";
+import { ChannelUser } from "./ChannelUser";
+import { ChannelBan } from "./ChannelBan";
+import styles from './ChannelOptions.module.scss';
+>>>>>>> master
 
 interface IReturnMessage {
   error: boolean;
   message: string;
 }
 
+<<<<<<< HEAD
 export const ChannelOptions: React.FC<IChannelOptionsProps> = ({ activeChannel }) => {
   const [returnMessage, setReturnMessage] = useState<IReturnMessage>({ error: true, message: "" });
 
+=======
+export const ChannelOptions: React.FC = () => {
+  const [returnMessage, setReturnMessage] = useState<IReturnMessage>({ error: true, message: "" });
+
+  const { activeChannel } = useContext(ChannelContext);
+  if (activeChannel === undefined) throw new Error("Undefined Active Channel");
+
+  const stopOutterScroll = (event: any) => {
+    const container = event.target.closest('.container');
+    container.style.overflow = 'hidden';
+  }
+
+  const enableOutterScroll = (event: any) => {
+    const container = event.target.closest('.container');
+    container.style.overflow = '';
+  }
+
+>>>>>>> master
   useEffect(() => {
     setReturnMessage((prev) => ({ ...prev, message: "" }));
   }, [activeChannel]);
 
   return (
+<<<<<<< HEAD
     <div className={styles.ChannelOptions}>
       <ChannelType activeChannel={activeChannel} setReturnMessage={setReturnMessage} />
       <ChannelUser users={activeChannel.users} />
@@ -31,3 +60,16 @@ export const ChannelOptions: React.FC<IChannelOptionsProps> = ({ activeChannel }
     </div>
   );
 };
+=======
+    <div
+      onMouseEnter={stopOutterScroll}
+      onMouseLeave={enableOutterScroll}
+      className={styles.ChannelOptions}
+    >
+      <ChannelType setReturnMessage={setReturnMessage}/>
+      <ChannelUser users={activeChannel.users} />
+      <ChannelBan banned={activeChannel.banned} />
+    </div>
+  );
+}
+>>>>>>> master

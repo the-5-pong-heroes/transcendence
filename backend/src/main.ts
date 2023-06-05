@@ -22,6 +22,13 @@ async function bootstrap() {
 
   app.use(cookieParser()); // cookie parser middleware
 
+  app.useGlobalPipes(
+    new ValidationPipe({
+      disableErrorMessages: true,
+      whitelist: true,
+    }),
+  );
+
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 

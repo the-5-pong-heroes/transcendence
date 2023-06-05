@@ -1,5 +1,4 @@
 import { Injectable, UseGuards } from "@nestjs/common";
-import { Cron } from "@nestjs/schedule";
 import { Server, Socket } from "socket.io";
 import { LobbyMode, GameMode, AuthenticatedSocket, ServerEvents, LobbyState, PaddleMove } from "./@types";
 import { GameLobby } from "./game.lobby";
@@ -242,21 +241,6 @@ export class GameService {
   public removeClient(client: AuthenticatedSocket): void {
     const lobby = client.data.lobby;
     lobby?.removeClient(client);
-  }
-
-  @Cron("*/5 * * * *")
-  private cleanLobbies(): void {
-    for (const [, lobby] of this.lobbies) {
-      const now = new Date().getTime();
-      const lobbyCreatedAt = lobby.createdAt.getTime();
-      const lobbyLifetime = now - lobbyCreatedAt;
-
-      if (lobbyLifetime > LOBBY_MAX_LIFETIME) {
-        lobby.dispatchToLobby(ServerEvents.GameEnd, "");
-        lobby.gameLoop.stop();
-        this.removeLobby(lobby.id);
-      }
-    }
   }
 
   /**************     UTILS     **************/

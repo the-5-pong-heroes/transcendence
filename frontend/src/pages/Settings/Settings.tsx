@@ -102,8 +102,8 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
     // TODO
   }
 
-  function toggle2FA() {
-    console.log("2FA on / off");
+  function toggle2FA(isToggled: boolean) {
+    console.log("2FA: ", isToggled);
   }
 
   useEffect(() => {

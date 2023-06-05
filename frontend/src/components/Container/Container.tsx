@@ -44,7 +44,7 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
         <Parallax className="layer light" speed={120}>
           <img src={Light} />
         </Parallax>
-        <Parallax className="layer moon" speed={20}>
+        <Parallax className="layer moon" speed={10}>
           <img src={Moon} />
         </Parallax>
         <Parallax className="layer moonDayLight" speed={10}>
@@ -56,13 +56,13 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
         <Parallax className="layer cloud" speed={70}>
           <img src={Cloud2} />
         </Parallax>
-        <Parallax className="layer trash" translateX={["40%", "-20%"]}>
+        <Parallax className="layer trash" speed={30}>
           <img src={Trash1} />
         </Parallax>
-        <Parallax className="layer trash" speed={30}>
+        <Parallax className="layer trash" speed={60}>
           <img src={Trash2} />
         </Parallax>
-        <Parallax className="layer trash" translateX={["50%", "-20%"]}>
+        <Parallax className="layer trash"  speed={60}>
           <div className="parallax-wrapper">
             <img src={Trash3} className="parallax-img" />
           </div>

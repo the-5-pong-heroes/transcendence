@@ -1,19 +1,24 @@
 import React, { useContext, useEffect, useState } from "react";
-import { UserContext, UserContextType } from "../../../../contexts";
-import { IChannel, IChannelBan, IChannelUser } from "../../../../interfaces";
+import { AppContext, ChannelContext, UserContext, UserContextType } from "../../../../contexts";
+import { IChannelBan, IChannelUser } from "../../../../interfaces";
 import { socket } from "../../../../socket";
 import styles from "./ChannelBan.module.scss";
 
 interface IChannelBanProps {
-  activeChannel: IChannel;
   banned: [IChannelBan];
 }
 
-export const ChannelBan: React.FC<IChannelBanProps> = ({ activeChannel, banned }) => {
+export const ChannelBan: React.FC<IChannelBanProps> = ({ banned }) => {
   const [activeUser, setActiveUser] = useState<IChannelBan>();
   const [userRole, setUserRole] = useState<string>();
 
   const { user } = useContext(UserContext) as UserContextType;
+  const { activeChannel } = useContext(ChannelContext);
+  if (activeChannel === undefined) throw new Error("Undefined AppContext");
+
+  const appContext = useContext(AppContext);
+  if (appContext === undefined) throw new Error("Undefined AppContext");
+  const { theme } = appContext;
 
   useEffect(() => {
     setUserRole(activeChannel.users.find((usr: IChannelUser) => usr.user.id === user.id)?.role);
@@ -27,7 +32,7 @@ export const ChannelBan: React.FC<IChannelBanProps> = ({ activeChannel, banned }
 
   return (
     banned.length ? 
-    <div className={styles.ChannelBan}>
+    <div className={`${styles.ChannelBan} ${theme === "light" ? styles.ChannelBanLight : styles.ChannelBanDark}`}>
       <div className={styles.Title}>
         Channel's banned users :
       </div>

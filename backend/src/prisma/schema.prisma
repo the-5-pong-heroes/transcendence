@@ -23,6 +23,8 @@ model User {
   addedBy       Friendship[]  @relation("addedBy")
   channelUsers  ChannelUser[]
   channelBans   ChannelBan[]
+  blocked       Blocked[]     @relation("blocked")
+  blockedBy     Blocked[]     @relation("blockedBy")
   auth          Auth?
 }
 
@@ -31,6 +33,16 @@ model Auth {
   userId   String @id @unique @db.Uuid
   email    String @unique
   password String
+}
+
+model Blocked {
+  blockedUser   User      @relation("blockedBy", fields: [blockedUserId], references: [id])
+  blockedUserId String    @db.Uuid
+  user          User      @relation("blocked", fields: [userId], references: [id])
+  userId        String    @db.Uuid
+  createdAt     DateTime  @default(now())
+
+  @@id(fields: [userId, blockedUserId])
 }
 
 model Friendship {
@@ -61,7 +73,7 @@ model Game {
 
 model Channel {
   id          String        @id @default(uuid()) @db.Uuid
-  name        String
+  name        String?
   createdAt   DateTime      @default(now())
   lastMessage DateTime      @default(now())
   type        ChannelType
@@ -117,6 +129,7 @@ enum ChannelType {
   PRIVATE
   PUBLIC
   PROTECTED
+  DIRECT
 }
 
 enum GameStatus {

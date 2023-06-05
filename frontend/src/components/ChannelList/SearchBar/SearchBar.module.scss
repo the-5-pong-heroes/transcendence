@@ -19,7 +19,6 @@
     display: flex;
     flex-flow: column nowrap;
     border-radius: 13px;
-    background-color: inherit;
     overflow-x: hidden;
     overflow-y: auto;
 
@@ -29,7 +28,30 @@
 
       &:hover {
         cursor: pointer;
-        background-color: rgba(212, 212, 212, 0.2);
+      }
+    }
+  }
+}
+
+.SearchBarLight {
+  .Preview {
+    background-color: rgba(255, 255, 255, 0.6);
+
+    .PreviewItem {
+      &:hover {
+        background-color: rgba(200, 200, 200, 0.6);
+      }
+    }
+  }
+}
+
+.SearchBarDark {
+  .Preview {
+    background-color: rgba(0, 0, 0, 0.6);
+
+    .PreviewItem {
+      &:hover {
+        background-color: rgba(55, 55, 55, 0.6);
       }
     }
   }

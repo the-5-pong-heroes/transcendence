@@ -10,8 +10,8 @@ export const CurrentUser = createParamDecorator(async (data: string | undefined,
   // ######
   let name;
   name = "Robtoine Collant";
-  name = "Jane Smith";
   name = "John Doe";
+  name = "Jane Smith";
   const prisma = new PrismaClient();
   const user: any = await prisma.user.findUniqueOrThrow({ where: { name: name } });
   // ######

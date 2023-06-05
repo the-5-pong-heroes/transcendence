@@ -10,6 +10,7 @@ import { StatsModule } from "./stats/stats.module";
 //import { AuthModule } from "./auth/auth.module";
 import { AuthModule } from "./auth_paul/auth.module"; // TEMPORAIRE
 import { ChannelsModule } from "./channels/channels.module";
+import { UserSettingsModule } from "./user-settings/user-settings.module";
 import { PrismaModule } from "./database/prisma.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { FriendshipModule } from "./friendship/friendship.module";
@@ -24,6 +25,7 @@ import { BlockedModule } from "./blocked/blocked.module";
     UsersModule, // TEMPORAIRE
     GameApiModule,
     ChannelsModule,
+    UserSettingsModule,
     FriendshipModule,
     BlockedModule,
     PrismaModule,

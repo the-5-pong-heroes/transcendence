@@ -7,6 +7,9 @@ import { UserLevel } from "../Leaderboard/UserLevel";
 import { MatchHistory } from "./MatchHistory";
 import { useParams } from "react-router-dom";
 import { UserStats } from "../Leaderboard/Leaderboard";
+import { Friends } from "./Friends";
+import { Setting, addFriend, GameLight, ChatLight } from '../../assets';
+import { Link } from "react-router-dom";
 
 export interface GameData {
   playerOne: { id: string; name: string };
@@ -27,6 +30,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
 
   const [user, setUser] = useState({} as UserStats);
 
+  const [currentTab, setCurrentTab] = useState("Match history");
 
   const fetchHistory = async () => {
     try {
@@ -56,16 +60,42 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
   useEffect(() => {
     fetchUser();
     fetchHistory();
-  }, []);
+  }, [uuid]);
+
+  function switchTab(event: any) {
+    const tabText: string = event.target.innerText;
+    if (tabText === "Match history") {
+      setCurrentTab("Match history");
+    } else {
+      setCurrentTab("Friends");
+    }
+  }
+
+  async function followFriend() {
+    const url= "http://localhost:3000";
+    try {
+      const response = await fetch(url + '/friendship', {
+        method: 'POST',
+        body: JSON.stringify({ newFriendId: uuid })
+      });
+      const data = await response.json();
+    } catch (err) {
+      console.error('Error adding a friend: ', err);
+    }
+  }
 
   return (
     <div ref={profileRef} id="Profile" className="Profile">
       <div className="profile-block block1">
         <div className="avatar">
-          <img src={DefaultAvatar} alt="profilePicture" />
+          <img src={user.avatar ? user.avatar : DefaultAvatar} alt="profilePicture" />
         </div>
         <div className="column username">
           {user.name}
+          { user.isMe && <Link to={"/Settings"}><img src={Setting}/></Link>}
+          { !user.isMe && <Link to={"/Chat"}><img src={ChatLight}/></Link>}
+          { !user.isMe && <Link to={"/Game"}><img src={GameLight}/></Link>}
+          { !user.isMe && !user.isFriend && <img className="addpointer" src={addFriend} onClick={followFriend}/>}
         </div>
         <UserStatus myClassName="column status" status={user.status} />
       </div>
@@ -94,8 +124,17 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
           <span>{user.nbGames}</span>
         </div>
       </div>
-      <MatchHistory history={history} />
-      {/* <div className="friends">{user.friend}</div> */}
+      <div className="block3">
+        <ul className="tab tabs">
+          <li className={`tab-item${currentTab === "Match history" ? " tab-active": ""}`} onClick={switchTab}>
+            <div className="tab-link">Match history</div>
+          </li>
+          <li className={`tab-item${currentTab === "Friends" ? " tab-active": ""}`} onClick={switchTab}>
+            <div className="tab-link">Friends</div>
+          </li>
+        </ul>
+        {currentTab === "Match history" ? <MatchHistory history={history} /> : <Friends user={user} />}
+      </div>
     </div>
   );
 };

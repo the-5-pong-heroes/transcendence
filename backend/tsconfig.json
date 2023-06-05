@@ -10,8 +10,8 @@
     },
     // which JS to use (the more recent, the less compatible)
     "target": "ESNext",
-    // enforces TS
-    "allowJs": false,
+    // enforces TS: false because class-validator (for instance) is written in JS
+    "allowJs": true,
     // allows importing modules with a .json extension
     "resolveJsonModule": true,
     // generates .d.ts files for every TypeScript file of the project
@@ -29,6 +29,8 @@
     "incremental": false,
     // stronger guarantees of program correctness
     "strict": true,
+    // TS won't raise an error when a class property isn't set in the constructor
+    "strictPropertyInitialization": false,
     // null and undefined have their own distinct types
     "strictNullChecks": true,
     // call, bind, apply should be invoked with correct argument

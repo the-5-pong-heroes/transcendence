@@ -13,6 +13,8 @@ interface ContextParameters {
   chatRef: React.RefObject<HTMLDivElement>;
   logRef: React.RefObject<HTMLDivElement>;
   signupRef: React.RefObject<HTMLDivElement>;
+  settingsRef: React.RefObject<HTMLDivElement>;
+  myProfileRef: React.RefObject<HTMLDivElement>;
   profileRef: React.RefObject<HTMLDivElement>;
   gameIsRunning: React.RefObject<boolean>;
 }
@@ -34,12 +36,14 @@ export const AppProvider: React.FC<ProviderParameters> = ({ children }) => {
   const chatRef = useRef<HTMLDivElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
   const signupRef = useRef<HTMLDivElement>(null);
+  const myProfileRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+  const settingsRef = useRef<HTMLDivElement>(null);
 
   const gameIsRunning = useRef<boolean>(false);
 
   const appContext = useMemo(
-    (): ContextParameters => ({ theme, toggleTheme, homeRef, gameRef, boardRef, chatRef, logRef, signupRef, profileRef, gameIsRunning }),
+    (): ContextParameters => ({ theme, toggleTheme, homeRef, gameRef, boardRef, chatRef, logRef, signupRef, myProfileRef, profileRef, gameIsRunning, settingsRef }),
     [theme]
   );
 

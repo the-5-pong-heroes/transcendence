@@ -29,8 +29,9 @@ export const ChannelBan: React.FC<IChannelBanProps> = ({ banned }) => {
   }, [user]);
 
   const handleUnban = () => {
-    const token = localStorage.getItem('access_token');
-    if (!token || !activeUser) return;
+    // const token = localStorage.getItem('access_token');
+    // if (!token || !activeUser) return;
+    if (!activeUser) return;
     socket?.emit("unbanChannelUser", { id: activeUser.id, channelId: activeChannel.id })
   }
 

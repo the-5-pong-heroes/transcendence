@@ -1,13 +1,13 @@
 .Profile {
   z-index: 7;
-  /* padding-top: 80px; */
+  padding-top: 70px;
   width: 100vw;
   height: 100vh;
   display: flex;
   flex-flow: column nowrap;
   margin: 0;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   user-select: none;
   position: absolute;
   top: 0;
@@ -37,7 +37,10 @@
   font-weight: bold;
   background-color: #e0c7f3;
   color: rgb(32, 29, 35);
-  /* transform: translateY(-0.1rem); */
+}
+
+.delete-button:hover {
+  transform: translateY(-0.05rem);
 }
 
 @keyframes fadeInAnimation {

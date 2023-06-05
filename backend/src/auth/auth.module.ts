@@ -11,6 +11,7 @@ import { GoogleStrategy } from "./google/google.strategy";
 import { GoogleService } from "./google/google.service";
 import { PrismaModule } from "src/database/prisma.module";
 import { UsersService } from "src/users/users.service";
+import { UserGuard } from "./user.guard";
 
 @Module({
   imports: [
@@ -23,7 +24,16 @@ import { UsersService } from "src/users/users.service";
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy, GoogleService, Oauth42Service, UsersService],
-  exports: [AuthService],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    GoogleStrategy,
+    GoogleService,
+    Oauth42Service,
+    UsersService,
+    UserGuard,
+  ],
+  exports: [AuthService, UserGuard],
 })
 export class AuthModule {}

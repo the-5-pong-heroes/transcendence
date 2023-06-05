@@ -9,7 +9,7 @@ import { PrismaService } from "../database/prisma.service";
 import { ChannelUsersService } from "../channel-users/channel-users.service";
 import { MessagesModule } from "../messages/messages.module";
 import { ChannelUsersModule } from "../channel-users/channel-users.module";
-import { ChannelGuard } from "./guard";
+import { UserGuard } from "src/auth/user.guard";
 import { AuthModule } from "src/auth/auth.module";
 import { BlockedService } from "src/blocked/blocked.service";
 
@@ -23,7 +23,7 @@ import { BlockedService } from "src/blocked/blocked.service";
     ChannelUsersService,
     UsersService,
     PrismaService,
-    ChannelGuard,
+    UserGuard,
     BlockedService,
   ],
 })

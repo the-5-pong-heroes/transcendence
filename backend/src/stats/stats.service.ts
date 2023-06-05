@@ -97,7 +97,7 @@ export class StatsService {
     addedBy.forEach((friend) => {
       friends.push({ name: friend.user.name, id: friend.user.id });
     });
-    const currentUserFriends = await this.getUserFriends(currentUser.id);
+    const currentUserFriends = await this.getUserFriends(currentUser?.id);
     const otherInfo = {
       rank: 1,
       score: 0,
@@ -105,7 +105,7 @@ export class StatsService {
       defeats: 0,
       nbGames: 0,
       level: "",
-      isMe: currentUser.id === userId,
+      isMe: currentUser?.id === userId,
       isFriend: this.isFriend(currentUserFriends, userId),
     };
     return { ...data, friends, ...otherInfo };
@@ -128,7 +128,7 @@ export class StatsService {
     rawData.forEach((game) => {
       const { playerOne, playerOneScore, playerTwo, playerTwoScore } = game;
       const playerOneData = gamesStats[playerOne.id] || { nbGames: 0, rank: 0, score: 0, wins: 0, defeats: 0 };
-      const playerTwoData = gamesStats[playerTwo.id] || { nbGames: 0, rank: 0, score: 0, wins: 0, defeats: 0 };
+      const playerTwoData = gamesStats[playerTwo?.id] || { nbGames: 0, rank: 0, score: 0, wins: 0, defeats: 0 };
       playerOneData.score += playerOneScore;
       playerOneData.nbGames += 1;
       playerTwoData.score += playerTwoScore;
@@ -141,7 +141,7 @@ export class StatsService {
         playerOneData.defeats += 1;
       }
       gamesStats[playerOne.id] = playerOneData;
-      gamesStats[playerTwo.id] = playerTwoData;
+      gamesStats[playerTwo?.id] = playerTwoData;
     });
     const ranks = Object.keys(gamesStats).sort((a, b) => {
       return gamesStats[b].score - gamesStats[a].score;
@@ -223,7 +223,7 @@ export class StatsService {
   async getHistory(currentUser: User, targetUser: User): Promise<GameData[]> {
     const matches = await this.extractGamesData();
     return matches.filter((match) => {
-      return targetUser.id === match.playerOne.id || targetUser.id === match.playerTwo.id;
+      return targetUser.id === match.playerOne.id || targetUser.id === match.playerTwo?.id;
     });
   }
 }

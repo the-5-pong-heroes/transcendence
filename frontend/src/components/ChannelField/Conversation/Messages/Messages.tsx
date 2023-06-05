@@ -7,6 +7,7 @@ import { IMessage } from '@/interfaces';
 import { ServerMessage } from './ServerMessage';
 import { UserMessage } from './UserMessage';
 import { OtherMessage } from './OtherMessage';
+import { ResponseError } from "@/helpers";
 import styles from './Messages.module.scss';
 
 export const Messages: React.FC = () => {
@@ -22,11 +23,14 @@ export const Messages: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem('access_token');
-      if (!token || !activeChannel) return setMessages([]);
-      const	config = { headers: { 'Authorization': token }};
-      const response = await fetch(`http://localhost:3000/chat/${activeChannel.id}`, config);
-      if (!response.ok) return console.log(response);
+      // const token = localStorage.getItem('access_token');
+      // if (!token || !activeChannel) return setMessages([]);
+      // const	config = { headers: { 'Authorization': token }};
+      const response = await fetch(`http://localhost:3000/chat/${activeChannel.id}`, { credentials: "include" });
+      // if (!response.ok) return console.log(response);
+      if (!response.ok) {
+        throw new ResponseError("Failed on fetch channels request", response);
+      }
       const data = await response.json();
       setMessages(data);
     }

@@ -3,6 +3,7 @@ import { UserContext, UserContextType } from "@/contexts";
 import { IMessage } from "@/interfaces";
 import { socket } from "@/socket";
 import { useNavigate } from "react-router-dom";
+import { ResponseError } from "@/helpers";
 import styles from "./OtherMessage.module.scss";
 
 interface IOtherMessageProps {
@@ -25,40 +26,48 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
   }
 
   const handleFriend = async () => {
-    const token = localStorage.getItem('access_token');
-    if (!token) return;
+    // const token = localStorage.getItem('access_token');
+    // if (!token) return;
     if (!userIsFriend) {
       const config = {
         method: "POST",
         mode: "cors" as RequestMode,
+        credentials: "include" as RequestCredentials,
         headers: {
-          "Authorization": token,
+          // "Authorization": token,
           "Content-Type": "application/json;charset=utf-8"
         },
         body: JSON.stringify({ newFriendId: message.senderId }),
       }
       const response = await fetch("http://localhost:3000/friendship", config);
-      if (!response.ok) return console.log("Error friendship");
+      if (!response.ok) {
+        throw new ResponseError("Failed on fetch channels request", response);
+      }
+      // if (!response.ok) return console.log("Error friendship");
     } else {
       const config = {
         method: "DELETE",
         mode: "cors" as RequestMode,
+        credentials: "include" as RequestCredentials,
         headers: {
-          "Authorization": token,
+          // "Authorization": token,
           "Content-Type": "application/json;charset=utf-8"
         },
         body: JSON.stringify({ friendId: message.senderId }),
       }
       const response = await fetch("http://localhost:3000/friendship", config);
-      if (!response.ok) return console.log("Error friendship");
+      if (!response.ok) {
+        throw new ResponseError("Failed on fetch channels request", response);
+      }
+      // if (!response.ok) return console.log("Error friendship");
     }
     setUserIsFriend(!userIsFriend);
     setShowOptions();
   }
 
   const handleBlock = async () => {
-    const token = localStorage.getItem('access_token');
-    if (!token) return;
+    // const token = localStorage.getItem('access_token');
+    // if (!token) return;
     socket.emit('block', { blockedUserId: message.senderId, toBlock: !userIsBlocked, userId: user.id });
     setShowOptions()
   }

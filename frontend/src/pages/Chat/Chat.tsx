@@ -10,7 +10,7 @@ interface IChatProps {
 export const Chat: React.FC<IChatProps> = ({ chatRef }) => {
 
   return (
-    <UserProvider>
+    // <UserProvider>
       <ChannelProvider>
         <div ref={chatRef} className={styles.Chat}>
           <div className={styles.ChatWindow}>
@@ -19,7 +19,7 @@ export const Chat: React.FC<IChatProps> = ({ chatRef }) => {
           </div>
         </div>
       </ChannelProvider>
-    </UserProvider>
+    // </UserProvider>
   );
 };
 

@@ -25,9 +25,10 @@ export const SearchBar: React.FC = () => {
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setInput(value);
-    const token = localStorage.getItem('access_token');
+    // const token = localStorage.getItem('access_token');
+    // if (!value || !token) return setPreview([]);
 
-    if (!value || !token) return setPreview([]);
+    if (!value) return setPreview([]);
 
     fetch(`${BASE_URL}/chat/search/${value}`, {
       credentials: "include",

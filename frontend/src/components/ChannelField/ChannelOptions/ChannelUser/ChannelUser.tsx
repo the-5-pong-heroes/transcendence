@@ -31,30 +31,34 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
   const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = event.target;
 
-    const token = localStorage.getItem('access_token');
-    if (!token || !activeUser) return;
+    // const token = localStorage.getItem('access_token');
+    // if (!token || !activeUser) return;
+    if (!activeUser) return;
     socket?.emit("updateChannelUser", { id: activeUser.id, role: value })
   }
 
   const toggleMuteUser = (event: any) => {
     event.preventDefault();
-    const token = localStorage.getItem('access_token');
-    if (!token || !activeUser) return;
+    // const token = localStorage.getItem('access_token');
+    // if (!token || !activeUser) return;
+    if (!activeUser) return;
     socket?.emit("updateChannelUser", { id: activeUser.id, isMuted: !activeUser.isMuted, mutedUntil: new Date(Date.now() + untilNumber * 60000) })
     setUntilOption("");
     setUntilNumber(0);
   }
 
   const kickUser = () => {
-    const token = localStorage.getItem('access_token');
-    if (!token || !activeUser) return;
+    // const token = localStorage.getItem('access_token');
+    // if (!token || !activeUser) return;
+    if (!activeUser) return;
     socket?.emit("kickChannelUser", { id: activeUser.id })
   }
 
   const banUser = (event: any) => {
     event?.preventDefault();
-    const token = localStorage.getItem('access_token');
-    if (!token || !activeUser) return;
+    // const token = localStorage.getItem('access_token');
+    // if (!token || !activeUser) return;
+    if (!activeUser) return;
     socket?.emit("banChannelUser", { id: activeUser.id, bannedUntil: new Date(Date.now() + untilNumber * 60000) })
     setUntilOption("");
     setUntilNumber(0);

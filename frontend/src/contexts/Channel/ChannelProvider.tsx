@@ -12,9 +12,10 @@ export const ChannelProvider: React.FC<ProviderParameters> = ({ children }) => {
   const [channels, setChannels] = useState<IChannel[]>([]);
 
   const fetchData = async (changeChannel: boolean = true) => {
-    const	token = localStorage.getItem('access_token');
-    if (!token) return;
-    const	config = { headers: { 'Authorization': token }};
+    // const	token = localStorage.getItem('access_token');
+    // if (!token) return;
+    // const	config = { headers: { 'Authorization': token }};
+    const config = { credentials: "include" as RequestCredentials } ;
     const response = await fetch('http://localhost:3000/chat', config);
     if (!response.ok) return;
     const data = await response.json();

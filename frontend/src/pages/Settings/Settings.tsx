@@ -43,8 +43,9 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
       try {
         setUploading(true);
         const response = await fetch(url + '/upload', {
+          credentials: 'include',
           method: 'POST',
-          body: formData
+          body: formData,
         });
         const data = await response.json();
         setAvatar(data.avatar);
@@ -57,7 +58,7 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
 
   const fetchSettings = async () => {
     try {
-      const resp = await fetch(url);
+      const resp = await fetch(url, { credentials: "include" });
       const data = await resp.json();
       if (data) {
         setSettings(data);
@@ -75,7 +76,8 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
         const resp = await fetch(url, {
           method: 'PATCH',
           headers: { 'Accept': 'application/json', 'Content-Type': 'application/json;charset=utf-8' },
-          body: JSON.stringify({name: username})
+          body: JSON.stringify({name: username}),
+          credentials: 'include',
         });
         if (!resp.ok) {
           alert("Your username must be unique and 3 to 20 characters long.");

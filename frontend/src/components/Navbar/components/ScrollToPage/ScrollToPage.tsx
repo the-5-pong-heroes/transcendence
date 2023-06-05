@@ -6,15 +6,16 @@ import type { PageRefs } from "@types";
 
 export const ScrollToPage: React.FC = () => {
   const { pathname } = useLocation();
-  const { homeRef, profileRef, gameRef, boardRef, chatRef, notFoundRef }: PageRefs = useAppContext().pageRefs;
+  const { homeRef, profileRef, myProfileRef, gameRef, boardRef, chatRef, notFoundRef }: PageRefs = useAppContext().pageRefs;
 
   const refs: Record<string, React.RefObject<HTMLDivElement>> = {
     "/": homeRef,
     "/Game": gameRef,
     "/Leaderboard": boardRef,
     "/Chat": chatRef,
-    "/Profile": profileRef,
-  };
+    "/Profile": myProfileRef,
+    // "/Profile": profileRef,
+  }
   const ref = refs[pathname] ?? notFoundRef;
 
   useEffect(() => {

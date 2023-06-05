@@ -21,8 +21,9 @@ export const ChannelHeader: React.FC<IChannelHeader> = ({ setShowOptions }) => {
   const { theme } = appContext;
 
   const leaveChannel = async () => {
-    const token = localStorage.getItem('access_token');
-    if (!token || !activeChannel) return;
+    // const token = localStorage.getItem('access_token');
+    // if (!token || !activeChannel) return;
+    if (!activeChannel) return;
     socket?.emit('quit', { channelId: activeChannel.id, userId: user?.id });
   }
 

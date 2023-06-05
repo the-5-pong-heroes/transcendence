@@ -9,7 +9,7 @@ import { MatchHistory } from "./MatchHistory";
 import { useParams } from "react-router-dom";
 import { UserStats } from "../Leaderboard/Leaderboard";
 import { Friends } from "./Friends";
-import { Setting, addFriend, GameLight, ChatLight } from '../../assets';
+import { Setting, addFriend, GameLight, ChatLight } from "../../assets";
 import { Link } from "react-router-dom";
 import { useSignOut } from "../Login/hooks";
 import * as customFetch from "@/helpers/fetch";
@@ -62,13 +62,13 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
       if (data) {
         const LEVELS: string[] = ["plant", "walle", "eve", "energy"];
         data.levelPicture = [Plant, Walle, Eve, Energy][LEVELS.indexOf(data.level)];
-        data.status = (data.status === "IN_GAME" ? "PLAYING" : data.status);
-        setUser(data)
+        data.status = data.status === "IN_GAME" ? "PLAYING" : data.status;
+        setUser(data);
       }
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   useEffect(() => {
     fetchUser();
@@ -95,15 +95,16 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
   }
 
   async function followFriend() {
-    const url= "http://localhost:3000";
+    const url = "http://localhost:3000";
     try {
-      const response = await fetch(url + '/friendship', {
-        method: 'POST',
-        body: JSON.stringify({ newFriendId: uuid })
+      const response = await fetch(url + "/friendship", {
+        method: "POST",
+        body: JSON.stringify({ newFriendId: uuid }),
+        credentials: "include",
       });
       const data = await response.json();
     } catch (err) {
-      console.error('Error adding a friend: ', err);
+      console.error("Error adding a friend: ", err);
     }
   }
 
@@ -115,10 +116,22 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
         </div>
         <div className="column username">
           {user.name}
-          { user.isMe && <Link to={"/Settings"}><img src={Setting}/></Link>}
-          { !user.isMe && <Link to={"/Chat"}><img src={ChatLight}/></Link>}
-          { !user.isMe && <Link to={"/Game"}><img src={GameLight}/></Link>}
-          { !user.isMe && !user.isFriend && <img className="addpointer" src={addFriend} onClick={followFriend}/>}
+          {user.isMe && (
+            <Link to={"/Settings"}>
+              <img src={Setting} />
+            </Link>
+          )}
+          {!user.isMe && (
+            <Link to={"/Chat"}>
+              <img src={ChatLight} />
+            </Link>
+          )}
+          {!user.isMe && (
+            <Link to={"/Game"}>
+              <img src={GameLight} />
+            </Link>
+          )}
+          {!user.isMe && !user.isFriend && <img className="addpointer" src={addFriend} onClick={followFriend} />}
         </div>
         <UserStatus myClassName="column status" status={user.status} />
       </div>
@@ -149,22 +162,22 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
       </div>
       <div className="block3">
         <ul className="tab tabs">
-          <li className={`tab-item${currentTab === "Match history" ? " tab-active": ""}`} onClick={switchTab}>
+          <li className={`tab-item${currentTab === "Match history" ? " tab-active" : ""}`} onClick={switchTab}>
             <div className="tab-link">Match history</div>
           </li>
-          <li className={`tab-item${currentTab === "Friends" ? " tab-active": ""}`} onClick={switchTab}>
+          <li className={`tab-item${currentTab === "Friends" ? " tab-active" : ""}`} onClick={switchTab}>
             <div className="tab-link">Friends</div>
           </li>
         </ul>
         {currentTab === "Match history" ? <MatchHistory history={history} /> : <Friends user={user} />}
-        <div className="profile-footer">
+      </div>
+      <div className="profile-footer">
         <button className="signOut-button" onClick={() => signOut()}>
           Sign out
         </button>
         <button className="delete-button" onClick={deleteUser}>
           Delete my account
         </button>
-      </div>
       </div>
     </div>
   );

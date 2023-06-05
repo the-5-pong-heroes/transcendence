@@ -33,8 +33,9 @@ const App: React.FC = () => {
         </Route>
         <Route element={<AppLayout user={user} />}>
           <Route path="/" element={<Home homeRef={homeRef} />} />
-          <Route path="/Profile" element={<Profile key="my-profile" profileRef={myProfileRef} />} />
-          <Route path="/Profile/:uuid" element={<Profile key={useParams().uuid} profileRef={profileRef} />} />
+          <Route path="/Profile" element={<Profile key="my-profile" profileRef={myProfileRef} />}>
+            {/* <Route path=":uuid" element={<Profile key={useParams().uuid} profileRef={profileRef} />} /> */}
+          </Route>
           <Route path="/Settings/" element={<Settings settingsRef={settingsRef} />} />
           {/* <Route path="/Profile" element={<Profile profileRef={profileRef} />} /> */}
           <Route path="/Game" element={<Game gameRef={gameRef} />} />

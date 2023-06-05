@@ -19,8 +19,9 @@ export const ConversationForm: React.FC = () => {
   const { theme }: AppContextParameters = useAppContext();
 
   const submit = () => {
-    const token = localStorage.getItem('access_token');
-    if (!token || message === "" || !activeChannel || !user) return; // TODO faire une redirection
+    // const token = localStorage.getItem('access_token');
+    // if (!token || message === "" || !activeChannel || !user) return; // TODO faire une redirection
+    if (message === "" || !activeChannel || !user) return; // TODO faire une redirection
     const sentMessage = {
       content: message,
       channelId: activeChannel.id,

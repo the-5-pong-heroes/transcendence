@@ -18,11 +18,11 @@ import { MessagesService } from "../messages/messages.service";
 import { ChannelsService } from "./channels.service";
 import { CreateChannelDto } from "./dto/create-channel.dto";
 import { UpdateChannelDto } from "./dto/update-channel.dto";
-import { ChannelGuard } from "./guard";
+import { UserGuard } from "src/auth/user.guard";
 
 @Controller("chat")
 // @UseGuards(AuthGuard("jwt"))
-@UseGuards(ChannelGuard)
+@UseGuards(UserGuard)
 export class ChannelsController {
   constructor(
     private readonly prismaService: PrismaService,

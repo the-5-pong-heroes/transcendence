@@ -7,25 +7,34 @@ import { Oauth42Service } from "./auth42/Oauth42.service";
 import { Generate2FAService } from "./2FA/generate.service";
 import { GoogleStrategy } from "./google/google.strategy";
 import { GoogleService } from "./google/google.service";
-import {MailerModule} from '@nestjs-modules/mailer';
+import { MailerModule } from "@nestjs-modules/mailer";
 import { EnableService } from "./2FA/enable2FA.service";
 import { VerifyService } from "./2FA/verify.service";
 
-
 @Module({
-    imports: [
-        MailerModule.forRoot({
-			transport: {
-				port: 465,
-				host: 'smtp.gmail.com',
-				auth: {
-					user: 'wallE.transcendence@gmail.com',
-					pass: 'fsyuokyiumczzmdb',
-				},
-			},
-		}),
-        PrismaModule],
-    controllers: [AuthController],
-    providers: [GoogleStrategy, GoogleService, AuthService, Oauth42Service, UserService, Generate2FAService, EnableService, VerifyService],
+  imports: [
+    MailerModule.forRoot({
+      transport: {
+        port: 465,
+        host: "smtp.gmail.com",
+        auth: {
+          user: "wallE.transcendence@gmail.com",
+          pass: "fsyuokyiumczzmdb",
+        },
+      },
+    }),
+    PrismaModule,
+  ],
+  controllers: [AuthController],
+  providers: [
+    GoogleStrategy,
+    GoogleService,
+    AuthService,
+    Oauth42Service,
+    UserService,
+    Generate2FAService,
+    EnableService,
+    VerifyService,
+  ],
 })
 export class AuthModule {}

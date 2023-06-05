@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { MiddlewareConsumer, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
@@ -14,7 +14,7 @@ import { PrismaModule } from "./database/prisma.module";
 import { GoogleStrategy } from "./auth/google/google.strategy";
 //import { UserModule } from "./users/users.module"
 import { PrismaService } from "./database/prisma.service";
-import { APP_FILTER } from "@nestjs/core";
+import { CurrentUserMiddleware } from "./auth/current-user.middleware";
 
 @Module({
   imports: [
@@ -32,4 +32,9 @@ import { APP_FILTER } from "@nestjs/core";
   controllers: [AppController],
   providers: [AppService, GoogleStrategy, PrismaService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    // registers our custom middleware, that attaches the current user to each of its request
+    consumer.apply(CurrentUserMiddleware).forRoutes("*");
+  }
+}

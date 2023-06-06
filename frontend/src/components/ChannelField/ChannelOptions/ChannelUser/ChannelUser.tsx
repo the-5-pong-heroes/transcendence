@@ -27,6 +27,7 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
   const { user } = useUser();
   const { socket }: SocketParameters = useSocketContext();
   const { theme }: AppContextParameters = useAppContext();
+  console.log("🤡", user?.id);
 
   const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = event.target;
@@ -64,6 +65,14 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
     setUntilNumber(0);
   }
 
+  const inviteToPlay = (id?: string): void => {
+    console.log("👺", id);
+    if (!id) {
+      return;
+    }
+    socket?.emit(ClientEvents.GameInvite, { userId: id });
+  };
+
   useEffect(() => {
     if (!activeUser) return;
     const newActiveUser = users.find((usr: IChannelUser) => usr.id === activeUser.id);
@@ -91,7 +100,6 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
                 onClick={() => setActiveUser(usr)}
               >
                 <div>{usr.user.name}</div>
-                {/* {user?.id !== usr.user.id && <button onClick={() => inviteToPlay(usr.user.id)}>Invite to play</button>} */}
                 <select name="role" value={usr.role} onChange={handleRoleChange} disabled={userRole === "USER" || activeUser !== usr}>
                   {
                   usr.role === "OWNER" ?
@@ -141,6 +149,7 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
             >
               Ban
             </button>
+            <button className={styles.Button} onClick={() => inviteToPlay(activeUser?.user.id)} disabled={!activeUser || user?.id === activeUser?.user.id}>Invite to play</button>
           </div>
           }
         </div>

@@ -30,6 +30,7 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
   const handleScroll = (event: React.UIEvent<HTMLDivElement>): void => {
     event.stopPropagation();
     setX(event.currentTarget.scrollTop);
+    console.log("🤞🏻", x);
   };
 
   return (

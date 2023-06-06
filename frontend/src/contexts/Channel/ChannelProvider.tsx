@@ -22,7 +22,6 @@ export const ChannelProvider: React.FC<ProviderParameters> = ({ children }) => {
     const response = await fetch('http://localhost:3000/chat', config);
     if (!response.ok) return;
     const data = (await response.json()) as IChannel[];
-    console.log("🤡", data);
     setChannels(data);
     if (changeChannel)
       setActiveChannel(data[0]);

@@ -13,4 +13,10 @@ export type User = {
   lastLogin: Date | null;
   createdAt: Date;
   updatedAt: Date;
+  blocked: {
+    blockedUserId: string;
+  }[];
+  addedBy: {
+    userId: string;
+  }[];
 };

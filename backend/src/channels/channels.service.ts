@@ -36,6 +36,7 @@ export class ChannelsService {
   }
 
   async findAll(userId: string): Promise<Channel[]> {
+    console.log("😵‍💫 userId", userId);
     const channels = await this.prismaService.channel.findMany({
       where: {
         users: {
@@ -101,6 +102,7 @@ export class ChannelsService {
       }
       return channel;
     });
+    console.log("🤡", channels);
     return channels;
   }
 

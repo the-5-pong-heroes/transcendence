@@ -23,8 +23,9 @@ export const ProtectedChannel: React.FC<IProtectedChannelProps> = ({ activeChann
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    const token = window.localStorage.getItem('access_token');
-    if (!token || !user?.id || !activeChannel || password === "") return;
+    // const token = window.localStorage.getItem('access_token');
+    // if (!token || !user?.id || !activeChannel || password === "") return;
+    if (!user?.id || !activeChannel || password === "") return;
     const data = { channelId: activeChannel.id, userId: user.id, password };
     socket?.emit("submitPassword", data, (response: any) => {
       setErrorMessage(response);

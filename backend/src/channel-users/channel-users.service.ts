@@ -24,6 +24,7 @@ export class ChannelUsersService {
   }
 
   async findFirst(data: any): Promise<ChannelUser | null> {
+    console.log(">>> data: ", data);
     return this.prismaService.channelUser.findFirst({ where: { ...data } });
   }
 

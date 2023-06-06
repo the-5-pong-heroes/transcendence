@@ -11,7 +11,7 @@ export class BlockedController {
 
   @Post()
   create(@Body() data: any, @Req() req: any) {
-    if (data.toBlock) this.blockedService.create({ blockedUserId: data.blockedUserId, userId: req.user.userId });
-    else this.blockedService.delete({ blockedUserId: data.blockedUserId, userId: req.user.userId });
+    if (data.toBlock) this.blockedService.create({ blockedUserId: data.blockedUserId, userId: req.user.id });
+    else this.blockedService.delete({ blockedUserId: data.blockedUserId, userId: req.user.id });
   }
 }

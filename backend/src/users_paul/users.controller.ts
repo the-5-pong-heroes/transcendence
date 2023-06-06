@@ -14,20 +14,20 @@ export class UsersController {
 
   @Get("me")
   async findMe(@Req() req: any) {
-    return await this.usersService.findOneById(req.user.userId);
+    return await this.usersService.findOneById(req.user.id);
   }
 
   @Get(":id")
   async findOne(@Param("id") id: string, @Req() req: any) {
     const user = await this.usersService.findOneById(id);
-    if (req.user.roles === 0 && req.user.userId !== user?.id) throw new BadRequestException("Unauthorized");
+    if (req.user.roles === 0 && req.user.id !== user?.id) throw new BadRequestException("Unauthorized");
     return user;
   }
 
   @Delete(":id")
   async remove(@Param("id") id: string, @Req() req: any) {
     const user = await this.usersService.findOneById(id);
-    if (req.user.roles === 0 && req.user.userId !== user?.id) throw new BadRequestException("Unauthorized");
+    if (req.user.roles === 0 && req.user.id !== user?.id) throw new BadRequestException("Unauthorized");
     return this.usersService.remove(id);
   }
 }

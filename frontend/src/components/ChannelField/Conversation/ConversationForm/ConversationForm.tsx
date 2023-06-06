@@ -20,7 +20,7 @@ export const ConversationForm: React.FC = () => {
 
   const submit = () => {
     // const token = localStorage.getItem('access_token');
-    // if (!token || message === "" || !activeChannel || !user) return; // TODO faire une redirection
+    // if (!token || message === "" || !activeChannel || !user) return;
     if (message === "" || !activeChannel || !user) return; // TODO faire une redirection
     const sentMessage = {
       content: message,

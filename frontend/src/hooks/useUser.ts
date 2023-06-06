@@ -6,6 +6,7 @@ import * as fetch from "@/helpers/fetch";
 
 async function fetchUser(): Promise<User | null> {
   const data = await fetch.get<UserAuth>("/auth/user");
+  console.log("🐥");
 
   return data.user;
 }

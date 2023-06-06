@@ -25,6 +25,7 @@ export const Messages: React.FC = () => {
     const fetchData = async () => {
       // const token = localStorage.getItem('access_token');
       // if (!token || !activeChannel) return setMessages([]);
+      if (!activeChannel) return setMessages([]);
       // const	config = { headers: { 'Authorization': token }};
       const response = await fetch(`http://localhost:3000/chat/${activeChannel.id}`, { credentials: "include" });
       // if (!response.ok) return console.log(response);

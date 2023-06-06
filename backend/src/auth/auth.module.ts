@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { PassportModule } from "@nestjs/passport";
 import { JwtModule } from "@nestjs/jwt";
 import { AuthController } from "./auth.controller";
@@ -15,8 +15,8 @@ import { UserGuard } from "./user.guard";
 
 @Module({
   imports: [
+    forwardRef(() => UsersModule),
     PrismaModule,
-    UsersModule,
     PassportModule,
     JwtModule.register({
       secret: "secret",

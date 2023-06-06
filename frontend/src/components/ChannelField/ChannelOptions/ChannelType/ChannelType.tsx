@@ -61,8 +61,9 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ setReturnMessage }) =
 
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const token = window.localStorage.getItem('access_token');
-    if (!token || !newChannel) return;
+    // const token = window.localStorage.getItem('access_token');
+    // if (!token || !newChannel) return;
+    if (!newChannel) return;
     if (newChannel.type === activeChannel.type && newChannel.password == activeChannel.password)
       return;
     if (newChannel.type === "PROTECTED" && !newChannel.password)

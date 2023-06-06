@@ -37,7 +37,8 @@ export class ChannelsController {
 
   @Get()
   findAll(@Req() req: any) {
-    return this.channelsService.findAll(req.user.userId);
+    console.log("👻", req.user);
+    return this.channelsService.findAll(req.user.id);
   }
 
   @Get(":id")
@@ -49,7 +50,7 @@ export class ChannelsController {
   searchChannels(@Param("name") name: string, @Req() req: any) {
     return this.channelsService.searchAll({
       channelName: name,
-      userId: req.user.userId,
+      userId: req.user.id,
     });
   }
 

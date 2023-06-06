@@ -23,7 +23,7 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
   const [untilNumber, setUntilNumber] = useState<number>(0)
   const [userRole, setUserRole] = useState<string>();
 
-  {/* const { user } = useContext(UserContext) as UserContextType; */}
+  // const { user } = useContext(UserContext) as UserContextType;
   const { user } = useUser();
   const { socket }: SocketParameters = useSocketContext();
   const { theme }: AppContextParameters = useAppContext();

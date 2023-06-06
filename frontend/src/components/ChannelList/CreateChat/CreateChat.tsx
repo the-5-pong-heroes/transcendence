@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useUser, useSocketContext, useAppContext } from "@hooks";
 import type { SocketParameters, AppContextParameters } from "@types";
 import styles from './CreateChat.module.scss';
+import { UserContext } from "@/contexts";
 
 interface IChannel {
   name: string;

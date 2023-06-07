@@ -1,13 +1,16 @@
 .game-container {
+  position: absolute;
+  top: 0;
+  left: 100vh;
+  left: calc(548vh / 5);
+  /* left: calc(548vh - 400vw); */
+  /* left: 100vw; */
 	height: 100vh;
 	width: 100vw;
   z-index: 7;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  top: 0;
-  left: 15%;
   animation: fadeInAnimation ease 500ms;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;

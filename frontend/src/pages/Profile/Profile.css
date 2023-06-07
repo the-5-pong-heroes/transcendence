@@ -1,4 +1,14 @@
+:root {
+  --viewport-width: 100vw;
+  --background-height: 548vh;
+}
+
 .Profile {
+  position: absolute;
+  top: 0;
+  right: 0;
+  /* left: calc(548vh - 100vw); */
+  right: 0;
   z-index: 7;
   padding-top: 70px;
   width: 100vw;
@@ -9,9 +19,6 @@
   align-items: center;
   justify-content: space-between;
   user-select: none;
-  position: absolute;
-  top: 0;
-  right: 0;
   animation: fadeInAnimation ease 500ms;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;

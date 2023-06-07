@@ -30,7 +30,7 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
   const handleScroll = (event: React.UIEvent<HTMLDivElement>): void => {
     event.stopPropagation();
     setX(event.currentTarget.scrollTop);
-    console.log("🤞🏻", x);
+    // const scrollSection = event.currentTarget.scrollHeight / 5;
   };
 
   return (
@@ -68,7 +68,7 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
             <img src={Trash3} className="parallax-img" />
           </div>
         </Parallax>
-        {children}
+        <div className="container-section">{children}</div>
       </div>
     </div>
   );

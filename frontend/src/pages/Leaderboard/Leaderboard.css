@@ -1,4 +1,7 @@
 .Leaderboard {
+  /* position: absolute;
+  top: 0;
+  left: calc((548vh - 100vw) / 5 * 2); */
   z-index: 8;
   width: 100vw;
   height: 100vh;
@@ -8,9 +11,6 @@
   align-items: center;
   justify-content: center;
   user-select: none;
-  position: absolute;
-  top: 0;
-  left: 30%;
   animation: fadeInAnimation ease 500ms;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;

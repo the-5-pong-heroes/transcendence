@@ -37,7 +37,6 @@ export class ChannelsController {
 
   @Get()
   findAll(@Req() req: any) {
-    console.log("👻", req.user);
     return this.channelsService.findAll(req.user.id);
   }
 

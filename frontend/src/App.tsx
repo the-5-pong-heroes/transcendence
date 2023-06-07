@@ -39,7 +39,6 @@ const App: React.FC = () => {
             <Route path=":uuid" element={<Profile key={uuid} profileRef={profileRef} />} />
           </Route>
           <Route path="/Settings/" element={<Settings settingsRef={settingsRef} />} />
-          {/* <Route path="/Profile" element={<Profile profileRef={profileRef} />} /> */}
           <Route path="/Game" element={<Game gameRef={gameRef} />} />
           <Route path="/Leaderboard" element={<Leaderboard boardRef={boardRef} />} />
           <Route path="/Chat" element={<Chat chatRef={chatRef} />} />

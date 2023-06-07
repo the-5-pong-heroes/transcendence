@@ -10,7 +10,10 @@
 }
 
 .Chat {
-  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 300vh;
+  left: calc(548vh / 5 * 3);
   height: calc(96vh - 62px);
   margin-top: calc(4vh + 62px);
   display: flex;

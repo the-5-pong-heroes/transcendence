@@ -17,8 +17,8 @@ import { ServerEvents } from "../@types";
 
 import { useGameContext } from "./useGameContext";
 
-import type { SocketParameters, GameState } from "@types";
-import { useSocketContext, useAppContext } from "@hooks";
+import type { GameState } from "@types";
+import { useAppContext, useSocket } from "@hooks";
 
 const DELAY_START_ROUND = 500;
 
@@ -41,14 +41,11 @@ interface GameEndParameters {
 export const useGameEvents = (): void => {
   const { overlayRef, playRef, localPongRef, paddleSideRef, serverPongRef, lobbyRef }: GameContextParameters =
     useGameContext();
-  const { socket }: SocketParameters = useSocketContext();
+
+  const socket = useSocket();
   const { isRunning, quitGame }: GameState = useAppContext().gameState;
 
   useEffect(() => {
-    if (!socket) {
-      return;
-    }
-
     const handleLobbyState = (lobby: LobbyState): void => {
       lobbyRef.current = lobby;
       overlayRef?.current?.setGamePlayers(lobby.userLeft, lobby.userRight);

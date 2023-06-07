@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { ServerEvents, type LobbyState } from "@Game/@types";
-import { useSocketContext } from "@hooks";
+import { useSocketContext, useSocket } from "@hooks";
 import type { SocketParameters } from "@types";
 
 interface GameListValues {

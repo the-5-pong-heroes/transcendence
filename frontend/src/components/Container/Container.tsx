@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Parallax } from "react-scroll-parallax";
 
-import { useAppContext } from "@hooks";
-import type { AppContextParameters } from "@types";
+import { useTheme } from "@hooks";
 import "./Container.css";
 import {
   Background,
@@ -23,7 +22,7 @@ interface ContainerProps {
 }
 
 export const Container: React.FC<ContainerProps> = ({ children }) => {
-  const { theme }: AppContextParameters = useAppContext();
+  const theme = useTheme();
 
   const [x, setX] = useState<number>(0);
 

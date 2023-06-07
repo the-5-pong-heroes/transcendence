@@ -1,7 +1,7 @@
 import { useContext } from "react";
 
 import { SocketContext } from "@/contexts/Socket";
-import type { SocketParameters } from "@types";
+import type { SocketParameters, CustomSocket } from "@types";
 
 export const useSocketContext = (): SocketParameters => {
   const socketContext = useContext(SocketContext);
@@ -10,7 +10,14 @@ export const useSocketContext = (): SocketParameters => {
   }
 
   return {
+    customSocket: socketContext.customSocket,
     socket: socketContext.socketRef.current,
     socketReady: socketContext.socketReady,
   };
+};
+
+export const useSocket = (): CustomSocket => {
+  const { customSocket }: SocketParameters = useSocketContext();
+
+  return customSocket;
 };

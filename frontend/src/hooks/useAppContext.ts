@@ -1,7 +1,7 @@
 import { useContext } from "react";
 
 import { AppContext } from "@/contexts/App";
-import type { AppContextParameters } from "@types";
+import type { AppContextParameters, ThemeMode } from "@types";
 
 export const useAppContext = (): AppContextParameters => {
   const appContext = useContext(AppContext);
@@ -11,3 +11,9 @@ export const useAppContext = (): AppContextParameters => {
 
   return appContext;
 };
+
+export function useTheme(): ThemeMode {
+  const { theme }: AppContextParameters = useAppContext();
+
+  return theme;
+}

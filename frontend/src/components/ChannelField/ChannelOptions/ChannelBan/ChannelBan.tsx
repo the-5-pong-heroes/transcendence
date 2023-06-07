@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { AppContext, ChannelContext } from "../../../../contexts";
+import { ChannelContext } from "../../../../contexts";
 import { IChannelBan, IChannelUser } from "../../../../interfaces";
 // import { socket } from "../../../../socket";
-import { useUser, useSocketContext } from "@hooks";
-import { type SocketParameters } from "@types";
+import { useUser, useSocket, useTheme } from "@hooks";
 import styles from "./ChannelBan.module.scss";
 
 interface IChannelBanProps {
@@ -16,13 +15,11 @@ export const ChannelBan: React.FC<IChannelBanProps> = ({ banned }) => {
 
   // const { user } = useContext(UserContext) as UserContextType;
   const { user } = useUser();
-  const { socket }: SocketParameters = useSocketContext();
+  const socket = useSocket();
   const { activeChannel } = useContext(ChannelContext);
   if (activeChannel === undefined) throw new Error("Undefined AppContext");
 
-  const appContext = useContext(AppContext);
-  if (appContext === undefined) throw new Error("Undefined AppContext");
-  const { theme } = appContext;
+  const theme = useTheme();
 
   useEffect(() => {
     setUserRole(activeChannel.users.find((usr: IChannelUser) => usr.user.id === user?.id)?.role);
@@ -32,7 +29,7 @@ export const ChannelBan: React.FC<IChannelBanProps> = ({ banned }) => {
     // const token = localStorage.getItem('access_token');
     // if (!token || !activeUser) return;
     if (!activeUser) return;
-    socket?.emit("unbanChannelUser", { id: activeUser.id, channelId: activeChannel.id })
+    socket.emit("unbanChannelUser", { id: activeUser.id, channelId: activeChannel.id });
   }
 
   return (

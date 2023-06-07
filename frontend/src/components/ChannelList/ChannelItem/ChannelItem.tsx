@@ -2,8 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { IChannel } from '@/interfaces';
 import styles from './ChannelItem.module.scss';
 import { ChannelContext } from '@/contexts';
-import type { AppContextParameters } from "@types";
-import { useAppContext } from "@hooks";
+import { useTheme } from "@hooks";
 
 interface ChannelItemProps {
   item: IChannel;
@@ -13,7 +12,7 @@ export const ChannelItem: React.FC<ChannelItemProps> = ({ item }) => {
   const [preview, setPreview] = useState<string>("");
 
   const { activeChannel, setActiveChannel } = useContext(ChannelContext);
-  const { theme }: AppContextParameters = useAppContext();
+  const theme = useTheme();
 
   useEffect(() => {
     if (!item.messages || !item.messages[0]) {

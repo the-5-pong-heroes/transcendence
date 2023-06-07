@@ -5,8 +5,7 @@ import { GameButton } from "../GameButton";
 import { CloseButton } from "../CloseButton";
 
 import { ClientEvents, type GameMode, type LobbyMode } from "@Game/@types";
-import { useSocketContext } from "@hooks";
-import type { SocketParameters } from "@types";
+import { useSocket } from "@hooks";
 
 interface LobbyModeProps {
   gameMode: GameMode | undefined;
@@ -15,7 +14,7 @@ interface LobbyModeProps {
 }
 
 export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode, setLobbyMode }) => {
-  const { socket }: SocketParameters = useSocketContext();
+  const socket = useSocket();
 
   if (lobbyMode) {
     return null;
@@ -23,7 +22,7 @@ export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode,
 
   const handleSendEvent = (lobbyMode: LobbyMode): void => {
     setLobbyMode(lobbyMode);
-    socket?.emit(ClientEvents.LobbyJoin, { lobbyMode: lobbyMode, gameMode: gameMode });
+    socket.emit(ClientEvents.LobbyJoin, { lobbyMode: lobbyMode, gameMode: gameMode });
   };
 
   return (
@@ -42,26 +41,6 @@ export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode,
             handleSendEvent("duo");
           }}
         />
-        {/* <button
-          className="lobby-btn btn-1"
-          onClick={() => {
-            handleSendEvent("solo");
-          }}>
-          <svg>
-            <rect x="0" y="0" fill="none" width="100%" height="100%" rx="20" />
-          </svg>
-          ONE PLAYER
-        </button>
-        <button
-          className="lobby-btn btn-1"
-          onClick={() => {
-            handleSendEvent("duo");
-          }}>
-          <svg>
-            <rect x="0" y="0" fill="none" width="100%" height="100%" rx="20" />
-          </svg>
-          TWO PLAYER
-        </button> */}
       </div>
     </div>
   );

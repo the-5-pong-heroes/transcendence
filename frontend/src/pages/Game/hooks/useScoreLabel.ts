@@ -6,7 +6,7 @@ import { ServerEvents } from "../@types";
 
 import { useGameContext } from "./useGameContext";
 
-import { useSocketContext } from "@hooks";
+import { useSocketContext, useSocket } from "@hooks";
 import type { SocketParameters } from "@types";
 
 interface ScoreUpdateParameters {

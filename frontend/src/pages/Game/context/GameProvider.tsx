@@ -8,8 +8,8 @@ import { useGameSize, usePause, useGameList } from "../hooks";
 
 import { GameContext } from "./GameContext";
 
-import type { SocketParameters, GameState } from "@types";
-import { useAppContext, useSocketContext } from "@hooks";
+import type { GameState } from "@types";
+import { useAppContext, useSocket } from "@hooks";
 
 interface ProviderParameters {
   children: React.ReactNode;
@@ -26,7 +26,7 @@ export const GameProvider: React.FC<ProviderParameters> = ({ children }) => {
   const serverPongRef = useRef<ServerPong>();
   const { gameList } = useGameList();
 
-  const { socket }: SocketParameters = useSocketContext();
+  const socket = useSocket();
   const { quitGame, setQuitGame }: GameState = useAppContext().gameState;
 
   const isMounted = useRef<boolean>(false);
@@ -40,12 +40,12 @@ export const GameProvider: React.FC<ProviderParameters> = ({ children }) => {
 
   useEffect(() => {
     isMounted.current = true;
-    socket?.emit(ClientEvents.GameConnect);
+    socket.emit(ClientEvents.GameConnect);
 
     return () => {
-      // socket?.emit(ClientEvents.LobbyLeave);
+      // socket.emit(ClientEvents.LobbyLeave);
       isMounted.current = false;
-      socket?.emit(ClientEvents.GameDisconnect);
+      socket.emit(ClientEvents.GameDisconnect);
     };
   }, [socket]);
 

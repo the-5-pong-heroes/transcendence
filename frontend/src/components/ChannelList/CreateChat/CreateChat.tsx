@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 // import { socket } from '../../../socket';
-import { useUser, useSocketContext, useAppContext } from "@hooks";
-import type { SocketParameters, AppContextParameters } from "@types";
+import { useUser, useSocket, useTheme } from "@hooks";
 import styles from './CreateChat.module.scss';
 import { UserContext } from "@/contexts";
 
@@ -25,8 +24,8 @@ export const CreateChat: React.FC = () => {
   const [channel, setChannel] = useState<IChannel>({ name: '', type: 'PUBLIC' });
   // const { user } = useContext(UserContext) as UserContextType;
   const { user } = useUser();
-  const { socket }: SocketParameters = useSocketContext();
-  const { theme }: AppContextParameters = useAppContext();
+  const socket = useSocket();
+  const theme = useTheme();
 
   useEffect(() => {
     if (!user) {
@@ -53,7 +52,7 @@ export const CreateChat: React.FC = () => {
     
     // const token = localStorage.getItem('access_token');
     // if (!token) return;
-    socket?.emit('create', channel);
+    socket.emit('create', channel);
     setChannel((prev: IChannel) => ({ users: prev.users, name: '', type: 'PUBLIC' }));
     setShowForm(false);
   }

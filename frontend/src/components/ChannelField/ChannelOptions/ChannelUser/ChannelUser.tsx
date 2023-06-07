@@ -2,8 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { UserContext, UserContextType } from "../../../../contexts";
 import { IChannelUser } from "../../../../interfaces";
 // import { socket } from "../../../../socket";
-import { useUser, useSocketContext, useAppContext } from "@hooks";
-import type { SocketParameters, AppContextParameters } from "@types";
+import { useUser, useSocket, useTheme } from "@hooks";
 import { ClientEvents } from "@Game/@types";
 
 import styles from "./ChannelUser.module.scss"
@@ -25,9 +24,9 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
 
   // const { user } = useContext(UserContext) as UserContextType;
   const { user } = useUser();
-  const { socket }: SocketParameters = useSocketContext();
-  const { theme }: AppContextParameters = useAppContext();
-  console.log("🤡", user?.id);
+  // const { socket }: SocketParameters = useSocketContext();
+  const socket = useSocket();
+  const theme = useTheme();
 
   const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = event.target;
@@ -35,7 +34,7 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
     // const token = localStorage.getItem('access_token');
     // if (!token || !activeUser) return;
     if (!activeUser) return;
-    socket?.emit("updateChannelUser", { id: activeUser.id, role: value })
+    socket.emit("updateChannelUser", { id: activeUser.id, role: value })
   }
 
   const toggleMuteUser = (event: any) => {
@@ -43,7 +42,7 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
     // const token = localStorage.getItem('access_token');
     // if (!token || !activeUser) return;
     if (!activeUser) return;
-    socket?.emit("updateChannelUser", { id: activeUser.id, isMuted: !activeUser.isMuted, mutedUntil: new Date(Date.now() + untilNumber * 60000) })
+    socket.emit("updateChannelUser", { id: activeUser.id, isMuted: !activeUser.isMuted, mutedUntil: new Date(Date.now() + untilNumber * 60000) })
     setUntilOption("");
     setUntilNumber(0);
   }
@@ -52,7 +51,7 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
     // const token = localStorage.getItem('access_token');
     // if (!token || !activeUser) return;
     if (!activeUser) return;
-    socket?.emit("kickChannelUser", { id: activeUser.id })
+    socket.emit("kickChannelUser", { id: activeUser.id })
   }
 
   const banUser = (event: any) => {
@@ -60,7 +59,7 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
     // const token = localStorage.getItem('access_token');
     // if (!token || !activeUser) return;
     if (!activeUser) return;
-    socket?.emit("banChannelUser", { id: activeUser.id, bannedUntil: new Date(Date.now() + untilNumber * 60000) })
+    socket.emit("banChannelUser", { id: activeUser.id, bannedUntil: new Date(Date.now() + untilNumber * 60000) })
     setUntilOption("");
     setUntilNumber(0);
   }
@@ -70,7 +69,7 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
     if (!id) {
       return;
     }
-    socket?.emit(ClientEvents.GameInvite, { userId: id });
+    socket.emit(ClientEvents.GameInvite, { userId: id });
   };
 
   useEffect(() => {

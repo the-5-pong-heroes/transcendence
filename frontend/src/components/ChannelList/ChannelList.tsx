@@ -4,16 +4,15 @@ import { ChannelContext, UserContext, UserContextType } from '@/contexts';
 import { CreateChat } from './CreateChat';
 import { SearchBar } from './SearchBar';
 import { ChannelItem } from './ChannelItem';
-import { useUser, useAppContext, useSocketContext } from "@hooks";
-import type { AppContextParameters, SocketParameters } from "@types";
+import { useUser, useTheme, useSocket } from "@hooks";
 import styles from './ChannelList.module.scss';
 
 export const ChannelList: React.FC = () => {
   // const { user } = useContext(UserContext) as UserContextType;
   const { user } = useUser();
-  const { theme }: AppContextParameters = useAppContext();
+  const theme = useTheme();
   const { channels } = useContext(ChannelContext);
-  const { socket }: SocketParameters = useSocketContext();
+  const socket = useSocket();
 
   const stopOutterScroll = (event: any) => {
     const container = event.target.closest('.container');
@@ -27,12 +26,12 @@ export const ChannelList: React.FC = () => {
 
   useEffect(() => {
     channels.map(channel => {
-      socket?.emit('join', channel.id);
+      socket.emit('join', channel.id);
     });
 
     return () => {
       channels.map(channel => {
-        socket?.emit('leave', channel.id);
+        socket.emit('leave', channel.id);
       });
     }
   }, [channels, socket]);

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ChannelContext } from "./ChannelContext";
 // import { socket } from "@/socket";
-import { useSocketContext } from "@hooks";
-import { type SocketParameters } from "@types";
+import { useSocket } from "@hooks";
 import { IChannel } from "@/interfaces";
 
 interface ProviderParameters {
@@ -12,7 +11,7 @@ interface ProviderParameters {
 export const ChannelProvider: React.FC<ProviderParameters> = ({ children }) => {
   const [activeChannel, setActiveChannel] = useState<IChannel | undefined>(undefined);
   const [channels, setChannels] = useState<IChannel[]>([]);
-  const { socket }: SocketParameters = useSocketContext();
+  const socket = useSocket();
 
   const fetchData = async (changeChannel: boolean = true) => {
     // const	token = localStorage.getItem('access_token');
@@ -36,9 +35,9 @@ export const ChannelProvider: React.FC<ProviderParameters> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    socket?.on('updateChannels', fetchData);
+    socket.on('updateChannels', fetchData);
     return () => {
-      socket?.off('updateChannels', fetchData);
+      socket.off('updateChannels', fetchData);
     }
   }, [activeChannel, socket]);
 

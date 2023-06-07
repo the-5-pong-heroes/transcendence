@@ -3,11 +3,10 @@ import React from "react";
 import "./ListOfGames.css";
 import { type GameContextParameters, type LobbyState, ClientEvents } from "@Game/@types";
 import { useGameContext } from "@Game/hooks";
-import { useSocketContext, useUser } from "@hooks";
-import type { SocketParameters } from "@types";
+import { useSocket, useUser } from "@hooks";
 
 export const ListOfGames: React.FC = () => {
-  const { socket }: SocketParameters = useSocketContext();
+  const socket = useSocket();
   const { gameList, overlayRef }: GameContextParameters = useGameContext();
   const { user } = useUser();
   const userName = user?.name;
@@ -15,10 +14,10 @@ export const ListOfGames: React.FC = () => {
   const onClick = (game: LobbyState): void => {
     if (game.status === "waiting") {
       if (socket) {
-        socket?.emit(ClientEvents.GameJoin, { lobbyId: game.id });
+        socket.emit(ClientEvents.GameJoin, { lobbyId: game.id });
       }
     } else {
-      socket?.emit(ClientEvents.GameView, { lobbyId: game.id });
+      socket.emit(ClientEvents.GameView, { lobbyId: game.id });
     }
     overlayRef?.current?.startGame(game.mode, game.gameMode);
   };

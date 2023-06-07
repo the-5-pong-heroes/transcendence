@@ -2,8 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { UserContext, UserContextType } from "@/contexts";
 import { IMessage } from "@/interfaces";
 // import { socket } from "@/socket";
-import { useUser, useSocketContext } from "@hooks";
-import { type SocketParameters } from "@types";
+import { useUser, useSocket } from "@hooks";
 import { useNavigate } from "react-router-dom";
 import { ResponseError } from "@/helpers";
 import styles from "./OtherMessage.module.scss";
@@ -20,7 +19,7 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
   const [userIsFriend, setUserIsFriend] = useState<boolean>(false);
   // const { user } = useContext(UserContext) as UserContextType;
   const { user } = useUser();
-  const { socket }: SocketParameters = useSocketContext();
+  const socket = useSocket();
   const optionsRef = useRef<any>(null);
   const navigate = useNavigate()
 
@@ -72,7 +71,7 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
   const handleBlock = async () => {
     // const token = localStorage.getItem('access_token');
     // if (!token) return;
-    socket?.emit('block', { blockedUserId: message.senderId, toBlock: !userIsBlocked, userId: user?.id });
+    socket.emit('block', { blockedUserId: message.senderId, toBlock: !userIsBlocked, userId: user?.id });
     setShowOptions()
   }
 

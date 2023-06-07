@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { AppContext, ChannelContext, UserContext, UserContextType } from '@/contexts';
+import { ChannelContext, UserContext, UserContextType } from '@/contexts';
 // import { socket } from '@/socket';
-import { useUser, useSocketContext, useAppContext } from "@hooks";
-import type { SocketParameters, AppContextParameters } from "@types";
+import { useUser, useSocket, useTheme } from "@hooks";
 import { IMessage } from '@/interfaces';
 import { ServerMessage } from './ServerMessage';
 import { UserMessage } from './UserMessage';
@@ -15,8 +14,9 @@ export const Messages: React.FC = () => {
   const [showOptions, setShowOptions] = useState<number>(-1);
 
   const { user } = useUser();
-  const { socket }: SocketParameters = useSocketContext();
-  const { theme }: AppContextParameters = useAppContext();
+  // const { socket }: SocketParameters = useSocketContext();
+  const socket = useSocket();
+  const theme = useTheme();
   // const { user } = useContext(UserContext) as UserContextType;
   const { activeChannel } = useContext(ChannelContext);
   if (activeChannel === undefined) throw new Error("Undefined Active Channel");
@@ -43,10 +43,10 @@ export const Messages: React.FC = () => {
         setMessages((prev: IMessage[]) => ([ message, ...prev ]));
     }
 
-    socket?.on('message', handleMessage);
+    socket.on('message', handleMessage);
 
     return () => {
-      socket?.off('message', handleMessage);
+      socket.off('message', handleMessage);
     }
   }, [activeChannel]);
 

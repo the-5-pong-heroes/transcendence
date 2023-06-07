@@ -7,5 +7,12 @@
 }
 
 .pause-icon {
-  height: 4vw;
+  height: 4vh;
+  max-height: 50px;
+}
+
+@media (min-width: 1080px) {
+  .pause-container {
+    margin: 30px;
+  }
 }

@@ -2,8 +2,8 @@ import React, { useMemo, useState } from "react";
 
 import { SocketContext } from "./SocketContext";
 
-import type { SocketContextParameters } from "@types";
-import { useSocket } from "@/hooks/useSocket";
+import { type SocketContextParameters, CustomSocket } from "@types";
+import { useSocketInit } from "@/hooks/useSocketInit";
 
 interface ProviderParameters {
   children: React.ReactNode;
@@ -11,9 +11,13 @@ interface ProviderParameters {
 
 export const SocketProvider: React.FC<ProviderParameters> = ({ children }) => {
   const [socketReady, setSocketReady] = useState<boolean>(false);
-  const { socketRef } = useSocket({ setSocketReady });
+  const { socketRef } = useSocketInit({ setSocketReady });
+  const customSocket = useMemo(() => new CustomSocket(socketRef), [socketRef]);
 
-  const socketContext = useMemo((): SocketContextParameters => ({ socketRef, socketReady }), [socketRef, socketReady]);
+  const socketContext = useMemo(
+    (): SocketContextParameters => ({ customSocket, socketRef, socketReady }),
+    [customSocket, socketRef, socketReady]
+  );
 
   return <SocketContext.Provider value={socketContext}>{children}</SocketContext.Provider>;
 };

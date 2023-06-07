@@ -4,7 +4,7 @@ import { UserContext } from "./UserContext";
 import { IUser } from "@/interfaces";
 // import { socket } from "@/socket";
 import { ResponseError } from "@/helpers";
-import { useUser, useSocketContext } from "@hooks";
+import { useSocket } from "@hooks";
 import type { SocketParameters } from "@types";
 
 interface ProviderParameters {
@@ -14,7 +14,7 @@ interface ProviderParameters {
 export const UserProvider: React.FC<ProviderParameters> = ({ children }) => {
   const [user, setUser] = useState<IUser>({ id: "", name: "", blocked: [], addedBy: [] });
   const navigate = useNavigate();
-  const { socket }: SocketParameters = useSocketContext();
+  const socket = useSocket();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,10 +37,10 @@ export const UserProvider: React.FC<ProviderParameters> = ({ children }) => {
 
     fetchData().catch((e) => console.log(e));
 
-    socket?.on("reloadUser", fetchData);
+    socket.on("reloadUser", fetchData);
 
     return () => {
-      socket?.off("reloadUser", fetchData);
+      socket.off("reloadUser", fetchData);
     };
   }, [socket]);
 

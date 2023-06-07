@@ -1,9 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { UserContext, UserContextType } from '@/contexts';
-{/* import { socket } from '@/socket'; */}
+// import { socket } from '@/socket';
 import { type IChannel } from "@/interfaces";
-import { useUser, useSocketContext, useAppContext } from "@hooks";
-import type { SocketParameters, AppContextParameters } from "@types";
+import { useUser, useSocket, useTheme } from "@hooks";
 import { ResponseError } from "@/helpers";
 import { BASE_URL } from "@/constants";
 import styles from './SearchBar.module.scss';
@@ -19,8 +18,8 @@ export const SearchBar: React.FC = () => {
   const [input, setInput] = useState<string>("")
   // const { user } = useContext(UserContext) as UserContextType;
   const { user } = useUser();
-  const { socket }: SocketParameters = useSocketContext();
-  const { theme }: AppContextParameters = useAppContext();
+  const socket = useSocket();
+  const theme = useTheme();
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -54,7 +53,7 @@ export const SearchBar: React.FC = () => {
   }
 
   const handlePreviewClick = (channel: ISearch) => {
-    socket?.emit('wantJoin', { userId: user?.id, channelId: channel.id, type: channel.type })
+    socket.emit('wantJoin', { userId: user?.id, channelId: channel.id, type: channel.type })
     setPreview([]);
     setInput("");
   }

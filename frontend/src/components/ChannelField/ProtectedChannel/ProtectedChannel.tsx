@@ -2,8 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { UserContext, UserContextType } from "../../../contexts";
 import { IChannel } from "../../../interfaces";
 // import { socket } from "../../../socket";
-import { useUser, useSocketContext } from "@hooks";
-import { type SocketParameters } from "@types";
+import { useUser, useSocket } from "@hooks";
 import styles from "./ProtectedChannel.module.scss";
 
 interface IProtectedChannelProps {
@@ -15,7 +14,7 @@ export const ProtectedChannel: React.FC<IProtectedChannelProps> = ({ activeChann
   const [errorMessage, setErrorMessage] = useState<string>("");
   // const { user } = useContext(UserContext) as UserContextType;
   const { user } = useUser();
-  const { socket }: SocketParameters = useSocketContext();
+  const socket = useSocket();
 
   const handleChange = (event: any) => {
     setPassword(event.target.value);
@@ -27,7 +26,7 @@ export const ProtectedChannel: React.FC<IProtectedChannelProps> = ({ activeChann
     // if (!token || !user?.id || !activeChannel || password === "") return;
     if (!user?.id || !activeChannel || password === "") return;
     const data = { channelId: activeChannel.id, userId: user.id, password };
-    socket?.emit("submitPassword", data, (response: any) => {
+    socket.emit("submitPassword", data, (response: any) => {
       setErrorMessage(response);
     });
     setPassword("");

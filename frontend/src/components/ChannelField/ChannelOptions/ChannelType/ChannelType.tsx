@@ -1,8 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react"
-import { AppContext, ChannelContext, UserContext, UserContextType } from "@/contexts";
+import { ChannelContext, UserContext, UserContextType } from "@/contexts";
 // import { socket } from "@/socket";
-import { useUser, useSocketContext } from "@hooks";
-import { type SocketParameters } from "@types";
+import { useUser, useSocket, useTheme } from "@hooks";
 import { Public, Protected, Private, View, Hide } from '@/assets';
 import styles from "./ChannelType.module.scss"
 
@@ -42,13 +41,11 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ setReturnMessage }) =
   const [newChannel, setNewChannel] = useState<IChannelUpdate>(filterActiveChannel);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isOwner, setIsOwner] = useState<boolean>(false);
-  
+
   // const { user } = useContext(UserContext) as UserContextType;
   const { user } = useUser();
-  const { socket }: SocketParameters = useSocketContext();
-  const appContext = useContext(AppContext);
-  if (appContext === undefined) throw new Error("Undefined AppContext");
-  const { theme } = appContext;
+  const socket = useSocket();
+  const theme = useTheme();
 
   const changeType = (type: string) => {
     setNewChannel((prev: IChannelUpdate) => ({ ...prev, type }));
@@ -68,7 +65,7 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ setReturnMessage }) =
       return;
     if (newChannel.type === "PROTECTED" && !newChannel.password)
       return setReturnMessage({ error: true, message: "Password cannot be empty" });
-    socket?.emit("updateChannelType", { ...newChannel, password: newChannel.type === "PROTECTED" ? newChannel.password : "" });
+    socket.emit("updateChannelType", { ...newChannel, password: newChannel.type === "PROTECTED" ? newChannel.password : "" });
     setReturnMessage({ error: false, message: "Changes to channel saved" });
   }
 

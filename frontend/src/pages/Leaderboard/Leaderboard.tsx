@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import "./Leaderboard.css";
 import UserData from "./UserData";
 
@@ -33,7 +34,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
       const resp = await fetch("http://localhost:3000/leaderboard", {
         mode: "cors",
         credentials: "include",
-      })
+      });
 
       const data = await resp.json();
       if (data.length > 0) {
@@ -42,7 +43,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   useEffect(() => {
     fetchUsers();
@@ -66,4 +67,6 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
   );
 };
 
-  {/* <h1 className="title">Leaderboard</h1> */}
+{
+  /* <h1 className="title">Leaderboard</h1> */
+}

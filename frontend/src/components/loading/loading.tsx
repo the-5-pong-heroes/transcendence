@@ -17,5 +17,5 @@ export const LoadingIcon: React.FC = () => {
       <div></div>
       <div></div>
     </div>
-  )
-}
+  );
+};

@@ -1,7 +1,6 @@
 import React from "react";
 import "./NotFound.css";
 
-import "./NotFound.css";
 import { WallEPlayingPong } from "@assets";
 
 interface NotFoundProps {

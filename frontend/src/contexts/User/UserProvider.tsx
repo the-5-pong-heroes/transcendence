@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { UserContext } from "./UserContext";
-import { IUser } from "@/interfaces";
+
+import { type IUser } from "@/interfaces";
 // import { socket } from "@/socket";
 import { ResponseError } from "@/helpers";
 import { useSocket } from "@hooks";

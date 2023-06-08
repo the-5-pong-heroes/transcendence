@@ -4,14 +4,16 @@ import { toast } from "react-toastify";
 
 import { USER_QUERY_KEY } from "@/constants";
 import { ResponseError } from "@/helpers";
-import * as fetch from "@/helpers/fetch";
+// import * as fetch from "@/helpers/customFetch";
+import { customFetch } from "@/helpers";
 
 interface Message {
   message: string;
 }
 
 async function signOut(): Promise<void> {
-  const { message } = await fetch.get<Message>("/auth/signout");
+  // const { message } = await fetch.get<Message>("/auth/signout");
+  const { message } = await customFetch<Message>("get", "/auth/signout");
 }
 
 type IUseSignOut = UseMutateFunction<void>;

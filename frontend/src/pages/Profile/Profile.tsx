@@ -13,7 +13,7 @@ import { Setting, addFriend, GameLight, ChatLight } from "../../assets";
 import { Link } from "react-router-dom";
 import { useSocket } from "@hooks";
 import { ClientEvents } from "@Game/@types";
-import { ResponseError } from "@/helpers";
+import { customFetch } from "@/helpers";
 
 export interface GameData {
   playerOne: { id: string; name: string };
@@ -90,17 +90,16 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
     const url = "http://localhost:3000";
     try {
       const body = { newFriendId: uuid };
-      // const data = await customFetch.post("/friendship", body);
-      // console.log("data: ", data);
-      const response = await fetch(url + "/friendship", {
-        method: "POST",
-        body: JSON.stringify(body),
-        headers: { Accept: "application/json", "Content-Type": "application/json;charset=utf-8" },
-        credentials: "include",
-      });
-      if (!response.ok) {
-        throw new ResponseError("Failed on fetch channels request", response);
-      }
+      const data = await customFetch("post", "/friendship", body);
+      // const response = await fetch(url + "/friendship", {
+      //   method: "POST",
+      //   body: JSON.stringify(body),
+      //   headers: { Accept: "application/json", "Content-Type": "application/json;charset=utf-8" },
+      //   credentials: "include",
+      // });
+      // if (!response.ok) {
+      //   throw new ResponseError("Failed on fetch channels request", response);
+      // }
     } catch (err) {
       console.error("Error adding a friend: ", err);
     }

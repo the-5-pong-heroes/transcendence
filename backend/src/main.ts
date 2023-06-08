@@ -2,13 +2,25 @@ import { NestFactory, HttpAdapterHost } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { PrismaClientExceptionFilter } from "./prisma-client-exception/prisma-client-exception.filter";
 import { ValidationPipe } from "@nestjs/common";
+import * as cookieParser from "cookie-parser";
+import { ALLOWED_ORIGINS } from "./common/constants";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors({
-    origin: ["http://localhost:5173", "http://127.0.0.1:5173", "https://api.intra.42.fr/*"],
+  const corsOptions = {
+    origin: ALLOWED_ORIGINS,
     credentials: true,
-  });
+  };
+  app.enableCors(corsOptions);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      disableErrorMessages: true,
+      whitelist: true,
+    }),
+  );
+
+  app.use(cookieParser()); // cookie parser middleware
 
   app.useGlobalPipes(
     new ValidationPipe({

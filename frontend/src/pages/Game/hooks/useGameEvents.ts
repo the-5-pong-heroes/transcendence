@@ -1,13 +1,24 @@
-/* eslint max-lines: ["warn", 150] */
+/* eslint max-lines: ["warn", 170] */
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
-import { useEffect, useContext } from "react";
-
-import type { Pong } from "../pongCore";
-import { GameContext } from "../context";
-import type { GameOverlayRef } from "../GameOverlay";
-import type { PaddleMove, LobbyState, PlayState, GameResult, PaddleSide, ServerPong, PongState } from "../@types";
+import type {
+  PaddleMove,
+  LobbyState,
+  PlayState,
+  GameResult,
+  PaddleSide,
+  PongState,
+  GameContextParameters,
+  LobbyMode,
+  GameMode,
+} from "../@types";
 import { ServerEvents } from "../@types";
-import { SocketContext } from "../../../contexts";
+
+import { useGameContext } from "./useGameContext";
+
+import type { GameState } from "@types";
+import { useAppContext, useSocket } from "@hooks";
 
 const DELAY_START_ROUND = 500;
 
@@ -16,52 +27,57 @@ interface PaddleUpdateParameters {
   move: PaddleMove;
 }
 
-interface GameEventsParameters {
-  overlayRef: React.RefObject<GameOverlayRef> | undefined;
-  playRef: React.MutableRefObject<PlayState>;
-  localPongRef: React.MutableRefObject<Pong>;
-  paddleSideRef: React.MutableRefObject<PaddleSide>;
-  serverPongRef: React.MutableRefObject<ServerPong | undefined>;
+interface InitGameParameters {
+  side: PaddleSide;
+  lobbyMode: LobbyMode;
+  gameMode: GameMode;
+}
+
+interface GameEndParameters {
+  result: GameResult;
+  winnerName: string;
 }
 
 export const useGameEvents = (): void => {
-  const gameContext = useContext(GameContext);
-  if (gameContext === undefined) {
-    throw new Error("Undefined GameContext");
-  }
-  const { overlayRef, playRef, localPongRef, paddleSideRef, serverPongRef }: GameEventsParameters = gameContext;
+  const { overlayRef, playRef, localPongRef, paddleSideRef, serverPongRef, lobbyRef }: GameContextParameters =
+    useGameContext();
 
-  const socketContext = useContext(SocketContext);
-  if (socketContext === undefined) {
-    throw new Error("Undefined SocketContext");
-  }
-  const { socketRef } = socketContext;
+  const socket = useSocket();
+  const { isRunning, quitGame }: GameState = useAppContext().gameState;
 
   useEffect(() => {
-    const socket = socketRef.current;
-    if (!socket) {
-      return;
-    }
-
     const handleLobbyState = (lobby: LobbyState): void => {
-      if (lobby.status === "waiting") {
+      lobbyRef.current = lobby;
+      overlayRef?.current?.setGamePlayers(lobby.userLeft, lobby.userRight);
+      if (lobbyRef.current.status === "waiting") {
         overlayRef?.current?.showLoader(true);
       } else {
         overlayRef?.current?.showLoader(false);
       }
+      if (!isRunning.current) {
+        isRunning.current = true;
+      }
     };
 
-    const initGame = (side: PaddleSide): void => {
+    const initGame = (data: InitGameParameters): void => {
+      overlayRef?.current?.initGame();
+      const { side, lobbyMode, gameMode } = data;
       paddleSideRef.current = side;
+      overlayRef?.current?.startGame(lobbyMode, gameMode);
     };
 
     const setPlay = (): void => {
       playRef.current.started = true;
-      playRef.current.paused = false;
+      if (!quitGame) {
+        playRef.current.paused = false;
+      }
     };
 
     let timeoutId: NodeJS.Timeout | undefined;
     const startGame = (time: number): void => {
+      if (!isRunning.current) {
+        isRunning.current = true;
+      }
       overlayRef?.current?.showCountdown();
       const currentTime = Date.now();
       const timeUntilTarget = time - currentTime;
@@ -78,12 +94,12 @@ export const useGameEvents = (): void => {
       };
     };
 
-    const endGame = (result: GameResult): void => {
+    const endGame = (gameResult: GameEndParameters): void => {
       if (playRef.current) {
         playRef.current.started = false;
         playRef.current.paused = true;
       }
-      overlayRef?.current?.setResult(result);
+      overlayRef?.current?.setResult(gameResult.result, gameResult.winnerName);
       localPongRef.current.initRound(0);
     };
 
@@ -96,7 +112,13 @@ export const useGameEvents = (): void => {
       if (playRef.current) {
         playRef.current.started = play.started;
         playRef.current.paused = play.paused;
+        overlayRef?.current?.setPause(play.paused);
       }
+    };
+
+    const handlePlayerAlreadySet = (): void => {
+      toast.warning("Sorry, you can't play against yourself...");
+      overlayRef?.current?.resetGame();
     };
 
     socket.on(ServerEvents.LobbyState, handleLobbyState);
@@ -106,6 +128,7 @@ export const useGameEvents = (): void => {
     socket.on(ServerEvents.PlayUpdate, updatePlayState);
     socket.on(ServerEvents.PaddleUpdate, updateOpponentPaddle);
     socket.on(ServerEvents.GameEnd, endGame);
+    socket.on(ServerEvents.PlayerAlreadySet, handlePlayerAlreadySet);
 
     return (): void => {
       socket.off(ServerEvents.LobbyState);
@@ -115,9 +138,10 @@ export const useGameEvents = (): void => {
       socket.off(ServerEvents.PlayUpdate);
       socket.off(ServerEvents.PaddleUpdate);
       socket.off(ServerEvents.GameEnd);
+      socket.off(ServerEvents.PlayerAlreadySet);
       if (timeoutId) {
         clearTimeout(timeoutId);
       }
     };
-  }, [socketRef, paddleSideRef, playRef, overlayRef, localPongRef, serverPongRef]);
+  }, [socket, paddleSideRef, playRef, overlayRef, localPongRef, serverPongRef, isRunning, quitGame, lobbyRef]);
 };

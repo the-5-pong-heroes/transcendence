@@ -48,8 +48,13 @@
     "useDefineForClassFields": true,
     // paths lets you declare how TS should resolve an import in your require/imports
     "paths": {
-      // "shared/*": ["../shared/*"]
+      "@shared/*": ["../shared/*"],
       "@/*": ["./src/*", "./dist/*", ""],
+      "@Game/*": ["./src/pages/Game/*"],
+      "@types": ["./src/@types"],
+      "@assets": ["./src/assets"],
+      "@contexts": ["./src/contexts"],
+      "@hooks": ["./src/hooks"],
       "pages/*": ["src/pages/*"],
       "components/*": ["src/components/*"],
       "types/*": ["src/@types/*"],

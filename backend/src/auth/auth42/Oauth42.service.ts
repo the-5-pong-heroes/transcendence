@@ -55,7 +55,17 @@ export class Oauth42Service {
     try {
       const user = await this.prisma.user.create({
         data: {
-          email: user42.email,
+          name: name,
+          auth: {
+            create: {
+              password: "test",
+              isRegistered: isRegistered,
+              accessToken: token,
+              email: user42.email,
+            },
+          },
+          status: "ONLINE",
+          lastLogin: new Date(),
         },
       });
       return user;

@@ -1,0 +1,63 @@
+/***********  Close button  ***********/
+
+.close-button-wrapper {
+  cursor: pointer;
+  margin: 10px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 35px;
+  width: 35px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.close-button {
+  opacity: 0.8;
+}
+
+.close-button-wrapper:hover {
+  /* background-color: rgba(255, 255, 255, 0.064); */
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.close-button-wrapper:hover .close-button:before,
+.close-button-wrapper:hover .close-button:after {
+  width: 1.5px;
+}
+
+.close-button-wrapper:hover .close-button {
+  opacity: 1;
+}
+
+.close-button:before,
+.close-button:after {
+  margin-top: 8px;
+  margin-left: 17px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: " ";
+  height: 20px;
+  width: 1px;
+  background-color: #ffffff;
+}
+
+#light .close-button-wrapper:hover {
+  background-color: #acbfed32;
+}
+
+#light .close-button:before,
+#light .close-button:after {
+  background-color: #000000;
+}
+
+.close-button:before {
+  transform: rotate(45deg);
+}
+
+.close-button:after {
+  transform: rotate(-45deg);
+}

@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext, UserContextType } from "../../../contexts";
 import { IChannel } from "../../../interfaces";
-import { socket } from "../../../socket";
+// import { socket } from "../../../socket";
+import { useUser, useSocket } from "@hooks";
 import styles from "./ProtectedChannel.module.scss";
 
 interface IProtectedChannelProps {
@@ -11,7 +12,9 @@ interface IProtectedChannelProps {
 export const ProtectedChannel: React.FC<IProtectedChannelProps> = ({ activeChannel }) => {
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const { user } = useContext(UserContext) as UserContextType;
+  // const { user } = useContext(UserContext) as UserContextType;
+  const user = useUser();
+  const socket = useSocket();
 
   const handleChange = (event: any) => {
     setPassword(event.target.value);
@@ -19,8 +22,9 @@ export const ProtectedChannel: React.FC<IProtectedChannelProps> = ({ activeChann
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    const token = window.localStorage.getItem('access_token');
-    if (!token || !user.id || !activeChannel || password === "") return;
+    // const token = window.localStorage.getItem('access_token');
+    // if (!token || !user?.id || !activeChannel || password === "") return;
+    if (!user?.id || !activeChannel || password === "") return;
     const data = { channelId: activeChannel.id, userId: user.id, password };
     socket.emit("submitPassword", data, (response: any) => {
       setErrorMessage(response);

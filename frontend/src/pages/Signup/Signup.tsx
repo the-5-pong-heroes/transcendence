@@ -1,78 +1,44 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ICreateUser } from '../../interfaces';
-import './Signup.css';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
-interface ISignupProps {
-  signupRef: React.RefObject<HTMLDivElement>;
-}
+import { useSignUp } from "./hooks";
 
-export const Signup: React.FC<ISignupProps> = ({ signupRef }) => {
-	const	[user, setUser] = useState<ICreateUser>({ email: '', password: '' });
-	const	[errMessage, setErrMessage] = useState<string>('');
-	const	navigate = useNavigate();
+import { Logo_Eve } from "@assets";
 
-	const	handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const	{ name, value } = event.target;
-		setUser(prev => ({ ...prev, [name]: value }));
-	}
-	
-  const	handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+export const Signup: React.FC = () => {
+  const signUp = useSignUp();
+  const navigate = useNavigate();
 
-    setErrMessage("");
-    const config = {
-      method: "POST",
-      mode: "cors" as RequestMode,
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8'
-      },
-      body: JSON.stringify(user)
-    };
-    const response = await fetch('http://localhost:3000/auth/signup', config);
-    const data = await response.json();
-    if (!response.ok)
-    {
-      setErrMessage(data.message);
-      return;
+  const onSignUp: React.FormEventHandler<HTMLFormElement> = (form) => {
+    form.preventDefault();
+    const formData = new FormData(form.currentTarget);
+    const name = formData.get("name");
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    if (typeof name === "string" && typeof email === "string" && typeof password === "string") {
+      signUp({
+        name,
+        email,
+        password,
+      });
     }
-    localStorage.setItem('access_token', `Bearer ${data.access_token}`);
-    navigate('/');
-    window.location.reload();
-}
+  };
 
-	return (
-		<div ref={signupRef} className="Signup">
-			<form className="form" onSubmit={handleSubmit}>
-				<h2>Sign Up</h2>
-				<input
-					className="input"
-					type="text"
-					name="email"
-					value={user.email}
-					onChange={handleChange}
-					placeholder="Email"
-				/>
-				<input
-					className="input"
-					type="password"
-					name="password"
-					value={user.password}
-					onChange={handleChange}
-					placeholder="Password"
-				/>
-				{
-					errMessage && 
-					<div className="err-message">{errMessage}</div>
-				}
-				<input
-					className="submit"
-					type="submit"
-					value="Send"
-				/>
-			</form>
-		</div>
-	);
-}
-
-export default Signup;
+  return (
+    <div className="Login">
+      <form className="form" onSubmit={onSignUp}>
+        <img id="login-robot" src={Logo_Eve} />
+        <input className="input" type="text" name="name" placeholder="Username" required />
+        <input className="input" type="text" name="email" placeholder="Email" required />
+        <input className="input" type="password" name="password" placeholder="Password" required />
+        <div className="form-sign">
+          <input className="submit" type="submit" value="Sign up" />
+          <button className="login-link" onClick={() => navigate("/Login")}>
+            Sign in
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};

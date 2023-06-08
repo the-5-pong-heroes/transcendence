@@ -1,10 +1,13 @@
 import { Module } from "@nestjs/common";
 import { MyProfileController, StatsController } from "./stats.controller";
 import { StatsService } from "./stats.service";
+import { AuthModule } from "src/auth/auth.module";
+import { UserGuard } from "src/auth/user.guard";
 
 @Module({
   controllers: [StatsController, MyProfileController],
-  providers: [StatsService],
+  imports: [AuthModule],
+  providers: [StatsService, UserGuard],
 })
 export class StatsModule {
   // helloworld() {}

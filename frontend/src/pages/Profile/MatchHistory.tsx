@@ -28,7 +28,7 @@ return (
             <span>{match.playerTwoScore}</span>
           </div>
           <div className="column player2">
-          <Link to={`/profile/${match.playerTwo.id}`} className="link-prof"><span>{match.playerTwo.name}</span></Link>
+          <Link to={`/profile/${match.playerTwo?.id}`} className="link-prof"><span>{match.playerTwo?.name}</span></Link>
           </div>
         </div>
       )

@@ -1,41 +1,58 @@
-import React, { useContext } from "react";
-import { Route, Routes, useParams } from "react-router-dom";
+import React from "react";
+import { Route, Routes, Navigate, useParams } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-import { Navbar, ThemeButton, Container } from "./components";
-import { Home, Profile, Game, Leaderboard, Settings, Chat, Login, Signup, NotFound } from "./pages";
+import { AppLayout, NotFoundLayout } from "./components";
+import { Login, Signup, Home, Profile, Game, Settings, Leaderboard, Chat, NotFound } from "./pages";
+import type { AppContextParameters, PageRefs } from "./@types";
+import { useAppContext, useUserQuery } from "./hooks";
 import "./App.css";
-import { SocketProvider, AppContext } from "./contexts";
 
 const App: React.FC = () => {
-  const appContext = useContext(AppContext);
-  if (appContext === undefined) {
-    throw new Error("Undefined AppContext");
+  const { theme, pageRefs }: AppContextParameters = useAppContext();
+  const { homeRef, profileRef, myProfileRef, settingsRef, gameRef, boardRef, chatRef, notFoundRef }: PageRefs =
+    pageRefs;
+  const { user, isLoading } = useUserQuery();
+  const { uuid } = useParams();
+
+  if (isLoading) {
+    // Show loading state while user data is being fetched
+    return (
+      <div className="loading-app">
+        <div>Loading...</div>
+      </div>
+    );
   }
-  const { theme, homeRef, myProfileRef, profileRef, settingsRef, gameRef, boardRef, chatRef, logRef, signupRef } = appContext;
 
   return (
-    <SocketProvider>
-      <div className="App" id={theme}>
-        <Navbar />
-        <ThemeButton />
-        <div className="App-container">
-          <Container>
-            <Routes>
-              <Route path="/" element={<Home homeRef={homeRef} />} />
-              <Route path="/Profile" element={<Profile key="my-profile" profileRef={myProfileRef} />} />
-              <Route path="/Profile/:uuid" element={<Profile key={useParams().uuid} profileRef={profileRef} />} />
-              <Route path="/Settings/" element={<Settings settingsRef={settingsRef} />} />
-              <Route path="/Game" element={<Game gameRef={gameRef} />} />
-              <Route path="/Leaderboard" element={<Leaderboard boardRef={boardRef} />} />
-              <Route path="/Chat" element={<Chat chatRef={chatRef} />} />
-              <Route path="/Login" element={<Login logRef={logRef} />} />
-              <Route path="/Signup" element={<Signup signupRef={signupRef} />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Container>
-        </div>
-      </div>
-    </SocketProvider>
+    <div className="App" id={theme}>
+      <Routes>
+        <Route path="/Login" element={user ? <Navigate to="/" /> : <Login />} />
+        <Route path="/Signup" element={user ? <Navigate to="/" /> : <Signup />} />
+        <Route element={<NotFoundLayout />}>
+          <Route path="*" element={<NotFound notFoundRef={notFoundRef} />} />
+        </Route>
+        <Route element={<AppLayout user={user} />}>
+          <Route path="/" element={<Home homeRef={homeRef} />} />
+          <Route path="/Profile" element={<Profile key="my-profile" profileRef={myProfileRef} />}>
+            <Route path=":uuid" element={<Profile key={uuid} profileRef={profileRef} />} />
+          </Route>
+          <Route path="/Settings/" element={<Settings settingsRef={settingsRef} />} />
+          <Route path="/Game" element={<Game gameRef={gameRef} />} />
+          <Route path="/Leaderboard" element={<Leaderboard boardRef={boardRef} />} />
+          <Route path="/Chat" element={<Chat chatRef={chatRef} />} />
+        </Route>
+      </Routes>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={2000}
+        hideProgressBar={true}
+        newestOnTop={false}
+        rtl={false}
+        theme="colored"
+      />
+    </div>
   );
 };
 

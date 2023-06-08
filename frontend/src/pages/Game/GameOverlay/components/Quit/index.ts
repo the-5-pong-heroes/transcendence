@@ -1,1 +1,1 @@
-export { QuitButton } from "./Quit";
+export { QuitModal } from "./Quit";

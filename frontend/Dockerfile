@@ -10,6 +10,10 @@ COPY --chown=node:node ./shared ./shared
 
 COPY --chown=node:node ./frontend/package*.json ./frontend/yarn.lock ./frontend/
 
+WORKDIR /app/shared
+
+RUN yarn install --frozen-lockfile --production --non-interactive
+
 WORKDIR /app/frontend
 
 RUN yarn install --frozen-lockfile --production --non-interactive

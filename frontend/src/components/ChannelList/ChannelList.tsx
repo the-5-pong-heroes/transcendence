@@ -1,19 +1,18 @@
 import React, { useContext, useEffect } from 'react';
-import { AppContext, ChannelContext, UserContext, UserContextType } from '@/contexts';
-import { socket } from '@/socket';
+import { ChannelContext, UserContext, UserContextType } from '@/contexts';
+// import { socket } from '@/socket';
 import { CreateChat } from './CreateChat';
 import { SearchBar } from './SearchBar';
 import { ChannelItem } from './ChannelItem';
+import { useUser, useTheme, useSocket } from "@hooks";
 import styles from './ChannelList.module.scss';
 
 export const ChannelList: React.FC = () => {
-  const { user } = useContext(UserContext) as UserContextType;
+  // const { user } = useContext(UserContext) as UserContextType;
+  const user = useUser();
+  const theme = useTheme();
+  const socket = useSocket();
   const { channels } = useContext(ChannelContext);
-  const appContext = useContext(AppContext);
-  if (appContext === undefined) {
-    throw new Error("Undefined AppContext");
-  }
-  const { theme } = appContext;
 
   const stopOutterScroll = (event: any) => {
     const container = event.target.closest('.container');
@@ -35,7 +34,7 @@ export const ChannelList: React.FC = () => {
         socket.emit('leave', channel.id);
       });
     }
-  }, [channels]);
+  }, [channels, socket]);
    
   return (
     <div
@@ -46,7 +45,7 @@ export const ChannelList: React.FC = () => {
       <div className={`${styles.Header} ${theme === "light" ? styles.HeaderLight : styles.HeaderDark}`}>
         <div className={styles.Top}>
           <div className={styles.Title}>
-            {user.name}
+            {user?.name}
           </div>
           <CreateChat />
         </div>

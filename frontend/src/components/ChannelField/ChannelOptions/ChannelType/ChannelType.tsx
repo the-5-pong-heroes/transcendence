@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react"
-import { AppContext, ChannelContext, UserContext, UserContextType } from "@/contexts";
-import { socket } from "@/socket";
+import { ChannelContext, UserContext, UserContextType } from "@/contexts";
+// import { socket } from "@/socket";
+import { useUser, useSocket, useTheme } from "@hooks";
 import { Public, Protected, Private, View, Hide } from '@/assets';
 import styles from "./ChannelType.module.scss"
 
@@ -40,11 +41,11 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ setReturnMessage }) =
   const [newChannel, setNewChannel] = useState<IChannelUpdate>(filterActiveChannel);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isOwner, setIsOwner] = useState<boolean>(false);
-  
-  const { user } = useContext(UserContext) as UserContextType;
-  const appContext = useContext(AppContext);
-  if (appContext === undefined) throw new Error("Undefined AppContext");
-  const { theme } = appContext;
+
+  // const { user } = useContext(UserContext) as UserContextType;
+  const user = useUser();
+  const socket = useSocket();
+  const theme = useTheme();
 
   const changeType = (type: string) => {
     setNewChannel((prev: IChannelUpdate) => ({ ...prev, type }));
@@ -57,8 +58,9 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ setReturnMessage }) =
 
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const token = window.localStorage.getItem('access_token');
-    if (!token || !newChannel) return;
+    // const token = window.localStorage.getItem('access_token');
+    // if (!token || !newChannel) return;
+    if (!newChannel) return;
     if (newChannel.type === activeChannel.type && newChannel.password == activeChannel.password)
       return;
     if (newChannel.type === "PROTECTED" && !newChannel.password)
@@ -71,7 +73,7 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ setReturnMessage }) =
     setNewChannel(filterActiveChannel);
     setShowPassword(false);
     setIsOwner(activeChannel.users.some((usr) => {
-      return usr.user.id === user.id && usr.role === "OWNER";
+      return usr.user.id === user?.id && usr.role === "OWNER";
     }));
   }, [activeChannel]);
 

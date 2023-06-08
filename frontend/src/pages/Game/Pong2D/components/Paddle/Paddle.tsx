@@ -1,8 +1,7 @@
 import React from "react";
 import { Vector3 } from "three";
 import { type Vec3 } from "cannon-es";
-
-import { PADDLE_WIDTH, PADDLE_HEIGHT } from "../../../pongCore/constants";
+import { PADDLE_WIDTH, PADDLE_HEIGHT } from "@shared/pongCore/constants";
 
 interface PaddleProps {
   paddleRef: React.RefObject<THREE.Mesh>;

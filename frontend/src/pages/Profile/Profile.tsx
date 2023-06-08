@@ -1,3 +1,4 @@
+/* eslint max-lines: ["warn", 300] */
 import React, { useEffect, useState } from "react";
 import "./Profile.css";
 import { DefaultAvatar } from "../../assets";
@@ -8,8 +9,10 @@ import { MatchHistory } from "./MatchHistory";
 import { useParams } from "react-router-dom";
 import { UserStats } from "../Leaderboard/Leaderboard";
 import { Friends } from "./Friends";
-import { Setting, addFriend, GameLight, ChatLight } from '../../assets';
+import { Setting, addFriend, GameLight, ChatLight } from "../../assets";
 import { Link } from "react-router-dom";
+import { useSocket } from "@hooks";
+import { ClientEvents } from "@Game/@types";
 
 export interface GameData {
   playerOne: { id: string; name: string };
@@ -23,8 +26,9 @@ interface ProfileProps {
 }
 
 export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
-
   const { uuid } = useParams();
+
+  const socket = useSocket();
 
   const [history, setHistory] = useState([] as GameData[]);
 
@@ -34,7 +38,10 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
 
   const fetchHistory = async () => {
     try {
-      const resp = await fetch(`http://localhost:3000/profile/history/${uuid ? uuid : ""}`);
+      const resp = await fetch(`http://localhost:3000/profile/history/${uuid ? uuid : ""}`, {
+        mode: "cors",
+        credentials: "include",
+      });
       const data = await resp.json();
       if (data) setHistory(data);
     } catch (err) {
@@ -44,23 +51,30 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
 
   const fetchUser = async () => {
     try {
-      const resp = await fetch(`http://localhost:3000/profile/${uuid ? uuid : ""}`);
+      const resp = await fetch(`http://localhost:3000/profile/${uuid ? uuid : ""}`, {
+        mode: "cors",
+        credentials: "include",
+      });
       const data = await resp.json();
       if (data) {
         const LEVELS: string[] = ["plant", "walle", "eve", "energy"];
         data.levelPicture = [Plant, Walle, Eve, Energy][LEVELS.indexOf(data.level)];
-        data.status = (data.status === "IN_GAME" ? "PLAYING" : data.status);
-        setUser(data)
+        data.status = data.status === "IN_GAME" ? "PLAYING" : data.status;
+        setUser(data);
       }
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   useEffect(() => {
     fetchUser();
     fetchHistory();
   }, [uuid]);
+
+  if (!user) {
+    return null;
+  }
 
   function switchTab(event: any) {
     const tabText: string = event.target.innerText;
@@ -72,17 +86,27 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
   }
 
   async function followFriend() {
-    const url= "http://localhost:3000";
+    const url = "http://localhost:3000";
     try {
-      const response = await fetch(url + '/friendship', {
-        method: 'POST',
-        body: JSON.stringify({ newFriendId: uuid })
+      console.log("uuid", uuid);
+      const response = await fetch(url + "/friendship", {
+        method: "POST",
+        body: JSON.stringify({ newFriendId: uuid }),
+        credentials: "include",
       });
       const data = await response.json();
     } catch (err) {
-      console.error('Error adding a friend: ', err);
+      console.error("Error adding a friend: ", err);
     }
   }
+
+  const inviteToPlay = (id?: string): void => {
+    console.log("🏓", id);
+    if (!id) {
+      return;
+    }
+    socket.emit(ClientEvents.GameInvite, { userId: id });
+  };
 
   return (
     <div ref={profileRef} id="Profile" className="Profile">
@@ -92,10 +116,25 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
         </div>
         <div className="column username">
           {user.name}
-          { user.isMe && <Link to={"/Settings"}><img src={Setting}/></Link>}
-          { !user.isMe && <Link to={"/Chat"}><img src={ChatLight}/></Link>}
-          { !user.isMe && <Link to={"/Game"}><img src={GameLight}/></Link>}
-          { !user.isMe && !user.isFriend && <img className="addpointer" src={addFriend} onClick={followFriend}/>}
+          {user.isMe && (
+            <Link to={"/Settings"}>
+              <img src={Setting} />
+            </Link>
+          )}
+          {!user.isMe && (
+            <Link to={"/Chat"}>
+              <img src={ChatLight} />
+            </Link>
+          )}
+          {!user.isMe && (
+            // <Link to={"/Game"}>
+            //   <img src={GameLight} />
+            // </Link>
+            <button onClick={() => inviteToPlay(user.id)}>
+              <img src={GameLight} />
+            </button>
+          )}
+          {!user.isMe && !user.isFriend && <img className="addpointer" src={addFriend} onClick={followFriend} />}
         </div>
         <UserStatus myClassName="column status" status={user.status} />
       </div>
@@ -126,10 +165,10 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
       </div>
       <div className="block3">
         <ul className="tab tabs">
-          <li className={`tab-item${currentTab === "Match history" ? " tab-active": ""}`} onClick={switchTab}>
+          <li className={`tab-item${currentTab === "Match history" ? " tab-active" : ""}`} onClick={switchTab}>
             <div className="tab-link">Match history</div>
           </li>
-          <li className={`tab-item${currentTab === "Friends" ? " tab-active": ""}`} onClick={switchTab}>
+          <li className={`tab-item${currentTab === "Friends" ? " tab-active" : ""}`} onClick={switchTab}>
             <div className="tab-link">Friends</div>
           </li>
         </ul>

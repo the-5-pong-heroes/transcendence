@@ -1,5 +1,7 @@
 import React from "react";
+
 import "./Loader.css";
+import { CloseButton } from "../CloseButton";
 
 interface LoaderParameters {
   loader: boolean;
@@ -11,7 +13,8 @@ export const Loader: React.FC<LoaderParameters> = ({ loader }) => {
   }
 
   return (
-    <div className="game-modal loader-modal">
+    <div className="game-modal-cross">
+      <CloseButton />
       <div className="loader-wrapper">
         <div className="loader"></div>
         <div className="text">

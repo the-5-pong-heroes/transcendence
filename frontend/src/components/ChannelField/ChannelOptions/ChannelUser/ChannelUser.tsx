@@ -1,7 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { AppContext, UserContext, UserContextType } from "../../../../contexts";
+import { UserContext, UserContextType } from "../../../../contexts";
 import { IChannelUser } from "../../../../interfaces";
-import { socket } from "../../../../socket";
+// import { socket } from "../../../../socket";
+import { useUser, useSocket, useTheme } from "@hooks";
+import { ClientEvents } from "@Game/@types";
+
 import styles from "./ChannelUser.module.scss"
 
 interface IChannelUserProps {
@@ -19,44 +22,53 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
   const [untilNumber, setUntilNumber] = useState<number>(0)
   const [userRole, setUserRole] = useState<string>();
 
-  const { user } = useContext(UserContext) as UserContextType;
-  const appContext = useContext(AppContext);
-  if (appContext === undefined) {
-    throw new Error("Undefined AppContext");
-  }
-  const { theme } = appContext;
+  // const { user } = useContext(UserContext) as UserContextType;
+  const user = useUser();
+  const socket = useSocket();
+  const theme = useTheme();
 
   const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = event.target;
 
-    const token = localStorage.getItem('access_token');
-    if (!token || !activeUser) return;
+    // const token = localStorage.getItem('access_token');
+    // if (!token || !activeUser) return;
+    if (!activeUser) return;
     socket.emit("updateChannelUser", { id: activeUser.id, role: value })
   }
 
   const toggleMuteUser = (event: any) => {
     event.preventDefault();
-    const token = localStorage.getItem('access_token');
-    if (!token || !activeUser) return;
+    // const token = localStorage.getItem('access_token');
+    // if (!token || !activeUser) return;
+    if (!activeUser) return;
     socket.emit("updateChannelUser", { id: activeUser.id, isMuted: !activeUser.isMuted, mutedUntil: new Date(Date.now() + untilNumber * 60000) })
     setUntilOption("");
     setUntilNumber(0);
   }
 
   const kickUser = () => {
-    const token = localStorage.getItem('access_token');
-    if (!token || !activeUser) return;
+    // const token = localStorage.getItem('access_token');
+    // if (!token || !activeUser) return;
+    if (!activeUser) return;
     socket.emit("kickChannelUser", { id: activeUser.id })
   }
 
   const banUser = (event: any) => {
     event?.preventDefault();
-    const token = localStorage.getItem('access_token');
-    if (!token || !activeUser) return;
+    // const token = localStorage.getItem('access_token');
+    // if (!token || !activeUser) return;
+    if (!activeUser) return;
     socket.emit("banChannelUser", { id: activeUser.id, bannedUntil: new Date(Date.now() + untilNumber * 60000) })
     setUntilOption("");
     setUntilNumber(0);
   }
+
+  const inviteToPlay = (id?: string): void => {
+    if (!id) {
+      return;
+    }
+    socket.emit(ClientEvents.GameInvite, { userId: id });
+  };
 
   useEffect(() => {
     if (!activeUser) return;
@@ -66,7 +78,7 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
   }, [users]);
 
   useEffect(() => {
-    setUserRole(users.find((usr: IChannelUser) => usr.user.id === user.id)?.role);
+    setUserRole(users.find((usr: IChannelUser) => usr.user.id === user?.id)?.role);
   }, [user]);
 
   return (
@@ -134,6 +146,7 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
             >
               Ban
             </button>
+            <button className={styles.Button} onClick={() => inviteToPlay(activeUser?.user.id)} disabled={!activeUser || user?.id === activeUser?.user.id}>Invite to play</button>
           </div>
           }
         </div>

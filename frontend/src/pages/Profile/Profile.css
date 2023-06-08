@@ -1,37 +1,70 @@
+:root {
+  --viewport-width: 100vw;
+  --background-height: 548vh;
+}
+
 .Profile {
+  position: absolute;
+  top: 0;
+  left: calc(548vh - 100vw);
   z-index: 7;
+  padding-top: 70px;
   width: 100vw;
   height: 100vh;
   display: flex;
   flex-flow: column nowrap;
   margin: 0;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   user-select: none;
-  position: absolute;
-  top: 0;
-  right: 0;
   animation: fadeInAnimation ease 500ms;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
+}
+
+.signOut-button {
+  width: 10rem;
+  color: white;
+  border: 1px solid white;
+  margin: 10px;
+  border-radius: 20px;
+  padding: 5px 20px;
+}
+
+.delete-button {
+  text-decoration: underline;
+  font-size: 0.9em;
+  margin: 8px;
+}
+
+.signOut-button:hover,
+.signOut-button:focus {
+  font-weight: bold;
+  background-color: #e0c7f3;
+  color: rgb(32, 29, 35);
+}
+
+.delete-button:hover {
+  transform: translateY(-0.05rem);
 }
 
 @keyframes fadeInAnimation {
   0% {
     opacity: 0;
   }
-
   100% {
     opacity: 1;
   }
 }
 
-#light .profile-title {
-  color: #6709b9;
-}
-
-#dark .profile-title {
-  color: #c0b4f2;
+.profile-footer {
+  width: 100%;
+  padding: 0;
+  height: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .profile-block {

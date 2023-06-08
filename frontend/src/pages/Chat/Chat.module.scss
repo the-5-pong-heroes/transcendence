@@ -1,11 +1,25 @@
+.ChatError {
+  width: 100vw;
+  height: 100vh;
+  z-index: 20;
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
 .Chat {
+  position: absolute;
+  top: 0;
+  left: calc((548vh - 100vw) / 4 * 3);
   width: 100vw;
   height: calc(96vh - 62px);
   margin-top: calc(4vh + 62px);
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   .ChatWindow {
     width: clamp(300px, 100%, 1200px);
     height: clamp(400px, 100%, 600px);

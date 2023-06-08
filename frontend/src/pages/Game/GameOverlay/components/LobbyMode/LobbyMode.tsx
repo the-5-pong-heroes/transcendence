@@ -1,8 +1,11 @@
-import React, { useContext } from "react";
-import "./LobbyMode.css";
+import React from "react";
 
-import { SocketContext } from "../../../../../contexts";
-import { ClientEvents, type GameMode, type LobbyMode } from "../../../@types";
+import "./LobbyMode.css";
+import { GameButton } from "../GameButton";
+import { CloseButton } from "../CloseButton";
+
+import { ClientEvents, type GameMode, type LobbyMode } from "@Game/@types";
+import { useSocket } from "@hooks";
 
 interface LobbyModeProps {
   gameMode: GameMode | undefined;
@@ -11,11 +14,7 @@ interface LobbyModeProps {
 }
 
 export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode, setLobbyMode }) => {
-  const socketContext = useContext(SocketContext);
-  if (socketContext === undefined) {
-    throw new Error("Undefined SocketContext");
-  }
-  const { socketRef } = socketContext;
+  const socket = useSocket();
 
   if (lobbyMode) {
     return null;
@@ -23,27 +22,25 @@ export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode,
 
   const handleSendEvent = (lobbyMode: LobbyMode): void => {
     setLobbyMode(lobbyMode);
-    // socketRef.current?.emit(ClientEvents.LobbyJoin, { lobbyMode: true, gameMode: 3 });
-    socketRef.current?.emit(ClientEvents.LobbyJoin, { lobbyMode: lobbyMode, gameMode: gameMode });
+    socket.emit(ClientEvents.LobbyJoin, { lobbyMode: lobbyMode, gameMode: gameMode });
   };
 
   return (
-    <div className="game-modal lobby">
+    <div className="game-modal-cross">
+      <CloseButton />
       <div className="game-button-wrapper">
-        <button
-          className="game-button"
+        <GameButton
+          text="ONE PLAYER"
           onClick={() => {
             handleSendEvent("solo");
-          }}>
-          ONE PLAYER
-        </button>
-        <button
-          className="game-button"
+          }}
+        />
+        <GameButton
+          text="TWO PLAYER"
           onClick={() => {
             handleSendEvent("duo");
-          }}>
-          TWO PLAYER
-        </button>
+          }}
+        />
       </div>
     </div>
   );

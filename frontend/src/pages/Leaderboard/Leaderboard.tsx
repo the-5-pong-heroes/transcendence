@@ -30,7 +30,11 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
 
   const fetchUsers = async () => {
     try {
-      const resp = await fetch("http://localhost:3000/leaderboard");
+      const resp = await fetch("http://localhost:3000/leaderboard", {
+        mode: "cors",
+        credentials: "include",
+      })
+
       const data = await resp.json();
       if (data.length > 0) {
         setUsers(data);
@@ -61,3 +65,5 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
     </div>
   );
 };
+
+  {/* <h1 className="title">Leaderboard</h1> */}

@@ -1,8 +1,8 @@
 import React from "react";
 import { Text } from "@react-three/drei";
+import { GAME_WIDTH, GAME_HEIGHT } from "@shared/pongCore/constants";
 
-import { GAME_WIDTH, GAME_HEIGHT } from "../../../pongCore/constants";
-import { SCORE_3D_Z } from "../../../constants";
+import { SCORE_3D_Z } from "@Game/constants";
 
 interface ScoreProps {
   score: string;

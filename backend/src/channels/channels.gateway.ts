@@ -2,7 +2,8 @@ import { SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/web
 import { Socket, Server } from "socket.io";
 import { ChannelUsersService } from "../channel-users/channel-users.service";
 import { PrismaService } from "../database/prisma.service";
-import { UsersService } from "../users_paul/users.service";
+import { UsersService } from "../users/users.service";
+// import { UsersService } from "../users_paul/users.service";
 import { CreateMessageDto } from "../messages/dto/create-message.dto";
 import { MessagesService } from "../messages/messages.service";
 import { ChannelsService } from "./channels.service";

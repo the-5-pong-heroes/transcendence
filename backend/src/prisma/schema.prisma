@@ -29,10 +29,15 @@ model User {
 }
 
 model Auth {
-  user     User   @relation(fields: [userId], references: [id])
-  userId   String @id @unique @db.Uuid
-  email    String @unique
-  password String
+  userId        String   @id @db.Uuid
+  user          User     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  email         String   @unique
+  accessToken   String   @default("noToken")
+  isRegistered  Boolean  @default(false)
+  password      String
+  otp_enabled   Boolean?  @default(false)
+  otp_verified  Boolean?  @default(false)
+  otp_validated Boolean?  @default(false)
 }
 
 model Blocked {
@@ -60,15 +65,12 @@ model Game {
   startedAt DateTime   @default(now())
   endedAt   DateTime?
   status    GameStatus @default(WAITING)
-
-  playerOne      User   @relation("playerOne", fields: [playerOneId], references: [id])
+  playerOne      User   @relation("playerOne", fields: [playerOneId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   playerOneId    String @db.Uuid
   playerOneScore Int    @default(0)
-  playerTwo      User?  @relation("playerTwo", fields: [playerTwoId], references: [id])
-  playerTwoId    String @db.Uuid
+  playerTwo      User?  @relation("playerTwo", fields: [playerTwoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  playerTwoId    String? @db.Uuid
   playerTwoScore Int    @default(0)
-
-  socketId String
 }
 
 model Channel {
@@ -85,7 +87,7 @@ model Channel {
 
 model ChannelUser {
   id     String @id @default(uuid()) @db.Uuid
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userId String @db.Uuid
 
   channel   Channel @relation(fields: [channelId], references: [id])
@@ -100,7 +102,7 @@ model ChannelUser {
 
 model ChannelBan {
   id     String @id @default(uuid()) @db.Uuid
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userId String @db.Uuid
 
   channel   Channel @relation(fields: [channelId], references: [id])
@@ -112,9 +114,9 @@ model ChannelBan {
 model Message {
   id        String   @id @default(uuid()) @db.Uuid
   content   String
-  sender    User?    @relation(fields: [senderId], references: [id])
+  sender    User?    @relation(fields: [senderId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   senderId  String?  @db.Uuid
-  channel   Channel  @relation(fields: [channelId], references: [id])
+  channel   Channel  @relation(fields: [channelId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   channelId String   @db.Uuid
   createdAt DateTime @default(now())
 }

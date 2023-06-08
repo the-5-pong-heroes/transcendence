@@ -1,7 +1,6 @@
 /* eslint-disable no-magic-numbers */
 
 import { Vec3 } from "cannon-es";
-
 import {
   GAME_WIDTH,
   BALL_RADIUS,
@@ -11,7 +10,8 @@ import {
   PADDLE_HEIGHT,
   PADDLE_WIDTH,
   PADDLE_VELOCITY,
-} from "../pongCore/constants";
+} from "@shared/pongCore/constants";
+
 import type { PongState } from "../@types/states";
 
 export const getInitialPongState = (): PongState => ({

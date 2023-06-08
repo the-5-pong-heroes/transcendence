@@ -1,10 +1,13 @@
-import { useState, useEffect, useCallback, useContext } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import { computeScoreLabel } from "../helpers";
-import type { ScoreState, PlayState } from "../@types";
+import type { ScoreState, PlayState, GameContextParameters } from "../@types";
 import { ServerEvents } from "../@types";
-import { SocketContext } from "../../../contexts";
-import { GameContext } from "../context";
+
+import { useGameContext } from "./useGameContext";
+
+import { useSocketContext, useSocket } from "@hooks";
+import type { SocketParameters } from "@types";
 
 interface ScoreUpdateParameters {
   score: ScoreState;
@@ -12,17 +15,8 @@ interface ScoreUpdateParameters {
 }
 
 export const useScoreLabel = (): string => {
-  const socketContext = useContext(SocketContext);
-  if (socketContext === undefined) {
-    throw new Error("Undefined SocketContext");
-  }
-  const { socketRef } = socketContext;
-
-  const gameContext = useContext(GameContext);
-  if (gameContext === undefined) {
-    throw new Error("Undefined GameContext");
-  }
-  const { playRef, localPongRef } = gameContext;
+  const { socket }: SocketParameters = useSocketContext();
+  const { playRef, localPongRef }: GameContextParameters = useGameContext();
 
   const [scoreLabel, setScoreLabel] = useState<string>(computeScoreLabel({ player1: 0, player2: 0, round: 0 }));
 
@@ -38,7 +32,6 @@ export const useScoreLabel = (): string => {
   );
 
   useEffect(() => {
-    const socket = socketRef.current;
     if (!socket) {
       return;
     }
@@ -47,7 +40,7 @@ export const useScoreLabel = (): string => {
     return () => {
       socket.off(ServerEvents.ScoreUpdate);
     };
-  }, [socketRef, updateScore]);
+  }, [socket, updateScore]);
 
   return scoreLabel;
 };

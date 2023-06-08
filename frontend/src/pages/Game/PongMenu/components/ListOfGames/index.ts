@@ -1,0 +1,1 @@
+export { ListOfGames } from "./ListOfGames";

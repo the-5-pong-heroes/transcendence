@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { socket } from '../../../socket';
-import { AppContext, UserContext, UserContextType } from '../../../contexts';
+// import { socket } from '../../../socket';
+import { useUser, useSocket, useTheme } from "@hooks";
 import styles from './CreateChat.module.scss';
+import { UserContext } from "@/contexts";
 
 interface IChannel {
   name: string;
@@ -21,15 +22,15 @@ const types: string[] = [
 export const CreateChat: React.FC = () => {
   const [showForm, setShowForm] = useState<boolean>(false);
   const [channel, setChannel] = useState<IChannel>({ name: '', type: 'PUBLIC' });
-  const { user } = useContext(UserContext) as UserContextType;
-  const appContext = useContext(AppContext);
-
-  if (appContext === undefined) {
-    throw new Error("Undefined AppContext");
-  }
-  const { theme } = appContext;
+  // const { user } = useContext(UserContext) as UserContextType;
+  const user = useUser();
+  const socket = useSocket();
+  const theme = useTheme();
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
     setChannel((prev: IChannel) => ({ ...prev, users: { userId: user.id } }));
   }, [user]);
 
@@ -49,8 +50,8 @@ export const CreateChat: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
-    const token = localStorage.getItem('access_token');
-    if (!token) return;
+    // const token = localStorage.getItem('access_token');
+    // if (!token) return;
     socket.emit('create', channel);
     setChannel((prev: IChannel) => ({ users: prev.users, name: '', type: 'PUBLIC' }));
     setShowForm(false);

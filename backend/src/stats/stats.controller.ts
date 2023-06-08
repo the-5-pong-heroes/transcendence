@@ -1,10 +1,12 @@
-import { Controller, Get, Redirect, Param } from "@nestjs/common";
+import { Controller, Get, Redirect, Param, UseGuards } from "@nestjs/common";
 import { GameData, StatsService, UserStats } from "./stats.service";
 import { User } from "@prisma/client";
 import { CurrentUser } from "./current-user.decorator";
 import { UserByIdPipe } from "./user-by-id.pipe";
+import { UserGuard } from "src/auth/user.guard";
 
 @Controller("leaderboard")
+@UseGuards(UserGuard)
 export class StatsController {
   constructor(private statsService: StatsService) {}
 
@@ -15,6 +17,7 @@ export class StatsController {
 }
 
 @Controller("profile")
+@UseGuards(UserGuard)
 export class MyProfileController {
   constructor(private statsService: StatsService) {}
 

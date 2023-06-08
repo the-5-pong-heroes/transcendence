@@ -11,8 +11,8 @@ export const ChannelList: React.FC = () => {
   // const { user } = useContext(UserContext) as UserContextType;
   const user = useUser();
   const theme = useTheme();
-  const { channels } = useContext(ChannelContext);
   const socket = useSocket();
+  const { channels } = useContext(ChannelContext);
 
   const stopOutterScroll = (event: any) => {
     const container = event.target.closest('.container');

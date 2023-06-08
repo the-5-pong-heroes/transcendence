@@ -11,9 +11,8 @@ import { UserStats } from "../Leaderboard/Leaderboard";
 import { Friends } from "./Friends";
 import { Setting, addFriend, GameLight, ChatLight } from "../../assets";
 import { Link } from "react-router-dom";
-import { useSignOut } from "../Login/hooks";
-import * as customFetch from "@/helpers/fetch";
-import { useUser } from "@hooks";
+import { useSocket } from "@hooks";
+import { ClientEvents } from "@Game/@types";
 
 export interface GameData {
   playerOne: { id: string; name: string };
@@ -27,13 +26,9 @@ interface ProfileProps {
 }
 
 export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
-  const userInfos = useUser();
-  const signOut = useSignOut();
+  const { uuid } = useParams();
 
-  let { uuid } = useParams();
-  if (uuid === undefined) {
-    uuid = userInfos?.id;
-  }
+  const socket = useSocket();
 
   const [history, setHistory] = useState([] as GameData[]);
 
@@ -80,12 +75,6 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
   if (!user) {
     return null;
   }
-  const deleteUser = (): void => {
-    customFetch.remove<void>(`/users/${user?.id}`).catch((error) => {
-      console.error(error);
-    });
-    signOut();
-  };
 
   function switchTab(event: any) {
     const tabText: string = event.target.innerText;
@@ -99,6 +88,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
   async function followFriend() {
     const url = "http://localhost:3000";
     try {
+      console.log("uuid", uuid);
       const response = await fetch(url + "/friendship", {
         method: "POST",
         body: JSON.stringify({ newFriendId: uuid }),
@@ -109,6 +99,14 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
       console.error("Error adding a friend: ", err);
     }
   }
+
+  const inviteToPlay = (id?: string): void => {
+    console.log("🏓", id);
+    if (!id) {
+      return;
+    }
+    socket.emit(ClientEvents.GameInvite, { userId: id });
+  };
 
   return (
     <div ref={profileRef} id="Profile" className="Profile">
@@ -129,9 +127,12 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
             </Link>
           )}
           {!user.isMe && (
-            <Link to={"/Game"}>
+            // <Link to={"/Game"}>
+            //   <img src={GameLight} />
+            // </Link>
+            <button onClick={() => inviteToPlay(user.id)}>
               <img src={GameLight} />
-            </Link>
+            </button>
           )}
           {!user.isMe && !user.isFriend && <img className="addpointer" src={addFriend} onClick={followFriend} />}
         </div>
@@ -172,14 +173,6 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
           </li>
         </ul>
         {currentTab === "Match history" ? <MatchHistory history={history} /> : <Friends user={user} />}
-      </div>
-      <div className="profile-footer">
-        <button className="signOut-button" onClick={() => signOut()}>
-          Sign out
-        </button>
-        <button className="delete-button" onClick={deleteUser}>
-          Delete my account
-        </button>
       </div>
     </div>
   );

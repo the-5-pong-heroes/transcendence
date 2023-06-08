@@ -4,8 +4,10 @@ import "./Settings.css";
 import { DefaultAvatar, Leave } from "@/assets";
 import { Unfollow } from "./Unfollow";
 import { Toggle2FA } from "./Toggle2FA";
+import { useSignOut } from "../Login/hooks";
 import { LoadingIcon } from "@/components/loading/loading";
-
+import * as customFetch from "@/helpers/fetch";
+import { useUser } from "@hooks";
 
 interface SettingsProps {
   settingsRef: React.RefObject<HTMLDivElement>;
@@ -19,7 +21,6 @@ export interface UserSettings {
   // 2FA
 }
 
-
 export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
 
   const [uploading, setUploading] = useState(false);
@@ -31,6 +32,9 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
   const [avatar, setAvatar] = useState(null);
 
   const [selectedFile, setSelectedFile] = useState(null);
+  
+  const signOut = useSignOut();
+  const user = useUser();
 
   const url = "http://localhost:3000/settings";
 
@@ -100,13 +104,20 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
     }));
   };
 
-  function logout() {
-    // TODO
-  }
-
   function toggle2FA(isToggled: boolean) {
     console.log("2FA: ", isToggled);
   }
+
+  if (!user) {
+    return null;
+  }
+
+  const deleteUser = (): void => {
+    customFetch.remove<void>(`/users/${user?.id}`).catch((error) => {
+      console.error(error);
+    });
+    signOut();
+  };
 
   useEffect(() => {
     fetchSettings();
@@ -122,7 +133,7 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
         </div>
         <div className="column username">
           {settings.name}
-          <img className="leave" src={Leave} onClick={() => { window.confirm( 'Are you sure you want to logout?', ) && logout() }}/>
+          <img className="leave" src={Leave} onClick={() => { window.confirm( 'Are you sure you want to logout?', ) && signOut() }}/>
         </div>
       </div>
 
@@ -143,6 +154,11 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
       </div>
       <div className="settings-block block2">
         <Unfollow friends={settings.friends} handleUnfollow={handleUnfollow} />
+      </div>
+      <div className="settings-footer">
+        <button className="delete-button" onClick={deleteUser}>
+          Delete my account
+        </button>
       </div>
     </div>
   );

@@ -2,9 +2,25 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   // patterns to include in the program
-  "include": ["src", "tests"],
+  "include": ["src/*", "tests/*"],
   // TypeScript’s configuration & how the language should work
   "compilerOptions": {
+    // paths lets you declare how TS should resolve an import in your require/imports
+    "paths": {
+      "@shared/*": ["../shared/*"],
+      "@/*": ["./src/*", "./dist/*", ""],
+      "@Game/*": ["./src/pages/Game/*"],
+      "@types": ["./src/@types"],
+      "@assets": ["./src/assets"],
+      "@contexts": ["./src/contexts"],
+      "@hooks": ["./src/hooks"],
+      "pages/*": ["src/pages/*"],
+      "components/*": ["src/components/*"],
+      "types/*": ["src/@types/*"],
+      "assets/*": ["src/assets/*"],
+      "contexts/*": ["src/contexts/*"],
+      "public/*": ["public/*"]
+    },
     // which JS to use (the more recent, the less compatible)
     "target": "ESNext",
     // enforces TS
@@ -26,6 +42,8 @@
     "incremental": false,
     // stronger guarantees of program correctness
     "strict": true,
+    // TS will raise an error when a class property isn't set in the constructor
+    "strictPropertyInitialization": true,
     // null and undefined have their own distinct types
     "strictNullChecks": true,
     // call, bind, apply should be invoked with correct argument
@@ -46,22 +64,6 @@
     "isolatedModules": true,
     // https://www.typescriptlang.org/tsconfig#useDefineForClassFields
     "useDefineForClassFields": true,
-    // paths lets you declare how TS should resolve an import in your require/imports
-    "paths": {
-      "@shared/*": ["../shared/*"],
-      "@/*": ["./src/*", "./dist/*", ""],
-      "@Game/*": ["./src/pages/Game/*"],
-      "@types": ["./src/@types"],
-      "@assets": ["./src/assets"],
-      "@contexts": ["./src/contexts"],
-      "@hooks": ["./src/hooks"],
-      "pages/*": ["src/pages/*"],
-      "components/*": ["src/components/*"],
-      "types/*": ["src/@types/*"],
-      "assets/*": ["src/assets/*"],
-      "contexts/*": ["src/contexts/*"],
-      "public/*": ["public/*"]
-    },
     // slower but more type-system accurate
     "skipLibCheck": true,
     // base directory to resolve non-absolute module names
@@ -70,10 +72,10 @@
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     // sets the module system for the program
     "module": "ESNext",
+    // files will be emitted into this directory
+    "outDir": "./dist",
     // controls how JSX constructs are emitted in JavaScript files
     "jsx": "react-jsx",
-    // Don't emit compiler output files like JS, source-maps, declarations
-    "noEmit": true,
     // https://www.typescriptlang.org/tsconfig#esModuleInterop
     "esModuleInterop": false,
     // specify the module resolution strategy

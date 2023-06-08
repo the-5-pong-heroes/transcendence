@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 
 import "./Settings.css";
-import { DefaultAvatar, Leave } from "@/assets";
+import { useSignOut } from "../Login/hooks";
+
 import { Unfollow } from "./Unfollow";
 import { Toggle2FA } from "./Toggle2FA";
-import { useSignOut } from "../Login/hooks";
+
+import { DefaultAvatar, Leave } from "@/assets";
 import { LoadingIcon } from "@/components/loading/loading";
 import * as customFetch from "@/helpers/fetch";
 import { useUser } from "@hooks";
@@ -22,17 +24,16 @@ export interface UserSettings {
 }
 
 export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
-
   const [uploading, setUploading] = useState(false);
 
-  const [settings, setSettings] = useState({name: ""} as UserSettings);
+  const [settings, setSettings] = useState({ name: "" } as UserSettings);
 
   const [username, setUsername] = useState(settings.name);
 
   const [avatar, setAvatar] = useState(null);
 
   const [selectedFile, setSelectedFile] = useState(null);
-  
+
   const signOut = useSignOut();
   const user = useUser();
 
@@ -43,22 +44,22 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
     setSelectedFile(file);
     if (file) {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append("file", file);
       try {
         setUploading(true);
-        const response = await fetch(url + '/upload', {
-          credentials: 'include',
-          method: 'POST',
+        const response = await fetch(url + "/upload", {
+          credentials: "include",
+          method: "POST",
           body: formData,
         });
         const data = await response.json();
         setAvatar(data.avatar);
         setUploading(false);
       } catch (err) {
-        console.error('Error uploading image: ', err);
+        console.error("Error uploading image: ", err);
       }
     }
-  };
+  }
 
   const fetchSettings = async () => {
     try {
@@ -72,24 +73,26 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   async function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       try {
         const resp = await fetch(url, {
-          method: 'PATCH',
-          headers: { 'Accept': 'application/json', 'Content-Type': 'application/json;charset=utf-8' },
-          body: JSON.stringify({name: username}),
-          credentials: 'include',
+          method: "PATCH",
+          headers: { Accept: "application/json", "Content-Type": "application/json;charset=utf-8" },
+          body: JSON.stringify({ name: username }),
+          credentials: "include",
         });
         if (!resp.ok) {
           alert("Your username must be unique and 3 to 20 characters long.");
+
           return;
         }
         const data = await resp.json();
-        if (data)
-          setSettings({...settings, name: username});
+        if (data) {
+          setSettings({ ...settings, name: username });
+        }
       } catch (err) {
         console.error(err);
       }
@@ -97,12 +100,12 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
   }
 
   function handleUnfollow(friendId: string) {
-    const updatedFriends = settings.friends.filter(friend => friend.id !== friendId);
-    setSettings(prevSettings => ({
+    const updatedFriends = settings.friends.filter((friend) => friend.id !== friendId);
+    setSettings((prevSettings) => ({
       ...prevSettings,
-      friends: updatedFriends
+      friends: updatedFriends,
     }));
-  };
+  }
 
   function toggle2FA(isToggled: boolean) {
     console.log("2FA: ", isToggled);
@@ -129,21 +132,27 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
       <div className="settings-header block1">
         <div className="avatar">
           <img src={avatar ? avatar : DefaultAvatar} alt="profilePicture" />
-          { uploading ? <LoadingIcon /> : null }
+          {uploading ? <LoadingIcon /> : null}
         </div>
         <div className="column username">
           {settings.name}
-          <img className="leave" src={Leave} onClick={() => { window.confirm( 'Are you sure you want to logout?', ) && signOut() }}/>
+          <img
+            className="leave"
+            src={Leave}
+            onClick={() => {
+              window.confirm("Are you sure you want to logout?") && signOut();
+            }}
+          />
         </div>
       </div>
 
       <div className="settings-block block2">
         <div className="settings-col update-username">
           Change your username:
-          <input type="text" value={username} onChange={e => setUsername(e.target.value)} onKeyDown={handleKeyDown} />
+          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} onKeyDown={handleKeyDown} />
         </div>
         <div className="settings-col update-avatar">
-            Change your avatar:
+          Change your avatar:
           <label className="custom-file-upload">
             <input type="file" accept=".jpg, .jpeg, .png" onChange={handleFileChange} /> Select an image
           </label>

@@ -9,7 +9,7 @@ export interface IChannel {
   createdAt: string;
   lastMessage: string;
   password?: string;
-  messages?: [IMessage]
-  users: [IChannelUser]
-  banned: [IChannelBan]
+  messages?: [IMessage];
+  users: [IChannelUser];
+  banned: [IChannelBan];
 }

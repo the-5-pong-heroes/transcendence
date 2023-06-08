@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import { UserSettings } from "./Settings";
 import { useState } from "react";
+
+import { UserSettings } from "./Settings";
 import "../Profile/Profile.css";
 
 export const Unfollow = ({

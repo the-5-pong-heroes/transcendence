@@ -23,8 +23,7 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
   const [userRole, setUserRole] = useState<string>();
 
   // const { user } = useContext(UserContext) as UserContextType;
-  const { user } = useUser();
-  // const { socket }: SocketParameters = useSocketContext();
+  const user = useUser();
   const socket = useSocket();
   const theme = useTheme();
 
@@ -65,7 +64,6 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
   }
 
   const inviteToPlay = (id?: string): void => {
-    console.log("👺", id);
     if (!id) {
       return;
     }

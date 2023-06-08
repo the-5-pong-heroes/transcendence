@@ -6,14 +6,14 @@ import "react-toastify/dist/ReactToastify.css";
 import { AppLayout, NotFoundLayout } from "./components";
 import { Login, Signup, Home, Profile, Game, Settings, Leaderboard, Chat, NotFound } from "./pages";
 import type { AppContextParameters, PageRefs } from "./@types";
-import { useAppContext, useUser } from "./hooks";
+import { useAppContext, useUserQuery } from "./hooks";
 import "./App.css";
 
 const App: React.FC = () => {
   const { theme, pageRefs }: AppContextParameters = useAppContext();
   const { homeRef, profileRef, myProfileRef, settingsRef, gameRef, boardRef, chatRef, notFoundRef }: PageRefs =
     pageRefs;
-  const { user, isLoading } = useUser();
+  const { user, isLoading } = useUserQuery();
   const { uuid } = useParams();
 
   if (isLoading) {

@@ -1,1 +1,0 @@
-export { handleOnClickButton } from "./handleOnClickButton";

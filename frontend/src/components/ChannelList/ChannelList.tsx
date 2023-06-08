@@ -9,7 +9,7 @@ import styles from './ChannelList.module.scss';
 
 export const ChannelList: React.FC = () => {
   // const { user } = useContext(UserContext) as UserContextType;
-  const { user } = useUser();
+  const user = useUser();
   const theme = useTheme();
   const { channels } = useContext(ChannelContext);
   const socket = useSocket();

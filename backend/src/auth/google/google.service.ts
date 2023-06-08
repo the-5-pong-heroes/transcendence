@@ -144,12 +144,10 @@ export class GoogleService {
     // const userInfoResponse = await userInfoClient.get({
     //   auth: oauth2Client,
     // });
-    console.log("🌻🌻🌻 access_token: ", oauth2Client.credentials.access_token);
     const userInfoClient = google.oauth2("v2").userinfo;
     const userInfoResponse = await userInfoClient.get({
       auth: oauth2Client,
     });
-    console.log("🌻🌻🌻 userInfoResponse: ", userInfoResponse);
     return token;
   }
 }

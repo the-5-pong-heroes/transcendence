@@ -12,7 +12,8 @@
 .Chat {
   position: absolute;
   top: 0;
-  left: calc(548vh / 5 * 3);
+  left: calc((548vh - 100vw) / 4 * 3);
+  width: 100vw;
   height: calc(96vh - 62px);
   margin-top: calc(4vh + 62px);
   display: flex;

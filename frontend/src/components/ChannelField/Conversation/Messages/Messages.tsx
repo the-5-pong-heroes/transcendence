@@ -13,11 +13,11 @@ export const Messages: React.FC = () => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [showOptions, setShowOptions] = useState<number>(-1);
 
-  const { user } = useUser();
-  // const { socket }: SocketParameters = useSocketContext();
+  // const { user } = useContext(UserContext) as UserContextType;
+  const user = useUser();
   const socket = useSocket();
   const theme = useTheme();
-  // const { user } = useContext(UserContext) as UserContextType;
+
   const { activeChannel } = useContext(ChannelContext);
   if (activeChannel === undefined) throw new Error("Undefined Active Channel");
 

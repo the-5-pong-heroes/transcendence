@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { MenuButton, ScrollToPage, BurgerButton } from "./components";
-import { handleOnClickButton } from "./helpers";
 import "./Navbar.css";
 import { type MenuRefs, menuItems } from "./menuItems";
 
+import { handleOnClickButton } from "@/helpers";
 import { useAppContext } from "@hooks";
 import type { AppContextParameters, PageRefs } from "@types";
 import { LogoWallE, LogoWallELight } from "@assets";
@@ -17,18 +17,18 @@ export const Navbar: React.FC = () => {
     document.body.classList.toggle("open");
   };
 
-  const { theme, pageRefs, gameState }: AppContextParameters = useAppContext();
-  const { homeRef, profileRef, gameRef, boardRef, chatRef }: PageRefs = pageRefs;
+  const { theme, pageRefs, gameState, isNavigatingRef }: AppContextParameters = useAppContext();
+  const { homeRef, myProfileRef, gameRef, boardRef, chatRef }: PageRefs = pageRefs;
 
   const menuRefs: MenuRefs = {
     gameRef,
     boardRef,
     chatRef,
-    profileRef,
+    myProfileRef,
   };
 
   const onClick = (event: React.MouseEvent<HTMLAnchorElement>): void => {
-    handleOnClickButton({ event, path: "/", menuRef: homeRef, gameState });
+    handleOnClickButton({ event, path: "/", menuRef: homeRef, gameState, isNavigatingRef });
   };
 
   return (

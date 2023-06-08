@@ -13,7 +13,7 @@ export const ProtectedChannel: React.FC<IProtectedChannelProps> = ({ activeChann
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   // const { user } = useContext(UserContext) as UserContextType;
-  const { user } = useUser();
+  const user = useUser();
   const socket = useSocket();
 
   const handleChange = (event: any) => {

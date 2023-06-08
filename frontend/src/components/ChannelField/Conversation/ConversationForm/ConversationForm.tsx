@@ -10,7 +10,7 @@ export const ConversationForm: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [isMuted, setIsMuted] = useState<boolean>(false);
 
-  const { user } = useUser();
+  const user = useUser();
   const socket = useSocket();
   // const { user } = useContext(UserContext) as UserContextType;
   const { activeChannel } = useContext(ChannelContext);

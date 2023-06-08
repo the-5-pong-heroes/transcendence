@@ -27,7 +27,7 @@ interface ProfileProps {
 }
 
 export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
-  const { user: userInfos } = useUser();
+  const userInfos = useUser();
   const signOut = useSignOut();
 
   let { uuid } = useParams();

@@ -15,7 +15,7 @@ interface IUseUser {
   isLoading: boolean;
 }
 
-export function useUser(): IUseUser {
+export function useUserQuery(): IUseUser {
   const { data: user, isLoading } = useQuery<User | null>(
     [USER_QUERY_KEY],
     async (): Promise<User | null> => fetchUser(),
@@ -30,4 +30,10 @@ export function useUser(): IUseUser {
     user: user ?? null,
     isLoading: isLoading,
   };
+}
+
+export function useUser(): User | null {
+  const { user } = useUserQuery();
+
+  return user;
 }

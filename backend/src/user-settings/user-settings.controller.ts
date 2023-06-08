@@ -9,6 +9,7 @@ import {
   Post,
   UploadedFile,
   UseInterceptors,
+  UseGuards,
 } from "@nestjs/common";
 import { UserSettingsService } from "./user-settings.service";
 // import { CreateUserSettingDto } from "./dto/create-user-setting.dto";
@@ -17,8 +18,10 @@ import { UserSettings } from "./user-settings.service";
 import { CurrentUser } from "src/stats/current-user.decorator";
 import { User } from "@prisma/client";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { UserGuard } from "src/auth/user.guard";
 
 @Controller("settings")
+@UseGuards(UserGuard)
 export class UserSettingsController {
   constructor(private readonly userSettingsService: UserSettingsService) {}
 

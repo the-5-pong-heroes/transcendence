@@ -6,8 +6,7 @@ import type { PageRefs } from "@types";
 
 export const ScrollToPage: React.FC = () => {
   const { pathname } = useLocation();
-  const { homeRef, profileRef, myProfileRef, gameRef, boardRef, chatRef, notFoundRef }: PageRefs =
-    useAppContext().pageRefs;
+  const { homeRef, myProfileRef, gameRef, boardRef, chatRef, notFoundRef }: PageRefs = useAppContext().pageRefs;
 
   const refs: Record<string, React.RefObject<HTMLDivElement>> = {
     "/": homeRef,

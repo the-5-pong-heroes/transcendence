@@ -43,7 +43,7 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ setReturnMessage }) =
   const [isOwner, setIsOwner] = useState<boolean>(false);
 
   // const { user } = useContext(UserContext) as UserContextType;
-  const { user } = useUser();
+  const user = useUser();
   const socket = useSocket();
   const theme = useTheme();
 

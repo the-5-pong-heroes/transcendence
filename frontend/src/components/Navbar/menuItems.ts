@@ -13,7 +13,7 @@ export interface MenuRefs {
   gameRef: React.RefObject<HTMLDivElement>;
   boardRef: React.RefObject<HTMLDivElement>;
   chatRef: React.RefObject<HTMLDivElement>;
-  profileRef: React.RefObject<HTMLDivElement>;
+  myProfileRef: React.RefObject<HTMLDivElement>;
 }
 
 export type MenuRefName = keyof MenuRefs;
@@ -53,6 +53,6 @@ export const menuItems: MenuItem[] = [
     path: "/Profile",
     iconLight: RobotLight,
     iconDark: RobotDark,
-    refName: "profileRef",
+    refName: "myProfileRef",
   },
 ];

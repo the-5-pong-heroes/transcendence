@@ -58,6 +58,7 @@ export const AppProvider: React.FC<ProviderParameters> = ({ children }) => {
   const pageRefs: PageRefs = useInitRefs();
   const gameState: GameState = useInitGameState();
   const invitationState: InvitationState = useInitInvitationState();
+  const isNavigatingRef = useRef<boolean>(false);
 
   const appContext = useMemo((): AppContextParameters => {
     return {
@@ -66,8 +67,9 @@ export const AppProvider: React.FC<ProviderParameters> = ({ children }) => {
       pageRefs,
       gameState,
       invitationState,
+      isNavigatingRef,
     };
-  }, [theme, pageRefs, gameState, invitationState]);
+  }, [theme, pageRefs, gameState, invitationState, isNavigatingRef]);
 
   return <AppContext.Provider value={appContext}>{children}</AppContext.Provider>;
 };

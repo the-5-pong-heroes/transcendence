@@ -1,8 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { handleOnClickButton } from "../../helpers";
-
+import { handleOnClickButton } from "@/helpers";
 import { useAppContext } from "@hooks";
 import type { AppContextParameters } from "@types";
 
@@ -16,10 +15,10 @@ interface MenuButtonProps {
 }
 
 const _MenuButton: React.FC<MenuButtonProps> = ({ icon, path, label, menuRef, showNavbar, handleShowNavbar }) => {
-  const { gameState }: AppContextParameters = useAppContext();
+  const { gameState, isNavigatingRef }: AppContextParameters = useAppContext();
 
   const onClick = (event: React.MouseEvent<HTMLAnchorElement>): void => {
-    handleOnClickButton({ event, path, menuRef, gameState });
+    handleOnClickButton({ event, path, menuRef, gameState, isNavigatingRef });
     if (showNavbar) {
       handleShowNavbar();
     }

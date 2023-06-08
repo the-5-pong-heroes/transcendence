@@ -23,7 +23,7 @@ export const CreateChat: React.FC = () => {
   const [showForm, setShowForm] = useState<boolean>(false);
   const [channel, setChannel] = useState<IChannel>({ name: '', type: 'PUBLIC' });
   // const { user } = useContext(UserContext) as UserContextType;
-  const { user } = useUser();
+  const user = useUser();
   const socket = useSocket();
   const theme = useTheme();
 

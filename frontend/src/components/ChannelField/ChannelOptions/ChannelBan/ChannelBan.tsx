@@ -14,7 +14,7 @@ export const ChannelBan: React.FC<IChannelBanProps> = ({ banned }) => {
   const [userRole, setUserRole] = useState<string>();
 
   // const { user } = useContext(UserContext) as UserContextType;
-  const { user } = useUser();
+  const user = useUser();
   const socket = useSocket();
   const { activeChannel } = useContext(ChannelContext);
   if (activeChannel === undefined) throw new Error("Undefined AppContext");

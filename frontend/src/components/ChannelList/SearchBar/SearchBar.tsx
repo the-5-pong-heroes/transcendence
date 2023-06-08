@@ -17,7 +17,7 @@ export const SearchBar: React.FC = () => {
   const [preview, setPreview] = useState<ISearch[]>([])
   const [input, setInput] = useState<string>("")
   // const { user } = useContext(UserContext) as UserContextType;
-  const { user } = useUser();
+  const user = useUser();
   const socket = useSocket();
   const theme = useTheme();
 

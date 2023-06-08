@@ -8,7 +8,7 @@ import { useSocket, useUser } from "@hooks";
 export const ListOfGames: React.FC = () => {
   const socket = useSocket();
   const { gameList, overlayRef }: GameContextParameters = useGameContext();
-  const { user } = useUser();
+  const user = useUser();
   const userName = user?.name;
 
   const onClick = (game: LobbyState): void => {

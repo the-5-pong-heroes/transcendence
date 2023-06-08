@@ -17,7 +17,7 @@ interface SocketValues {
 }
 
 export const useSocketInit = ({ setSocketReady }: SocketProps): SocketValues => {
-  const { user } = useUser();
+  const user = useUser();
   const socketRef = useRef<Socket>();
   useSocketEvents({ socketRef });
 

@@ -6,7 +6,6 @@
   width: 100vw;
   z-index: 7;
   color: #fff;
-  font-size: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,7 +13,7 @@
 }
 
 .home h1 {
-  font-size: 7vw;
+  font-size: 60px;
 }
 
 #light .home {
@@ -103,4 +102,15 @@
 
 .game-link:active {
   transform: scale(0.96);
+}
+
+
+@media (max-width: 680px) {
+  .home h1 {
+    font-size: 40px;
+  }
+  .game-link span {
+    font-size: 10px;
+    line-height: 18px;
+  }
 }

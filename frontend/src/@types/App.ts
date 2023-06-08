@@ -31,4 +31,5 @@ export interface AppContextParameters {
   pageRefs: PageRefs;
   gameState: GameState;
   invitationState: InvitationState;
+  isNavigatingRef: React.MutableRefObject<boolean>;
 }

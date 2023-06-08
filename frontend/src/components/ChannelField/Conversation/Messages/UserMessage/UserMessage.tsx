@@ -1,6 +1,8 @@
 import React from "react";
-import { IMessage } from "@/interfaces";
+
 import styles from "./UserMessage.module.scss";
+
+import { type IMessage } from "@/interfaces";
 
 interface IUserMessageProps {
   message: IMessage;
@@ -14,4 +16,4 @@ export const UserMessage: React.FC<IUserMessageProps> = ({ message, theme }) => 
       {message.content}
     </div>
   );
-}
+};

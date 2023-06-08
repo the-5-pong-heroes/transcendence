@@ -10,10 +10,10 @@
     },
     // which JS to use (the more recent, the less compatible)
     "target": "ESNext",
-    // enforces TS: false because class-validator (for instance) is written in JS
+    // JS is allowed because class-validator is written in JS
     "allowJs": true,
     // allows importing modules with a .json extension
-    "resolveJsonModule": true,
+    "resolveJsonModule": false,
     // generates .d.ts files for every TypeScript file of the project
     "declaration": true,
     // strips all comments from TypeScript files
@@ -30,6 +30,7 @@
     // stronger guarantees of program correctness
     "strict": true,
     // TS won't raise an error when a class property isn't set in the constructor
+    // indeed DTO classes do not have constructors
     "strictPropertyInitialization": false,
     // null and undefined have their own distinct types
     "strictNullChecks": true,
@@ -62,6 +63,8 @@
     // files will be emitted into this directory
     "outDir": "./dist",
     // https://www.typescriptlang.org/tsconfig#esModuleInterop
-    "esModuleInterop": false
+    "esModuleInterop": false,
+    // specify the module resolution strategy
+    "moduleResolution": "node"
   }
 }

@@ -1,7 +1,6 @@
 import { Plant, Walle, Eve, Energy } from "../../assets";
 
-export const UserLevel = ({ myClassName, level}: {myClassName: string; level: string}) => {
-
+export const UserLevel = ({ myClassName, level }: { myClassName: string; level: string }) => {
   const LEVELS: string[] = ["plant", "walle", "eve", "energy"];
   const levelPicture = [Plant, Walle, Eve, Energy][LEVELS.indexOf(level)];
 
@@ -10,5 +9,5 @@ export const UserLevel = ({ myClassName, level}: {myClassName: string; level: st
       <img src={levelPicture} alt="levelPicture" />
       <span>{level}</span>
     </div>
-    );
+  );
 };

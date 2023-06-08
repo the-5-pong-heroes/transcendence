@@ -1,8 +1,11 @@
 import React from "react";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
-import { ChannelProvider, UserProvider } from "@/contexts";
+
 import { ChannelList, ChannelField } from "../../components";
+
 import styles from "./Chat.module.scss";
+
+import { ChannelProvider, UserProvider } from "@/contexts";
 
 interface IChatProps {
   chatRef: React.RefObject<HTMLDivElement>;

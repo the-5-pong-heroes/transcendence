@@ -6,7 +6,7 @@ export class FriendshipService {
   constructor(private prismaService: PrismaService) {}
 
   async create(data: any, user: any) {
-    // console.log("🏓", data.newFriendId, user.userId);
+    console.log("🏓", data.newFriendId, user.id);
     return this.prismaService.friendship.create({// FIXME
       data: {
         userId: data.newFriendId,

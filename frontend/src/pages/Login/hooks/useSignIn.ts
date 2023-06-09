@@ -2,10 +2,10 @@ import { useQueryClient, type UseMutateFunction, useMutation } from "react-query
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { ResponseError } from "@/helpers";
+import { ResponseError, customFetch } from "@/helpers";
 import { USER_QUERY_KEY } from "@/constants";
 import type { UserAuth, User } from "@types";
-import * as fetch from "@/helpers/fetch";
+// import * as fetch from "@/helpers/customFetch";
 
 type SignInBody = {
   email: string;
@@ -17,7 +17,8 @@ async function signIn(email: string, password: string): Promise<User> {
     email: email,
     password: password,
   };
-  const data = await fetch.post<SignInBody, UserAuth>("/auth/signin", signInBody);
+  // const data = await fetch.post<SignInBody, UserAuth>("/auth/signin", signInBody);
+  const data = await customFetch<UserAuth, SignInBody>("post", "/auth/signin", signInBody);
 
   return data.user;
 }

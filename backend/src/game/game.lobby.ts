@@ -6,7 +6,7 @@ import { GameService } from "./game.service";
 import { GameLoop } from "./game-logic";
 import { PrismaService } from "../database/prisma.service";
 import { Game, GameStatus, UserStatus } from "@prisma/client";
-import { UsersService } from "src/users/users.service";
+import { userService } from "src/user/users.service";
 import { EventEmitter } from "events";
 
 /*  playerRight = player2 --> is by default the first user to connect  */
@@ -44,7 +44,7 @@ export class GameLobby extends EventEmitter {
     public readonly lobbyMode: LobbyMode,
     private readonly gameService: GameService,
     private readonly prisma: PrismaService,
-    private readonly usersService: UsersService,
+    private readonly userService: userService,
   ) {
     super();
     this.gameLoop = new GameLoop(this, this.server);
@@ -206,10 +206,10 @@ export class GameLobby extends EventEmitter {
 
   private async updatePlayersStatus(status: UserStatus): Promise<void> {
     if (this.player["right"]) {
-      await this.usersService.updateStatus(this.player["right"].id, status);
+      await this.userService.updateStatus(this.player["right"].id, status);
     }
     if (this.player["left"]) {
-      await this.usersService.updateStatus(this.player["left"].id, status);
+      await this.userService.updateStatus(this.player["left"].id, status);
     }
   }
 
@@ -219,7 +219,7 @@ export class GameLobby extends EventEmitter {
     }
     const id = this.player[paddleSide]?.id;
     if (id !== undefined) {
-      await this.usersService.updateStatus(id, status);
+      await this.userService.updateStatus(id, status);
     }
   }
 

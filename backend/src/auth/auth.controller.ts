@@ -3,12 +3,15 @@ import { Request, Response } from "express";
 
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
-import { CreateUserDto } from "../users/dto";
+import { CreateUserDto } from "../user/dto";
 import { User } from "@prisma/client";
 import { UserDto } from "./dto";
-import { UsersService } from "src/users/users.service";
+import { UserService } from "src/user/user.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
 import { GoogleService } from "src/auth/google/google.service";
+import { Generate2FAService } from "./2FA/generate.service";
+import { EnableService } from "./2FA/enable2FA.service";
+import { VerifyService } from "./2FA/verify.service";
 
 @Injectable()
 export class GoogleOauthGuard extends AuthGuard("google") {}
@@ -129,4 +132,3 @@ export class AuthController {
   //      await this.authService.deleteCookies(res);
   //    }
 }
-

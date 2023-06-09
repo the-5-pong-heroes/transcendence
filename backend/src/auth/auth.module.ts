@@ -1,4 +1,4 @@
-import { UserService } from "src/users/users.service";
+import { UserService } from "src/user/user.service";
 import { Generate2FAService } from "./2FA/generate.service";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { EnableService } from "./2FA/enable2FA.service";
@@ -15,7 +15,7 @@ import { GoogleStrategy } from "./google/google.strategy";
 import { GoogleService } from "./google/google.service";
 import { PrismaModule } from "src/database/prisma.module";
 import { UserGuard } from "./user.guard";
-import { UserModule } from "src/users/users.module";
+import { UserModule } from "src/user/user.module";
 
 @Module({
   imports: [

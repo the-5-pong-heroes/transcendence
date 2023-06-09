@@ -76,7 +76,7 @@ export class EnableService {
       throw new HttpException(
         {
           status: HttpStatus.BAD_REQUEST,
-          error: "Error to update the cookies",
+          error: "Error to update the 2FA",
         },
         HttpStatus.BAD_REQUEST,
       );

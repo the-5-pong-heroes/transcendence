@@ -4,9 +4,9 @@ import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 
 import { Auth } from "@prisma/client";
-import { UserService } from "src/users/users.service";
+import { UserService } from "src/user/user.service";
 import { SignInDto, SignUpDto } from "./dto";
-import { CreateUserDto } from "../users/dto";
+import { CreateUserDto } from "../user/dto";
 import { User } from "@prisma/client";
 import { PrismaService } from "../database/prisma.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
@@ -29,7 +29,7 @@ interface GoogleUserInfos {
 export class AuthService {
   constructor(
     private jwtService: JwtService,
-    private usersService: UserService,
+    private userService: UserService,
     private prisma: PrismaService,
     private Oauth42: Oauth42Service,
     private googleService: GoogleService,
@@ -48,7 +48,7 @@ export class AuthService {
   async signUp(@Res({ passthrough: true }) res: Response, data: SignUpDto): Promise<void> {
     const { name, email, password } = data;
 
-    const userByName = await this.usersService.findUserByName(name);
+    const userByName = await this.userService.findUserByName(name);
     if (userByName) {
       res.status(HttpStatus.CONFLICT).json({ message: "User already exists" });
       return;
@@ -62,7 +62,7 @@ export class AuthService {
     const hash = await bcrypt.hash(password, salt);
 
     const newUser = new CreateUserDto(name, email, hash);
-    const createdUser = await this.usersService.create(newUser);
+    const createdUser = await this.userService.create(newUser);
 
     const payload = { email: email, sub: createdUser.id };
     const accessToken = this.jwtService.sign(payload);
@@ -103,7 +103,7 @@ export class AuthService {
 
   async signIn(@Res({ passthrough: true }) res: Response, auth: Auth): Promise<void> {
     const payload = { email: auth.email, sub: auth.userId };
-    const user = await this.usersService.findOne(auth.userId);
+    const user = await this.userService.findOne(auth.userId);
     const accessToken = this.jwtService.sign(payload);
 
     res
@@ -130,7 +130,7 @@ export class AuthService {
           accessToken: userInfos.accessToken,
         },
       });
-      user = await this.usersService.findOne(userByEmail.userId);
+      user = await this.userService.findOne(userByEmail.userId);
     } else {
       user = await this.googleService.createDataBaseUserFromGoogle(
         userInfos.accessToken,
@@ -176,7 +176,7 @@ export class AuthService {
         return null;
       }
     }
-    const user = await this.usersService.findOne(userId);
+    const user = await this.userService.findOne(userId);
     return user;
   }
 
@@ -265,8 +265,7 @@ export class AuthService {
       expires: new Date(new Date().getTime() + 60 * 24 * 7 * 1000), // expires in 7 days
       httpOnly: true, // for security
     });
-    const Googlecookies = res.cookie("FullToken", token,
-    {
+    const Googlecookies = res.cookie("FullToken", token, {
       expires: new Date(new Date().getTime() + 60 * 24 * 7 * 1000), // expires in 7 days
       httpOnly: true, // for security
     });

@@ -32,6 +32,7 @@ model Auth {
   userId        String   @id @db.Uuid
   user          User     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   email           String   @unique
+  password        String?   
   accessToken     String   @default("noToken")
   isRegistered    Boolean  @default(false)
   twoFAactivated  Boolean?  @default(false)

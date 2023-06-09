@@ -1,26 +1,24 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards, BadRequestException } from "@nestjs/common";
-import { UserService } from "./users.service";
+import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UserGuard } from "src/auth/user.guard";
 
-@Controller('users')
+@Controller("users")
 export class UserController {
-	constructor(
-		private userService: UserService,
-	) {}
+  constructor(private userService: UserService) {}
 
-	@Get()
-	async getUsers(@Req() req: Request) {
-		const blockedOf = req.query.blockedOf as string;
-		return this.userService.getAllUsers(blockedOf);
-	}
+  @Get()
+  async getUsers(@Req() req: Request) {
+    const blockedOf = req.query.blockedOf as string;
+    return this.userService.getAllUsers(blockedOf);
+  }
 
-	@Post('me/username/get')
-	getUsername(@Req() req: Request) {
-		console.log("getUsernaaaaaaaaaaaaaaaaame");
-		return this.userService.getUsername(req);
-	}
+  @Post("me/username/get")
+  getUsername(@Req() req: Request) {
+    console.log("getUsernaaaaaaaaaaaaaaaaame");
+    return this.userService.getUsername(req);
+  }
 
   @Get("me")
   async findMe(@Req() req: any) {

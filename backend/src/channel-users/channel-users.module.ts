@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
-import { ChannelUsersService } from "./channel-users.service";
+import { ChanneluserService } from "./channel-users.service";
 import { PrismaService } from "../database/prisma.service";
 
 @Module({
-  providers: [ChannelUsersService, PrismaService],
+  providers: [ChanneluserService, PrismaService],
 })
 export class ChannelUsersModule {}

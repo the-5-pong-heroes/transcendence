@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable, Req, Res } from "@nestjs/common";
-import { UserService } from "src/users/users.service";
+import { UserService } from "src/user/users.service";
 import { PrismaService } from "src/database/prisma.service";
 import { Request, Response } from "express";
 import { google } from "googleapis";
@@ -12,7 +12,7 @@ interface Token {
 
 @Injectable({})
 export class GoogleService {
-  constructor(private prisma: PrismaService, private usersService: UsersService) {}
+  constructor(private prisma: PrismaService, private userService: userService) {}
 
   async handleGoogleUserCreation(@Res() res: Response, @Req() req: Request) {
     try {
@@ -109,7 +109,7 @@ export class GoogleService {
       );
     }
   }
-  
+
   async getTokenFromGoogle(code: string) {
     const oauth2Client = await this.getOauth2ClientGoogle();
     const { tokens } = await oauth2Client.getToken(code);

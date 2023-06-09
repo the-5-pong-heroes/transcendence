@@ -1,17 +1,17 @@
 import { HttpException, HttpStatus, Injectable, Req, Res } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
+import fetch from "node-fetch";
 
 @Injectable()
 export class Oauth42Service {
   constructor(private prisma: PrismaService) {}
 
-  /* 42 API ACCESS */
   async accessToken(req: string) {
     try {
       const response = await fetch("https://api.intra.42.fr/oauth/token", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `grant_type=authorization_code&client_id=${process.env.API42_ID}&client_secret=${process.env.API42_SECRET}&code=${req}&redirect_uri=${process.env.API42_URI}`,
+        body: `grant_type=authorization_code&client_id=${process.env.VITE_API42_ID}&client_secret=${process.env.VITE_API42_SECRET}&code=${req}&redirect_uri=${process.env.VITE_API42_URI}`,
       });
       const data = await response.json();
       if (!data) {
@@ -28,13 +28,12 @@ export class Oauth42Service {
       throw new HttpException(
         {
           status: HttpStatus.BAD_REQUEST,
-          error: "Error to get the user by token",
+          error: "Error to get the user by token3",
         },
         HttpStatus.BAD_REQUEST,
       );
     }
   }
-
   async access42UserInformation(accessToken: string) {
     try {
       const response = await fetch("https://api.intra.42.fr/v2/me", {
@@ -51,14 +50,13 @@ export class Oauth42Service {
     return null;
   }
 
-  async createDataBase42User(user42: any, token: string, name: string, isRegistered: boolean) {
+  async createDataBase42User(user42: any, token: string, username: string, isRegistered: boolean) {
     try {
       const user = await this.prisma.user.create({
         data: {
-          name: name,
+          name: username,
           auth: {
             create: {
-              password: "test",
               isRegistered: isRegistered,
               accessToken: token,
               email: user42.email,

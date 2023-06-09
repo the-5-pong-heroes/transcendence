@@ -1,7 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from "react";
+
 // import { socket } from '../../../socket';
+import styles from "./CreateChat.module.scss";
+
 import { useUser, useSocket, useTheme } from "@hooks";
-import styles from './CreateChat.module.scss';
 import { UserContext } from "@/contexts";
 
 interface IChannel {
@@ -13,15 +15,11 @@ interface IChannel {
   };
 }
 
-const types: string[] = [
-  "Public",
-  "Private",
-  "Protected",
-];
+const types: string[] = ["Public", "Private", "Protected"];
 
 export const CreateChat: React.FC = () => {
   const [showForm, setShowForm] = useState<boolean>(false);
-  const [channel, setChannel] = useState<IChannel>({ name: '', type: 'PUBLIC' });
+  const [channel, setChannel] = useState<IChannel>({ name: "", type: "PUBLIC" });
   // const { user } = useContext(UserContext) as UserContextType;
   const user = useUser();
   const socket = useSocket();
@@ -35,40 +33,41 @@ export const CreateChat: React.FC = () => {
   }, [user]);
 
   const handleClick = () => {
-    setShowForm((prev: boolean) => (!prev));
-  }
+    setShowForm((prev: boolean) => !prev);
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setChannel((prev: IChannel) => ({ ...prev, [name]: value }));
-    if (name === "type" && value === "PROTECTED")
+    if (name === "type" && value === "PROTECTED") {
       setChannel((prev: IChannel) => ({ ...prev, password: "" }));
-    if (name === "type" && value !== "PROTECTED")
+    }
+    if (name === "type" && value !== "PROTECTED") {
       setChannel((prev: IChannel) => ({ ...prev, password: undefined }));
-  }
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+
     // const token = localStorage.getItem('access_token');
     // if (!token) return;
-    socket.emit('create', channel);
-    setChannel((prev: IChannel) => ({ users: prev.users, name: '', type: 'PUBLIC' }));
+    socket.emit("create", channel);
+    setChannel((prev: IChannel) => ({ users: prev.users, name: "", type: "PUBLIC" }));
     setShowForm(false);
-  }
+  };
 
   return (
     <div className={styles.CreateChat}>
       <button
         className={`${styles.Button} ${theme === "light" ? styles.ButtonLight : styles.ButtonDark}`}
-        onClick={handleClick}
-      >+</button>
-      {
-        showForm &&
+        onClick={handleClick}>
+        +
+      </button>
+      {showForm && (
         <form
           className={`${styles.Form} ${theme === "light" ? styles.FormLight : styles.FormDark}`}
-          onSubmit={handleSubmit}
-        >
+          onSubmit={handleSubmit}>
           <input
             className={styles.InputName}
             type="text"
@@ -79,25 +78,23 @@ export const CreateChat: React.FC = () => {
             required={true}
           />
           <div className={styles.Type}>
-          {
-            types.map((type: string, index: number) => {
+            {types.map((type: string, index: number) => {
               return (
-                  <label key={index} className={styles.TypeLabel}>
-                    <input
-                      className={styles.InputType}
-                      type="radio"
-                      name="type"
-                      value={type.toUpperCase()}
-                      checked={channel.type == type.toUpperCase()}
-                      onChange={handleChange}
-                    />
-                    <span>{type}</span>
-                  </label>
+                <label key={index} className={styles.TypeLabel}>
+                  <input
+                    className={styles.InputType}
+                    type="radio"
+                    name="type"
+                    value={type.toUpperCase()}
+                    checked={channel.type == type.toUpperCase()}
+                    onChange={handleChange}
+                  />
+                  <span>{type}</span>
+                </label>
               );
-            })
-          }
+            })}
           </div>
-          {channel.type === "PROTECTED" &&
+          {channel.type === "PROTECTED" && (
             <input
               className={styles.Password}
               type="text"
@@ -107,13 +104,10 @@ export const CreateChat: React.FC = () => {
               onChange={handleChange}
               required={channel.type === "PROTECTED"}
             />
-          }
-          <input
-            className={styles.Submit}
-            type="submit"
-          />
+          )}
+          <input className={styles.Submit} type="submit" />
         </form>
-      }
+      )}
     </div>
   );
-}
+};

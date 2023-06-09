@@ -4,5 +4,5 @@ export interface IMessage {
   senderId?: string;
   sender?: {
     name: string;
-  }
+  };
 }

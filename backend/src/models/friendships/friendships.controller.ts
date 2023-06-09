@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Delete,
-  ParseUUIDPipe,
-} from "@nestjs/common";
+import { Controller, Get, Post, Body, Param, Delete, ParseUUIDPipe } from "@nestjs/common";
 import { FriendshipsService } from "./friendships.service";
 import { AddFriendDto } from "./add-friend.dto";
 

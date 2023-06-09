@@ -5,4 +5,4 @@ export const SocketExceptions = {
   GameError: "exception.game_error",
 } as const;
 
-export type TSocketExceptions = typeof SocketExceptions[keyof typeof SocketExceptions];
+export type TSocketExceptions = (typeof SocketExceptions)[keyof typeof SocketExceptions];

@@ -9,45 +9,47 @@ import "./Login.css";
 
 export const Login42: React.FC = () => {
   const handleOnClick = (): void => {
-    let url = `${import.meta.env.VITE_API42_URI}`;
+    const url = `${import.meta.env.VITE_API42_URI}`;
     window.open(url, "_self");
   };
 
   const navigate = useNavigate();
-  const twoFACode = React.useState('');
+  const twoFACode = React.useState("");
   const [isActivated, setIsActivated] = React.useState(false);
 
   const handleAuth42 = () => {
-    let url = `${import.meta.env.VITE_API42_URI}`;
+    const url = `${import.meta.env.VITE_API42_URI}`;
     window.open(url, "_self");
-    };
+  };
 
   // const handleAuthGoogle = () => {
   //   navigate("/auth/google");
   // };
 
   const handle2FA = async () => {
-    setIsActivated(prevState => !prevState);
+    setIsActivated((prevState) => !prevState);
     try {
       const data = await handle2FAfunction();
-      console.log(data); 
+      console.log(data);
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   async function handle2FAfunction(): Promise<any> {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}` + '/auth/2FA/generate', {
-			method: 'POST',
-			headers: {'Content-Type': 'application/json'},
-			body: JSON.stringify({ code: twoFACode, twoFAactivated: isActivated })
-		});
-		const data = await response.json();
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code: twoFACode, twoFAactivated: isActivated }),
+    });
+    const data = await response.json();
     console.log("data ===", data);
-		if (data.twoFAactivated === true)
+    if (data.twoFAactivated === true) {
       openPopup(data.code);
+    }
+
     return data;
-  };
+  }
 
   function openPopup(twoFACode: string) {
     const popup = document.getElementById("popup");
@@ -58,16 +60,14 @@ export const Login42: React.FC = () => {
   }
 
   function submitVerificationCode() {
-    const verificationCodeInput = document.getElementById(
-      "verificationCode"
-    ) as HTMLInputElement;
+    const verificationCodeInput = document.getElementById("verificationCode") as HTMLInputElement;
     if (verificationCodeInput) {
       const verificationCode = verificationCodeInput.value;
       const popup = document.getElementById("popup");
       if (popup) {
-        const twoFACode = popup.dataset.twoFACode; 
-        console.log("twoFA = ",twoFACode);
-        console.log("verif = ",verificationCode);
+        const twoFACode = popup.dataset.twoFACode;
+        console.log("twoFA = ", twoFACode);
+        console.log("verif = ", verificationCode);
         if (verificationCode === twoFACode) {
           alert("Code de vérification correct !");
           closePopup();
@@ -82,10 +82,9 @@ export const Login42: React.FC = () => {
     const popup = document.getElementById("popup");
     if (popup) {
       popup.style.display = "none";
-      popup.removeAttribute("data-twoFACode"); 
+      popup.removeAttribute("data-twoFACode");
     }
   }
-
 
   return (
     <div className="Login_with" onClick={handleAuth42}>
@@ -126,7 +125,7 @@ export const Login: React.FC = () => {
       });
     }
   };
-  
+
   return (
     <div className="Login">
       <form className="form" onSubmit={onSignIn}>
@@ -174,7 +173,7 @@ export const Login: React.FC = () => {
 //     setIsActivated(prevState => !prevState);
 //     try {
 //       const data = await handle2FAfunction();
-//       console.log(data); 
+//       console.log(data);
 //     } catch (error) {
 //       console.error(error);
 //     }
@@ -209,7 +208,7 @@ export const Login: React.FC = () => {
 //       const verificationCode = verificationCodeInput.value;
 //       const popup = document.getElementById("popup");
 //       if (popup) {
-//         const twoFACode = popup.dataset.twoFACode; 
+//         const twoFACode = popup.dataset.twoFACode;
 //         console.log("twoFA = ",twoFACode);
 //         console.log("verif = ",verificationCode);
 //         if (verificationCode === twoFACode) {
@@ -226,7 +225,7 @@ export const Login: React.FC = () => {
 //     const popup = document.getElementById("popup");
 //     if (popup) {
 //       popup.style.display = "none";
-//       popup.removeAttribute("data-twoFACode"); 
+//       popup.removeAttribute("data-twoFACode");
 //     }
 //   }
 

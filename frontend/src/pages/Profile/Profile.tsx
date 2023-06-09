@@ -1,16 +1,17 @@
 /* eslint max-lines: ["warn", 300] */
 import React, { useEffect, useState } from "react";
+
 import "./Profile.css";
-import { DefaultAvatar } from "../../assets";
-import { Plant, Walle, Eve, Energy } from "../../assets";
+import { useParams, Link } from "react-router-dom";
+
+import { DefaultAvatar, Plant, Walle, Eve, Energy, Setting, addFriend, GameLight, ChatLight } from "../../assets";
 import { UserStatus } from "../Leaderboard/UserStatus";
 import { UserLevel } from "../Leaderboard/UserLevel";
+import { type UserStats } from "../Leaderboard/Leaderboard";
+
 import { MatchHistory } from "./MatchHistory";
-import { useParams } from "react-router-dom";
-import { UserStats } from "../Leaderboard/Leaderboard";
 import { Friends } from "./Friends";
-import { Setting, addFriend, GameLight, ChatLight } from "../../assets";
-import { Link } from "react-router-dom";
+
 import { useSocket } from "@hooks";
 import { ClientEvents } from "@Game/@types";
 
@@ -43,7 +44,9 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
         credentials: "include",
       });
       const data = await resp.json();
-      if (data) setHistory(data);
+      if (data) {
+        setHistory(data);
+      }
     } catch (err) {
       console.error(err);
     }

@@ -32,4 +32,4 @@ export const Home: React.FC<HomeProps> = ({ homeRef }) => {
       </div>
     </div>
   );
-}
+};

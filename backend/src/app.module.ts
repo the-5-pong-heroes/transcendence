@@ -32,8 +32,8 @@ import { GoogleStrategy } from "./auth/google/google.strategy";
   providers: [AppService, GoogleStrategy, PrismaService],
 })
 export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    // registers our custom middleware, that attaches the current user to each of its request
-    consumer.apply(CurrentUserMiddleware).forRoutes("*");
-  }
+  // configure(consumer: MiddlewareConsumer) {
+  // registers our custom middleware, that attaches the current user to each of its request
+  //consumer.apply(CurrentUserMiddleware).forRoutes("*");
+  // }
 }

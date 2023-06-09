@@ -3,6 +3,7 @@ import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UserGuard } from "src/auth/user.guard";
+import { Request } from "express";
 
 @Controller("users")
 export class UserController {
@@ -16,7 +17,6 @@ export class UserController {
 
   @Post("me/username/get")
   getUsername(@Req() req: Request) {
-    console.log("getUsernaaaaaaaaaaaaaaaaame");
     return this.userService.getUsername(req);
   }
 

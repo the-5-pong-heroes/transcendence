@@ -1,59 +1,59 @@
-import {PrismaService} from '../database/prisma.service';
-import {HttpException, HttpStatus, Injectable, Req} from '@nestjs/common';
-import { Request } from 'express';
-
+import { PrismaService } from "../database/prisma.service";
+import { ConflictException, HttpException, HttpStatus, Injectable, NotFoundException, Req } from "@nestjs/common";
+import { Request } from "express";
+import { Auth, User, UserStatus } from "@prisma/client";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
 
 @Injectable({})
 export class UserService {
-	constructor(
-		private readonly prisma: PrismaService,
-	) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-	async getAllUsers(blockedOf: string) {
-			const users = await this.prisma.user.findMany({});
-		}
+  async getAllUsers(blockedOf: string) {
+    const users = await this.prisma.user.findMany({});
+  }
 
-	async getUserByEmail(email: string) {
-		try {
-			const user = await this.prisma.user.findFirst({
-				where: {
-					auth: {
-						email: email,
-					},
-				},
-				include: {
-					auth: true,
-				  },
-			});
-			return user;
-		} catch (error) {}
-	}
+  async getUserByEmail(email: string) {
+    try {
+      const user = await this.prisma.user.findFirst({
+        where: {
+          auth: {
+            email: email,
+          },
+        },
+        include: {
+          auth: true,
+        },
+      });
+      return user;
+    } catch (error) {}
+  }
 
-	async getUsername(@Req() req: Request) {
-		const accessToken = req.cookies.token;
-		try {
-			const user = await this.prisma.user.findFirst({
-				where: {
-					auth: {
-						accessToken: accessToken,
-					},
-				},
-				include: {
-					auth: true,
-				  },
-			});
-			return user;
-		} catch (error) {}
-	}
+  async getUsername(@Req() req: Request) {
+    const accessToken = req.cookies.token;
+    try {
+      const user = await this.prisma.user.findFirst({
+        where: {
+          auth: {
+            accessToken: accessToken,
+          },
+        },
+        include: {
+          auth: true,
+        },
+      });
+      return user;
+    } catch (error) {}
+  }
 
-	async remove(id: string) {
-		const user = await this.prisma.user.findUnique({
-			where: { id },
-	});
+  async remove(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
 
-	if (!user) await this.prisma.user.delete({ where: { name: id } });
-		else await this.prisma.user.delete({ where: { id } });
-	}
+    if (!user) await this.prisma.user.delete({ where: { name: id } });
+    else await this.prisma.user.delete({ where: { id } });
+  }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = await this.prisma.user.findUnique({

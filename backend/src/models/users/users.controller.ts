@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseUUIDPipe } from "@nestjs/common";
-import { userService } from "./users.service";
+import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { ListAllEntities } from "./dto/list-all-entities.dto";
@@ -8,7 +8,7 @@ import { CurrentUser } from "./current-user.decorator";
 
 @Controller("users")
 export class UsersController {
-  constructor(private readonly userService: userService) {}
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {

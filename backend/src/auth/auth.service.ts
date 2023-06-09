@@ -25,6 +25,10 @@ interface GoogleUserInfos {
   accessToken: string;
 }
 
+interface Token {
+  access_token: string | undefined;
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -93,9 +97,11 @@ export class AuthService {
     if (!userAuth) {
       throw new BadRequestException("User doesn't exist");
     }
-    const isMatch = await bcrypt.compare(password, userAuth.password);
-    if (!isMatch) {
-      throw new BadRequestException("Invalid credentials");
+    if (userAuth.password) {
+      const isMatch = await bcrypt.compare(password, userAuth.password);
+      if (!isMatch) {
+        throw new BadRequestException("Invalid credentials");
+      }
     }
     const { password: _, ...result } = userAuth;
     return result;
@@ -195,7 +201,7 @@ export class AuthService {
 
   /***********       LAURA'S CODE      ***********/
 
-  async createDataBase42User(user42: any, token: string, username: string, isRegistered: boolean) {
+  async createDataBase42User(user42: any, token: Token, username: string, isRegistered: boolean) {
     try {
       const user = await this.prisma.user.create({
         data: {

@@ -1,14 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { CreateChannelDto } from "./dto/create-channel.dto";
 import { PrismaService } from "../database/prisma.service";
-import { userService } from "../user/user.service";
-// import { userService } from "../users_paul/users.service";
+import { UserService } from "../user/user.service";
 import { Channel, ChannelUser } from "@prisma/client";
 import { UpdateChannelDto } from "./dto/update-channel.dto";
 
 @Injectable()
 export class ChannelsService {
-  constructor(private readonly prismaService: PrismaService, private readonly userService: userService) {}
+  constructor(private readonly prismaService: PrismaService, private readonly userService: UserService) {}
 
   async create(createChannelDto: CreateChannelDto): Promise<Channel> {
     const { users, ...data } = createChannelDto;

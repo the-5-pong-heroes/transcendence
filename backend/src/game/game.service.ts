@@ -3,7 +3,7 @@ import { Server, Socket } from "socket.io";
 import { LobbyMode, GameMode, AuthenticatedSocket, ServerEvents, LobbyState, PaddleMove } from "./@types";
 import { GameLobby } from "./game.lobby";
 import { PrismaService } from "../database/prisma.service";
-import { userService } from "src/user/users.service";
+import { UserService } from "src/user/user.service";
 import { AuthService } from "src/auth/auth.service";
 import { parse } from "cookie";
 
@@ -24,7 +24,7 @@ export class GameService {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly userService: userService,
+    private readonly userService: UserService,
     private readonly authService: AuthService,
   ) {}
 

@@ -4,12 +4,12 @@ import { Strategy, ExtractJwt } from "passport-jwt";
 import { Request } from "express";
 
 import { JwtPayload } from "../interface/jwt-payload.interface";
-import { userService } from "src/user/users.service";
+import { UserService } from "src/user/user.service";
 import { Auth } from "@prisma/client";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private readonly userService: userService) {
+  constructor(private readonly userService: UserService) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([JwtStrategy.extractJWTFromCookie]),
       ignoreExpiration: false,

@@ -1,11 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
-// import { userService } from "src/users_paul/users.service";
-import { userService } from "src/user/users.service";
+import { UserService } from "src/user/user.service";
 
 @Injectable()
 export class BlockedService {
-  constructor(private prismaService: PrismaService, private userService: userService) {}
+  constructor(private prismaService: PrismaService, private userService: UserService) {}
 
   async create(data: any) {
     return this.prismaService.blocked.create({

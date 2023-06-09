@@ -9,7 +9,7 @@ import "./Login.css";
 
 export const Login42: React.FC = () => {
   const handleOnClick = (): void => {
-    const url = `${BASE_URL}/auth/auth42/callback`;
+    let url = `${import.meta.env.VITE_API42_URI}`;
     window.open(url, "_self");
   };
 
@@ -88,7 +88,7 @@ export const Login42: React.FC = () => {
 
 
   return (
-    <div className="Login_with" onClick={handleOnClick}>
+    <div className="Login_with" onClick={handleAuth42}>
       <span>Continue with </span>
       <img id="logo-42" alt="42 Logo" src={Logo_42} />
     </div>

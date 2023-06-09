@@ -6,7 +6,7 @@ import { GameService } from "./game.service";
 import { GameLoop } from "./game-logic";
 import { PrismaService } from "../database/prisma.service";
 import { Game, GameStatus, UserStatus } from "@prisma/client";
-import { userService } from "src/user/users.service";
+import { UserService } from "src/user/user.service";
 import { EventEmitter } from "events";
 
 /*  playerRight = player2 --> is by default the first user to connect  */
@@ -44,7 +44,7 @@ export class GameLobby extends EventEmitter {
     public readonly lobbyMode: LobbyMode,
     private readonly gameService: GameService,
     private readonly prisma: PrismaService,
-    private readonly userService: userService,
+    private readonly userService: UserService,
   ) {
     super();
     this.gameLoop = new GameLoop(this, this.server);

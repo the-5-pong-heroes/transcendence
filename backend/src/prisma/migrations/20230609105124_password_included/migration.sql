@@ -27,7 +27,7 @@ CREATE TABLE "User" (
 CREATE TABLE "Auth" (
     "userId" UUID NOT NULL,
     "email" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
+    "password" TEXT,
     "accessToken" TEXT NOT NULL DEFAULT 'noToken',
     "isRegistered" BOOLEAN NOT NULL DEFAULT false,
     "twoFAactivated" BOOLEAN DEFAULT false,

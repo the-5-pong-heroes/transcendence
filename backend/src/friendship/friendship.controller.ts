@@ -11,7 +11,6 @@ export class FriendshipController {
 
   @Post()
   create(@Body() data: any, @Req() req: any) {
-    console.log("🏓", data);
     this.friendshipService.create(data, req.user);
   }
 

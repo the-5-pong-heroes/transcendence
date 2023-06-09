@@ -3,9 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { USER_QUERY_KEY } from "@/constants";
-import { ResponseError } from "@/helpers";
+import { ResponseError, customFetch } from "@/helpers";
 // import * as fetch from "@/helpers/customFetch";
-import { customFetch } from "@/helpers";
 
 interface Message {
   message: string;
@@ -13,7 +12,7 @@ interface Message {
 
 async function signOut(): Promise<void> {
   // const { message } = await fetch.get<Message>("/auth/signout");
-  const { message } = await customFetch<Message>("get", "/auth/signout");
+  const { message } = await customFetch<Message>("GET", "/auth/signout");
 }
 
 type IUseSignOut = UseMutateFunction<void>;

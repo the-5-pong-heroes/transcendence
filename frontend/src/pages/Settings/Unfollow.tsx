@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import React from "react";
 
 import "../Profile/Profile.css";
-import { BASE_URL } from "@/constants";
 import { customFetch } from "@/helpers";
 
 interface UnfollowProps {
@@ -22,9 +21,11 @@ export const Unfollow: React.FC<UnfollowProps> = ({ friends, handleUnfollow }) =
   function removeFriend(uuid: string): void {
     if (window.confirm("Are you sure you want to remove this friend?")) {
       handleUnfollow(uuid);
-      customFetch<void>("DELETE", "/friendship", { friendId: uuid }).catch(() => {
-        console.error("Failed to remove this friend!");
-      });
+      customFetch<void>("DELETE", "/friendship", { friendId: uuid });
+
+      // .catch(() => {
+      //   console.error("Failed to remove this friend!");
+      // });
     }
   }
 

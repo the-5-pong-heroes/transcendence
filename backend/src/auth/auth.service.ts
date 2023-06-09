@@ -60,7 +60,6 @@ export class AuthService {
     }
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(password, salt);
-
     const newUser = new CreateUserDto(name, email, hash);
     const createdUser = await this.usersService.create(newUser);
 
@@ -121,7 +120,6 @@ export class AuthService {
     const userByEmail = await this.findOne(userInfos.email);
     let user;
     if (userByEmail) {
-      // console.log("🌪️ User already exists !", userByEmail.userId);
       await this.prisma.auth.update({
         where: {
           userId: userByEmail.userId,
@@ -189,7 +187,6 @@ export class AuthService {
     if (!user) {
       return res.status(404).json({ message: "Invalid token" });
     }
-    // console.log("🙇🏼‍♀️", user);
     res.status(200).json({ message: "Successfully fetched user", user: user });
   }
 

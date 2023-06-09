@@ -77,7 +77,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
     return null;
   }
 
-  function switchTab(event: any) {
+  function switchTab(event: any): Promise<void> {
     const tabText: string = event.target.innerText;
     if (tabText === "Match history") {
       setCurrentTab("Match history");
@@ -86,11 +86,11 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
     }
   }
 
-  async function followFriend() {
+  async function followFriend(): Promise<void> {
     const url = "http://localhost:3000";
     try {
       const body = { newFriendId: uuid };
-      const data = await customFetch("post", "/friendship", body);
+      const data = await customFetch("POST", "/friendship", body);
     } catch (err) {
       console.error("Error adding a friend: ", err);
     }

@@ -1,61 +1,45 @@
-import { ResponseError } from "./error";
-
 import { BASE_URL } from "@/constants";
 
-interface ErrorMessage {
-  message: string;
-}
-
-async function sendRequest<T>(path: string, config: RequestInit): Promise<T> {
-  const url = `${BASE_URL}${path}`;
-  config.credentials = "include";
-  config.mode = "cors";
-
-  if (config.method === "POST" || config.method === "PUT") {
-    config.headers = {
-      ...config.headers,
-      "Content-Type": "application/json; charset=utf-8",
-    };
-  }
-  const request = new Request(url, config);
-  const response: Response = await fetch(request);
-
-  return (await response.json()) as T;
-}
-
-export async function customFetch<T>(
+/**
+ * A Fetch Wrapper to Simplify HTTP Requests.
+ *
+ * See also https://www.newline.co/@bespoyasov/how-to-use-fetch-with-typescript--a81ac257
+ *
+ * @param method - The HTTP method to use
+ * @param path - The path to the resource, for instance `/leaderboard`
+ * @param body - The body of the request, for instance `{ username: "John Doe" }`
+ * @param config - The RequestInit object to consider in the request
+ * @returns the body text of the response parsed as as JSON
+ */
+export async function customFetch<TResponse>(
   method: string,
   path: string,
-  body: object | undefined,
-  config?: RequestInit
-): Promise<T> {
-  if (config?.method in ["POST", "PUT"]) {
-    config.headers = {
-      ...config.headers,
-      "Content-Type": "application/json; charset=utf-8",
-    };
-  }
-
+  body: object | null = null,
+  config: RequestInit = { headers: {} }
+): Promise<TResponse> {
+  method = method.toUpperCase() || "GET"; // GET request by default
   // checks that the HTTP method is valid
-  method = method.toUpperCase();
-  if (!method) {
-    method = "GET";
-  }
   const valid_methods = ["POST", "GET", "PUT", "PATCH", "DELETE"];
   if (!valid_methods.includes(method)) {
     throw new Error(`Invalid method: ${method}`);
   }
-
-  const init = {
+  // updates the RequestInit headers when necessary
+  if (method in ["POST", "PUT"]) {
+    const ct = { "Content-Type": "application/json; charset=utf-8" };
+    config.headers = { ...ct, ...config.headers };
+  }
+  // builds the options (custom settings) to apply to the request
+  const options: RequestInit = {
     method: method,
-    body: JSON.stringify(body),
-    credentials: "include",
-    mode: "cors",
+    cache: "no-cache", // default, no-store, reload, no-cache, force-cache, only-if-cached
+    body: body ? JSON.stringify(body) : null,
+    credentials: "same-origin", // omit, same-origin, include
+    mode: "cors", // cors, no-cors, same-origin, navigate, websocket
+    redirect: "follow", // follow, error, manual
     ...config,
   };
-
-  const request: Request = new Request(`${BASE_URL}${path}`, config);
+  const request: Request = new Request(`${BASE_URL}${path}`, options);
   const response: Response = await fetch(request);
 
-  return (await response.json()) as T;
+  return (await response.json()) as TResponse;
 }

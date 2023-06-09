@@ -116,7 +116,7 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
   }
 
   const deleteUser = (): void => {
-    customFetch<void>("remove", `/users/${user?.id}`).catch((error) => {
+    customFetch<void>("DELETE", `/users/${user?.id}`).catch((error) => {
       console.error(error);
     });
     signOut();

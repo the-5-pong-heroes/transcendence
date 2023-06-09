@@ -24,7 +24,8 @@ async function signUp(name: string, email: string, password: string): Promise<Us
     email: email,
     password: password,
   };
-  const data = await customFetch<UserAuth, SignUpBody>("post", "/auth/signup", signUpBody);
+  const data = await customFetch<UserAuth>("post", "/auth/signup", signUpBody);
+  // const data = await customFetch<UserAuth, SignUpBody>("post", "/auth/signup", signUpBody);
 
   return data.user;
 }

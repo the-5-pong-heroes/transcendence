@@ -4,7 +4,7 @@ import { FriendshipService } from "./friendship.service";
 import { UserGuard } from "src/auth/user.guard";
 
 @Controller("friendship")
-@UseGuards(UserGuard)
+// @UseGuards(UserGuard)
 // @UseGuards(AuthGuard("jwt"))
 export class FriendshipController {
   constructor(private readonly friendshipService: FriendshipService) {}

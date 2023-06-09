@@ -121,7 +121,6 @@ export class AuthService {
     const userByEmail = await this.findOne(userInfos.email);
     let user;
     if (userByEmail) {
-      // console.log("🌪️ User already exists !", userByEmail.userId);
       await this.prisma.auth.update({
         where: {
           userId: userByEmail.userId,
@@ -229,23 +228,55 @@ export class AuthService {
     else res.redirect(301, `http://e1r2p7.clusters.42paris.fr:5173/`);
   }
 
+  // async getUserByToken(req: Request) {
+  //   try {
+  //     const accessToken = req.cookies.token;
+  //     const user = await this.prisma.auth.findFirst({
+  //       where: {
+  //         accessToken: accessToken,
+  //       },
+  //     });
+  //     if (!user) {
+  //       throw new HttpException(
+  //         {
+  //           status: HttpStatus.BAD_REQUEST,
+  //           error: "Error to get the user by token1",
+  //         },
+  //         HttpStatus.BAD_REQUEST,
+  //       );
+  //     }
+  //     return user;
+  //   } catch (error) {
+  //     throw new HttpException(
+  //       {
+  //         status: HttpStatus.BAD_REQUEST,
+  //         error: "Error to get the user by token2",
+  //       },
+  //       HttpStatus.BAD_REQUEST,
+  //     );
+  //   }
+  // }
+
   async getUserByToken(req: Request) {
     try {
       const accessToken = req.cookies.token;
-      const user = await this.prisma.auth.findFirst({
-        where: {
-          accessToken: accessToken,
-        },
-      });
-      if (!user) {
-        throw new HttpException(
-          {
-            status: HttpStatus.BAD_REQUEST,
-            error: "Error to get the user by token1",
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-      }
+      console.log("🍋", accessToken);
+      const user = await this.validateUser(accessToken);
+      console.log("🐥", user);
+      // const user = await this.prisma.auth.findFirst({
+      //   where: {
+      //     accessToken: accessToken,
+      //   },
+      // });
+      // if (!user) {
+      //   throw new HttpException(
+      //     {
+      //       status: HttpStatus.BAD_REQUEST,
+      //       error: "Error to get the user by token1",
+      //     },
+      //     HttpStatus.BAD_REQUEST,
+      //   );
+      // }
       return user;
     } catch (error) {
       throw new HttpException(

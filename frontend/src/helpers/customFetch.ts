@@ -33,12 +33,18 @@ async function sendRequest<T>(path: string, config: RequestInit): Promise<T> {
   return response.json().catch(() => ({})) as T;
 }
 
-export async function customFetch<T, U = undefined>(
-  method: string,
-  path: string,
-  body?: U,
-  config?: RequestInit
-): Promise<T> {
+// export async function customFetch<T, U = undefined>(
+//   method: string,
+//   path: string,
+//   body?: U,
+//   config?: RequestInit
+// ): Promise<T> {
+//   const init = { method: method.toUpperCase(), body: JSON.stringify(body), ...config };
+
+//   return await sendRequest<T>(path, init);
+// }
+
+export async function customFetch<T>(method: string, path: string, body?: object, config?: RequestInit): Promise<T> {
   const init = { method: method.toUpperCase(), body: JSON.stringify(body), ...config };
 
   return await sendRequest<T>(path, init);

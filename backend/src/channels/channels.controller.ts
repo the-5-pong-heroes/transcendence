@@ -22,7 +22,7 @@ import { UserGuard } from "src/auth/user.guard";
 
 @Controller("chat")
 // @UseGuards(AuthGuard("jwt"))
-@UseGuards(UserGuard)
+// @UseGuards(UserGuard)
 export class ChannelsController {
   constructor(
     private readonly prismaService: PrismaService,

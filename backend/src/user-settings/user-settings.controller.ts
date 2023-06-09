@@ -21,7 +21,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { UserGuard } from "src/auth/user.guard";
 
 @Controller("settings")
-@UseGuards(UserGuard)
+// @UseGuards(UserGuard)
 export class UserSettingsController {
   constructor(private readonly userSettingsService: UserSettingsService) {}
 

@@ -6,18 +6,19 @@ import { UserByIdPipe } from "./user-by-id.pipe";
 import { UserGuard } from "src/auth/user.guard";
 
 @Controller("leaderboard")
-@UseGuards(UserGuard)
+// @UseGuards(UserGuard)
 export class StatsController {
   constructor(private statsService: StatsService) {}
 
   @Get()
   async getStatsData(@CurrentUser() user: User): Promise<UserStats[]> {
+    console.log("🌽🌽", user);
     return this.statsService.getUsersStats(user);
   }
 }
 
 @Controller("profile")
-@UseGuards(UserGuard)
+// @UseGuards(UserGuard)
 export class MyProfileController {
   constructor(private statsService: StatsService) {}
 
@@ -36,6 +37,7 @@ export class MyProfileController {
 
   @Get(":uuid")
   getUserData(@CurrentUser() user: User, @Param("uuid", UserByIdPipe) targetUser: User): Promise<UserStats> {
+    console.log("🌽", user);
     return this.statsService.getUserStats(user, targetUser);
   }
 

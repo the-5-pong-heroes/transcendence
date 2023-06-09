@@ -13,10 +13,6 @@ type SignUpBody = {
   password: string;
 };
 
-interface ErrorMessage {
-  message: string;
-}
-
 async function signUp(name: string, email: string, password: string): Promise<User> {
   const signUpBody = {
     name: name,

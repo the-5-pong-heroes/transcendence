@@ -2,31 +2,30 @@ import { MiddlewareConsumer, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-//import { UserModule } from "./api/users/users.module.ts";
 import { UserModule } from "./users/users.module";
-//import { UsersModule } from "./users_paul/users.module"; // TEMPORAIRE
-import { GameApiModule, GameSocketModule } from "./game";
+import { GameModule } from "./game/game.module";
 import { StatsModule } from "./stats/stats.module";
 import { AuthModule } from "./auth/auth.module";
-//import { AuthModule } from "./auth_paul/auth.module"; // TEMPORAIRE
-import { ChannelsModule } from "./channels/channels.module";
 import { PrismaModule } from "./database/prisma.module";
-import { GoogleStrategy } from "./auth/google/google.strategy";
-//import { UserModule } from "./users/users.module"
+import { ChannelsModule } from "./channels/channels.module";
+import { UserSettingsModule } from "./user-settings/user-settings.module";
+import { FriendshipModule } from "./friendship/friendship.module";
+import { BlockedModule } from "./blocked/blocked.module";
 import { PrismaService } from "./database/prisma.service";
-import { CurrentUserMiddleware } from "./auth/current-user.middleware";
+import { GoogleStrategy } from "./auth/google/google.strategy";
 
 @Module({
   imports: [
     StatsModule,
     AuthModule,
-    GameSocketModule,
-    UserModule,
-    //UsersModule, // TEMPORAIRE
-    GameApiModule,
+    GameModule,
     ChannelsModule,
+    UserModule,
+    ChannelsModule,
+    UserSettingsModule,
+    FriendshipModule,
+    BlockedModule,
     PrismaModule,
-    //ScheduleModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true }),
   ],
   controllers: [AppController],

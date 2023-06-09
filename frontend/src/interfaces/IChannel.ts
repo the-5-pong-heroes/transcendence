@@ -1,6 +1,6 @@
-import { IMessage } from "./IMessage";
-import { IChannelUser } from "./IChannelUser"
-import { IChannelBan } from "./IChannelBan";
+import { type IMessage } from "./IMessage";
+import { type IChannelUser } from "./IChannelUser";
+import { type IChannelBan } from "./IChannelBan";
 
 export interface IChannel {
   id: string;

@@ -1,29 +1,33 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { ChannelContext } from "@/contexts";
 import { ChannelHeader } from "./ChannelHeader";
 import { ChannelOptions } from "./ChannelOptions";
 import { Conversation } from "./Conversation";
 import { ProtectedChannel } from "./ProtectedChannel";
-import { IChannel } from "../../interfaces";
 import styles from "./ChannelField.module.scss";
 
-interface IChannelFieldProps {
-  activeChannel: IChannel;
-}
-
-export const ChannelField: React.FC<IChannelFieldProps> = ({ activeChannel }) => {
+export const ChannelField: React.FC = () => {
   const [showOptions, setShowOptions] = useState<boolean>(false);
 
+  const { activeChannel } = useContext(ChannelContext);
+
   return (
+    activeChannel ?
     <div className={styles.ChannelField}>
-      <ChannelHeader activeChannel={activeChannel} setShowOptions={setShowOptions} />
+      <ChannelHeader setShowOptions={setShowOptions} />
       {activeChannel.messages ?
         showOptions ?
-          <ChannelOptions activeChannel={activeChannel} />
+          <ChannelOptions />
           :
-          <Conversation activeChannel={activeChannel} />
+          <Conversation />
         :
         <ProtectedChannel activeChannel={activeChannel} />
       }
+    </div>
+    :
+    <div className={styles.ChannelField}>
+      <h2>Welcome to the Chat</h2>
+      <div>You can search a channel in search bar on the upper left or create a new one with the + button</div>
     </div>
   );
 }

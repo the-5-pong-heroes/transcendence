@@ -8,9 +8,12 @@ import { PrismaService } from "../database/prisma.service";
 import { ChannelUsersService } from "../channel-users/channel-users.service";
 import { MessagesModule } from "../messages/messages.module";
 import { ChannelUsersModule } from "../channel-users/channel-users.module";
+import { UserGuard } from "src/auth/user.guard";
+import { AuthModule } from "src/auth/auth.module";
+import { BlockedService } from "src/blocked/blocked.service";
 
 @Module({
-  imports: [MessagesModule, ChannelUsersModule],
+  imports: [MessagesModule, ChannelUsersModule, AuthModule],
   controllers: [ChannelsController],
   providers: [
     ChannelsGateway,
@@ -19,6 +22,8 @@ import { ChannelUsersModule } from "../channel-users/channel-users.module";
     ChannelUsersService,
     UserService,
     PrismaService,
+    UserGuard,
+    BlockedService,
   ],
 })
 export class ChannelsModule {}

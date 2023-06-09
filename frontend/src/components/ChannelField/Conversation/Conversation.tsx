@@ -1,19 +1,28 @@
 import React from 'react';
 import { Messages } from './Messages';
 import { ConversationForm } from './ConversationForm';
-import { IChannel } from 'src/interfaces';
 import styles from './Conversation.module.scss';
 
-interface IConversationProps {
-  activeChannel: IChannel;
-}
+export const Conversation: React.FC = () => {
 
-export const Conversation: React.FC<IConversationProps> = ({ activeChannel }) => {
+  const stopOutterScroll = (event: any) => {
+    const container = event.target.closest('.container');
+    container.style.overflow = 'hidden';
+  }
+
+  const enableOutterScroll = (event: any) => {
+    const container = event.target.closest('.container');
+    container.style.overflow = '';
+  }
 
   return (
-    <div className={styles.Conversation}>
-      <Messages activeChannel={activeChannel} />
-      <ConversationForm activeChannel={activeChannel} />
+    <div
+      onMouseEnter={stopOutterScroll}
+      onMouseLeave={enableOutterScroll}
+      className={styles.Conversation}
+    >
+      <Messages />
+      <ConversationForm />
     </div>
   );
 }

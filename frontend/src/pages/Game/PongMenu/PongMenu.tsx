@@ -1,24 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
 import "./PongMenu.css";
 
-import type { GameMode } from "../@types";
-import { GameContext } from "../context";
+import { type GameContextParameters } from "../@types";
+import { useGameContext } from "../hooks";
 
-import { GameModeButton } from "./components";
-
-interface GameProps {
-  height: number;
-  width: number;
-  gameMode: GameMode | undefined;
-  setGameMode: (mode: GameMode) => void;
-}
+import { GameModeButton, ListOfGames } from "./components";
 
 const _PongMenu: React.FC = () => {
-  const gameContext = useContext(GameContext);
-  if (gameContext === undefined) {
-    throw new Error("Undefined GameContext");
-  }
-  const { height, width, gameMode, setGameMode }: GameProps = gameContext;
+  const { height, width, gameMode, setGameMode }: GameContextParameters = useGameContext();
 
   if (gameMode) {
     return null;
@@ -32,6 +21,7 @@ const _PongMenu: React.FC = () => {
   return (
     <div className="menu-container" style={containerStyle}>
       <GameModeButton setGameMode={setGameMode} />
+      <ListOfGames />
     </div>
   );
 };

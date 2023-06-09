@@ -1,14 +1,22 @@
-import { Body, Controller, Get, UseGuards, Req, Res, Post } from "@nestjs/common";
-import { AuthService } from "./auth.service";
-import { Generate2FAService } from "./2FA/generate.service";
-import { EnableService } from "./2FA/enable2FA.service";
-import { VerifyService } from "./2FA/verify.service";
-import { GoogleAuthGuard } from "./google/guards";
+import { Injectable, Get, Controller, Post, Body, UseGuards, Req, Res } from "@nestjs/common";
 import { Request, Response } from "express";
+
+import { AuthGuard } from "@nestjs/passport";
+import { AuthService } from "./auth.service";
+import { CreateUserDto } from "../users/dto";
+import { User } from "@prisma/client";
 import { UserDto } from "./dto";
-import { UserService } from "src/users/users.service";
+import { UsersService } from "src/users/users.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
 import { GoogleService } from "src/auth/google/google.service";
+
+@Injectable()
+export class GoogleOauthGuard extends AuthGuard("google") {}
+
+export interface UserAuth {
+  message: string;
+  user: User;
+}
 
 @Controller("auth")
 export class AuthController {
@@ -52,6 +60,39 @@ export class AuthController {
     //this.authService.RedirectConnectingUser(req,res, userExists?.auth.email);
   }
 
+  @Post("signup")
+  async signUp(@Res({ passthrough: true }) res: Response, @Body() data: CreateUserDto): Promise<void> {
+    await this.authService.signUp(res, data);
+  }
+
+  @UseGuards(AuthGuard("local"))
+  @Post("signin")
+  async signIn(@Req() req: any, @Res({ passthrough: true }) res: Response): Promise<void> {
+    await this.authService.signIn(res, req.user);
+  }
+
+  @Get("signout")
+  async signout(@Res() res: Response): Promise<void> {
+    await this.authService.signOut(res);
+  }
+
+  @Get("user")
+  async getUser(@Req() req: any, @Res() res: Response): Promise<void> {
+    await this.authService.getUser(req, res);
+  }
+
+  @Get("google")
+  @UseGuards(GoogleOauthGuard)
+  async googleLogin() {
+    /* void */
+  }
+
+  @Get("google/callback")
+  @UseGuards(GoogleOauthGuard)
+  async googleAuthCallback(@Req() req: any, @Res() res: Response) {
+    await this.authService.signInGoogle(res, req.user);
+  }
+
   @Get("token")
   async checkIfTokenValid(@Req() req: Request, @Res() res: Response) {
     return this.authService.checkIfTokenValid(req, res);
@@ -88,3 +129,4 @@ export class AuthController {
   //      await this.authService.deleteCookies(res);
   //    }
 }
+

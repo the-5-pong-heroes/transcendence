@@ -13,3 +13,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.error-fallback {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

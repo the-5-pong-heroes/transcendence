@@ -1,22 +1,26 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { UserContext, UserContextType } from '../../../../contexts';
-import { IChannel, IChannelUser } from '../../../../interfaces';
-import { socket } from '../../../../socket';
+import { ChannelContext, UserContext, UserContextType } from '../../../../contexts';
+import { IChannelUser } from '../../../../interfaces';
+// import { socket } from '../../../../socket';
+import { useUser, useSocket, useTheme } from "@hooks";
 import { Rocket } from '../../../../assets';
 import styles from './ConversationForm.module.scss';
 
-interface IConversationFormProps {
-  activeChannel: IChannel | null;
-}
-
-export const ConversationForm: React.FC<IConversationFormProps> = ({ activeChannel }) => {
+export const ConversationForm: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [isMuted, setIsMuted] = useState<boolean>(false);
-  const { user } = useContext(UserContext) as UserContextType;
+
+  const user = useUser();
+  const socket = useSocket();
+  // const { user } = useContext(UserContext) as UserContextType;
+  const { activeChannel } = useContext(ChannelContext);
+  if (activeChannel === undefined) throw new Error("Undefined Active Channel");
+  const theme = useTheme();
 
   const submit = () => {
-    const token = localStorage.getItem('access_token');
-    if (!token || message === "" || !activeChannel || !user) return; // TODO faire une redirection
+    // const token = localStorage.getItem('access_token');
+    // if (!token || message === "" || !activeChannel || !user) return;
+    if (message === "" || !activeChannel || !user) return; // TODO faire une redirection
     const sentMessage = {
       content: message,
       channelId: activeChannel.id,
@@ -54,7 +58,7 @@ export const ConversationForm: React.FC<IConversationFormProps> = ({ activeChann
   }, [message]);
 
   useEffect(() => {
-    const activeUser = activeChannel?.users.find((usr: IChannelUser) => usr.user.id === user.id);
+    const activeUser = activeChannel.users.find((usr: IChannelUser) => usr.user.id === user?.id);
     if (activeUser)
       setIsMuted(activeUser.isMuted);
   }, [activeChannel]);
@@ -71,7 +75,7 @@ export const ConversationForm: React.FC<IConversationFormProps> = ({ activeChann
         style={{cursor: `${isMuted && "not-allowed"}`}}
       />
       <button
-        className={styles.Submit}
+        className={`${styles.Submit} ${theme === "light" ? styles.SubmitLight : styles.SubmitDark}`}
         title="Send"
         type="submit"
         style={{backgroundImage: `url(${Rocket})`}}

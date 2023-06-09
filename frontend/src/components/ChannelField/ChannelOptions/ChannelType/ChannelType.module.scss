@@ -19,10 +19,6 @@
       gap: 10px;
       padding: 10px;
       border-radius: 7px;
-
-      &:hover {
-        background-color: lightgray;
-      }
     }
       
     .TypeNotOwner {
@@ -33,10 +29,6 @@
       padding: 10px;
       border-radius: 7px;
       }
-
-    .ActiveType {
-      outline: 2px solid black;
-    }
 
     .TypeIcon {
       width: 30px;
@@ -72,9 +64,40 @@
     border: none;
     outline: none;
     padding: 10px 15px;
-    background-color: #d38ce5;
     font-weight: bold;
     border-radius: 8px;
     box-shadow: 1px 2px 5px -3px black;
+  }
+}
+
+.ChannelTypeLight {
+  .Type {
+    &:hover {
+      background-color: rgba(255, 255, 255, .4);
+    }
+  }
+
+  .ActiveType {
+    outline: 2px solid black;
+  }
+  
+  .Button {
+    background-color: rgba(255, 0, 38, .9);
+  }
+}
+
+.ChannelTypeDark {
+  .Type {
+    &:hover {
+      background-color: rgba(0, 0, 0, .4);
+    }
+  }
+
+  .ActiveType {
+    outline: 2px solid white;
+  }
+  
+  .Button {
+    background-color: rgba(227, 24, 54, .9);
   }
 }

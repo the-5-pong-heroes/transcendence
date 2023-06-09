@@ -1,22 +1,8 @@
-import { useEffect, useRef } from "react";
-import { io, type Socket } from "socket.io-client";
+import { useSocketContext } from "@hooks";
+import type { CustomSocket, SocketParameters } from "@types";
 
-const ENDPOINT = "http://localhost:3333";
+export const useSocket = (): CustomSocket => {
+  const { customSocket }: SocketParameters = useSocketContext();
 
-interface SocketValues {
-  socketRef: React.MutableRefObject<Socket | undefined>;
-}
-
-export const useSocket = (): SocketValues => {
-  const socketRef = useRef<Socket>();
-
-  useEffect(() => {
-    socketRef.current = io(ENDPOINT);
-
-    return () => {
-      socketRef.current?.disconnect();
-    };
-  }, []);
-
-  return { socketRef };
+  return customSocket;
 };

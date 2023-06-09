@@ -6,3 +6,4 @@ export { Login } from "./Login";
 export { Chat } from "./Chat";
 export { Signup } from "./Signup";
 export { NotFound } from "./NotFound";
+export { Settings } from "./Settings";

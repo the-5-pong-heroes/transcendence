@@ -1,16 +1,201 @@
-import { BadRequestException, Req, Res, Body, Injectable } from "@nestjs/common";
-import { PrismaService } from "../database/prisma.service";
+import { Injectable, BadRequestException, Req, Res, Body, HttpException, HttpStatus } from "@nestjs/common";
 import { Request, Response, request } from "express";
-import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
-import { UserDto } from "./dto";
-import { GoogleService } from "src/auth/google/google.service";
+import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from "bcrypt";
+
+import { Auth } from "@prisma/client";
+import { UserService } from "src/users/users.service";
+import { SignInDto, SignUpDto } from "./dto";
+import { CreateUserDto } from "../users/dto";
 import { User } from "@prisma/client";
+import { PrismaService } from "../database/prisma.service";
+import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
+import { GoogleService } from "src/auth/google/google.service";
+import { UserDto } from "./dto";
+import { CLIENT_URL } from "src/common/constants";
+
+export interface UserAuth {
+  message: string;
+  user: User;
+}
+
+interface GoogleUserInfos {
+  email: string;
+  name: string;
+  accessToken: string;
+}
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService, private Oauth42: Oauth42Service, private googleService: GoogleService) {}
+  constructor(
+    private jwtService: JwtService,
+    private usersService: UserService,
+    private prisma: PrismaService,
+    private Oauth42: Oauth42Service,
+    private googleService: GoogleService,
+  ) {}
 
-  async createDataBase42User(user42: any, token: any, username: string, isRegistered: boolean) {
+  async findOne(email: string): Promise<Auth | null> {
+    if (!email) {
+      return null;
+    }
+    const result = await this.prisma.auth.findUnique({
+      where: { email: email },
+    });
+    return result;
+  }
+
+  async signUp(@Res({ passthrough: true }) res: Response, data: SignUpDto): Promise<void> {
+    const { name, email, password } = data;
+
+    const userByName = await this.usersService.findUserByName(name);
+    if (userByName) {
+      res.status(HttpStatus.CONFLICT).json({ message: "User already exists" });
+      return;
+    }
+    const userAuth = await this.findOne(email);
+    if (userAuth) {
+      res.status(HttpStatus.CONFLICT).json({ message: "Email already used" });
+      return;
+    }
+    const salt = await bcrypt.genSalt();
+    const hash = await bcrypt.hash(password, salt);
+
+    const newUser = new CreateUserDto(name, email, hash);
+    const createdUser = await this.usersService.create(newUser);
+
+    const payload = { email: email, sub: createdUser.id };
+    const accessToken = this.jwtService.sign(payload);
+    await this.prisma.user.update({
+      where: { id: createdUser.id },
+      data: {
+        auth: {
+          update: {
+            accessToken: accessToken,
+          },
+        },
+      },
+    });
+    res
+      .cookie("access_token", accessToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+      })
+      .status(200)
+      .json({ message: "Welcome !", user: createdUser });
+  }
+
+  async validateUserJwt(signInDto: SignInDto): Promise<any> {
+    const { email, password } = signInDto;
+    const userAuth = await this.findOne(email);
+    if (!userAuth) {
+      throw new BadRequestException("User doesn't exist");
+    }
+    const isMatch = await bcrypt.compare(password, userAuth.password);
+    if (!isMatch) {
+      throw new BadRequestException("Invalid credentials");
+    }
+    const { password: _, ...result } = userAuth;
+    return result;
+  }
+
+  async signIn(@Res({ passthrough: true }) res: Response, auth: Auth): Promise<void> {
+    const payload = { email: auth.email, sub: auth.userId };
+    const user = await this.usersService.findOne(auth.userId);
+    const accessToken = this.jwtService.sign(payload);
+
+    res
+      .cookie("access_token", accessToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+      })
+      .status(200)
+      .json({ message: "Welcome back !", user: user });
+  }
+
+  async signInGoogle(@Res() res: Response, userInfos: GoogleUserInfos): Promise<void> {
+    const userByEmail = await this.findOne(userInfos.email);
+    let user;
+    if (userByEmail) {
+      // console.log("🌪️ User already exists !", userByEmail.userId);
+      await this.prisma.auth.update({
+        where: {
+          userId: userByEmail.userId,
+        },
+        data: {
+          accessToken: userInfos.accessToken,
+        },
+      });
+      user = await this.usersService.findOne(userByEmail.userId);
+    } else {
+      user = await this.googleService.createDataBaseUserFromGoogle(
+        userInfos.accessToken,
+        userInfos.name,
+        userInfos.email,
+        true,
+      );
+    }
+    res
+      .cookie("access_token", userInfos.accessToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+      })
+      .redirect(301, CLIENT_URL);
+  }
+
+  async signOut(res: Response): Promise<void> {
+    res.cookie("access_token", "", { expires: new Date() }).status(200).json({ message: "Successfully logout !" });
+  }
+
+  async validateUser(access_token: string): Promise<User | null> {
+    let userId;
+    if (!access_token) {
+      return null;
+    }
+    try {
+      const decodedToken = this.jwtService.verify(access_token);
+      userId = decodedToken.sub;
+    } catch (error) {
+      try {
+        const auth = await this.prisma.auth.findFirst({
+          where: {
+            accessToken: access_token,
+          },
+        });
+        if (!auth) {
+          return null;
+        }
+        userId = auth.userId;
+      } catch {
+        return null;
+      }
+    }
+    const user = await this.usersService.findOne(userId);
+    return user;
+  }
+
+  async getUser(req: Request, res: Response): Promise<any> {
+    const access_token = req.cookies.access_token;
+    if (!access_token) {
+      return res.status(200).json({ message: "User not connected", user: null });
+    }
+    const user = await this.validateUser(access_token);
+    if (!user) {
+      return res.status(404).json({ message: "Invalid token" });
+    }
+    // console.log("🙇🏼‍♀️", user);
+    res.status(200).json({ message: "Successfully fetched user", user: user });
+  }
+
+  /***********       LAURA'S CODE      ***********/
+
+  async createDataBase42User(user42: any, token: string, username: string, isRegistered: boolean) {
     try {
       const user = await this.prisma.user.create({
         data: {
@@ -44,11 +229,6 @@ export class AuthService {
     else res.redirect(301, `http://localhost:5173/`);
   }
 
-  /**
-   * Returns the user initiating this request.
-   *
-   * An error is thrown when the cookies in the request headers do not contain a valid token.
-   */
   async getUserByToken(req: Request): Promise<User> {
     const token = req.cookies["token"];
     if (!token) throw new BadRequestException("Failed to get the user by token (falsy token)");
@@ -85,11 +265,11 @@ export class AuthService {
       expires: new Date(new Date().getTime() + 60 * 24 * 7 * 1000), // expires in 7 days
       httpOnly: true, // for security
     });
-    // const Googlecookies = res.cookie("FullToken", token,
-    // {
-    //   expires: new Date(new Date().getTime() + 60 * 24 * 7 * 1000), // expires in 7 days
-    //   httpOnly: true, // for security
-    // });
+    const Googlecookies = res.cookie("FullToken", token,
+    {
+      expires: new Date(new Date().getTime() + 60 * 24 * 7 * 1000), // expires in 7 days
+      httpOnly: true, // for security
+    });
   }
 
   async updateCookies(@Res() res: Response, token: any, userInfos: any) {

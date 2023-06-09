@@ -1,0 +1,1 @@
+export { ScrollToPage } from "./ScrollToPage";

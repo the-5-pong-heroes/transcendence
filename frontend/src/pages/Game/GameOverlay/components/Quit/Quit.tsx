@@ -1,60 +1,52 @@
-import React, { useContext } from "react";
-import "./Quit.css";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
-import { SocketContext } from "../../../../../contexts";
-import { ClientEvents, type LobbyMode } from "../../../@types";
-import { GameContext } from "../../../context";
+import "./Quit.css";
+import { GameButton } from "../GameButton";
+
+import { useGameContext } from "@Game/hooks";
+import type { LobbyMode, GameContextParameters } from "@Game/@types";
+import { useAppContext } from "@hooks";
+import type { GameState } from "@types";
 
 interface QuitProps {
-  setQuitButton: React.Dispatch<React.SetStateAction<boolean>>;
+  setQuitModal: React.Dispatch<React.SetStateAction<boolean>>;
   setQuitGame: React.Dispatch<React.SetStateAction<boolean>>;
   setLobbyMode: React.Dispatch<React.SetStateAction<LobbyMode | undefined>>;
 }
 
-export const QuitButton: React.FC<QuitProps> = ({ setQuitButton, setQuitGame, setLobbyMode }) => {
-  const socketContext = useContext(SocketContext);
-  if (socketContext === undefined) {
-    throw new Error("Undefined SocketContext");
-  }
-  const { socketRef } = socketContext;
+export const QuitModal: React.FC<QuitProps> = ({ setQuitModal }) => {
+  const { overlayRef }: GameContextParameters = useGameContext();
+  const { newRoute }: GameState = useAppContext().gameState;
 
-  const gameContext = useContext(GameContext);
-  if (gameContext === undefined) {
-    throw new Error("Undefined GameContext");
-  }
-  const { setGameMode } = gameContext;
+  const navigate = useNavigate();
 
   const quitGame = (): void => {
-    socketRef.current?.emit(ClientEvents.LobbyLeave);
-    setGameMode(undefined);
-    setLobbyMode(undefined);
-    setQuitGame(true);
-    setQuitButton(false);
+    overlayRef?.current?.resetGame();
+    navigate(newRoute.current);
   };
 
   const resumeGame = (): void => {
-    setQuitButton(false);
-    socketRef.current?.emit(ClientEvents.GamePause);
+    setQuitModal(false);
+    overlayRef?.current?.pauseGame();
   };
 
   return (
     <div className="game-modal">
       <div className="quit-text">Do you wish to leave the current game ?</div>
-      <div className="game-button-wrapper">
-        <button
-          className="game-button"
+      <div className="game-button-wrapper-text">
+        <GameButton
+          text="CONFIRM"
           onClick={() => {
             quitGame();
-          }}>
-          YES
-        </button>
-        <button
-          className="game-button"
+          }}
+        />
+        <GameButton
+          text="CANCEL"
           onClick={() => {
             resumeGame();
-          }}>
-          NO
-        </button>
+          }}
+        />
       </div>
     </div>
   );

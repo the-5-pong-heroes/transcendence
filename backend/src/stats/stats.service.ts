@@ -50,7 +50,7 @@ export interface UserStats {
   isMe: boolean;
 }
 
-@Injectable({})
+@Injectable()
 export class StatsService {
   constructor(private prisma: PrismaService) {}
 
@@ -76,7 +76,19 @@ export class StatsService {
     return rawData;
   }
 
-  private async extractUserData(myUserId: string, userId: string): Promise<UserStats> {
+  private async getUserFriends(uuid: string): Promise<{ name: string; id: string }[]> {
+    const rawData = await this.prisma.user.findUniqueOrThrow({
+      where: { id: uuid },
+      select: { addedBy: { select: { user: { select: { name: true, id: true } } } } },
+    });
+    const friends: { name: string; id: string }[] = [];
+    rawData["addedBy"].forEach((friend) => {
+      friends.push({ name: friend.user.name, id: friend.user.id });
+    });
+    return friends;
+  }
+
+  private async extractUserData(currentUser: User, userId: string): Promise<UserStats> {
     const { addedBy, ...data } = await this.prisma.user.findUniqueOrThrow({
       where: { id: userId },
       include: { addedBy: { select: { user: { select: { name: true, id: true } } } } },
@@ -85,6 +97,7 @@ export class StatsService {
     addedBy.forEach((friend) => {
       friends.push({ name: friend.user.name, id: friend.user.id });
     });
+    const currentUserFriends = await this.getUserFriends(currentUser?.id);
     const otherInfo = {
       rank: 1,
       score: 0,
@@ -92,8 +105,8 @@ export class StatsService {
       defeats: 0,
       nbGames: 0,
       level: "",
-      isMe: myUserId === userId,
-      isFriend: this.isFriend(friends, userId),
+      isMe: currentUser?.id === userId,
+      isFriend: this.isFriend(currentUserFriends, userId),
     };
     return { ...data, friends, ...otherInfo };
   }
@@ -115,7 +128,7 @@ export class StatsService {
     rawData.forEach((game) => {
       const { playerOne, playerOneScore, playerTwo, playerTwoScore } = game;
       const playerOneData = gamesStats[playerOne.id] || { nbGames: 0, rank: 0, score: 0, wins: 0, defeats: 0 };
-      const playerTwoData = gamesStats[playerTwo.id] || { nbGames: 0, rank: 0, score: 0, wins: 0, defeats: 0 };
+      const playerTwoData = gamesStats[playerTwo?.id] || { nbGames: 0, rank: 0, score: 0, wins: 0, defeats: 0 };
       playerOneData.score += playerOneScore;
       playerOneData.nbGames += 1;
       playerTwoData.score += playerTwoScore;
@@ -128,7 +141,7 @@ export class StatsService {
         playerOneData.defeats += 1;
       }
       gamesStats[playerOne.id] = playerOneData;
-      gamesStats[playerTwo.id] = playerTwoData;
+      gamesStats[playerTwo?.id] = playerTwoData;
     });
     const ranks = Object.keys(gamesStats).sort((a, b) => {
       return gamesStats[b].score - gamesStats[a].score;
@@ -171,7 +184,7 @@ export class StatsService {
   // ################ Public functions called by a controller #################
 
   async getUserStats(currentUser: User, targetUser: User): Promise<UserStats> {
-    const user = await this.extractUserData(currentUser.id, targetUser.id);
+    const user = await this.extractUserData(currentUser, targetUser.id);
     const games = await this.getGamesStats();
     return this.addGamesStatsToUser(user, games);
   }
@@ -180,6 +193,7 @@ export class StatsService {
     const myUserId = currentUser.id;
     const rawData = await this.extractUsersData();
     const games = await this.getGamesStats();
+    const currentUserFriends = await this.getUserFriends(currentUser.id);
     const users: UserStats[] = rawData
       .map((userRawData) => {
         const { addedBy, ...rest } = userRawData;
@@ -195,7 +209,7 @@ export class StatsService {
           nbGames: 0,
           level: "",
           isMe: userRawData.id === myUserId,
-          isFriend: this.isFriend(friends, myUserId),
+          isFriend: this.isFriend(currentUserFriends, userRawData.id),
         };
         const user = { ...rest, friends, ...otherInfo };
         return this.addGamesStatsToUser(user, games);
@@ -209,7 +223,7 @@ export class StatsService {
   async getHistory(currentUser: User, targetUser: User): Promise<GameData[]> {
     const matches = await this.extractGamesData();
     return matches.filter((match) => {
-      return targetUser.id === match.playerOne.id || targetUser.id === match.playerTwo.id;
+      return targetUser.id === match.playerOne.id || targetUser.id === match.playerTwo?.id;
     });
   }
 }

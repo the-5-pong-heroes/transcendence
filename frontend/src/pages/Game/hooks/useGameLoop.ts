@@ -1,23 +1,14 @@
-/* eslint-disable no-magic-numbers */
+import { useRef, useEffect, useCallback } from "react";
+import { useFrame } from "@react-three/fiber";
 
-import { useRef, useEffect, useCallback, useContext } from "react";
-import { useFrame, useLoader } from "@react-three/fiber";
-import { TextureLoader } from "three";
+import type { GameContextParameters } from "../@types";
+import { REFRESH_RATE } from "../constants";
 
-import type { Pong } from "../pongCore";
-import { GameContext } from "../context";
-import type { PlayState, ServerPong, GameMode } from "../@types";
-
+import { useGameContext } from "./useGameContext";
 import { useControlledPaddle } from "./useControlledPaddle";
 
-const REFRESH_RATE = 1000 / 60;
-
-interface GameLoopParameters {
-  playRef: React.MutableRefObject<PlayState>;
-  localPongRef: React.MutableRefObject<Pong>;
-  serverPongRef: React.MutableRefObject<ServerPong | undefined>;
-  gameMode: GameMode | undefined;
-}
+import type { GameState } from "@types";
+import { useAppContext } from "@hooks";
 
 interface GameLoopValues {
   ballRef: React.RefObject<THREE.Mesh>;
@@ -37,11 +28,8 @@ interface ParticleSystemMaterial extends THREE.ShaderMaterial {
 }
 
 export const useGameLoop = (): GameLoopValues => {
-  const gameContext = useContext(GameContext);
-  if (gameContext === undefined) {
-    throw new Error("Undefined GameContext");
-  }
-  const { playRef, localPongRef, serverPongRef, gameMode }: GameLoopParameters = gameContext;
+  const { playRef, localPongRef, serverPongRef, gameMode }: GameContextParameters = useGameContext();
+  const { isRunning }: GameState = useAppContext().gameState;
 
   useControlledPaddle();
 
@@ -78,8 +66,9 @@ export const useGameLoop = (): GameLoopValues => {
 
     return () => {
       clearInterval(intervalId);
+      isRunning.current = false;
     };
-  }, [gameLoop, playRef]);
+  }, [gameLoop, playRef, isRunning]);
 
   /* Render loop */
   useFrame(({ clock }) => {

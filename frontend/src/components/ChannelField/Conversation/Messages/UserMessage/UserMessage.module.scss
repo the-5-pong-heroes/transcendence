@@ -1,0 +1,24 @@
+.UserMessage {
+  align-self: flex-end;
+  padding: 7px 12px;
+  border-radius: 19px;
+  max-width: 80%;
+  flex-shrink: 0;
+  display: flex;
+  flex-flow: column nowrap;
+  word-wrap: break-word;
+  white-space: pre-line;
+
+  span {
+    color: #606060;
+    font-size: 12px;
+  }
+}
+
+.UserMessageLight {
+  background-color: rgba(119, 150, 207, .9);
+}
+
+.UserMessageDark {
+  background-color: rgba(3, 83, 159, .9);
+}

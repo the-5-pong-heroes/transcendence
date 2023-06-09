@@ -1,34 +1,45 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { AppContext, UserContext, UserContextType } from '../../../../contexts';
-import { IChannel } from '../../../../interfaces';
-import { socket } from '../../../../socket';
+import { ChannelContext, UserContext, UserContextType } from '@/contexts';
+// import { socket } from '@/socket';
+import { useUser, useSocket, useTheme } from "@hooks";
+import { IMessage } from '@/interfaces';
+import { ServerMessage } from './ServerMessage';
+import { UserMessage } from './UserMessage';
+import { OtherMessage } from './OtherMessage';
+import { ResponseError } from "@/helpers";
 import styles from './Messages.module.scss';
 
-interface IMessagesProps {
-  activeChannel: IChannel;
-}
-
-interface IMessage {
-  content: string;
-  senderId?: string;
-  sender?: {
-    name: string;
-  };
-  channelId: string;
-}
-
-export const Messages: React.FC<IMessagesProps> = ({ activeChannel }) => {
+export const Messages: React.FC = () => {
   const [messages, setMessages] = useState<IMessage[]>([]);
-  const { user } = useContext(UserContext) as UserContextType;
-  const appContext = useContext(AppContext);
-  if (appContext === undefined) {
-    throw new Error("Undefined AppContext");
-  }
-  const { theme } = appContext;
+  const [showOptions, setShowOptions] = useState<number>(-1);
+
+  // const { user } = useContext(UserContext) as UserContextType;
+  const user = useUser();
+  const socket = useSocket();
+  const theme = useTheme();
+
+  const { activeChannel } = useContext(ChannelContext);
+  if (activeChannel === undefined) throw new Error("Undefined Active Channel");
 
   useEffect(() => {
+    const fetchData = async () => {
+      // const token = localStorage.getItem('access_token');
+      // if (!token || !activeChannel) return setMessages([]);
+      if (!activeChannel) return setMessages([]);
+      // const	config = { headers: { 'Authorization': token }};
+      const response = await fetch(`http://localhost:3000/chat/${activeChannel.id}`, { credentials: "include" });
+      // if (!response.ok) return console.log(response);
+      if (!response.ok) {
+        throw new ResponseError("Failed on fetch channels request", response);
+      }
+      const data = await response.json();
+      setMessages(data);
+    }
+
+    fetchData();
+
     const handleMessage = (message: IMessage) => {
-      if (message.channelId === activeChannel?.id)
+      if (message.channelId === activeChannel.id)
         setMessages((prev: IMessage[]) => ([ message, ...prev ]));
     }
 
@@ -38,37 +49,25 @@ export const Messages: React.FC<IMessagesProps> = ({ activeChannel }) => {
       socket.off('message', handleMessage);
     }
   }, [activeChannel]);
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      const token = localStorage.getItem('access_token');
-      if (!token || !activeChannel) return setMessages([]);
-      const	config = { headers: { 'Authorization': token }};
-      const response = await fetch(`http://localhost:3000/chat/${activeChannel.id}`, config);
-      if (!response.ok)
-      {
-        console.log(response);
-        return;
-      }
-      const data = await response.json();
-      setMessages(data);
-    }
-
-    fetchData();
-  }, [activeChannel]);
 
   return (
-    <div className={`${styles.Messages} ${theme === "light" ? styles.MessagesLight : styles.MessagesDark}`}>
+    <div className={styles.Messages}>
       {
       messages.map((message, index) => {
         return (
-          <div
-            key={index}
-            className={`${styles.Message} ${message.senderId ? (message.senderId == user.id ? styles.Mine : "") : styles.Server}`}
-          >
-            <span>{message.sender?.name}</span>
-            {message.content}
-          </div>
+          message.senderId ?
+            message.senderId === user?.id ?
+            <UserMessage key={index} message={message} theme={theme} />
+            :
+            <OtherMessage
+              key={index}
+              message={message}
+              theme={theme}
+              showOptions={showOptions === index}
+              setShowOptions={() => showOptions === index ? setShowOptions(-1) : setShowOptions(index)}
+            />
+          :
+          <ServerMessage key={index} message={message} theme={theme} />
         );
       })
       }

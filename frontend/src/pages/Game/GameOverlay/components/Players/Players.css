@@ -1,0 +1,22 @@
+.game-players-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.game-players {
+  font-size: 3vw;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0px 10vw;
+}
+
+.game-players p {
+  opacity: 0.5;
+  /* padding: 0 22vw; */
+}

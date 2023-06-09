@@ -1,0 +1,10 @@
+{
+  // extend your base config to share compilerOptions, etc
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // ensure that nobody can accidentally use this config for a build
+    "noEmit": true
+  },
+  "include": ["src/**/*", "vite.config.ts"], // include all TypeScript files
+  "exclude": ["node_modules"] // don't exclude any TypeScript files
+}

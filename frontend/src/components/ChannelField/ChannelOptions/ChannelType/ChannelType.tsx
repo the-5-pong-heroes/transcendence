@@ -1,12 +1,11 @@
 import React, { useCallback, useContext, useEffect, useState } from "react"
-import { UserContext, UserContextType } from "../../../../contexts";
-import { IChannel } from "../../../../interfaces";
-import { socket } from "../../../../socket";
-import { Public, Protected, Private, View, Hide } from '../../../../assets';
+import { ChannelContext, UserContext, UserContextType } from "@/contexts";
+// import { socket } from "@/socket";
+import { useUser, useSocket, useTheme } from "@hooks";
+import { Public, Protected, Private, View, Hide } from '@/assets';
 import styles from "./ChannelType.module.scss"
 
 interface IChannelTypeProps {
-  activeChannel: IChannel;
   setReturnMessage: (prev: any) => void;
 }
 
@@ -28,17 +27,25 @@ const types: string[] = [
   "PRIVATE",
 ];
 
-export const ChannelType: React.FC<IChannelTypeProps> = ({ activeChannel, setReturnMessage }) => {
+export const ChannelType: React.FC<IChannelTypeProps> = ({ setReturnMessage }) => {
+  const { activeChannel } = useContext(ChannelContext);
+  if (activeChannel === undefined) throw new Error("Undefined Active Channel");
+
   const filterActiveChannel = useCallback(() => {
-      const { id, password, type } = activeChannel;
-      return { id, password, type } as IChannelUpdate;
+    if (!activeChannel)
+      return { id: "", type: "" };
+    const { id, password, type } = activeChannel;
+    return { id, password, type } as IChannelUpdate;
   }, [activeChannel]);
 
   const [newChannel, setNewChannel] = useState<IChannelUpdate>(filterActiveChannel);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isOwner, setIsOwner] = useState<boolean>(false);
-  
-  const { user } = useContext(UserContext) as UserContextType;
+
+  // const { user } = useContext(UserContext) as UserContextType;
+  const user = useUser();
+  const socket = useSocket();
+  const theme = useTheme();
 
   const changeType = (type: string) => {
     setNewChannel((prev: IChannelUpdate) => ({ ...prev, type }));
@@ -51,15 +58,14 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ activeChannel, setRet
 
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const token = window.localStorage.getItem('access_token');
-    if (!token || !newChannel) return;
+    // const token = window.localStorage.getItem('access_token');
+    // if (!token || !newChannel) return;
+    if (!newChannel) return;
     if (newChannel.type === activeChannel.type && newChannel.password == activeChannel.password)
       return;
     if (newChannel.type === "PROTECTED" && !newChannel.password)
       return setReturnMessage({ error: true, message: "Password cannot be empty" });
-    socket.emit("updateChannelType", { ...newChannel, password: newChannel.type === "PROTECTED" ? newChannel.password : "" }, (res: any) => {
-      console.log(res);
-    });
+    socket.emit("updateChannelType", { ...newChannel, password: newChannel.type === "PROTECTED" ? newChannel.password : "" });
     setReturnMessage({ error: false, message: "Changes to channel saved" });
   }
 
@@ -67,13 +73,16 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ activeChannel, setRet
     setNewChannel(filterActiveChannel);
     setShowPassword(false);
     setIsOwner(activeChannel.users.some((usr) => {
-      return usr.user.id === user.id && usr.role === "OWNER";
+      return usr.user.id === user?.id && usr.role === "OWNER";
     }));
   }, [activeChannel]);
 
   return (
     isOwner ?
-    <form className={styles.ChannelType} onSubmit={handleSubmit}>
+    <form
+      className={`${styles.ChannelType} ${theme === "light" ? styles.ChannelTypeLight : styles.ChannelTypeDark}`}
+      onSubmit={handleSubmit}
+    >
       <div className={styles.ChannelTypeOptions}>
         {
           types.map(type => {

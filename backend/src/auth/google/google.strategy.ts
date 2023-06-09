@@ -1,26 +1,24 @@
 import { PassportStrategy } from "@nestjs/passport";
 import { Profile, Strategy, VerifyCallback } from "passport-google-oauth20";
 import { Injectable } from "@nestjs/common";
+import { GOOGLE_CLIENT_ID, GOOGLE_SECRET, GOOGLE_REDIRECT_URI } from "src/common/constants";
 
 @Injectable()
-export class GoogleStrategy extends PassportStrategy(Strategy) {
+export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
   constructor() {
     super({
-      clientID: "710896193743-ghevbabaa9s9f94qlsaqbvbrnlj30hgv.apps.googleusercontent.com",
-      clientSecret: "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",
-      callbackURL: "http://localhost:3333/auth/google/callback",
+      clientID: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_SECRET,
+      callbackURL: GOOGLE_REDIRECT_URI,
       scope: ["email", "profile"],
     });
   }
-  async validate(accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback): Promise<any> {
-    console.log("Access token:", accessToken);
-    console.log("Refresh token:", refreshToken);
-    console.log("Profile:", profile);
 
+  async validate(accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback): Promise<any> {
     const { name, emails } = profile;
     const user = {
       email: emails && emails.length > 0 ? emails[0].value : "",
-      displayName: profile.displayName,
+      name: profile.displayName,
       accessToken,
     };
     done(null, user);

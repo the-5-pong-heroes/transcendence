@@ -1,22 +1,17 @@
-import React, { Suspense, useContext } from "react";
+import React, { Suspense } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, OrthographicCamera } from "@react-three/drei";
 
 import "./Pong2D.css";
 
 import { CAMERA_2D_Z } from "../constants";
-import { GameContext } from "../context/GameContext";
-import { type GameMode } from "../@types";
-import { useGameLoop, useScoreLabel, useGameEvents } from "../hooks";
+import { type GameContextParameters } from "../@types";
+import { useGameLoop, useScoreLabel, useGameEvents, useGameContext } from "../hooks";
 import { getInitialPongState } from "../helpers";
 
 import { Ball, Board, Paddle, Score, DashedLine } from "./components";
 
 const INITIAL_PONG_STATE = getInitialPongState();
-
-interface GameProps {
-  gameMode: GameMode | undefined;
-}
 
 const Light: React.FC = () => {
   return (
@@ -27,8 +22,6 @@ const Light: React.FC = () => {
 };
 
 const PongGame: React.FC = () => {
-  useGameEvents();
-
   useThree(({ camera }) => {
     camera.position.set(0, 0, CAMERA_2D_Z);
   });
@@ -56,11 +49,8 @@ const Loading: React.FC = () => {
 };
 
 const _Pong2D: React.FC = () => {
-  const gameContext = useContext(GameContext);
-  if (gameContext === undefined) {
-    throw new Error("Undefined GameContext");
-  }
-  const { gameMode }: GameProps = gameContext;
+  const { gameMode }: GameContextParameters = useGameContext();
+
   if (gameMode != "2D") {
     return null;
   }

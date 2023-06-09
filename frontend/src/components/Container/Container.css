@@ -7,6 +7,12 @@
   object-fit: cover;
 }
 
+.container-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 body.open .container {
   transition: all 0.5s ease-in-out;
   filter: blur(15px);
@@ -23,16 +29,17 @@ body.open .container {
   transform: rotate(90deg) translateY(-100vh);
   transform-origin: top left;
   width: 535vh;
+  /* width: 548vh; */
   overscroll-behavior-x: none;
   padding-right: 1px;
 }
 
 .background {
   position: absolute;
+  background-size: cover;
   top: 0;
   left: 0;
-  bottom: 0;
-  right: 0;
+  width: 548vh;
 }
 
 .background-img {
@@ -54,7 +61,10 @@ body.open .container {
   background-repeat: repeat;
 }
 
-.light,
+.light {
+  z-index: 7;
+}
+
 .trash {
   z-index: 6;
 }
@@ -78,22 +88,4 @@ body.open .container {
 
 .parallax-img {
   overflow: hidden;
-}
-
-@media  (max-height: 600px) {
-  .background {
-    width: 590vh;
-  }
-  .background-img {
-    width: 590vh;
-  }
-}
-
-@media  (max-height: 350px) and (min-width: 1580px) {
-  .background {
-    width: 760vh;
-  }
-  .background-img {
-    width: 760vh;
-  }
 }

@@ -1,75 +1,144 @@
+@import url("https://fonts.cdnfonts.com/css/euclid-circular-a");
+
 .Login {
-	height: 100vh;
-	width: 100vw;
-  z-index: 7;
-  color: #fff;
-  flex-flow: column nowrap;
-  font-size: 50px;
+  z-index: 20;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: linear-gradient(
+    to right top,
+    #eacede,
+    #ddb5d2,
+    #cd9dc9,
+    #b986c1,
+    #a171bc,
+    #9477c4,
+    #867ccb,
+    #7682d1,
+    #7e9ede,
+    #90b8e8,
+    #acd1ef,
+    #cfe8f7
+  );
+  font-family: "Euclid circular A";
+}
+
+.continue-with {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-bottom: 15px;
+  font-size: 0.9em;
+}
+
+.Login_with {
+  margin: 6px;
+  width: 170px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 0;
-  left: 0;
+  justify-content: space-evenly;
+  padding: 5px 10px;
+  border: 1px solid rgb(255, 255, 255);
+  border-radius: 8px;
+  color: rgb(255, 254, 254);
 }
 
-.Login h1 {
-  font-size: 7vw;
+#login-robot {
+  height: 140px;
+  border-radius: 50%;
+  /* border: 2px solid rgb(255, 255, 255); */
+  /* background-color: rgb(110, 48, 154); */
+  padding: 5px;
 }
 
-#light .Login h1 {
-  color: #070c76;
+#logo-42 {
+  height: 30px;
+  padding-top: 3px;
 }
 
-#dark .Login h1 {
-  color: #ffffff;
+#logo-Google {
+  height: 30px;
+  padding: 4px;
+}
+
+.login-link {
+  text-decoration: underline;
+  font-size: 0.9em;
+  margin: 8px;
+  /* font-style: italic; */
+}
+
+.Login_with:hover {
+  cursor: pointer;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .form {
-	margin: auto;
-	width: clamp(200px, 600px, 40%);
-	background-color: white;
-	padding: 30px;
-	border-radius: 10px;
-	display: flex;
-	flex-flow: column nowrap;
-	justify-content: center;
-	align-items: stretch;
-	gap: 20px;
-	box-shadow: 5px 8px 10px 3px rgba(0, 0, 0, 0.2);
+  margin: auto;
+  width: 380px;
+  height: 500px;
+  background-color: rgba(255, 255, 255, 0.309);
+  border-radius: 20px;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 5px 8px 10px 3px rgba(47, 47, 47, 0.2);
+  color: rgb(255, 255, 255);
 }
 
-.form h2 {
-	margin: 0;
-	margin-bottom: 10px;
+.form-sign {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
 }
 
 .input {
-	height: 30px;
-	border-radius: 5px;
-	text-indent: 8px;
-
+  height: 30px;
+  width: 220px;
+  border-radius: 5px;
+  text-indent: 8px;
+  color:rgb(0, 0, 0)
 }
 
 .submit {
-	margin: auto;
-	padding-top: 8px;
-	width: 120px;
-	height: 40px;
-	border-radius: 8px;
-	border: 0px solid black;
-	font: inherit;
-	font-size: 20px;
-	line-height: 0;
-	color: white;
-	background-color: lightslategray;
-	cursor: pointer;
+  margin: auto;
+  width: 90px;
+  height: 30px;
+  border-radius: 20px;
+  border: 1px solid rgb(255, 255, 255);
+  font-size: 1em;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
 }
 
-.err-message {
-	color: red;
-	font-size: 15px;
-	text-align: center;
+.submit:hover {
+  background-color: white;
+  color: black;
+}
+
+@media (max-width: 600px) {
+	#login-robot {
+		display: none;
+	}
+
+	.form {
+		padding: 40px;
+		width: 350px;
+	}
+
+	.continue-with {
+		margin: 0;
+	}
 }
 
 .walle-button {

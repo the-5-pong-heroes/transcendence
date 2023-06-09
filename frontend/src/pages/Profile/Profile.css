@@ -15,7 +15,6 @@
   flex-flow: column nowrap;
   margin: 0;
   align-items: center;
-  justify-content: space-between;
   user-select: none;
   animation: fadeInAnimation ease 500ms;
   animation-iteration-count: 1;

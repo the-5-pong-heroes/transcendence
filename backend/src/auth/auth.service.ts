@@ -84,8 +84,8 @@ export class AuthService {
       .cookie("access_token", accessToken, {
         httpOnly: true,
         secure: false,
-        sameSite: "lax",
-        expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+        sameSite: "strict",
+        expires: new Date(Date.now() + 86400 * 1000),
       })
       .status(200)
       .json({ message: "Welcome !", user: createdUser });
@@ -116,8 +116,8 @@ export class AuthService {
       .cookie("access_token", accessToken, {
         httpOnly: true,
         secure: false,
-        sameSite: "lax",
-        expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+        sameSite: "strict",
+        expires: new Date(Date.now() + 86400 * 1000),
       })
       .status(200)
       .json({ message: "Welcome back !", user: user });
@@ -149,8 +149,8 @@ export class AuthService {
       .cookie("access_token", userInfos.accessToken, {
         httpOnly: true,
         secure: false,
-        sameSite: "lax",
-        expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+        sameSite: "strict",
+        expires: new Date(Date.now() + 86400 * 1000),
       })
       .redirect(301, CLIENT_URL);
   }
@@ -268,12 +268,16 @@ export class AuthService {
 
   async createCookies(@Res() res: Response, token: any) {
     const cookies = res.cookie("access_token", token.access_token, {
-      expires: new Date(new Date().getTime() + 60 * 24 * 7 * 1000), // expires in 7 days
-      httpOnly: true, // for security
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+      expires: new Date(Date.now() + 86400 * 1000),
     });
     const Googlecookies = res.cookie("FullToken", token, {
-      expires: new Date(new Date().getTime() + 60 * 24 * 7 * 1000), // expires in 7 days
-      httpOnly: true, // for security
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+      expires: new Date(Date.now() + 86400 * 1000),
     });
   }
 

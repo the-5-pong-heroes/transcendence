@@ -267,7 +267,7 @@ export class AuthService {
   }
 
   async createCookies(@Res() res: Response, token: any) {
-    const cookies = res.cookie("token", token.access_token, {
+    const cookies = res.cookie("access_token", token.access_token, {
       expires: new Date(new Date().getTime() + 60 * 24 * 7 * 1000), // expires in 7 days
       httpOnly: true, // for security
     });
@@ -296,7 +296,7 @@ export class AuthService {
 
   async deleteCookies(@Res() res: Response) {
     try {
-      res.clearCookie("token").clearCookie("FullToken").end();
+      res.clearCookie("access_token").clearCookie("FullToken").end();
     } catch (error) {
       throw new BadRequestException("Failed to delete the cookies");
     }

@@ -18,58 +18,44 @@ async function sendRequest<T>(path: string, config: RequestInit): Promise<T> {
     };
   }
   const request = new Request(url, config);
-  const response = await fetch(request);
+  const response: Response = await fetch(request);
 
-  if (!response.ok) {
-    try {
-      const { message } = (await response.json()) as ErrorMessage;
-      throw new ResponseError(message, response);
-    } catch (e) {
-      throw new ResponseError("Fetch request failed", response);
-    }
-  }
-
-  // may error if there is no body, return empty array
-  return response.json().catch(() => ({})) as T;
+  return (await response.json()) as T;
 }
 
-export async function customFetch<T, U = undefined>(
+export async function customFetch<T>(
   method: string,
   path: string,
-  body?: U,
+  body: object | undefined,
   config?: RequestInit
 ): Promise<T> {
-  const init = { method: method.toUpperCase(), body: JSON.stringify(body), ...config };
+  if (config?.method in ["POST", "PUT"]) {
+    config.headers = {
+      ...config.headers,
+      "Content-Type": "application/json; charset=utf-8",
+    };
+  }
 
-  return await sendRequest<T>(path, init);
+  // checks that the HTTP method is valid
+  method = method.toUpperCase();
+  if (!method) {
+    method = "GET";
+  }
+  const valid_methods = ["POST", "GET", "PUT", "PATCH", "DELETE"];
+  if (!valid_methods.includes(method)) {
+    throw new Error(`Invalid method: ${method}`);
+  }
+
+  const init = {
+    method: method,
+    body: JSON.stringify(body),
+    credentials: "include",
+    mode: "cors",
+    ...config,
+  };
+
+  const request: Request = new Request(`${BASE_URL}${path}`, config);
+  const response: Response = await fetch(request);
+
+  return (await response.json()) as T;
 }
-
-// export async function get<T>(path: string, config?: RequestInit): Promise<T> {
-//   const init = { method: "get", ...config };
-
-//   return await sendRequest<T>(path, init);
-// }
-
-// export async function post<T, U>(path: string, body: T, config?: RequestInit): Promise<U> {
-//   const init = { method: "post", body: JSON.stringify(body), ...config };
-
-//   return await sendRequest<U>(path, init);
-// }
-
-// export async function put<T, U>(path: string, body: T, config?: RequestInit): Promise<U> {
-//   const init = { method: "put", body: JSON.stringify(body), ...config };
-
-//   return await sendRequest<U>(path, init);
-// }
-
-// export async function remove<T>(path: string, config?: RequestInit): Promise<T> {
-//   const init = { method: "delete", ...config };
-
-//   return await sendRequest<T>(path, init);
-// }
-
-// export async function customFetch<T>(method: string, path: string, body?: T, config?: RequestInit): Promise<T> {
-//   const init = { method: method, body: JSON.stringify(body), ...config };
-
-//   return await sendRequest<T>(path, init);
-// }

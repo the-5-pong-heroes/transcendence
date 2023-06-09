@@ -260,9 +260,7 @@ export class AuthService {
   async getUserByToken(req: Request) {
     try {
       const accessToken = req.cookies.token;
-      console.log("🍋", accessToken);
       const user = await this.validateUser(accessToken);
-      console.log("🐥", user);
       // const user = await this.prisma.auth.findFirst({
       //   where: {
       //     accessToken: accessToken,

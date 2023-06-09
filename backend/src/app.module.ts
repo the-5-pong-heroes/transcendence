@@ -30,19 +30,18 @@ import { CurrentUserMiddleware } from "./common/middleware/current-user.middlewa
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
-// export class AppModule {
-//   configure(consumer: MiddlewareConsumer) {
-//     // registers our custom middleware, that attaches the current user to each of its request
-//     consumer
-//       .apply(CurrentUserMiddleware)
-//       .exclude(
-//         { path: "auth", method: RequestMethod.POST },
-//         { path: "auth", method: RequestMethod.GET },
-//         // { path: "/auth/signin", method: RequestMethod.POST },
-//         // { path: "/auth/signup", method: RequestMethod.POST },
-//         // { path: "/auth/signout", method: RequestMethod.GET },
-//       )
-//       .forRoutes("*");
-//   }
-// }
+// export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    // registers our custom middleware, that attaches the current user to each of its request
+    consumer
+      .apply(CurrentUserMiddleware)
+      .exclude(
+        { path: "/auth/user", method: RequestMethod.GET },
+        { path: "/auth/signin", method: RequestMethod.POST },
+        { path: "/auth/signup", method: RequestMethod.POST },
+        { path: "/auth/signout", method: RequestMethod.GET },
+      )
+      .forRoutes("*");
+  }
+}

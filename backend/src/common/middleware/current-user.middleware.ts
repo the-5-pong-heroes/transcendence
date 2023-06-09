@@ -27,12 +27,10 @@ export class CurrentUserMiddleware implements NestMiddleware {
     //   req["currentUser"] = null;
     // }
     const token = req.cookies["access_token"];
-    console.log("🍏", token);
     if (!token) {
       throw new UnauthorizedException("Not authenticated");
     }
     const user = await this.authService.validateUser(token);
-    //   const user = await this.authService.getUserByToken(req);
     if (!user) {
       throw new UnauthorizedException("Not authenticated");
     }

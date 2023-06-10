@@ -119,7 +119,6 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
     else{
       try {
         const data = await handle2FAfunction();
-        console.log(data);
       } catch (error) {
         console.error(error);
       }
@@ -226,11 +225,11 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
           <Toggle2FA toggled={true} onClick={toggle2FA} />
         </div>
         <div id="popup" style={{ display: "none" }}>
-        <h3>Entrez le code de vérification :</h3>
-        <input type="text" id="verificationCode" style={{ color: "black" }} />
-        <button className="walle-button" onClick={submitVerificationCode}>
-          Valider
-        </button>
+          <h3>Entrez le code de vérification :</h3>
+          <input type="text" id="verificationCode" style={{ color: "black" }} />
+          <button className="walle-button" onClick={submitVerificationCode}>
+            Valider
+          </button>
        </div>
       </div>
       <div className="settings-block block2">

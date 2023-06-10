@@ -30,7 +30,7 @@ export class UserService {
   }
 
   async getUsername(@Req() req: Request) {
-    const accessToken = req.cookies.token;
+    const accessToken = req.cookies.access_token;
     try {
       const user = await this.prisma.user.findFirst({
         where: {

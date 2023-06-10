@@ -13,7 +13,7 @@ export class Generate2FAService {
   constructor(private readonly mailerService: MailerService, private prisma: PrismaService) {}
 
   async generateService(@Req() req: Request, @Res() res: Response) {
-    const accessToken = req.cookies.token;
+    const accessToken = req.cookies.access_token;
     const user = await this.prisma.user.findFirst({
       where: {
         auth: {
@@ -24,13 +24,40 @@ export class Generate2FAService {
         auth: true,
       },
     });
-    if (user?.auth?.twoFAactivated == true) {
-      const code = await this.sendActivationMail(user);
-      const twoFAactivated = true;
-      return res.json({
-        code,
-        twoFAactivated,
+    await this.updateUser(user);
+    const code = await this.sendActivationMail(user);
+    const twoFAactivated = true;
+    return res.json({
+      code,
+      twoFAactivated,
+    });
+  }
+
+  async updateUser(user: any) {
+    try {
+      const userid = user.id;
+      const updatedUser = await this.prisma.user.update({
+        where: { id: userid },
+        data: {
+          auth: {
+            update: {
+              twoFAactivated: true,
+            },
+          },
+        },
+        include: {
+          auth: true,
+        },
       });
+      return updatedUser;
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: "Fail to update user in Disable 2FA ",
+        },
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 

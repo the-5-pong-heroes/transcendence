@@ -26,65 +26,6 @@ export const Login42: React.FC = () => {
   //   navigate("/auth/google");
   // };
 
-  const handle2FA = async () => {
-    setIsActivated((prevState) => !prevState);
-    try {
-      const data = await handle2FAfunction();
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  async function handle2FAfunction(): Promise<any> {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code: twoFACode, twoFAactivated: isActivated }),
-    });
-    const data = await response.json();
-    console.log("data ===", data);
-    if (data.twoFAactivated === true) {
-      openPopup(data.code);
-    }
-
-    return data;
-  }
-
-  function openPopup(twoFACode: string) {
-    const popup = document.getElementById("popup");
-    if (popup) {
-      popup.style.display = "block";
-      popup.dataset.twoFACode = twoFACode;
-    }
-  }
-
-  function submitVerificationCode() {
-    const verificationCodeInput = document.getElementById("verificationCode") as HTMLInputElement;
-    if (verificationCodeInput) {
-      const verificationCode = verificationCodeInput.value;
-      const popup = document.getElementById("popup");
-      if (popup) {
-        const twoFACode = popup.dataset.twoFACode;
-        console.log("twoFA = ", twoFACode);
-        console.log("verif = ", verificationCode);
-        if (verificationCode === twoFACode) {
-          alert("Code de vérification correct !");
-          closePopup();
-        } else {
-          alert("Code de vérification incorrect. Veuillez réessayer.");
-        }
-      }
-    }
-  }
-
-  function closePopup() {
-    const popup = document.getElementById("popup");
-    if (popup) {
-      popup.style.display = "none";
-      popup.removeAttribute("data-twoFACode");
-    }
-  }
 
   return (
     <div className="Login_with" onClick={handleAuth42}>

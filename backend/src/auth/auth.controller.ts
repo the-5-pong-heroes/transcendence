@@ -56,11 +56,12 @@ export class AuthController {
       else {
         this.authService.updateCookies(res, token, userExists);
         if (!userExists.auth?.twoFAactivated) res.redirect(301, `http://localhost:5173/`); // ou /Profile ?
-        else this.Generate2FA.sendActivationMail(userExists); //2FA page
+        else {
+          this.Generate2FA.sendActivationMail(userExists); //2FA page
+          res.redirect(301, `http://localhost:5173/Login`);
+        }
       }
     }
-    //res.redirect(301, `http://localhost:5173/`);
-    //this.authService.RedirectConnectingUser(req,res, userExists?.auth.email);
   }
 
   @Post("signup")
@@ -102,11 +103,6 @@ export class AuthController {
     return this.authService.checkIfTokenValid(req, res);
   }
 
-  @Get("2FA/enable")
-  async enable2FA(@Req() req: Request, @Res() res: Response) {
-    return this.enable2FAService.EnableService(req, res);
-  }
-
   @Post("2FA/generate")
   async generate2FA(@Req() req: Request, @Res() res: Response) {
     return this.Generate2FA.generateService(req, res);
@@ -115,6 +111,11 @@ export class AuthController {
   @Get("2FA/verify")
   async verify2FA(@Req() req: Request, @Res() res: Response) {
     return this.verify2FAService.validate2FA(req, res);
+  }
+
+  @Get("2FA/disable")
+  async disable2FA(@Req() req: Request, @Res() res: Response) {
+    return this.enable2FAService.disable2FA(req, res);
   }
 
   //    @Get("google/callback")

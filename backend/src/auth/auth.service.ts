@@ -235,7 +235,7 @@ export class AuthService {
   }
 
   async getUserByToken(req: Request): Promise<User> {
-    const token = req.cookies["token"];
+    const token = req.cookies["access_token"];
     if (!token) throw new BadRequestException("Failed to get the user by token (falsy token)");
     try {
       const user = await this.prisma.user.findFirstOrThrow({
@@ -248,7 +248,7 @@ export class AuthService {
   }
 
   async handleDataBaseCreation(@Req() req: Request, @Res() res: Response, @Body() userDto: UserDto) {
-    const token: string = req.cookies.token;
+    const token: string = req.cookies.access_token;
     const user42infos = await this.Oauth42.access42UserInformation(token);
     if (user42infos) {
       const finalUser = await this.Oauth42.createDataBase42User(
@@ -278,6 +278,7 @@ export class AuthService {
       sameSite: "strict",
       expires: new Date(Date.now() + 86400 * 1000),
     });
+    return cookies;
   }
 
   async updateCookies(@Res() res: Response, token: any, userInfos: any) {
@@ -306,7 +307,7 @@ export class AuthService {
   }
 
   async checkIfTokenValid(@Req() req: Request, @Res() res: Response) {
-    const token: string = req.cookies.token;
+    const token: string = req.cookies.access_token;
 
     const token42Valid = await this.Oauth42.access42UserInformation(token); // check token from user if user is from 42
     const dataGoogleValid = await this.googleService.getUserFromGoogleByCookies(req); // check now if the token from google is valid

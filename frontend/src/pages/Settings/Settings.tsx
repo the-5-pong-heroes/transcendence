@@ -114,7 +114,8 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
     console.log("2FA: ", isToggled);
     if (isToggled === false)
     {
-      //desable 2FA
+      const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/disable";
+      window.open(url, "_self");
     }
     else{
       try {
@@ -132,7 +133,6 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
       body: JSON.stringify({ code: twoFACode, twoFAactivated: isActivated }),
     });
     const data = await response.json();
-    console.log("data ===", data);
     if (data.twoFAactivated === true) {
       openPopup(data.code);
     }

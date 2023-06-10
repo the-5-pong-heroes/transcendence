@@ -51,7 +51,7 @@ export const SearchBar: React.FC = () => {
       });
 
     // const config = {headers: { 'Authorization': token }}
-    // const response = await fetch(`http://localhost:3000/chat/search/${value}`, config);
+    // const response = await fetch(`http://localhost:3333/chat/search/${value}`, config);
     // if (!response.ok) return console.log(response);
     // const data = await response.json();
     // setPreview(data);

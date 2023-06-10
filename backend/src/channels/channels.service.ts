@@ -1,14 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { CreateChannelDto } from "./dto/create-channel.dto";
 import { PrismaService } from "../database/prisma.service";
-import { UsersService } from "../users/users.service";
-// import { UsersService } from "../users_paul/users.service";
+import { UserService } from "../user/user.service";
 import { Channel, ChannelUser } from "@prisma/client";
 import { UpdateChannelDto } from "./dto/update-channel.dto";
 
 @Injectable()
 export class ChannelsService {
-  constructor(private readonly prismaService: PrismaService, private readonly usersService: UsersService) {}
+  constructor(private readonly prismaService: PrismaService, private readonly userService: UserService) {}
 
   async create(createChannelDto: CreateChannelDto): Promise<Channel> {
     const { users, ...data } = createChannelDto;
@@ -194,13 +193,13 @@ export class ChannelsService {
     const firstChannels = await this.searchFirstMatch(payload);
     channels = firstChannels;
     if (channels.length >= 5) return channels;
-    const users = await this.usersService.searchFirstMatch(payload, 5 - channels.length);
+    const users = await this.userService.searchFirstMatch(payload, 5 - channels.length);
     channels = [...channels, ...users];
     if (channels.length >= 5) return channels;
     const endChannels = await this.searchEndMatch(payload, firstChannels, 5 - channels.length);
     channels = [...channels, ...endChannels];
     if (channels.length >= 5) return channels;
-    const endUsers = await this.usersService.searchEndMatch(payload, users, 5 - channels.length);
+    const endUsers = await this.userService.searchEndMatch(payload, users, 5 - channels.length);
     return [...channels, ...endUsers];
   }
 

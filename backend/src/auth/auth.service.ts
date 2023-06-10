@@ -1,12 +1,12 @@
-import { Injectable, BadRequestException, Req, Res, Body, HttpException, HttpStatus } from "@nestjs/common";
+import { Injectable, BadRequestException, Req, Res, Body, HttpStatus } from "@nestjs/common";
 import { Request, Response, request } from "express";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 
 import { Auth } from "@prisma/client";
-import { UsersService } from "src/users/users.service";
+import { UserService } from "src/user/user.service";
 import { SignInDto, SignUpDto } from "./dto";
-import { CreateUserDto } from "../users/dto";
+import { CreateUserDto } from "../user/dto";
 import { User } from "@prisma/client";
 import { PrismaService } from "../database/prisma.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
@@ -25,11 +25,15 @@ interface GoogleUserInfos {
   accessToken: string;
 }
 
+interface Token {
+  access_token: string | undefined;
+}
+
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
-    private usersService: UsersService,
+    private userService: UserService,
     private prisma: PrismaService,
     private Oauth42: Oauth42Service,
     private googleService: GoogleService,
@@ -48,7 +52,7 @@ export class AuthService {
   async signUp(@Res({ passthrough: true }) res: Response, data: SignUpDto): Promise<void> {
     const { name, email, password } = data;
 
-    const userByName = await this.usersService.findUserByName(name);
+    const userByName = await this.userService.findUserByName(name);
     if (userByName) {
       res.status(HttpStatus.CONFLICT).json({ message: "User already exists" });
       return;
@@ -62,7 +66,7 @@ export class AuthService {
     const hash = await bcrypt.hash(password, salt);
 
     const newUser = new CreateUserDto(name, email, hash);
-    const createdUser = await this.usersService.create(newUser);
+    const createdUser = await this.userService.create(newUser);
 
     const payload = { email: email, sub: createdUser.id };
     const accessToken = this.jwtService.sign(payload);
@@ -93,9 +97,11 @@ export class AuthService {
     if (!userAuth) {
       throw new BadRequestException("User doesn't exist");
     }
-    const isMatch = await bcrypt.compare(password, userAuth.password);
-    if (!isMatch) {
-      throw new BadRequestException("Invalid credentials");
+    if (userAuth.password) {
+      const isMatch = await bcrypt.compare(password, userAuth.password);
+      if (!isMatch) {
+        throw new BadRequestException("Invalid credentials");
+      }
     }
     const { password: _, ...result } = userAuth;
     return result;
@@ -103,7 +109,7 @@ export class AuthService {
 
   async signIn(@Res({ passthrough: true }) res: Response, auth: Auth): Promise<void> {
     const payload = { email: auth.email, sub: auth.userId };
-    const user = await this.usersService.findOne(auth.userId);
+    const user = await this.userService.findOne(auth.userId);
     const accessToken = this.jwtService.sign(payload);
 
     res
@@ -129,7 +135,7 @@ export class AuthService {
           accessToken: userInfos.accessToken,
         },
       });
-      user = await this.usersService.findOne(userByEmail.userId);
+      user = await this.userService.findOne(userByEmail.userId);
     } else {
       user = await this.googleService.createDataBaseUserFromGoogle(
         userInfos.accessToken,
@@ -175,7 +181,7 @@ export class AuthService {
         return null;
       }
     }
-    const user = await this.usersService.findOne(userId);
+    const user = await this.userService.findOne(userId);
     return user;
   }
 
@@ -194,100 +200,54 @@ export class AuthService {
 
   /***********       LAURA'S CODE      ***********/
 
-  async createDataBase42User(user42: any, token: string, username: string, isRegistered: boolean) {
+  async createDataBase42User(user42: any, token: Token, username: string, isRegistered: boolean) {
     try {
       const user = await this.prisma.user.create({
         data: {
           name: username,
-          auth: {
-            create: {
-              accessToken: token,
-              isRegistered: isRegistered,
-              email: user42.email,
-              password: "test",
-            },
-          },
           status: "ONLINE",
           lastLogin: new Date(),
+          auth: {
+            create: {
+              accessToken: token.access_token,
+              isRegistered: isRegistered,
+              email: user42.email,
+              twoFAactivated: false,
+              otp_enabled: false,
+              otp_validated: false,
+              otp_verified: false,
+            },
+          },
+        },
+        include: {
+          auth: true,
         },
       });
       return user;
     } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: "Error to create the user to the database",
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException("Failed to create the user");
     }
   }
 
   async RedirectConnectingUser(@Req() req: Request, @Res() res: Response, email: string | null | undefined) {
-    if (!email) res.redirect(301, `http://e1r2p7.clusters.42paris.fr:5173/registration`);
-    else res.redirect(301, `http://e1r2p7.clusters.42paris.fr:5173/`);
+    if (!email) res.redirect(301, `http://localhost:5173/Profile`);
+    else res.redirect(301, `http://localhost:5173/`);
   }
 
-  // async getUserByToken(req: Request) {
-  //   try {
-  //     const accessToken = req.cookies.token;
-  //     const user = await this.prisma.auth.findFirst({
-  //       where: {
-  //         accessToken: accessToken,
-  //       },
-  //     });
-  //     if (!user) {
-  //       throw new HttpException(
-  //         {
-  //           status: HttpStatus.BAD_REQUEST,
-  //           error: "Error to get the user by token1",
-  //         },
-  //         HttpStatus.BAD_REQUEST,
-  //       );
-  //     }
-  //     return user;
-  //   } catch (error) {
-  //     throw new HttpException(
-  //       {
-  //         status: HttpStatus.BAD_REQUEST,
-  //         error: "Error to get the user by token2",
-  //       },
-  //       HttpStatus.BAD_REQUEST,
-  //     );
-  //   }
-  // }
-
-  async getUserByToken(req: Request) {
+  async getUserByToken(req: Request): Promise<User> {
+    const token = req.cookies["token"];
+    if (!token) throw new BadRequestException("Failed to get the user by token (falsy token)");
     try {
-      const accessToken = req.cookies.token;
-      const user = await this.validateUser(accessToken);
-      // const user = await this.prisma.auth.findFirst({
-      //   where: {
-      //     accessToken: accessToken,
-      //   },
-      // });
-      // if (!user) {
-      //   throw new HttpException(
-      //     {
-      //       status: HttpStatus.BAD_REQUEST,
-      //       error: "Error to get the user by token1",
-      //     },
-      //     HttpStatus.BAD_REQUEST,
-      //   );
-      // }
+      const user = await this.prisma.user.findFirstOrThrow({
+        where: { auth: { accessToken: token } },
+      });
       return user;
     } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: "Error to get the user by token2",
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException("Failed to get the user by token (no user found)");
     }
   }
 
-  async handleDataBaseCreation(@Req() req: Request, @Res() res: Response, @Body() data: UserDto) {
+  async handleDataBaseCreation(@Req() req: Request, @Res() res: Response, @Body() userDto: UserDto) {
     const token: string = req.cookies.token;
     const user42infos = await this.Oauth42.access42UserInformation(token);
     if (user42infos) {
@@ -306,7 +266,7 @@ export class AuthService {
   }
 
   async createCookies(@Res() res: Response, token: any) {
-    const cookies = res.cookie("token", token.access_token, {
+    const cookies = res.cookie("access_token", token.access_token, {
       httpOnly: true,
       secure: false,
       sameSite: "strict",
@@ -325,33 +285,23 @@ export class AuthService {
       if (userInfos) {
         const name = userInfos.id;
         const user = await this.prisma.auth.update({
-          where: { userId: name },
+          where: {
+            userId: name,
+          },
           data: { accessToken: token.access_token },
         });
         return user;
       } else return null;
     } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: "Error to update the cookies",
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException("Failed to update the cookies");
     }
   }
 
   async deleteCookies(@Res() res: Response) {
     try {
-      res.clearCookie("token").clearCookie("FullToken").end();
+      res.clearCookie("access_token").clearCookie("FullToken").end();
     } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: "Error to update the cookies",
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException("Failed to delete the cookies");
     }
   }
 
@@ -362,7 +312,6 @@ export class AuthService {
     const dataGoogleValid = await this.googleService.getUserFromGoogleByCookies(req); // check now if the token from google is valid
     if (!token42Valid && !dataGoogleValid) {
       throw new BadRequestException("InvalidToken", {
-        cause: new Error(),
         description: "Json empty, the token is invalid",
       });
     }
@@ -371,47 +320,4 @@ export class AuthService {
       path: request.url,
     });
   }
-
-  // import { ForbiddenException, Injectable } from "@nestjs/common";
-  // import { PrismaService } from "../database/prisma.service";
-  // import { AuthDto } from "./dto";
-  // import * as argon from "argon2";
-  // import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-
-  // @Injectable()
-  // export class AuthService {
-  //   constructor(private prisma: PrismaService) {}
-  //   async signup(dto: AuthDto) {
-  //   const hash = await argon.hash(dto.password);
-  //   try {
-  //     const user = await this.prisma.user.create({
-  //       data: {
-  //         email: dto.email,
-  //         hash,
-  //       },
-  //     });
-  //     delete user.hash;
-  //     return user;
-  //   } catch (error) {
-  //     if (error instanceof PrismaClientKnownRequestError) {
-  //       if (error.code === "P2002") {
-  //         throw new ForbiddenException("Credentials taken");
-  //       }
-  //     }
-  //   }
-  //   throw Error;
-  // }
-
-  // async signin(dto: AuthDto) {
-  // const user = await this.prisma.user.findUnique({
-  //   where: {
-  //     email: dto.email,
-  //   },
-  // });
-  // if (!user) throw new ForbiddenException("Credentials incorrect");
-  // const pwMatches = await argon.verity(user.hash, dto.password);
-  // if (!pwMatches) throw new ForbiddenException("Credentials incorrect");
-  // delete user.hash;
-  // return user;
-  // }
 }

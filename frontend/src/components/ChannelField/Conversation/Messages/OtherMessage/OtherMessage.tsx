@@ -45,7 +45,7 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
         },
         body: JSON.stringify({ newFriendId: message.senderId }),
       };
-      const response = await fetch("http://localhost:3000/friendship", config);
+      const response = await fetch("http://localhost:3333/friendship", config);
       if (!response.ok) {
         throw new ResponseError("Failed on fetch channels request", response);
       }
@@ -61,7 +61,7 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
         },
         body: JSON.stringify({ friendId: message.senderId }),
       };
-      const response = await fetch("http://localhost:3000/friendship", config);
+      const response = await fetch("http://localhost:3333/friendship", config);
       if (!response.ok) {
         throw new ResponseError("Failed on fetch channels request", response);
       }

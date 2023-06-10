@@ -4,8 +4,7 @@ import { AuthService } from "src/auth/auth.service";
 import { User } from "@prisma/client";
 
 export interface RequestWithUser extends Request {
-  // currentUser: User;
-  currentUser: User | null;
+  currentUser: User;
 }
 
 /**
@@ -19,13 +18,6 @@ export class CurrentUserMiddleware implements NestMiddleware {
   constructor(private authService: AuthService) {}
 
   async use(req: RequestWithUser, res: Response, next: NextFunction) {
-    // if ("access_token" in req.cookies) {
-    //   const user = await this.authService.getUserByToken(req);
-    //   req["currentUser"] = user;
-    // } else {
-    //   // there are not any 'token' in the cookies
-    //   req["currentUser"] = null;
-    // }
     const token = req.cookies["access_token"];
     if (!token) {
       throw new UnauthorizedException("Not authenticated");

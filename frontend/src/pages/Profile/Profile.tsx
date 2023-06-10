@@ -37,7 +37,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
 
   const fetchHistory = async () => {
     try {
-      const resp = await fetch(`http://localhost:3000/profile/history/${uuid ? uuid : ""}`, {
+      const resp = await fetch(`http://localhost:3333/profile/history/${uuid ? uuid : ""}`, {
         mode: "cors",
         credentials: "include",
       });
@@ -52,7 +52,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
 
   const fetchUser = async () => {
     try {
-      const resp = await fetch(`http://localhost:3000/profile/${uuid ? uuid : ""}`, {
+      const resp = await fetch(`http://localhost:3333/profile/${uuid ? uuid : ""}`, {
         mode: "cors",
         credentials: "include",
       });
@@ -87,7 +87,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
   }
 
   async function followFriend() {
-    const url = "http://localhost:3000";
+    const url = "http://localhost:3333";
     try {
       const body = { newFriendId: uuid };
       const data = await customFetch("post", "/friendship", body);

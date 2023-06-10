@@ -20,7 +20,7 @@ export const ChannelProvider: React.FC<ProviderParameters> = ({ children }) => {
     // if (!token) return;
     // const	config = { headers: { 'Authorization': token }};
     const config = { credentials: "include" as RequestCredentials };
-    const response = await fetch("http://localhost:3000/chat", config);
+    const response = await fetch("http://localhost:3333/chat", config);
     if (!response.ok) {
       return;
     }

@@ -37,7 +37,7 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
   const signOut = useSignOut();
   const user = useUser();
 
-  const url = "http://localhost:3000/settings";
+  const url = "http://localhost:3333/settings";
 
   async function handleFileChange(event: any) {
     const file = event.target.files[0];

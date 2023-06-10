@@ -23,13 +23,13 @@ export const UserProvider: React.FC<ProviderParameters> = ({ children }) => {
       // const token = localStorage.getItem("access_token");
       // if (!token) return navigate("/Login");
       // const config = { headers: { Authorization: token } };
-      // const response = await fetch("http://localhost:3000/users/me", config);
+      // const response = await fetch("http://localhost:3333/users/me", config);
       // if (!response.ok) {
       //   localStorage.setItem("access_token", "");
       //   return; // Set Error Message
       // }
       const config = { credentials: "include" as RequestCredentials };
-      const response = await fetch(`http://localhost:3000/users/me`, config);
+      const response = await fetch(`http://localhost:3333/users/me`, config);
       if (!response.ok) {
         throw new ResponseError("Failed on fetch channels request", response);
       }

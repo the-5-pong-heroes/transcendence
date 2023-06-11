@@ -17,7 +17,9 @@ async function signIn(email: string, password: string): Promise<User> {
     email: email,
     password: password,
   };
+  // const data = await fetch.post<SignInBody, UserAuth>("/auth/signin", signInBody);
   const data = await customFetch<UserAuth>("POST", "/auth/signin", signInBody);
+  // const data = await customFetch<UserAuth, SignInBody>("post", "/auth/signin", signInBody);
 
   return data.user;
 }

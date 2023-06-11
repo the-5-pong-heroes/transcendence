@@ -1,14 +1,18 @@
-import { NestFactory, HttpAdapterHost } from "@nestjs/core";
-import { AppModule } from "./app.module";
-import { PrismaClientExceptionFilter } from "./prisma-client-exception/prisma-client-exception.filter";
+import { NestFactory } from "@nestjs/core";
 import { ValidationPipe } from "@nestjs/common";
 import * as cookieParser from "cookie-parser";
 import { ALLOWED_ORIGINS } from "./common/constants";
+import { AppModule } from "./app.module";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   const corsOptions = {
     origin: ALLOWED_ORIGINS,
+    allowedHeaders: ["content-type"],
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
     credentials: true,
   };
   app.enableCors(corsOptions);
@@ -20,19 +24,10 @@ async function bootstrap() {
     }),
   );
 
-  app.use(cookieParser()); // cookie parser middleware
+  // app.use(cookieParser("MY_SECRET"));
+  app.use(cookieParser());
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      disableErrorMessages: true,
-      whitelist: true,
-    }),
-  );
-
-  const { httpAdapter } = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
-
-  await app.listen(3000);
+  await app.listen(3333);
 }
 
 bootstrap();

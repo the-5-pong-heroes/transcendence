@@ -20,6 +20,8 @@
     "@types/node": "^18.15.10",
     "@types/styled-components": "^5.1.26",
     "cannon-es": "^0.20.0",
+    "dotenv": "^16.0.3",
+    "dotenv-webpack": "^8.0.1",
     "glsl-rotate": "^2.0.0",
     "glslify-loader": "^2.0.0",
     "gsap": "^3.11.5",

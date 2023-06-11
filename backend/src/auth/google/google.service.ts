@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable, Req, Res } from "@nestjs/common";
-import { UsersService } from "src/users/users.service";
+import { UserService } from "src/user/user.service";
 import { PrismaService } from "src/database/prisma.service";
 import { Request, Response } from "express";
 import { google } from "googleapis";
@@ -12,7 +12,7 @@ interface Token {
 
 @Injectable({})
 export class GoogleService {
-  constructor(private prisma: PrismaService, private usersService: UsersService) {}
+  constructor(private prisma: PrismaService, private userService: UserService) {}
 
   async handleGoogleUserCreation(@Res() res: Response, @Req() req: Request) {
     try {
@@ -89,7 +89,6 @@ export class GoogleService {
           name: name,
           auth: {
             create: {
-              password: "test",
               accessToken: accessToken,
               isRegistered: isRegistered,
               email: email,
@@ -110,26 +109,6 @@ export class GoogleService {
       );
     }
   }
-
-  // async getTokenFromGoogle(code: string) {
-  //   const oauth2Client = await this.getOauth2ClientGoogle();
-  //   const { tokens } = await oauth2Client.getToken(code);
-  //   console.log("💥 tokens: ", tokens);
-  //   const token = {
-  //     access_token: tokens.access_token,
-  //   };
-  //   console.log("🔥 token: ", token);
-  //   return token;
-  // }
-
-  // async getTokenFromGoogle(code: string) {
-  //   const oauth2Client = await this.getOauth2ClientGoogle();
-  //   const { tokens } = await oauth2Client.getToken(code);
-  //   const token: Token = {
-  //     access_token: tokens.access_token,
-  //   };
-  //   return token;
-  // }
 
   async getTokenFromGoogle(code: string) {
     const oauth2Client = await this.getOauth2ClientGoogle();

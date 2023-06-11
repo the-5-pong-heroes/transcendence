@@ -77,7 +77,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
     return null;
   }
 
-  function switchTab(event: any): Promise<void> {
+  function switchTab(event: any): void {
     const tabText: string = event.target.innerText;
     if (tabText === "Match history") {
       setCurrentTab("Match history");

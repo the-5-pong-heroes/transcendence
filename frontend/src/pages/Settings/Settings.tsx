@@ -8,7 +8,7 @@ import { Toggle2FA } from "./Toggle2FA";
 
 import { DefaultAvatar, Leave } from "@/assets";
 import { LoadingIcon } from "@/components/loading/loading";
-import * as customFetch from "@/helpers/fetch";
+import { customFetch } from "@/helpers";
 import { useUser } from "@hooks";
 
 interface SettingsProps {
@@ -180,7 +180,7 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
   }
 
   const deleteUser = (): void => {
-    customFetch.remove<void>(`/users/${user?.id}`).catch((error) => {
+    customFetch<void>("remove", `/users/${user?.id}`).catch((error) => {
       console.error(error);
     });
     signOut();

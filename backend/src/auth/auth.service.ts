@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, Req, Res, Body, HttpException, HttpStatus } from "@nestjs/common";
+import { Injectable, BadRequestException, Req, Res, Body, HttpStatus } from "@nestjs/common";
 import { Request, Response, request } from "express";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
@@ -127,7 +127,6 @@ export class AuthService {
     const userByEmail = await this.findOne(userInfos.email);
     let user;
     if (userByEmail) {
-      // console.log("🌪️ User already exists !", userByEmail.userId);
       await this.prisma.auth.update({
         where: {
           userId: userByEmail.userId,

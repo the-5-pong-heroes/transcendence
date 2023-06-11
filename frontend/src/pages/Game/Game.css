@@ -2,8 +2,8 @@
   position: absolute;
   top: 0;
   left: calc((548vh - 100vw) / 4);
-	height: 100vh;
-	width: 100vw;
+  height: 100vh;
+  width: 100vw;
   z-index: 7;
   display: flex;
   justify-content: center;
@@ -13,6 +13,7 @@
   animation-fill-mode: forwards;
   border: none;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Open Sans", sans-serif;
+  transition: opacity 0.5s ease-out;
 }
 
 @keyframes fadeInAnimation {
@@ -21,6 +22,15 @@
   }
   100% {
     opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
 
@@ -48,7 +58,7 @@
   border-radius: 15px;
   transition: 0.5s ease-out;
   box-shadow: 7px 7px 20px 5px rgba(255, 255, 255, 0.12);
-  background: linear-gradient(45deg, hsla(276, 37%, 20%, 0.99), hsla(261, 46%, 30%, 0.99), hsla(248, 43%, 25%, 0.99)); 
+  background: linear-gradient(45deg, hsla(276, 37%, 20%, 0.99), hsla(261, 46%, 30%, 0.99), hsla(248, 43%, 25%, 0.99));
 }
 
 .game-modal-cross {
@@ -62,7 +72,7 @@
   border-radius: 15px;
   transition: 0.5s ease-out;
   box-shadow: 7px 7px 20px 5px rgba(255, 255, 255, 0.12);
-  background: linear-gradient(45deg, hsla(276, 37%, 20%, 0.99), hsla(261, 46%, 30%, 0.99), hsla(248, 43%, 25%, 0.99)); 
+  background: linear-gradient(45deg, hsla(276, 37%, 20%, 0.99), hsla(261, 46%, 30%, 0.99), hsla(248, 43%, 25%, 0.99));
 }
 
 #light .game-modal {
@@ -95,48 +105,11 @@
   padding-top: 20px;
 }
 
-/* #light .game-button {
-  color: black;
-}
-
-.game-button {
-  height: 45px;
-  width: 180px;
-  font-size: 0.9em;
-  outline: none;
-  cursor: pointer;
-  z-index: 2;
-  border-radius: 100rem;
-  margin: 20px;
-  color: white;
-  background: transparent;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Open Sans", sans-serif;
-  border: 1px solid hsla(0, 0%, 100%, 0.4);
-}
-
-#light .game-button {
-  color: black;
-  border: 1px solid hsla(0, 0%, 0%, 0.4);
-}
-
-.game-button:hover,
-.game-button:focus {
-  border-color: hsla(0, 0%, 100%, 0.6);
-  transform: translateY(-0.1rem);
-} */
-
 @media (max-width: 680px) {
   .game-modal {
     height: 150px;
     width: 480px;
   }
-
-  /* .game-button {
-    font-size: 0.6em;
-    height: 30px;
-    width: 110px;
-    margin: 10px 15px;
-  } */
 }
 
 @media (max-width: 350px), (max-height: 440px) {

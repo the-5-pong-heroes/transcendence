@@ -1,6 +1,7 @@
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { UseInterceptors } from "@nestjs/common";
 import { Socket, Server } from "socket.io";
-import { ChanneluserService } from "../channel-users/channel-users.service";
+import { ChannelUsersService } from "../channel-users/channel-users.service";
 import { PrismaService } from "../database/prisma.service";
 import { UserService } from "../user/user.service";
 import { CreateMessageDto } from "../messages/dto/create-message.dto";
@@ -8,18 +9,20 @@ import { MessagesService } from "../messages/messages.service";
 import { ChannelsService } from "./channels.service";
 import { CreateChannelDto } from "./dto/create-channel.dto";
 import { BlockedService } from "src/blocked/blocked.service";
+import { WebSocketInterceptor } from "src/common/interceptors";
 
 @WebSocketGateway({
   cors: {
     origin: "*",
   },
 })
+@UseInterceptors(WebSocketInterceptor)
 export class ChannelsGateway {
   constructor(
     private prismaService: PrismaService,
     private channelsService: ChannelsService,
     private messagesService: MessagesService,
-    private channeluserService: ChanneluserService,
+    private channeluserService: ChannelUsersService,
     private userService: UserService,
     private blockedService: BlockedService,
   ) {}

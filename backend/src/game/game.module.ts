@@ -5,10 +5,10 @@ import { GameService } from "./game.service";
 import { PrismaModule } from "../database/prisma.module";
 import { AuthModule } from "src/auth/auth.module";
 import { UserModule } from "src/user/user.module";
-import { WsGuard } from "./ws.guard";
+import { WebSocketInterceptor } from "src/common/interceptors";
 
 @Module({
   imports: [PrismaModule, UserModule, AuthModule],
-  providers: [GameGateway, GameService, WsGuard],
+  providers: [GameGateway, GameService, WebSocketInterceptor],
 })
 export class GameModule {}

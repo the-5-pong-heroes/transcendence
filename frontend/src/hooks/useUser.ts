@@ -2,10 +2,10 @@ import { useQuery } from "react-query";
 
 import { USER_QUERY_KEY } from "@/constants";
 import type { UserAuth, User } from "@types";
-import * as fetch from "@/helpers/fetch";
+import { customFetch } from "@/helpers";
 
 async function fetchUser(): Promise<User | null> {
-  const data = await fetch.get<UserAuth>("/auth/user");
+  const data = await customFetch<UserAuth>("get", "/auth/user");
 
   return data.user;
 }

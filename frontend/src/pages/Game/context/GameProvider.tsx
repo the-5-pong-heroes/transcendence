@@ -29,8 +29,6 @@ export const GameProvider: React.FC<ProviderParameters> = ({ children }) => {
   const socket = useSocket();
   const { quitGame, setQuitGame }: GameState = useAppContext().gameState;
 
-  const isMounted = useRef<boolean>(false);
-
   useEffect(() => {
     if (quitGame) {
       overlayRef?.current?.showQuitModal();
@@ -39,12 +37,10 @@ export const GameProvider: React.FC<ProviderParameters> = ({ children }) => {
   }, [quitGame, setQuitGame, socket, playRef]);
 
   useEffect(() => {
-    isMounted.current = true;
     socket.emit(ClientEvents.GameConnect);
 
     return () => {
       // socket.emit(ClientEvents.LobbyLeave);
-      isMounted.current = false;
       socket.emit(ClientEvents.GameDisconnect);
     };
   }, [socket]);

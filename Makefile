@@ -11,8 +11,6 @@ endif
 
 DATABASE_VOLUME		= $(shell basename "$(CURDIR)_postgresql_data")
 
-RM					= rm -rf
-
 SUDO 				= @sudo
 
 all: run
@@ -52,9 +50,9 @@ re: fclean all
 RESET		= \033[0m
 RED			= \033[1;31m
 GREEN		= \033[1;32m
-YELLOW		= \033[1;33m
+YELLOW	= \033[1;33m
 BLUE		= \033[1;34m
 WHITE		= \033[1;37m
-ORANGE		= \033[0;38;5;208m
+ORANGE	= \033[0;38;5;208m
 UP			= \033[A
 CUT			= \033[K

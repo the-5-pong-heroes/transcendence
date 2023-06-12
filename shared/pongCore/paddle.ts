@@ -89,7 +89,6 @@ export class Paddle<Side extends PaddleSide> {
   }
 
   public set(other: PaddleState): void {
-    // console.log("🏓", this.side, this.posY, other.pos.y, this.velocity, other.velocity);
     this.lastMove = other.lastMove;
     this.posX = other.pos.x;
     // this.posY = other.pos.y;

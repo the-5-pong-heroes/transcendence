@@ -48,6 +48,7 @@
 }
 
 .game-modal {
+  position: absolute;
   z-index: 2;
   height: 160px;
   width: 500px;
@@ -62,7 +63,7 @@
 }
 
 .game-modal-cross {
-  position: relative;
+  position: absolute;
   z-index: 2;
   height: 160px;
   width: 500px;

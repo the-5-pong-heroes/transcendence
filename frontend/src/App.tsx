@@ -3,7 +3,7 @@ import { Route, Routes, Navigate, useParams } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { AppLayout, NotFoundLayout } from "./components";
+import { AppLayout, NotFoundLayout, LoadingPage } from "./components";
 import { Login, Signup, Home, Profile, Game, Settings, Leaderboard, Chat, NotFound } from "./pages";
 import type { AppContextParameters, PageRefs } from "./@types";
 import { useAppContext, useUserQuery } from "./hooks";
@@ -17,12 +17,8 @@ const App: React.FC = () => {
   const { uuid } = useParams();
 
   if (isLoading) {
-    // Show loading state while user data is being fetched
-    return (
-      <div className="loading-app">
-        <div>Loading...</div>
-      </div>
-    );
+    // Show loading page while user data is being fetched
+    return <LoadingPage />;
   }
 
   return (

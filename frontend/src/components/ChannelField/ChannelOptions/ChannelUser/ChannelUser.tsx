@@ -7,7 +7,7 @@ import { type IChannelUser } from "../../../../interfaces";
 import styles from "./ChannelUser.module.scss";
 
 import { useUser, useSocket, useTheme } from "@hooks";
-import { InviteButton } from "@/components";
+import { InviteButton } from "@/components/InviteButton";
 
 interface IChannelUserProps {
   users: [IChannelUser];

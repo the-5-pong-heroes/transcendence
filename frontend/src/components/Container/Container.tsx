@@ -16,7 +16,7 @@ import {
   Cloud2,
   MoonDayLight,
 } from "@assets";
-import type { AppContextParameters } from "@types";
+import type { AppContextParameters, GameState } from "@types";
 import { useAppContext } from "@hooks";
 
 interface ContainerProps {
@@ -24,7 +24,8 @@ interface ContainerProps {
 }
 
 export const Container: React.FC<ContainerProps> = ({ children }) => {
-  const { theme, isNavigatingRef }: AppContextParameters = useAppContext();
+  const { theme, isNavigatingRef, gameState }: AppContextParameters = useAppContext();
+  const { isRunning, setQuitGame, newRoute }: GameState = gameState;
 
   const [x, setX] = useState<number>(0);
   const [sectionSize, setSectionSize] = useState<number>(0);
@@ -40,18 +41,28 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
       navigateToSection();
     }
   };
+
   const navigateToSection = (): void => {
-    if (x >= sectionSize * 4 && location.pathname !== "/Profile") {
-      navigate("/Profile");
-    } else if (x >= sectionSize * 3 && x < sectionSize * 4 && location.pathname !== "/Chat") {
-      navigate("/Chat");
-    } else if (x >= sectionSize * 2 && x < sectionSize * 3 && location.pathname !== "/Leaderboard") {
-      navigate("/Leaderboard");
-    } else if (x >= sectionSize && x < sectionSize * 2 && location.pathname !== "/Game") {
-      navigate("/Game");
-      // setTimeout(() => navigate("/Game"), 1000);
-    } else if (x < sectionSize && location.pathname !== "/") {
-      navigate("/");
+    const sections = [
+      { path: "/Profile", threshold: sectionSize * 4 },
+      { path: "/Chat", threshold: sectionSize * 3 },
+      { path: "/Leaderboard", threshold: sectionSize * 2 },
+      { path: "/Game", threshold: sectionSize },
+      { path: "/", threshold: 0 },
+    ];
+
+    const currentPath = location.pathname;
+    const currentThreshold = sections.find((section) => x >= section.threshold)?.threshold;
+
+    const section = sections.find((section) => section.threshold === currentThreshold);
+
+    if (section && currentPath !== section.path) {
+      if (isRunning.current) {
+        setQuitGame(true);
+        newRoute.current = section.path;
+      } else {
+        navigate(section.path);
+      }
     }
   };
 
@@ -92,9 +103,7 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
           <img src={Trash2} />
         </Parallax>
         <Parallax className="layer trash" speed={60}>
-          <div className="parallax-wrapper">
-            <img src={Trash3} className="parallax-img" />
-          </div>
+          <img src={Trash3} className="parallax-img" />
         </Parallax>
         <div className="container-section">{children}</div>
       </div>

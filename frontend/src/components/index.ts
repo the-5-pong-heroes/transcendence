@@ -6,3 +6,4 @@ export { Container } from "./Container";
 export { ChannelList } from "./ChannelList";
 export { ChannelField } from "./ChannelField";
 export { InviteButton } from "./InviteButton";
+export { LoadingPage } from "./LoadingPage";

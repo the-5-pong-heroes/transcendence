@@ -23,9 +23,6 @@ export class WebSocketInterceptor implements NestInterceptor {
       client.disconnect();
       throw new UnauthorizedException("Not authenticated");
     }
-    client.data.userName = client.handshake.auth.name;
-    client.data.userId = client.handshake.auth.id;
-    client.data.readyToPlay = false;
 
     // Call next.handle() to continue the execution
     return next.handle();

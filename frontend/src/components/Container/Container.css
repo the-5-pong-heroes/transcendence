@@ -80,12 +80,6 @@ body.open .container {
   display: none;
 }
 
-.parallax-wrapper {
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
-}
-
 .parallax-img {
   overflow: hidden;
 }

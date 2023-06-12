@@ -1,13 +1,10 @@
-import { Injectable, UseGuards } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { Server, Socket } from "socket.io";
 import { LobbyMode, GameMode, AuthenticatedSocket, ServerEvents, LobbyState, PaddleMove } from "./@types";
 import { GameLobby } from "./game.lobby";
 import { PrismaService } from "../database/prisma.service";
 import { UserService } from "src/user/user.service";
 import { AuthService } from "src/auth/auth.service";
-import { parse } from "cookie";
-
-const LOBBY_MAX_LIFETIME = 1000 * 60 * 60;
 
 @Injectable()
 export class GameService {
@@ -41,6 +38,12 @@ export class GameService {
   }
 
   public async setupClient(client: AuthenticatedSocket): Promise<void> {
+    if (!client.handshake.auth) {
+      client.disconnect();
+    }
+    client.data.userName = client.handshake.auth.name;
+    client.data.userId = client.handshake.auth.id;
+    client.data.readyToPlay = false;
     for (const [, socket] of this.connectedSockets) {
       if (socket.data.userId === client.handshake.auth.id) {
         client.emit(ServerEvents.Connect);
@@ -79,7 +82,7 @@ export class GameService {
     }
     lobby = this.createLobby(lobbyMode, gameMode, client);
     lobby.dispatchLobbyState();
-    // this.broadcastLobbies();
+    this.broadcastLobbies();
   }
 
   public joinLobbyById(lobbyId: string, client: AuthenticatedSocket): void {
@@ -101,7 +104,6 @@ export class GameService {
         return lobby;
       }
     }
-
     return null;
   }
 
@@ -111,7 +113,7 @@ export class GameService {
     await this.delay(1000);
     lobby.startGame();
     lobby.dispatchLobbyState();
-    // this.broadcastLobbies();
+    this.broadcastLobbies();
   }
 
   /************     VIEW GAME    ************/
@@ -223,7 +225,7 @@ export class GameService {
 
   public removeLobby(lobbyId: string): void {
     this.lobbies.delete(lobbyId);
-    // this.broadcastLobbies();
+    this.broadcastLobbies();
   }
 
   public async removeSocket(client: AuthenticatedSocket): Promise<void> {
@@ -265,7 +267,7 @@ export class GameService {
   private broadcastLobbies(): void {
     const listOfLobbies: LobbyState[] = this.getListOfLobbies();
     this.server.emit(ServerEvents.GameList, listOfLobbies);
-    this.displayLobbies();
+    // this.displayLobbies();
   }
 
   private displayLobbies(): void {

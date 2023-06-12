@@ -42,10 +42,30 @@
 }
 
 .loading-app {
+  --bg-size: 400%;
+  --color-one: #4b4b95;
+  --color-two: #e71e24;
+  --color-three: darkblue;
+  font-size: clamp(3rem, 20vmin, 6rem);
+  background: linear-gradient(90deg,
+      var(--color-one),
+      var(--color-two),
+      var(--color-three)) 0 0 / var(--bg-size) 100%;
+  color: transparent;
+  -webkit-background-clip: text;
+  animation: move-bg 2.5s infinite linear;
+  background-clip: text;
   height: 100vh;
   width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+
+
+@keyframes move-bg {
+  to {
+    background-position: var(--bg-size) 0;
+  }
 }

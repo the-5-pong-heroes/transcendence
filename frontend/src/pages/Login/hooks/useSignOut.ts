@@ -31,9 +31,9 @@ export function useSignOut(): IUseSignOut {
     },
     onError: (error) => {
       if (error instanceof ResponseError) {
-        toast.error(`Ops.. ${error.message}. Try again!`);
+        toast.error(`Oops.. ${error.message}. Try again!`);
       } else {
-        toast.error(`Ops.. Error on sign out. Try again!`);
+        toast.error(`Oops.. Error on sign out. Try again!`);
       }
     },
   });

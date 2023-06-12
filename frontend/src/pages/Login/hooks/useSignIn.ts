@@ -47,9 +47,9 @@ export function useSignIn(): IUseSignIn {
       },
       onError: (error) => {
         if (error instanceof ResponseError) {
-          toast.error(`Ops.. ${error.message}. Try again!`);
+          toast.error(`Oops.. ${error.message}. Try again!`);
         } else {
-          toast.error(`Ops.. Error on sign in. Try again!`);
+          toast.error(`Oops.. Error on sign in. Try again!`);
         }
       },
     }

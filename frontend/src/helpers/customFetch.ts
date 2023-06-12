@@ -1,7 +1,7 @@
 import { BASE_URL } from "@/constants";
 
 /**
- * A Fetch Wrapper to Simplify HTTP Requests.
+ * A Fetch Wrapper to simplify HTTP Requests.
  *
  * See also https://www.newline.co/@bespoyasov/how-to-use-fetch-with-typescript--a81ac257
  *
@@ -9,14 +9,14 @@ import { BASE_URL } from "@/constants";
  * @param path - The path to the resource, for instance `/leaderboard`
  * @param body - The body of the request, for instance `{ username: "John Doe" }`
  * @param config - The RequestInit object to consider in the request
- * @returns the body text of the response parsed as as JSON
+ * @returns the fetch Response (and not the body text of the response parsed as as JSON)
  */
-export async function customFetch<TResponse>(
+export async function customFetch(
   method: string,
   path: string,
   body: object | null = null,
   config: RequestInit = { headers: {} }
-): Promise<TResponse> {
+): Promise<Response> {
   method = method.toUpperCase() || "GET"; // GET request by default
   // checks that the HTTP method is valid
   const valid_methods = ["POST", "GET", "PUT", "PATCH", "DELETE"];
@@ -24,7 +24,7 @@ export async function customFetch<TResponse>(
     throw new Error(`Invalid method: ${method}`);
   }
   // updates the RequestInit headers when necessary
-  if (method in ["POST", "PUT"]) {
+  if (["POST", "PUT"].includes(method)) {
     const ct = { "Content-Type": "application/json; charset=utf-8" };
     config.headers = { ...ct, ...config.headers };
   }
@@ -38,8 +38,8 @@ export async function customFetch<TResponse>(
     redirect: "follow", // follow, error, manual
     ...config,
   };
-  const request: Request = new Request(`${BASE_URL}${path}`, options);
+  const request: Request = new Request(`${BASE_URL}/${path}`, options);
   const response: Response = await fetch(request);
 
-  return (await response.json()) as TResponse;
+  return response;
 }

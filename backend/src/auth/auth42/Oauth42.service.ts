@@ -1,6 +1,7 @@
-import { HttpException, HttpStatus, Injectable, Req, Res } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
 import fetch from "node-fetch";
+import { API_42_ID, API_42_SECRET, API_42_URI } from "../../common/constants";
 
 @Injectable()
 export class Oauth42Service {
@@ -11,7 +12,7 @@ export class Oauth42Service {
       const response = await fetch("https://api.intra.42.fr/oauth/token", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `grant_type=authorization_code&client_id=${process.env.VITE_API42_ID}&client_secret=${process.env.VITE_API42_SECRET}&code=${req}&redirect_uri=${process.env.VITE_API42_URI}`,
+        body: `grant_type=authorization_code&client_id=${API_42_ID}&client_secret=${API_42_SECRET}&code=${req}&redirect_uri=${API_42_URI}`,
       });
       const data = await response.json();
       if (!data) {

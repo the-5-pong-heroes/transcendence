@@ -10,6 +10,7 @@ import { DefaultAvatar, Leave } from "@/assets";
 import { LoadingIcon } from "@/components/loading/loading";
 import { customFetch } from "@/helpers";
 import { useUser } from "@hooks";
+import { BASE_URL } from "@/constants";
 
 interface SettingsProps {
   settingsRef: React.RefObject<HTMLDivElement>;
@@ -112,12 +113,10 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
 
   async function toggle2FA(isToggled: boolean) {
     console.log("2FA: ", isToggled);
-    if (isToggled === false)
-    {
-      const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/disable";
+    if (!isToggled) {
+      const url = `${BASE_URL}` + "/auth/2FA/disable";
       window.open(url, "_self");
-    }
-    else{
+    } else {
       try {
         const data = await handle2FAfunction();
       } catch (error) {
@@ -127,7 +126,7 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
   }
 
   async function handle2FAfunction(): Promise<any> {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/generate", {
+    const response = await fetch(`${BASE_URL}` + "/auth/2FA/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code: twoFACode, twoFAactivated: isActivated }),
@@ -230,7 +229,7 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
           <button className="walle-button" onClick={submitVerificationCode}>
             Valider
           </button>
-       </div>
+        </div>
       </div>
       <div className="settings-block block2">
         <Unfollow friends={settings.friends} handleUnfollow={handleUnfollow} />

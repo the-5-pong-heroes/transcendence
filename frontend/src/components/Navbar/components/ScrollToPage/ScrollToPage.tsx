@@ -14,9 +14,11 @@ export const ScrollToPage: React.FC = () => {
     "/Leaderboard": boardRef,
     "/Chat": chatRef,
     "/Profile": myProfileRef,
-    // "/Profile": profileRef,
   };
-  const ref = refs[pathname] ?? notFoundRef;
+  let ref = refs[pathname] ?? notFoundRef;
+  if (pathname.startsWith("/profile") || pathname.startsWith("/Profile")) {
+    ref = myProfileRef;
+  }
 
   useEffect(() => {
     ref.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });

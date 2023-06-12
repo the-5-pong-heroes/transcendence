@@ -16,7 +16,6 @@ export const handleOnClickButton = ({ event, path, menuRef, gameState, isNavigat
     setQuitGame(true);
     newRoute.current = path;
   } else {
-    console.log("👗");
     menuRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
   setTimeout(() => (isNavigatingRef.current = false), 3000);

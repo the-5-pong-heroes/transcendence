@@ -1,10 +1,12 @@
-import { Link } from "react-router-dom";
+import React from "react";
 
 import { DefaultAvatar } from "../../assets";
 
 import { type UserStats } from "./Leaderboard";
 import { UserLevel } from "./UserLevel";
 import { UserStatus } from "./UserStatus";
+
+import { CustomLink } from "@/components";
 
 const UserData = ({ users }: { users: UserStats[] }) => {
   return (
@@ -18,9 +20,12 @@ const UserData = ({ users }: { users: UserStats[] }) => {
               <img src={DefaultAvatar} alt="profilePicture" />
             </div>
             <div className="col">
-              <Link to={`/profile/${id}`} className="link-prof">
+              <CustomLink to={`/Profile/${id}`} className="link-prof">
                 {name}
-              </Link>
+              </CustomLink>
+              {/* <Link to={`/Profile/${id}`} onClick={onClick} className="link-prof">
+                {name}
+              </Link> */}
             </div>
             <div className="col">{score}</div>
             <div className="col">{wins}</div>

@@ -15,8 +15,7 @@ import { WebSocketInterceptor } from "src/common/interceptors";
   cors: {
     origin: "*",
   },
-})
-@UseInterceptors(WebSocketInterceptor)
+}) // @UseInterceptors(WebSocketInterceptor)
 export class ChannelsGateway {
   constructor(
     private prismaService: PrismaService,

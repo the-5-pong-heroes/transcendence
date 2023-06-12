@@ -5,6 +5,7 @@ import { ChannelContext } from "./ChannelContext";
 // import { socket } from "@/socket";
 import { useSocket } from "@hooks";
 import { type IChannel } from "@/interfaces";
+import { customFetch } from "@/helpers";
 
 interface ProviderParameters {
   children: React.ReactNode;
@@ -16,11 +17,7 @@ export const ChannelProvider: React.FC<ProviderParameters> = ({ children }) => {
   const socket = useSocket();
 
   const fetchData = async (changeChannel = true) => {
-    // const	token = localStorage.getItem('access_token');
-    // if (!token) return;
-    // const	config = { headers: { 'Authorization': token }};
-    const config = { credentials: "include" as RequestCredentials };
-    const response = await fetch("http://localhost:3333/chat", config);
+    const response = await customFetch("GET", "chat");
     if (!response.ok) {
       return;
     }

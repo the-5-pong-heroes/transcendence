@@ -7,7 +7,7 @@ import { UserContext, UserContextType } from "@/contexts";
 import { type IMessage } from "@/interfaces";
 // import { socket } from "@/socket";
 import { useUser, useSocket } from "@hooks";
-import { ResponseError } from "@/helpers";
+import { ResponseError, customFetch } from "@/helpers";
 
 interface IOtherMessageProps {
   message: IMessage;
@@ -35,33 +35,14 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
     // const token = localStorage.getItem('access_token');
     // if (!token) return;
     if (!userIsFriend) {
-      const config = {
-        method: "POST",
-        mode: "cors" as RequestMode,
-        credentials: "include" as RequestCredentials,
-        headers: {
-          // "Authorization": token,
-          "Content-Type": "application/json;charset=utf-8",
-        },
-        body: JSON.stringify({ newFriendId: message.senderId }),
-      };
-      const response = await fetch("http://localhost:3333/friendship", config);
+      const response = await customFetch("POST", "friendship", { newFriendId: message.senderId });
+
       if (!response.ok) {
         throw new ResponseError("Failed on fetch channels request", response);
       }
       // if (!response.ok) return console.log("Error friendship");
     } else {
-      const config = {
-        method: "DELETE",
-        mode: "cors" as RequestMode,
-        credentials: "include" as RequestCredentials,
-        headers: {
-          // "Authorization": token,
-          "Content-Type": "application/json;charset=utf-8",
-        },
-        body: JSON.stringify({ friendId: message.senderId }),
-      };
-      const response = await fetch("http://localhost:3333/friendship", config);
+      const response = await customFetch("DELETE", "friendship", { friendId: message.senderId });
       if (!response.ok) {
         throw new ResponseError("Failed on fetch channels request", response);
       }

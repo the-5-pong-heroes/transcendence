@@ -1,7 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
 import fetch from "node-fetch";
 import { API_42_ID, API_42_SECRET, API_42_URI } from "../../common/constants";
+import { API_42_NEW_TOKEN, API_42_USER } from "src/common/constants/auth";
 
 @Injectable()
 export class Oauth42Service {
@@ -9,35 +10,23 @@ export class Oauth42Service {
 
   async accessToken(req: string) {
     try {
-      const response = await fetch("https://api.intra.42.fr/oauth/token", {
+      const response = await fetch(API_42_NEW_TOKEN, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: `grant_type=authorization_code&client_id=${API_42_ID}&client_secret=${API_42_SECRET}&code=${req}&redirect_uri=${API_42_URI}`,
       });
       const data = await response.json();
       if (!data) {
-        throw new HttpException(
-          {
-            status: HttpStatus.BAD_REQUEST,
-            error: "the user token is empty",
-          },
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException("the user token is empty");
       }
       return data;
     } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: "Error to get the user by token3",
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException("Error to get the user by token3");
     }
   }
   async access42UserInformation(accessToken: string) {
     try {
-      const response = await fetch("https://api.intra.42.fr/v2/me", {
+      const response = await fetch(API_42_USER, {
         method: "GET",
         headers: { Authorization: `Bearer ${accessToken}` },
       });
@@ -69,13 +58,7 @@ export class Oauth42Service {
       });
       return user;
     } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: "Error to create the user to the database",
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException("Error to create the user to the database");
     }
   }
 }

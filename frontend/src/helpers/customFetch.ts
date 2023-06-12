@@ -33,7 +33,7 @@ export async function customFetch(
     method: method,
     cache: "no-cache", // default, no-store, reload, no-cache, force-cache, only-if-cached
     body: body ? JSON.stringify(body) : null,
-    credentials: "same-origin", // omit, same-origin, include
+    credentials: "include", // omit, same-origin, include
     mode: "cors", // cors, no-cors, same-origin, navigate, websocket
     redirect: "follow", // follow, error, manual
     ...config,

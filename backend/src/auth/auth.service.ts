@@ -245,7 +245,7 @@ export class AuthService {
     }
   }
 
-  async handleDataBaseCreation(@Req() req: Request, @Res() res: Response, @Body() userDto: UserDto) {
+  async handleDataBaseCreation(@Req() req: Request, @Res() res: Response, @Body() userData: UserDto) {
     const token: string = req.cookies.access_token;
     const user42infos = await this.Oauth42.access42UserInformation(token);
     if (user42infos) {

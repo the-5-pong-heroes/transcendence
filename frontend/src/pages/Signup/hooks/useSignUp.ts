@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import { ResponseError, customFetch } from "@/helpers";
 import { USER_QUERY_KEY } from "@/constants";
 import type { UserAuth, User } from "@types";
-// import * as fetch from "@/helpers/customFetch";
 
 type SignUpBody = {
   name: string;
@@ -19,10 +18,10 @@ async function signUp(name: string, email: string, password: string): Promise<Us
     email: email,
     password: password,
   };
-  const data = await customFetch<UserAuth>("POST", "/auth/signup", signUpBody);
-  // const data = await customFetch<UserAuth, SignUpBody>("post", "/auth/signup", signUpBody);
+  const response = await customFetch("POST", "auth/signup", signUpBody);
+  const payload = (await response.json()) as UserAuth;
 
-  return data.user;
+  return payload.user;
 }
 
 type IUseSignUp = UseMutateFunction<
@@ -49,9 +48,9 @@ export function useSignUp(): IUseSignUp {
       },
       onError: (error) => {
         if (error instanceof ResponseError) {
-          toast.error(`Ops.. ${error.message}. Try again!`);
+          toast.error(`Oops.. ${error.message}. Try again!`);
         } else {
-          toast.error(`Ops.. Error on sign up. Try again!`);
+          toast.error(`Oops.. Error on sign up. Try again!`);
         }
       },
     }

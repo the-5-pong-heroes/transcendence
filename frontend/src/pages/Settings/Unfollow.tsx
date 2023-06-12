@@ -21,11 +21,11 @@ export const Unfollow: React.FC<UnfollowProps> = ({ friends, handleUnfollow }) =
   function removeFriend(uuid: string): void {
     if (window.confirm("Are you sure you want to remove this friend?")) {
       handleUnfollow(uuid);
-      customFetch<void>("DELETE", "/friendship", { friendId: uuid });
 
-      // .catch(() => {
-      //   console.error("Failed to remove this friend!");
-      // });
+      return void customFetch("DELETE", "friendship", { friendId: uuid });
+      // (async () => {
+      //   await customFetch("DELETE", "friendship", { friendId: uuid });
+      // })();
     }
   }
 
@@ -38,11 +38,10 @@ export const Unfollow: React.FC<UnfollowProps> = ({ friends, handleUnfollow }) =
               <span>{friend.name}</span>
             </Link>
             <span
-              data-friend={friend.id}
               className="cross"
-              // onClick={async () => {
-              //   await removeFriend(friend.id);
-              onClick={() => removeFriend(friend.id)}>
+              onClick={() => {
+                removeFriend(friend.id);
+              }}>
               ✗
             </span>
           </div>

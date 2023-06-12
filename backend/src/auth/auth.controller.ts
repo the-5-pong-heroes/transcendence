@@ -39,8 +39,8 @@ export class AuthController {
   }
 
   @Post("Oauth")
-  async userOauthCreationInDataBase(@Req() req: Request, @Res() res: Response, @Body() UserDto: UserDto) {
-    await this.authService.handleDataBaseCreation(req, res, UserDto);
+  async userOauthCreationInDataBase(@Req() req: Request, @Res() res: Response, @Body() userData: UserDto) {
+    await this.authService.handleDataBaseCreation(req, res, userData);
   }
 
   @Get("auth42/callback")
@@ -66,7 +66,6 @@ export class AuthController {
 
   @Post("signup")
   async signUp(@Res({ passthrough: true }) res: Response, @Body() data: CreateUserDto): Promise<void> {
-    console.log("👙");
     await this.authService.signUp(res, data);
   }
 

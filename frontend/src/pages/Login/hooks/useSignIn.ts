@@ -17,11 +17,11 @@ async function signIn(email: string, password: string): Promise<User> {
     email: email,
     password: password,
   };
-  // const data = await fetch.post<SignInBody, UserAuth>("/auth/signin", signInBody);
-  const data = await customFetch<UserAuth>("POST", "/auth/signin", signInBody);
-  // const data = await customFetch<UserAuth, SignInBody>("post", "/auth/signin", signInBody);
 
-  return data.user;
+  const response = await customFetch("POST", "auth/signin", signInBody);
+  const payload = (await response.json()) as UserAuth;
+
+  return payload.user;
 }
 
 type IUseSignIn = UseMutateFunction<

@@ -42,6 +42,8 @@ export class Generate2FAService {
           auth: {
             update: {
               twoFAactivated: true,
+              otp_enabled: true,
+              otp_validated: false,
             },
           },
         },
@@ -90,6 +92,7 @@ export class Generate2FAService {
   }
 
   async sendEmailToUser(email: string, user42: any, code2FA: string) {
+    console.log("email", email);
     let htmlWithCode = myHTML.replace("{{code2FA}}", code2FA);
     htmlWithCode = htmlWithCode.replace("{{userName}}", user42.name);
 

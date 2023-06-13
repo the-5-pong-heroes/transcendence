@@ -156,6 +156,11 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
     }
   }
 
+  function updateVerify2FA() {
+    const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/verify";
+    window.open(url, "_self");
+  }
+
   function submitVerificationCode() {
     const verificationCodeInput = document.getElementById("verificationCode") as HTMLInputElement;
     if (verificationCodeInput) {
@@ -167,6 +172,7 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
         console.log("verif = ", verificationCode);
         if (verificationCode === twoFACode) {
           alert("Code de vérification correct !");
+          updateVerify2FA();
           closePopup();
         } else {
           alert("Code de vérification incorrect. Veuillez réessayer.");

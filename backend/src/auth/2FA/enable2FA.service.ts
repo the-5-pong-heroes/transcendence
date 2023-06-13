@@ -25,6 +25,8 @@ export class EnableService {
           auth: {
             update: {
               twoFAactivated: false,
+              otp_enabled: false,
+              otp_validated: false,
             },
           },
         },

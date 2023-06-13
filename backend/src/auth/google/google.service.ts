@@ -41,7 +41,7 @@ export class GoogleService {
   }
 
   async getUserFromGoogleByCookies(@Req() req: Request) {
-    const token: string = req.cookies.FullToken;
+    const token: string = req.signedCookies.FullToken;
     const data = await this.getUserFromGoogle(token);
     return data;
   }

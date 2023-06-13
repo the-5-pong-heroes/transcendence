@@ -7,6 +7,7 @@ import { Navbar } from "./Navbar";
 import { ThemeButton } from "./ThemeButton";
 import { Container } from "./Container";
 import { InvitationModal } from "./Invitation";
+import { ShootingStar } from "./ShootingStar";
 
 import { type User } from "@types";
 
@@ -23,6 +24,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ user }) => {
       <div className="App-container">
         <Container>
           <Outlet />
+          <ShootingStar />
         </Container>
       </div>
     </SocketProvider>

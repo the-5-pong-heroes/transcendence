@@ -66,7 +66,6 @@ export class AuthController {
 
   @Post("signup")
   async signUp(@Res({ passthrough: true }) res: Response, @Body() data: CreateUserDto): Promise<void> {
-    console.log("👙");
     await this.authService.signUp(res, data);
   }
 
@@ -95,6 +94,7 @@ export class AuthController {
   @Get("google/callback")
   @UseGuards(GoogleOauthGuard)
   async googleAuthCallback(@Req() req: any, @Res() res: Response) {
+    console.log("✨", req.user);
     await this.authService.signInGoogle(res, req.user);
   }
 

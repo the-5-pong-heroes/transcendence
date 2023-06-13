@@ -3,6 +3,8 @@ import { Socket } from "socket.io";
 import { Observable } from "rxjs";
 import { parse } from "cookie";
 import { AuthService } from "src/auth/auth.service";
+import * as cookieParser from "cookie-parser";
+import { COOKIES_SECRET } from "src/common/constants";
 
 @Injectable()
 export class WebSocketInterceptor implements NestInterceptor {
@@ -11,14 +13,21 @@ export class WebSocketInterceptor implements NestInterceptor {
   async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
     const wsContext = context.switchToWs();
     const client: Socket = wsContext.getClient();
-    const cookieHeader = client.handshake.headers.cookie;
-    if (!cookieHeader || !client.handshake.auth) {
+    const handshakeCookie = client.handshake.headers.cookie;
+    if (!handshakeCookie || !client.handshake.auth) {
       client.disconnect();
       throw new UnauthorizedException("Not authenticated");
     }
-    const cookies = parse(cookieHeader);
-    const access_token = cookies.access_token;
-    const user = await this.authService.validateUser(access_token);
+    const signedCookies = parse(handshakeCookie).access_token;
+    let token = null;
+    if (COOKIES_SECRET !== undefined) {
+      token = cookieParser.signedCookie(signedCookies, COOKIES_SECRET);
+    }
+    if (!token) {
+      client.disconnect();
+      throw new UnauthorizedException("Not authenticated");
+    }
+    const user = await this.authService.validateUser(token);
     if (!user) {
       client.disconnect();
       throw new UnauthorizedException("Not authenticated");

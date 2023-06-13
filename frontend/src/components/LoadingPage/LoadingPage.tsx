@@ -5,6 +5,7 @@ import "./LoadingPage.css";
 export const LoadingPage: React.FC = () => {
   return (
     <div className="loading-page">
+      <div className="loading-wheel"></div>
       <div>
         Loading
         <span className="jumping-dots">
@@ -13,7 +14,6 @@ export const LoadingPage: React.FC = () => {
           <span className="dot-3">.</span>
         </span>
       </div>
-      <div className="loading-wheel"></div>
     </div>
   );
 };

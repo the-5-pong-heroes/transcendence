@@ -44,7 +44,7 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
 
   const navigateToSection = (): void => {
     const sections = [
-      { path: "/Profile", threshold: sectionSize * 4 },
+      { path: "/Profile", threshold: sectionSize * 4 }, // TODO Check for Settings and profile/uuid too
       { path: "/Chat", threshold: sectionSize * 3 },
       { path: "/Leaderboard", threshold: sectionSize * 2 },
       { path: "/Game", threshold: sectionSize },

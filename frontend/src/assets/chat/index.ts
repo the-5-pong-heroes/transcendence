@@ -6,3 +6,4 @@ export { default as Private } from "./private.png";
 export { default as View } from "./view.png";
 export { default as Hide } from "./hide.png";
 export { default as Rocket } from "./rocket.png";
+export { default as Game } from "./game.png";

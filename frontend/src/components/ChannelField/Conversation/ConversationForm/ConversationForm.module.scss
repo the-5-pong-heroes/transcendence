@@ -3,7 +3,7 @@
   flex-flow: row nowrap;
   padding: 15px 20px;
   justify-content: space-between;
-  gap: 20px;
+  gap: 15px;
 
   .ContentEditable {
     background-color: rgba(255, 255, 255, .2);
@@ -20,22 +20,48 @@
     overflow-y: auto;
   }
 
-  .Submit {
-    width: 30px;
-    height: 30px;
-    align-self: flex-end;
-    cursor: pointer;
-    border: none;
-    background-color: transparent;
-    background-size: contain;
-    background-repeat: no-repeat;
+  .Buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
 
-    &:disabled {
-      cursor: auto;
+    .Submit {
+      width: 30px;
+      height: 30px;
+      align-self: flex-end;
+      cursor: pointer;
+      border: none;
+      background-color: transparent;
+      background-size: contain;
+      background-repeat: no-repeat;
+
+      &:disabled {
+        cursor: auto;
+      }
+    }
+
+    .Invite {
+      width: 30px;
+      height: 30px;
+      align-self: flex-end;
+      cursor: pointer;
+      border: none;
+      background-color: transparent;
+      background-size: contain;
+      background-repeat: no-repeat;
+
+      &:disabled {
+        cursor: auto;
+      }
     }
   }
 
   .SubmitDark {
+    filter: invert(1);
+  }
+
+  .InviteDark {
+    width: 120%;
     filter: invert(1);
   }
 }

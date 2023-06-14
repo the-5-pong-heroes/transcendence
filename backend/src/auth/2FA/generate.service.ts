@@ -24,8 +24,8 @@ export class Generate2FAService {
         auth: true,
       },
     });
-    await this.updateUser(user);
-    const code = await this.sendActivationMail(user);
+    //this.updateUser(user);
+    const code = user?.auth?.twoFASecret;
     const twoFAactivated = true;
     return res.json({
       code,
@@ -69,6 +69,7 @@ export class Generate2FAService {
       const code2FA = this.generateRandomCode(6);
       this.sendEmailToUser(email, user42, code2FA);
       await this.storeCodeToDataBase(code2FA, user42);
+      this.updateUser(user42);
       return code2FA;
     } catch (error) {
       throw new HttpException(
@@ -92,7 +93,6 @@ export class Generate2FAService {
   }
 
   async sendEmailToUser(email: string, user42: any, code2FA: string) {
-    console.log("email", email);
     let htmlWithCode = myHTML.replace("{{code2FA}}", code2FA);
     htmlWithCode = htmlWithCode.replace("{{userName}}", user42.name);
 
@@ -107,15 +107,24 @@ export class Generate2FAService {
 
   async storeCodeToDataBase(code2FA: string, user42: any) {
     try {
-      const saltOrRounds = 10;
-      const password = code2FA;
-      const hash = await bcrypt.hash(password, saltOrRounds);
-      await this.prisma.auth.update({
-        where: { userId: user42.id }, // to change by the id/name of the request
+      //const saltOrRounds = 10;
+      //const password = code2FA;
+      //const hash = await bcrypt.hash(password, saltOrRounds);
+      const userid = user42.id;
+      const updatedUser = await this.prisma.user.update({
+        where: { id: userid },
         data: {
-          twoFASecret: hash,
+          auth: {
+            update: {
+              twoFASecret: code2FA,
+            },
+          },
+        },
+        include: {
+          auth: true,
         },
       });
+      return updatedUser;
     } catch (error) {
       throw new HttpException(
         {

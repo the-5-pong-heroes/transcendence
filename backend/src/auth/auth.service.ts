@@ -220,6 +220,7 @@ export class AuthService {
       return res.status(404).json({ message: "Invalid token" });
     }
     if (user.auth?.twoFAactivated && !user.auth.otp_verified) {
+      console.log("🌪️ twofa =", user.auth.twoFAactivated, "otp_verified =", user.auth.otp_verified);
       return res.status(200).json({ message: "User not connected", user: null });
     }
     res.status(200).json({ message: "Successfully fetched user", user: user });

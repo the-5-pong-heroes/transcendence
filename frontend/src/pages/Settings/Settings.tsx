@@ -118,11 +118,8 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
       window.open(url, "_self");
     }
     else{
-      try {
-        const data = await handle2FAfunction();
-      } catch (error) {
-        console.error(error);
-      }
+      const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/generate";
+      window.open(url, "_self");
     }
   }
 

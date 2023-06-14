@@ -34,6 +34,7 @@ export class VerifyService {
       });
     }
     return user;
+    //res.redirect(301, `http://localhost:5173/`);
   }
 
   async updateVerify2FA(user: User) {

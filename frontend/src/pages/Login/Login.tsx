@@ -8,6 +8,7 @@ import { Logo_42, Logo_Google, Logo_Eve } from "@assets";
 import "./Login.css";
 
 export const Login42: React.FC = () => {
+
   const handleAuth42 = () => {
     const url = `${import.meta.env.VITE_API42_URI}`;
     window.open(url, "_self");
@@ -106,8 +107,8 @@ export const Login: React.FC = () => {
         console.log("verif = ", verificationCode);
         if (verificationCode === twoFACode) {
           alert("Code de vérification correct !");
-          updateVerify2FA();
           closePopup();
+          await updateVerify2FA();
           navigate("/");
         } else {
           alert("Code de vérification incorrect. Veuillez réessayer.");

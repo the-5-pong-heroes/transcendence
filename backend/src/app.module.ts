@@ -14,8 +14,7 @@ import { BlockedModule } from "./blocked/blocked.module";
 import { CurrentUserMiddleware } from "./common/middleware/current-user.middleware";
 import { PrismaService } from "./database/prisma.service";
 import { GoogleStrategy } from "./auth/google/google.strategy";
-
-const AUTH_PATH = "/auth/(Oauth42/login|Oauth|auth42/callback|user|signin|signup|signout|google|google/callback)";
+import { AUTH_EXEMPT_ROUTES } from "./common/constants/auth";
 
 @Module({
   imports: [
@@ -37,6 +36,9 @@ const AUTH_PATH = "/auth/(Oauth42/login|Oauth|auth42/callback|user|signin|signup
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     // registers our custom middleware, that attaches the current user to each of its request
-    consumer.apply(CurrentUserMiddleware).exclude({ path: AUTH_PATH, method: RequestMethod.ALL }).forRoutes("*");
+    consumer
+      .apply(CurrentUserMiddleware)
+      .exclude({ path: AUTH_EXEMPT_ROUTES, method: RequestMethod.ALL })
+      .forRoutes("*");
   }
 }

@@ -7,3 +7,6 @@ export const API_42_SECRET = "TEMPORARY PATCH";
 export const API_42_URI = "TEMPORARY PATCH";
 export const API_42_NEW_TOKEN = "https://api.intra.42.fr/oauth/token";
 export const API_42_USER = "https://api.intra.42.fr/v2/me";
+
+export const AUTH_EXEMPT_ROUTES =
+  "/auth/(Oauth42/login|Oauth|auth42/callback|user|signin|signup|signout|google|google/callback)";

@@ -41,6 +41,6 @@ export function useUserQuery(): IUseUser {
 
 export function useUser(): User | null {
   const { user } = useUserQuery();
-
+  console.log("useUser", user);
   return user;
 }

@@ -2,40 +2,54 @@ import { HttpException, HttpStatus, Injectable, Req, Res } from "@nestjs/common"
 import { PrismaService } from "src/database/prisma.service";
 import { Request, Response } from "express";
 import * as bcrypt from "bcrypt";
+import { userInfo } from "os";
+import { User } from "@prisma/client";
 
 @Injectable()
 export class VerifyService {
   constructor(private readonly prisma: PrismaService) {}
 
   async validate2FA(@Req() req: Request, @Res() res: Response) {
-    try {
-      const { userName } = req.body;
-      const user = await this.prisma.user.findUnique({ where: { name: userName.userName } }); // to change by the name or real ID
-      await this.handleErrorToken(req, user);
-      res.status(200).json({ otp_verified: true });
-    } catch (e) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: "Impossible to validate 2FA",
+    const accessToken = req.cookies.access_token;
+    const user = await this.prisma.user.findFirst({
+      where: {
+        auth: {
+          accessToken: accessToken,
         },
-        HttpStatus.BAD_REQUEST,
-      );
+      },
+      include: {
+        auth: true,
+      },
+    });
+    if (user) {
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          auth: {
+            update: {
+              otp_verified: true,
+            },
+          },
+        },
+      });
     }
+    return user;
+    //res.redirect(301, `http://localhost:5173/`);
   }
 
-  async handleErrorToken(@Req() req: Request, user: any) {
-    const { token } = req.body;
-    const token_mail = user?.token_mail;
-    const isMatch = await bcrypt.compare(token, token_mail);
-    if (!isMatch) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: "errorCodeIsfalse",
+  async updateVerify2FA(user: User) {
+    if (user) {
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          auth: {
+            update: {
+              otp_verified: false,
+            },
+          },
         },
-        HttpStatus.BAD_REQUEST,
-      );
+      });
     }
+    return user;
   }
 }

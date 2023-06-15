@@ -25,6 +25,35 @@ export class EnableService {
           auth: {
             update: {
               twoFAactivated: false,
+              otp_validated: false,
+            },
+          },
+        },
+      });
+    }
+    return user;
+  }
+
+  async eable2FA(@Req() req: Request, @Res() res: Response) {
+    const accessToken = req.cookies.access_token;
+    const user = await this.prisma.user.findFirst({
+      where: {
+        auth: {
+          accessToken: accessToken,
+        },
+      },
+      include: {
+        auth: true,
+      },
+    });
+    if (user) {
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          auth: {
+            update: {
+              twoFAactivated: true,
+              otp_validated: false,
             },
           },
         },

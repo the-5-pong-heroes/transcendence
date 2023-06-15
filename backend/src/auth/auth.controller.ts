@@ -45,6 +45,7 @@ export class AuthController {
 
   @Get("auth42/callback")
   async getToken(@Req() req: Request, @Res() res: Response) {
+    if (req.cookies.access_token) res.redirect(301, `http://localhost:5173/`);
     const codeFromUrl = req.query.code as string;
     const token = await this.Oauth42.accessToken(codeFromUrl);
     const user42infos = await this.Oauth42.access42UserInformation(token.access_token);
@@ -57,8 +58,9 @@ export class AuthController {
         this.authService.updateCookies(res, token, userExists);
         if (!userExists.auth?.twoFAactivated) res.redirect(301, `http://localhost:5173/`); // ou /Profile ?
         else {
-          this.Generate2FA.sendActivationMail(userExists); //2FA page
-          res.redirect(301, `http://localhost:5173/Login`);
+          this.verify2FAService.updateVerify2FA(userExists);
+          this.Generate2FA.sendActivationMail(userExists);
+          res.redirect(301, `http://localhost:5173/Login?displayPopup=true`);
         }
       }
     }

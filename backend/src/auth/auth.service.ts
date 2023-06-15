@@ -162,42 +162,69 @@ export class AuthService {
   }
 
   async validateUser(access_token: string): Promise<User | null> {
-    let userId;
-    if (!access_token) {
-      return null;
-    }
     try {
-      const decodedToken = this.jwtService.verify(access_token);
-      userId = decodedToken.sub;
-    } catch (error) {
-      try {
-        const auth = await this.prisma.auth.findFirst({
-          where: {
+      const user = await this.prisma.user.findFirst({
+        where: {
+          auth: {
             accessToken: access_token,
           },
-        });
-        if (!auth) {
-          return null;
-        }
-        userId = auth.userId;
-      } catch {
-        return null;
-      }
+        },
+        include: {
+          auth: true,
+        },
+      });
+      return user;
+    } catch {
+      return null;
     }
-    const user = await this.userService.findOne(userId);
-    return user;
   }
+  // let userId;
+  // if (!access_token) {
+  //   return null;
+  // }
+  // try {
+  //   const decodedToken = this.jwtService.verify(access_token);
+  //   userId = decodedToken.sub;
+  // } catch (error) {
+  //   try {
+  //     const auth = await this.prisma.auth.findFirst({
+  //       where: {
+  //         accessToken: access_token,
+  //       },
+  //     });
+  //     if (!auth) {
+  //       return null;
+  //     }
+  //     userId = auth.userId;
+  //   } catch {
+  //     return null;
+  //   }
+  // }
+  // const user = await this.userService.findOne(userId);
 
   async getUser(req: Request, res: Response): Promise<any> {
     const access_token = req.signedCookies.access_token;
     if (!access_token) {
       return res.status(200).json({ message: "User not connected", user: null });
     }
-    const user = await this.validateUser(access_token);
+    //const user = await this.validateUser(access_token);
+    const user = await this.prisma.user.findFirst({
+      where: {
+        auth: {
+          accessToken: access_token,
+        },
+      },
+      include: {
+        auth: true,
+      },
+    });
     if (!user) {
       return res.status(404).json({ message: "Invalid token" });
     }
-    // console.log("🙇🏼‍♀️", user);
+    if (user.auth?.twoFAactivated && !user.auth.otp_verified) {
+      console.log("🌪️ twofa =", user.auth.twoFAactivated, "otp_verified =", user.auth.otp_verified);
+      return res.status(200).json({ message: "User not connected", user: null });
+    }
     res.status(200).json({ message: "Successfully fetched user", user: user });
   }
 
@@ -273,14 +300,14 @@ export class AuthService {
       httpOnly: true,
       secure: false,
       sameSite: "strict",
-      expires: new Date(Date.now() + 86400 * 1000),
+      expires: new Date(Date.now() + 600000),
       signed: true,
     });
     const Googlecookies = res.cookie("FullToken", token, {
       httpOnly: true,
       secure: false,
       sameSite: "strict",
-      expires: new Date(Date.now() + 86400 * 1000),
+      expires: new Date(Date.now() + 600000),
       signed: true,
     });
     return cookies;

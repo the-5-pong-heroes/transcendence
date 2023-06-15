@@ -24,7 +24,7 @@ export async function customFetch(
     throw new Error(`Invalid method: ${method}`);
   }
   // updates the RequestInit headers when necessary
-  if (["POST", "PUT"].includes(method)) {
+  if (["POST", "PUT", "PATCH"].includes(method)) {
     const ct = { "Content-Type": "application/json; charset=utf-8" };
     config.headers = { ...ct, ...config.headers };
   }

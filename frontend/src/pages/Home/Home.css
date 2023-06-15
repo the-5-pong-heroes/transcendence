@@ -114,3 +114,45 @@
     line-height: 18px;
   }
 }
+
+.swiper-container {
+  /* background-color: rgba(255, 0, 0, 0.352); */
+  margin: 0;
+  padding: 0;
+  height: 50vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper {
+  padding-top: 50px;
+  padding-bottom: 80px;
+}
+
+.swiper .swiper-slide {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-position: center;
+  background-size: cover;
+  background-color: rgba(28, 27, 28, 0.319);
+  border-radius: 10px;
+  width: 45vh;
+  height: 45vh;
+}
+
+.carroussel-heading {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.carroussel-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}

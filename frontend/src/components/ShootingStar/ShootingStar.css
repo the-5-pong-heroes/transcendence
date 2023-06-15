@@ -53,10 +53,10 @@
 
 @keyframes shoot3{
     10%{
-        transform: rotate(-20deg) translate(-100vw, 0);
+        transform: rotate(-20deg) translate(-200vw, 0);
     }
     100%{
-        transform: rotate(-20deg) translate(-100vw, 0);
+        transform: rotate(-20deg) translate(-200vw, 0);
         opacity: 0;
     }
 }

@@ -13,7 +13,6 @@
     "check:all": "yarn type:check && yarn lint:check"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
     "@react-spring/parallax": "^9.7.1",
     "@react-three/drei": "^9.58.1",
     "@react-three/fiber": "^8.12.0",
@@ -40,6 +39,7 @@
     "shared": "file:../shared",
     "socket.io-client": "^4.5.4",
     "styled-components": "^6.0.0-rc.3",
+    "swiper": "^9.4.1",
     "three": "^0.150.1"
   },
   "devDependencies": {

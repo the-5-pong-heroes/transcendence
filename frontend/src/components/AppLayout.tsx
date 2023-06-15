@@ -10,12 +10,15 @@ import { InvitationModal } from "./Invitation";
 import { ShootingStar } from "./ShootingStar";
 
 import { type User } from "@types";
+import { useTheme } from "@/hooks";
 
 interface AppLayoutProps {
   user: User | null;
 }
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ user }) => {
+  const theme = useTheme();
+
   return user ? (
     <SocketProvider>
       <Navbar />
@@ -24,7 +27,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ user }) => {
       <div className="App-container">
         <Container>
           <Outlet />
-          <ShootingStar />
+          {theme === "dark" && <ShootingStar />}
         </Container>
       </div>
     </SocketProvider>

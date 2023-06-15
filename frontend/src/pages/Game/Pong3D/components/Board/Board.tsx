@@ -11,7 +11,7 @@ const BoardBox: React.FC<BoxProps> = ({ posY }: BoxProps) => {
   return (
     <mesh position={new Vector3(0, posY, 0)} visible castShadow>
       <boxGeometry args={[GAME_WIDTH, 20, PADDLE_DEPTH]} />
-      <meshStandardMaterial color={"white"} transparent={true} opacity={0.3} />
+      <meshStandardMaterial color={"white"} transparent={true} opacity={0.5} />
     </mesh>
   );
 };

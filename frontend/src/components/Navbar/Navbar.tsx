@@ -28,7 +28,6 @@ export const Navbar: React.FC = () => {
   };
 
   const onClick = (event: React.MouseEvent<HTMLAnchorElement>): void => {
-    console.log("🐍", homeRef.current);
     handleOnClickButton({ event, path: "/", menuRef: homeRef, gameState, isNavigatingRef });
   };
 

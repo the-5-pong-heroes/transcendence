@@ -5,13 +5,6 @@ import { toast } from "react-toastify";
 import { ResponseError, type ErrorMessage, customFetch } from "@/helpers";
 import { USER_QUERY_KEY } from "@/constants";
 import type { UserAuth, User } from "@types";
-// import * as fetch from "@/helpers/customFetch";
-
-type SignUpBody = {
-  name: string;
-  email: string;
-  password: string;
-};
 
 async function signUp(name: string, email: string, password: string): Promise<User> {
   const signUpBody = {
@@ -19,13 +12,14 @@ async function signUp(name: string, email: string, password: string): Promise<Us
     email: email,
     password: password,
   };
-  const data = await customFetch<UserAuth>("post", "/auth/signup", signUpBody);
-  // if (!response.ok) {
-  // const { message } = (await response.json()) as ErrorMessage;
-  //   throw new ResponseError(message ? message : "Fetch request failed", response);
-  // }
+  const response = await customFetch("post", "/auth/signup", signUpBody);
+  if (!response.ok) {
+    const { message } = (await response.json()) as ErrorMessage;
+    throw new ResponseError(message ? message : "Fetch request failed", response);
+  }
+  const payload = (await response.json()) as UserAuth;
 
-  return data.user;
+  return payload.user;
 }
 
 type IUseSignUp = UseMutateFunction<

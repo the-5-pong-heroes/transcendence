@@ -3,17 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { USER_QUERY_KEY } from "@/constants";
-import { ResponseError } from "@/helpers";
-// import * as fetch from "@/helpers/customFetch";
-import { customFetch } from "@/helpers";
+import { ResponseError, type ErrorMessage, customFetch } from "@/helpers";
 
 interface Message {
   message: string;
 }
 
 async function signOut(): Promise<void> {
-  // const { message } = await fetch.get<Message>("/auth/signout");
-  const { message } = await customFetch<Message>("get", "/auth/signout");
+  const response = await customFetch("get", "/auth/signout");
+  if (!response.ok) {
+    const { message } = (await response.json()) as ErrorMessage;
+    throw new ResponseError(message ? message : "Fetch request failed", response);
+  }
+  const payload = (await response.json()) as Message;
 }
 
 type IUseSignOut = UseMutateFunction<void>;

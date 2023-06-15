@@ -11,7 +11,7 @@ async function sendRequest<T>(path: string, config: RequestInit): Promise<T> {
   config.credentials = "include";
   config.mode = "cors";
 
-  if (config.method === "POST" || config.method === "PUT") {
+  if (config.method === "POST" || config.method === "PUT" || config.method === "PATCH") {
     config.headers = {
       ...config.headers,
       "Content-Type": "application/json; charset=utf-8",

@@ -44,14 +44,14 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
 
   const navigateToSection = (): void => {
     const sections = [
-      { path: "/Profile", threshold: sectionSize * 4 }, // TODO Check for Settings and profile/uuid too
-      { path: "/Chat", threshold: sectionSize * 3 },
-      { path: "/Leaderboard", threshold: sectionSize * 2 },
-      { path: "/Game", threshold: sectionSize },
+      { path: "/profile", threshold: sectionSize * 4 },
+      { path: "/chat", threshold: sectionSize * 3 },
+      { path: "/leaderboard", threshold: sectionSize * 2 },
+      { path: "/game", threshold: sectionSize },
       { path: "/", threshold: 0 },
     ];
 
-    const currentPath = location.pathname;
+    const currentPath = location.pathname.toLowerCase();
     const currentThreshold = sections.find((section) => x >= section.threshold)?.threshold;
 
     const section = sections.find((section) => section.threshold === currentThreshold);
@@ -60,6 +60,11 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
       if (isRunning.current) {
         setQuitGame(true);
         newRoute.current = section.path;
+      } else if (
+        section.path === "/profile" &&
+        (currentPath.startsWith("/profile") || currentPath === "/settings")
+      ) {
+        return;
       } else {
         navigate(section.path);
       }

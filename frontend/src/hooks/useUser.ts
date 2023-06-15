@@ -20,10 +20,10 @@ export function useUserQuery(): IUseUser {
     [USER_QUERY_KEY],
     async (): Promise<User | null> => fetchUser(),
     {
-      // refetchOnMount: false,
-      // refetchOnReconnect: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      refetchInterval: 5000,
+      // refetchInterval: 5000,
     }
   );
 

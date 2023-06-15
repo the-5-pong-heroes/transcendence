@@ -16,3 +16,4 @@ export { WallEPlayingPong } from "./video";
 export { Setting, Leave, Public, Protected, Private, View, Hide, Rocket } from "./chat";
 export { DefaultAvatar } from "./avatar";
 export { Eve, Plant, Energy, Walle } from "./levels";
+export { WallE_Img, WallE_2_Img, WallE_Pong_Img, WallE_Eve_Img } from "./home";

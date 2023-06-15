@@ -26,7 +26,6 @@ export const Login42: React.FC = () => {
   //   navigate("/auth/google");
   // };
 
-
   return (
     <div className="Login_with" onClick={handleAuth42}>
       <span>Continue with </span>

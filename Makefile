@@ -9,7 +9,7 @@ else
   DOCKER_COMPOSE	= docker-compose --env-file ${DOCKER_ENV_FILE}
 endif
 
-DATABASE_VOLUME		= $(shell basename "$(CURDIR)_postgresql_data")
+DATABASE_VOLUME		= $(shell basename '$(CURDIR)_postgresql_data' | tr '[:upper:]' '[:lower:]')
 
 RM					= rm -rf
 
@@ -43,9 +43,12 @@ clean:  down
 fclean: clean
 	${SUDO} docker system prune --all --force
 	${SUDO} docker volume rm $(DATABASE_VOLUME)
-	@printf "$(UP)"
+	yy@printf "$(UP)"
 
 re: fclean all
+
+echo:
+	echo $(DATABASE_VOLUME_MAJ)
 
 .PHONY: run up debug list list_volumes clean
 

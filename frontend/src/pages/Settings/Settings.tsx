@@ -33,17 +33,17 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
 
   const [avatar, setAvatar] = useState(null);
 
-  const [selectedFile, setSelectedFile] = useState(null);
-
   const signOut = useSignOut();
   const user = useUser();
 
   const twoFACode = React.useState("");
   const [isActivated, setIsActivated] = React.useState(false);
 
-  async function handleFileChange(event: any): Promise<void> {
+  async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>): Promise<void> {
+    if (!event.target.files) {
+      return;
+    }
     const file = event.target.files[0];
-    setSelectedFile(file);
     if (file) {
       try {
         setUploading(true);

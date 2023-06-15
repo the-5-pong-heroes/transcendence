@@ -71,15 +71,6 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
     return null;
   }
 
-  function switchTab(event: any): void {
-    const tabText: string = event.target.innerText;
-    if (tabText === "Match history") {
-      setCurrentTab("Match history");
-    } else {
-      setCurrentTab("Friends");
-    }
-  }
-
   async function followFriend(): Promise<void> {
     try {
       const body = { newFriendId: uuid };
@@ -143,10 +134,18 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
       </div>
       <div className="block3">
         <ul className="tab tabs">
-          <li className={`tab-item${currentTab === "Match history" ? " tab-active" : ""}`} onClick={switchTab}>
+          <li
+            className={`tab-item${currentTab === "Match history" ? " tab-active" : ""}`}
+            onClick={() => {
+              setCurrentTab("Match history");
+            }}>
             <div className="tab-link">Match history</div>
           </li>
-          <li className={`tab-item${currentTab === "Friends" ? " tab-active" : ""}`} onClick={switchTab}>
+          <li
+            className={`tab-item${currentTab === "Friends" ? " tab-active" : ""}`}
+            onClick={() => {
+              setCurrentTab("Friends");
+            }}>
             <div className="tab-link">Friends</div>
           </li>
         </ul>

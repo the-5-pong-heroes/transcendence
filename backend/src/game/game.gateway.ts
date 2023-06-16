@@ -20,7 +20,8 @@ import { WebSocketInterceptor } from "src/common/interceptors";
     origin: ALLOWED_ORIGINS,
     credentials: true,
   },
-}) // @UseInterceptors(WebSocketInterceptor)
+})
+@UseInterceptors(WebSocketInterceptor)
 @UsePipes(new ValidationPipe({ transform: true }))
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger: Logger = new Logger(GameGateway.name);

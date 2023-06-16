@@ -30,6 +30,6 @@ export default defineConfig({
     },
     host: true, // listens on all addresses and not only localhost
     strictPort: true, // exits when the port is not available
-    port: parseInt(process.env.FRONTEND_PORT),
+    port: parseInt(process.env.VITE_PORT),
   },
 });

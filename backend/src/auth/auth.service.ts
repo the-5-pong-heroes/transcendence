@@ -217,6 +217,13 @@ export class AuthService {
     res.status(200).json({ message: "Successfully fetched user", user: user });
   }
 
+  async twoFAtoggle(email: string, twoFAactivated: boolean): Promise<Auth> {
+    return this.prisma.auth.update({
+      where: { email },
+      data: { twoFAactivated },
+    });
+  }
+
   /***********       LAURA'S CODE      ***********/
 
   async createDataBase42User(user42: any, token: Token, username: string, isRegistered: boolean) {

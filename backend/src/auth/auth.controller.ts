@@ -1,4 +1,4 @@
-import { Injectable, Get, Controller, Post, Body, UseGuards, Req, Res } from "@nestjs/common";
+import { Injectable, Get, Put, Controller, Post, Body, UseGuards, Req, Res } from "@nestjs/common";
 import { Request, Response } from "express";
 
 import { AuthGuard } from "@nestjs/passport";
@@ -97,6 +97,28 @@ export class AuthController {
   @Get("token")
   async checkIfTokenValid(@Req() req: Request, @Res() res: Response) {
     return this.authService.checkIfTokenValid(req, res);
+  }
+
+  @Get("twoFAactivated")
+  async getTwoFAactivated(@Req() req: Request, @Res() res: Response) {
+    const accessToken = req.signedCookies.access_token;
+    if (!accessToken) return res.status(200).json({ message: "User not connected" });
+    const user = await this.authService.validateUser(accessToken);
+    if (!user) return res.status(404).json({ message: "Invalid token" });
+    if (!user.auth) return res.status(200).json({ message: "User has no authentication" });
+    return user.auth.twoFAactivated;
+  }
+
+  @Put("twoFAtoggle")
+  async twoFAtoggle(@Req() req: Request, @Res() res: Response) {
+    const { isToggle } = req.body;
+    const accessToken = req.signedCookies.access_token;
+    if (!accessToken) return res.status(200).json({ message: "User not connected" });
+    const user = await this.authService.validateUser(accessToken);
+    if (!user) return res.status(404).json({ message: "Invalid token" });
+    if (!user.auth) return res.status(200).json({ message: "User has no authentication" });
+    await this.authService.twoFAtoggle(user.auth.email, isToggle);
+    return res.status(200);
   }
 
   @Post("2FA/generate")

@@ -31,6 +31,7 @@
     "@nestjs/platform-express": "^9.4",
     "@nestjs/platform-socket.io": "^10.0.0",
     "@nestjs/schedule": "^3.0.0",
+    "@nestjs/swagger": "^6.3.0",
     "@nestjs/websockets": "^10.0.0",
     "@prisma/client": "^4.15.0",
     "@types/bcrypt": "^5.0.0",

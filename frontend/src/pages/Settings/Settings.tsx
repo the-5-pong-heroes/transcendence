@@ -115,11 +115,14 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
     if (isToggled === false)
     {
       const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/disable";
+      console.log("✨ url: ", url);
       window.open(url, "_self");
     }
     else{
-      const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/generate";
-      window.open(url, "_self");
+      // const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/generate";
+      // console.log("✨ url: ", url);
+      // window.open(url, "_self");
+      const data = await customFetch("post", "auth/2FA/generate");
     }
   }
 
@@ -183,7 +186,7 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
   }
 
   const deleteUser = (): void => {
-    customFetch("remove", `/users/${user?.id}`).catch((error) => {
+    customFetch("delete", `users/${user?.id}`).catch((error) => {
       console.error(error);
     });
     signOut();
@@ -225,7 +228,7 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
           </label>
         </div>
         <div className="settings-col update-2fa">
-          <Toggle2FA toggled={true} onClick={toggle2FA} />
+          <Toggle2FA toggled={false} onClick={toggle2FA} />
         </div>
         <div id="popup" style={{ display: "none" }}>
           <h3>Entrez le code de vérification :</h3>

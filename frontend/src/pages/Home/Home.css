@@ -131,17 +131,16 @@
 }
 
 .swiper .swiper-slide {
-  background-color: red;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-position: center;
   background-size: cover;
-  background-color: rgba(28, 27, 28, 0.319);
+  background-color: rgba(28, 27, 28, 0.639);
   border-radius: 0.5rem;
-  width: 45vh;
-  height: 45vh;
+  width: 40vh;
+  height: 50vh;
 }
 
 .carroussel-slide {
@@ -156,11 +155,22 @@
   padding: 5px 10px;
 }
 
+.carroussel-slide img {
+  position: absolute;
+  top: 0;
+  /* width: 100%; */
+  height: 20vh;
+}
+
 .carroussel-img {
   height: 100%;
   width: 100%;
   position: absolute;
-  opacity: 0.7;
+  opacity: 0.4;
+}
+
+.carroussel-slide:hover .carroussel-img {
+  opacity: 0.9;
 }
 
 .carroussel-heading {

@@ -4,7 +4,6 @@ import { Request, Response } from "express";
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
 import { CreateUserDto } from "../user/dto";
-import { User } from "@prisma/client";
 import { UserService } from "src/user/user.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
 import { GoogleService } from "src/auth/google/google.service";
@@ -15,11 +14,6 @@ import { UserDto } from "./dto";
 
 @Injectable()
 export class GoogleOauthGuard extends AuthGuard("google") {}
-
-export interface UserAuth {
-  message: string;
-  user: User;
-}
 
 @Controller("auth")
 export class AuthController {
@@ -45,7 +39,7 @@ export class AuthController {
 
   @Get("auth42/callback")
   async getToken(@Req() req: Request, @Res() res: Response) {
-    if (req.cookies.access_token) res.redirect(301, `http://localhost:5173/`);
+    if (req.signedCookies.access_token) res.redirect(301, `http://localhost:5173/`);
     const codeFromUrl = req.query.code as string;
     const token = await this.Oauth42.accessToken(codeFromUrl);
     const user42infos = await this.Oauth42.access42UserInformation(token.access_token);
@@ -84,6 +78,7 @@ export class AuthController {
 
   @Get("user")
   async getUser(@Req() req: any, @Res() res: Response): Promise<void> {
+    console.log("✨✨✨ Get user");
     await this.authService.getUser(req, res);
   }
 
@@ -107,6 +102,7 @@ export class AuthController {
 
   @Post("2FA/generate")
   async generate2FA(@Req() req: Request, @Res() res: Response) {
+    console.log("🐥 /auth/2FA/generate");
     return this.Generate2FA.generateService(req, res);
   }
 
@@ -117,6 +113,7 @@ export class AuthController {
 
   @Get("2FA/disable")
   async disable2FA(@Req() req: Request, @Res() res: Response) {
+    console.log("🐥 /auth/2FA/disable");
     return this.enable2FAService.disable2FA(req, res);
   }
 

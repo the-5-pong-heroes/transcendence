@@ -1,9 +1,7 @@
 import { MailerService } from "@nestjs-modules/mailer";
 import { HttpException, HttpStatus, Injectable, Req, Res } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
-import * as bcrypt from "bcrypt";
 import * as fs from "fs";
-import * as path from "path";
 import { Request, Response } from "express";
 
 const myHTML = fs.readFileSync("./index.html", "utf8");
@@ -24,8 +22,10 @@ export class Generate2FAService {
         auth: true,
       },
     });
+    console.log("🪭 generateService: ", user);
     //this.updateUser(user);
     const code = user?.auth?.twoFASecret;
+    console.log("🪭 code: ", code);
     const twoFAactivated = true;
     return res.json({
       code,

@@ -90,7 +90,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
     const url = "http://localhost:3333";
     try {
       const body = { newFriendId: uuid };
-      const data = await customFetch("post", "/friendship", body);
+      const data = await customFetch("post", "friendship", body);
     } catch (err) {
       console.error("Error adding a friend: ", err);
     }

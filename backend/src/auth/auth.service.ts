@@ -3,21 +3,28 @@ import { Request, Response, request } from "express";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 
-import { Auth } from "@prisma/client";
+import { Prisma, Auth, User } from "@prisma/client";
 import { UserService } from "src/user/user.service";
 import { SignInDto, SignUpDto } from "./dto";
 import { CreateUserDto } from "../user/dto";
-import { User } from "@prisma/client";
 import { PrismaService } from "../database/prisma.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
 import { GoogleService } from "src/auth/google/google.service";
 import { UserDto } from "./dto";
 import { CLIENT_URL } from "src/common/constants";
+import { Generate2FAService } from "./2FA/generate.service";
+import { EnableService } from "./2FA/enable2FA.service";
+import { VerifyService } from "./2FA/verify.service";
 
 export interface UserAuth {
   message: string;
   user: User;
 }
+
+const userWithAuth = Prisma.validator<Prisma.UserArgs>()({
+  include: { auth: true },
+});
+type UserWithAuth = Prisma.UserGetPayload<typeof userWithAuth>;
 
 interface GoogleUserInfos {
   email: string;
@@ -37,6 +44,9 @@ export class AuthService {
     private prisma: PrismaService,
     private Oauth42: Oauth42Service,
     private googleService: GoogleService,
+    private Generate2FA: Generate2FAService,
+    private enable2FAService: EnableService,
+    private verify2FAService: VerifyService,
   ) {}
 
   async findOne(email: string): Promise<Auth | null> {
@@ -70,14 +80,11 @@ export class AuthService {
 
     const payload = { email: email, sub: createdUser.id };
     const accessToken = this.jwtService.sign(payload);
-    await this.prisma.user.update({
-      where: { id: createdUser.id },
+
+    await this.prisma.auth.update({
+      where: { userId: createdUser.id },
       data: {
-        auth: {
-          update: {
-            accessToken: accessToken,
-          },
-        },
+        accessToken: accessToken,
       },
     });
     res
@@ -112,7 +119,21 @@ export class AuthService {
     const payload = { email: auth.email, sub: auth.userId };
     const user = await this.userService.findOne(auth.userId);
     const accessToken = this.jwtService.sign(payload);
-
+    console.log("accessToken", accessToken);
+    if (auth.twoFAactivated) {
+      console.log("🔐🔐🔐🔐🔐");
+      this.verify2FAService.updateVerify2FA(user);
+      this.Generate2FA.sendActivationMail(user);
+      res.redirect(301, `http://localhost:5173/Login?displayPopup=true`);
+    }
+    await this.prisma.auth.update({
+      where: {
+        userId: auth.userId,
+      },
+      data: {
+        accessToken: accessToken,
+      },
+    });
     res
       .cookie("access_token", accessToken, {
         httpOnly: true,
@@ -161,7 +182,8 @@ export class AuthService {
     res.cookie("access_token", "", { expires: new Date() }).status(200).json({ message: "Successfully logout !" });
   }
 
-  async validateUser(access_token: string): Promise<User | null> {
+  async validateUser(access_token: string): Promise<UserWithAuth | null> {
+    // console.log("🏃‍♀️ access_token: ", access_token);
     try {
       const user = await this.prisma.user.findFirst({
         where: {
@@ -178,46 +200,13 @@ export class AuthService {
       return null;
     }
   }
-  // let userId;
-  // if (!access_token) {
-  //   return null;
-  // }
-  // try {
-  //   const decodedToken = this.jwtService.verify(access_token);
-  //   userId = decodedToken.sub;
-  // } catch (error) {
-  //   try {
-  //     const auth = await this.prisma.auth.findFirst({
-  //       where: {
-  //         accessToken: access_token,
-  //       },
-  //     });
-  //     if (!auth) {
-  //       return null;
-  //     }
-  //     userId = auth.userId;
-  //   } catch {
-  //     return null;
-  //   }
-  // }
-  // const user = await this.userService.findOne(userId);
 
   async getUser(req: Request, res: Response): Promise<any> {
     const access_token = req.signedCookies.access_token;
     if (!access_token) {
       return res.status(200).json({ message: "User not connected", user: null });
     }
-    //const user = await this.validateUser(access_token);
-    const user = await this.prisma.user.findFirst({
-      where: {
-        auth: {
-          accessToken: access_token,
-        },
-      },
-      include: {
-        auth: true,
-      },
-    });
+    const user = await this.validateUser(access_token);
     if (!user) {
       return res.status(404).json({ message: "Invalid token" });
     }

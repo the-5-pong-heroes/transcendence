@@ -5,6 +5,8 @@ import { Auth, User, UserStatus } from "@prisma/client";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
 
+// type IUser = User & { auth: Auth | null };
+
 @Injectable({})
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}

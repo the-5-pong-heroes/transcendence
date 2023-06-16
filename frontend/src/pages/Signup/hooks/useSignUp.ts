@@ -12,7 +12,7 @@ async function signUp(name: string, email: string, password: string): Promise<Us
     email: email,
     password: password,
   };
-  const response = await customFetch("post", "/auth/signup", signUpBody);
+  const response = await customFetch("post", "auth/signup", signUpBody);
   if (!response.ok) {
     const { message } = (await response.json()) as ErrorMessage;
     throw new ResponseError(message ? message : "Fetch request failed", response);

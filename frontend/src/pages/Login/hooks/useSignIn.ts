@@ -11,7 +11,7 @@ async function signIn(email: string, password: string): Promise<User> {
     email: email,
     password: password,
   };
-  const response = await customFetch("post", "/auth/signin", signInBody);
+  const response = await customFetch("post", "auth/signin", signInBody);
   if (!response.ok) {
     const { message } = (await response.json()) as ErrorMessage;
     throw new ResponseError(message ? message : "Fetch request failed", response);

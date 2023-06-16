@@ -25,12 +25,12 @@ model User {
   channelBans   ChannelBan[]
   blocked       Blocked[]     @relation("blocked")
   blockedBy     Blocked[]     @relation("blockedBy")
-  auth          Auth?
+  auth          Auth?         @relation("auth")
 }
 
 model Auth {
   userId        String   @id @db.Uuid
-  user          User     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user          User     @relation("auth", fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   email           String   @unique
   password        String?   
   accessToken     String   @default("noToken")

@@ -8,7 +8,6 @@ import { Logo_42, Logo_Google, Logo_Eve } from "@assets";
 import "./Login.css";
 
 export const Login42: React.FC = () => {
-
   const handleAuth42 = () => {
     const url = `${import.meta.env.VITE_API42_URI}`;
     window.open(url, "_self");
@@ -17,7 +16,7 @@ export const Login42: React.FC = () => {
   return (
     <div className="Login_with" onClick={handleAuth42}>
       <span>Continue with </span>
-      <img id="logo-42" alt="42 Logo" src={Logo_42} />      
+      <img id="logo-42" alt="42 Logo" src={Logo_42} />
     </div>
   );
 };
@@ -133,14 +132,14 @@ export const Login: React.FC = () => {
           <Login42 />
           <LoginGoogle />
           <div id="popup" style={{ display: "none" }}>
-              <div className="popup-modal">
-                <div className="popup-content">
-                  <p>Please enter the verification code sent to your email:</p>
-                  <input type="text" id="verificationCode" style={{ color: "black" }} />
-                  <button onClick={submitVerificationCode}> Valider</button>
-                </div>
+            <div className="popup-modal">
+              <div className="popup-content">
+                <p>Please enter the verification code sent to your email:</p>
+                <input type="text" id="verificationCode" style={{ color: "black" }} />
+                <button onClick={submitVerificationCode}> Valider</button>
               </div>
             </div>
+          </div>
         </div>
       </form>
     </div>

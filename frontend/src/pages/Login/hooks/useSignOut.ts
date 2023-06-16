@@ -10,7 +10,7 @@ interface Message {
 }
 
 async function signOut(): Promise<void> {
-  const response = await customFetch("get", "/auth/signout");
+  const response = await customFetch("get", "auth/signout");
   if (!response.ok) {
     const { message } = (await response.json()) as ErrorMessage;
     throw new ResponseError(message ? message : "Fetch request failed", response);

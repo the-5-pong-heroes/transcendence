@@ -5,7 +5,7 @@ import type { UserAuth, User } from "@types";
 import { ResponseError, type ErrorMessage, customFetch } from "@/helpers";
 
 async function fetchUser(): Promise<User | null> {
-  const response = await customFetch("get", "/auth/user");
+  const response = await customFetch("get", "auth/user");
 
   if (!response.ok) {
     const { message } = (await response.json()) as ErrorMessage;
@@ -41,6 +41,6 @@ export function useUserQuery(): IUseUser {
 
 export function useUser(): User | null {
   const { user } = useUserQuery();
-  console.log("useUser", user);
+
   return user;
 }

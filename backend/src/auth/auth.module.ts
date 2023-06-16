@@ -14,7 +14,6 @@ import { Oauth42Service } from "./auth42/Oauth42.service";
 import { GoogleStrategy } from "./google/google.strategy";
 import { GoogleService } from "./google/google.service";
 import { PrismaModule } from "src/database/prisma.module";
-import { UserGuard } from "./user.guard";
 import { UserModule } from "src/user/user.module";
 
 @Module({
@@ -49,8 +48,7 @@ import { UserModule } from "src/user/user.module";
     VerifyService,
     LocalStrategy,
     JwtStrategy,
-    UserGuard,
   ],
-  exports: [AuthService, UserGuard],
+  exports: [AuthService],
 })
 export class AuthModule {}

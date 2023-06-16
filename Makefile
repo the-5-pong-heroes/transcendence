@@ -43,12 +43,9 @@ clean:  down
 fclean: clean
 	${SUDO} docker system prune --all --force
 	${SUDO} docker volume rm $(DATABASE_VOLUME)
-	yy@printf "$(UP)"
+	@printf "$(UP)"
 
 re: fclean all
-
-echo:
-	echo $(DATABASE_VOLUME_MAJ)
 
 .PHONY: run up debug list list_volumes clean
 

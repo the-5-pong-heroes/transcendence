@@ -88,7 +88,8 @@ const Subject: React.FC = () => {
 
   return (
     <div className="carroussel-slide">
-      <div className="carroussel-img" style={imgStyle}></div>
+      {/* <div className="carroussel-img" style={imgStyle}></div> */}
+      <img src={WallE_Img} />
       <div className="carroussel-heading">Transcendence</div>
       <div className="carroussel-heading">Available features</div>
       <ul className="carroussel-list">
@@ -136,6 +137,7 @@ const Carroussel: React.FC = () => {
   return (
     <div className="swiper-container">
       <Swiper
+        spaceBetween={10}
         modules={[EffectCoverflow, Mousewheel]}
         mousewheel={true}
         direction="horizontal"
@@ -144,12 +146,14 @@ const Carroussel: React.FC = () => {
         slidesPerView="auto"
         effect="coverflow"
         coverflowEffect={{
-          rotate: 50,
+          rotate: 0,
+          // rotate: 50,
           stretch: 0,
-          depth: 200,
+          depth: 300,
           modifier: 1,
           slideShadows: true,
         }}>
+        {/* > */}
         <div className="swiper-wrapper">
           <SwiperSlide>
             <Subject />
@@ -179,7 +183,7 @@ export const Home: React.FC<HomeProps> = ({ homeRef }) => {
 
   return (
     <div ref={homeRef} id="Home" className="home">
-      <Carroussel />
+      {/* <Carroussel /> */}
       <div className="home-play-button">
         <Link to={"/Game"} className="game-link" onClick={onClick}>
           <span>Ready to play ?</span>

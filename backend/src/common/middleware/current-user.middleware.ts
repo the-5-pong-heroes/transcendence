@@ -22,6 +22,7 @@ export class CurrentUserMiddleware implements NestMiddleware {
     if (!token) {
       throw new UnauthorizedException("Not authenticated");
     }
+    // console.log("🌈 CurrentUserMiddleware");
     const user = await this.authService.validateUser(token);
     if (!user) {
       throw new UnauthorizedException("Not authenticated");

@@ -110,22 +110,6 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
     }));
   }
 
-  async function toggle2FA(isToggled: boolean) {
-    console.log("2FA: ", isToggled);
-    if (isToggled === false)
-    {
-      const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/disable";
-      console.log("✨ url: ", url);
-      window.open(url, "_self");
-    }
-    else{
-      // const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/generate";
-      // console.log("✨ url: ", url);
-      // window.open(url, "_self");
-      const data = await customFetch("post", "auth/2FA/generate");
-    }
-  }
-
   async function handle2FAfunction(): Promise<any> {
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/generate", {
       method: "POST",
@@ -140,46 +124,22 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
     return data;
   }
 
-  function openPopup(twoFACode: string) {
-    const popup = document.getElementById("popup");
-    if (popup) {
-      popup.style.display = "block";
-      popup.dataset.twoFACode = twoFACode;
-    }
-  }
+  // function openPopup(twoFACode: string) {
+  //   const popup = document.getElementById("popup");
+  //   if (popup) {
+  //     popup.style.display = "block";
+  //     popup.dataset.twoFACode = twoFACode;
+  //   }
+  // }
 
-  function closePopup() {
-    const popup = document.getElementById("popup");
-    if (popup) {
-      popup.style.display = "none";
-      popup.removeAttribute("data-twoFACode");
-    }
-  }
+  // function closePopup() {
+  //   const popup = document.getElementById("popup");
+  //   if (popup) {
+  //     popup.style.display = "none";
+  //     popup.removeAttribute("data-twoFACode");
+  //   }
+  // }
 
-  function updateVerify2FA() {
-    const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/verify";
-    window.open(url, "_self");
-  }
-
-  function submitVerificationCode() {
-    const verificationCodeInput = document.getElementById("verificationCode") as HTMLInputElement;
-    if (verificationCodeInput) {
-      const verificationCode = verificationCodeInput.value;
-      const popup = document.getElementById("popup");
-      if (popup) {
-        const twoFACode = popup.dataset.twoFACode;
-        console.log("twoFA = ", twoFACode);
-        console.log("verif = ", verificationCode);
-        if (verificationCode === twoFACode) {
-          alert("Code de vérification correct !");
-          updateVerify2FA();
-          closePopup();
-        } else {
-          alert("Code de vérification incorrect. Veuillez réessayer.");
-        }
-      }
-    }
-  }
 
   if (!user) {
     return null;
@@ -228,15 +188,8 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
           </label>
         </div>
         <div className="settings-col update-2fa">
-          <Toggle2FA toggled={false} onClick={toggle2FA} />
+          <Toggle2FA />
         </div>
-        <div id="popup" style={{ display: "none" }}>
-          <h3>Entrez le code de vérification :</h3>
-          <input type="text" id="verificationCode" style={{ color: "black" }} />
-          <button className="walle-button" onClick={submitVerificationCode}>
-            Valider
-          </button>
-       </div>
       </div>
       <div className="settings-block block2">
         <Unfollow friends={settings.friends} handleUnfollow={handleUnfollow} />

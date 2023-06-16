@@ -1,9 +1,9 @@
 import { ChannelType, ChannelUser } from "@prisma/client";
 
 export class CreateChannelDto {
-  name!: string;
+  name: string;
   lastMessage?: Date;
-  type!: ChannelType;
+  type: ChannelType;
   password?: string;
-  users!: ChannelUser;
+  users: ChannelUser;
 }

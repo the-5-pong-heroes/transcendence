@@ -1,4 +1,3 @@
-# FROM node:latest
 FROM node:18.16.0
 
 RUN mkdir /app && chown -R node:node ./app/

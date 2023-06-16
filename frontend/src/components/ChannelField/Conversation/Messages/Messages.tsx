@@ -3,19 +3,18 @@ import React, { useContext, useEffect, useState } from "react";
 import { ServerMessage } from "./ServerMessage";
 import { UserMessage } from "./UserMessage";
 import { OtherMessage } from "./OtherMessage";
+import { Invitation } from "./Invitation";
 import styles from "./Messages.module.scss";
 
-import { ChannelContext, UserContext, UserContextType } from "@/contexts";
-// import { socket } from '@/socket';
+import { ChannelContext } from "@/contexts";
 import { useUser, useSocket, useTheme } from "@hooks";
 import { type IMessage } from "@/interfaces";
-import { ResponseError } from "@/helpers";
+import { ResponseError, customFetch } from "@/helpers";
 
 export const Messages: React.FC = () => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [showOptions, setShowOptions] = useState<number>(-1);
 
-  // const { user } = useContext(UserContext) as UserContextType;
   const user = useUser();
   const socket = useSocket();
   const theme = useTheme();
@@ -27,15 +26,13 @@ export const Messages: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // const token = localStorage.getItem('access_token');
-      // if (!token || !activeChannel) return setMessages([]);
       if (!activeChannel) {
         return setMessages([]);
       }
-      // const	config = { headers: { 'Authorization': token }};
-      const response = await fetch(`http://localhost:3333/chat/${activeChannel.id}`, { credentials: "include" });
-      // if (!response.ok) return console.log(response);
+      // const response = await fetch(`http://localhost:3000/chat/${activeChannel.id}`, { credentials: "include" });
+      const response = await customFetch("get", `chat/${activeChannel.id}`);
       if (!response.ok) {
+        console.log("🐥");
         throw new ResponseError("Failed on fetch channels request", response);
       }
       const data = await response.json();
@@ -60,21 +57,22 @@ export const Messages: React.FC = () => {
   return (
     <div className={styles.Messages}>
       {messages.map((message, index) => {
-        return message.senderId ? (
-          message.senderId === user?.id ? (
-            <UserMessage key={index} message={message} theme={theme} />
-          ) : (
-            <OtherMessage
+        if (!message.senderId) {
+          return <ServerMessage key={index} message={message} theme={theme} />
+        }
+        if (message.content === "/InviteToPlay" && message.senderId) {
+          return <Invitation key={index} message={message} theme={theme} />
+        }
+        if (message.senderId === user?.id) {
+          return <UserMessage key={index} message={message} theme={theme} />
+        }
+        return <OtherMessage
               key={index}
               message={message}
               theme={theme}
               showOptions={showOptions === index}
               setShowOptions={() => (showOptions === index ? setShowOptions(-1) : setShowOptions(index))}
             />
-          )
-        ) : (
-          <ServerMessage key={index} message={message} theme={theme} />
-        );
       })}
     </div>
   );

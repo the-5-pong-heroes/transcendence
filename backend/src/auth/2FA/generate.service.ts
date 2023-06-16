@@ -12,6 +12,7 @@ export class Generate2FAService {
 
   async generateService(@Req() req: Request, @Res() res: Response) {
     const accessToken = req.signedCookies.access_token;
+    console.log("Access Token :", accessToken);
     const user = await this.prisma.user.findFirst({
       where: {
         auth: {
@@ -22,6 +23,7 @@ export class Generate2FAService {
         auth: true,
       },
     });
+    console.log("User :", user);
     // console.log("🪭 generateService: ", user);
     //this.updateUser(user);
     const code = user?.auth?.twoFASecret;

@@ -78,7 +78,7 @@ export class AuthController {
 
   @Get("user")
   async getUser(@Req() req: any, @Res() res: Response): Promise<void> {
-    console.log("✨✨✨ Get user");
+    // console.log("✨✨✨ Get user");
     await this.authService.getUser(req, res);
   }
 
@@ -91,7 +91,6 @@ export class AuthController {
   @Get("google/callback")
   @UseGuards(GoogleOauthGuard)
   async googleAuthCallback(@Req() req: any, @Res() res: Response) {
-    console.log("✨", req.user);
     await this.authService.signInGoogle(res, req.user);
   }
 
@@ -102,7 +101,6 @@ export class AuthController {
 
   @Post("2FA/generate")
   async generate2FA(@Req() req: Request, @Res() res: Response) {
-    console.log("🐥 /auth/2FA/generate");
     return this.Generate2FA.generateService(req, res);
   }
 
@@ -113,7 +111,6 @@ export class AuthController {
 
   @Get("2FA/disable")
   async disable2FA(@Req() req: Request, @Res() res: Response) {
-    console.log("🐥 /auth/2FA/disable");
     return this.enable2FAService.disable2FA(req, res);
   }
 

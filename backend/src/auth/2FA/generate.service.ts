@@ -22,10 +22,9 @@ export class Generate2FAService {
         auth: true,
       },
     });
-    console.log("🪭 generateService: ", user);
+    // console.log("🪭 generateService: ", user);
     //this.updateUser(user);
     const code = user?.auth?.twoFASecret;
-    console.log("🪭 code: ", code);
     const twoFAactivated = true;
     return res.json({
       code,

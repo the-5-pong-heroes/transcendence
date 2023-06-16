@@ -119,9 +119,9 @@ export class AuthService {
     const payload = { email: auth.email, sub: auth.userId };
     const user = await this.userService.findOne(auth.userId);
     const accessToken = this.jwtService.sign(payload);
-    console.log("accessToken", accessToken);
+    // console.log("accessToken", accessToken);
     if (auth.twoFAactivated) {
-      console.log("🔐🔐🔐🔐🔐");
+      console.log("🔐🔐🔐");
       this.verify2FAService.updateVerify2FA(user);
       this.Generate2FA.sendActivationMail(user);
       res.redirect(301, `http://localhost:5173/Login?displayPopup=true`);

@@ -20,7 +20,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           <AppProvider>
             <ParallaxProvider scrollAxis="horizontal">
               <App />
-              {/* <ReactQueryDevtools /> */}
+              <ReactQueryDevtools />
             </ParallaxProvider>
           </AppProvider>
         </QueryClientProvider>

@@ -78,7 +78,6 @@ export class AuthController {
 
   @Get("user")
   async getUser(@Req() req: any, @Res() res: Response): Promise<void> {
-    // console.log("✨✨✨ Get user");
     await this.authService.getUser(req, res);
   }
 
@@ -106,18 +105,20 @@ export class AuthController {
     const user = await this.authService.validateUser(accessToken);
     if (!user) return res.status(404).json({ message: "Invalid token" });
     if (!user.auth) return res.status(200).json({ message: "User has no authentication" });
-    return user.auth.twoFAactivated;
+    console.log("💥💥💥 twoFAactivated: ", user.auth.twoFAactivated);
+    return res.status(200).json({ twoFAactivated: user.auth.twoFAactivated });
   }
 
   @Put("twoFAtoggle")
   async twoFAtoggle(@Req() req: Request, @Res() res: Response) {
-    const { isToggle } = req.body;
+    const { isToggled } = req.body;
+    console.log("✨✨✨", req.body);
     const accessToken = req.signedCookies.access_token;
     if (!accessToken) return res.status(200).json({ message: "User not connected" });
     const user = await this.authService.validateUser(accessToken);
     if (!user) return res.status(404).json({ message: "Invalid token" });
     if (!user.auth) return res.status(200).json({ message: "User has no authentication" });
-    await this.authService.twoFAtoggle(user.auth.email, isToggle);
+    await this.authService.twoFAtoggle(user.auth.email, isToggled);
     return res.status(200);
   }
 

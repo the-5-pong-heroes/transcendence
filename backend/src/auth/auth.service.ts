@@ -120,12 +120,12 @@ export class AuthService {
     const user = await this.userService.findOne(auth.userId);
     const accessToken = this.jwtService.sign(payload);
     // console.log("accessToken", accessToken);
-    if (auth.twoFAactivated) {
-      console.log("🔐🔐🔐");
-      this.verify2FAService.updateVerify2FA(user);
-      this.Generate2FA.sendActivationMail(user);
-      res.redirect(301, `http://localhost:5173/Login?displayPopup=true`);
-    }
+    // if (auth.twoFAactivated) {
+    //   console.log("🔐🔐🔐");
+    //   this.verify2FAService.updateVerify2FA(user);
+    //   this.Generate2FA.sendActivationMail(user);
+    //   res.redirect(301, `http://localhost:5173/Login?displayPopup=true`);
+    // }
     await this.prisma.auth.update({
       where: {
         userId: auth.userId,
@@ -210,10 +210,10 @@ export class AuthService {
     if (!user) {
       return res.status(404).json({ message: "Invalid token" });
     }
-    if (user.auth?.twoFAactivated && !user.auth.otp_verified) {
-      console.log("🌪️ twofa =", user.auth.twoFAactivated, "otp_verified =", user.auth.otp_verified);
-      return res.status(200).json({ message: "User not connected", user: null });
-    }
+    // if (user.auth?.twoFAactivated && !user.auth.otp_verified) {
+    //   console.log("🌪️ twofa =", user.auth.twoFAactivated, "otp_verified =", user.auth.otp_verified);
+    //   return res.status(200).json({ message: "User not connected", user: null });
+    // }
     res.status(200).json({ message: "Successfully fetched user", user: user });
   }
 

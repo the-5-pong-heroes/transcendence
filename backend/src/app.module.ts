@@ -15,7 +15,8 @@ import { CurrentUserMiddleware } from "./common/middleware/current-user.middlewa
 import { PrismaService } from "./database/prisma.service";
 import { GoogleStrategy } from "./auth/google/google.strategy";
 
-const AUTH_PATH = "/auth/(Oauth42/login|Oauth|auth42/callback|user|signin|signup|signout|google|google/callback)";
+const AUTH_PATH =
+  "/auth/(Oauth42/login|Oauth|auth42/callback|user|signin|signup|signout|google|google/callback|twoFAactivated)";
 
 @Module({
   imports: [

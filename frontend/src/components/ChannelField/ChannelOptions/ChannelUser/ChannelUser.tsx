@@ -63,13 +63,6 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
     setUntilNumber(0);
   };
 
-  const inviteToPlay = (id?: string): void => {
-    if (!id) {
-      return;
-    }
-    socket.emit(ClientEvents.GameInvite, { userId: id });
-  };
-
   useEffect(() => {
     if (!activeUser) {
       return;
@@ -139,12 +132,6 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
                 onClick={() => setUntilOption("Ban")}
                 disabled={!activeUser || activeUser.role === "OWNER"}>
                 Ban
-              </button>
-              <button
-                className={styles.Button}
-                onClick={() => inviteToPlay(activeUser?.user.id)}
-                disabled={!activeUser || user?.id === activeUser?.user.id}>
-                Invite to play
               </button>
             </div>
           )}

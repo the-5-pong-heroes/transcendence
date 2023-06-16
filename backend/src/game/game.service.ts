@@ -79,7 +79,7 @@ export class GameService {
     }
     lobby = this.createLobby(lobbyMode, gameMode, client);
     lobby.dispatchLobbyState();
-    // this.broadcastLobbies();
+    this.broadcastLobbies();
   }
 
   public joinLobbyById(lobbyId: string, client: AuthenticatedSocket): void {
@@ -111,7 +111,7 @@ export class GameService {
     await this.delay(1000);
     lobby.startGame();
     lobby.dispatchLobbyState();
-    // this.broadcastLobbies();
+    this.broadcastLobbies();
   }
 
   /************     VIEW GAME    ************/
@@ -223,7 +223,7 @@ export class GameService {
 
   public removeLobby(lobbyId: string): void {
     this.lobbies.delete(lobbyId);
-    // this.broadcastLobbies();
+    this.broadcastLobbies();
   }
 
   public async removeSocket(client: AuthenticatedSocket): Promise<void> {

@@ -167,24 +167,54 @@
 }
 
 .username {
+  /* background-coor: red; */
   align-self: center;
   font-size: 2.3rem;
   margin: 0 0 0 1rem;
   font-family: sans-serif;
   color: white;
   text-shadow: darkblue 2px 0 10px;
+  display: flex;
 }
 
-.username img:last-child {
-  height: 20px !important;
+.username-icons {
+  height: 100%;
+  width: 100%;
+  margin-left: 10px;
 }
 
 .username img {
-  height: 25px;
   display: inline;
-  margin-left: 20px;
+  margin-left: 12px;
   filter: brightness(0) invert(1);
-  align-self: center
+  align-self: center;
+  border-radius: 0.5rem;
+}
+
+.username img:hover {
+  transform: scale(1.15);
+
+}
+
+.username img:active {
+  /* transform: translateY(-2px); */
+  transform: scale(1);
+}
+
+#game-icon {
+  height: 30px;
+}
+
+#chat-icon {
+  height: 35px;
+}
+
+#friend-icon {
+  height: 35px;
+}
+
+#settings-icon {
+  height: 30px;
 }
 
 .bullet-orange {

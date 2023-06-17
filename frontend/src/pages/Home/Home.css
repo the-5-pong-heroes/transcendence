@@ -138,7 +138,6 @@
   align-items: center;
   background-position: center;
   background-size: cover;
-  /* background-color: rgb(197, 169, 209); */
   background-color: #6E5898;
   border-radius: 1rem;
   width: 300px;
@@ -158,7 +157,6 @@
   padding: 5px 20px;
   box-shadow: 5px 8px 10px 3px rgba(47, 47, 47, 0.2);
   border-radius: 0.7rem;
-  opacity: 0.5;
 }
 
 .carroussel-img {
@@ -177,16 +175,16 @@
  }
 
 .carroussel-content {
-  /* background-color: red; */
   position: absolute;
   bottom: 0;
   width: 100%;
   height: 250px;
   display: flex;
   flex-direction: column;
-  justify-items: center;
+  justify-content: center;
   align-items: center;
   text-align: center;
+  /* background-color: red; */
   padding: 30px 40px;
 }
 
@@ -194,7 +192,7 @@
   font-size: 1.1rem;
   z-index: 1;
   font-weight: bold;
-  padding-bottom: 10px;
+  padding-bottom: 20px;
 }
 
 .carroussel-list {
@@ -203,4 +201,12 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+.carroussel-list-elem {
+  font-weight: 300;
+}
+
+.carroussel-list-elem:hover {
+  font-weight: 600;
 }

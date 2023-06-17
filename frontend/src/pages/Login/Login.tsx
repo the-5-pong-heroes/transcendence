@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useSignIn } from "./hooks";
+import { useSignIn, useTwoFA } from "./hooks";
 
 import { BASE_URL } from "@/constants";
 import { Logo_42, Logo_Google, Logo_Eve } from "@assets";
@@ -40,6 +40,7 @@ export const LoginGoogle: React.FC = () => {
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const signIn = useSignIn();
+  const twoFALogin = useTwoFA();
   const queryParams = new URLSearchParams(window.location.search);
   const displayPopup = queryParams.get("displayPopup") === "true";
   const twoFACode = React.useState("");
@@ -95,9 +96,7 @@ export const Login: React.FC = () => {
   async function updateVerify2FA() {
     // const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/verify";
     // window.open(url, "_self");
-    console.log("updateVerify2FA");
-    const response = await customFetch("get", "auth/2FA/verify");
-    console.log(response);
+    twoFALogin();
   }
 
   async function submitVerificationCode() {

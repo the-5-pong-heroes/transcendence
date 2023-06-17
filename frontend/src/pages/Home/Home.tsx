@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Mousewheel } from "swiper";
 
 import { handleOnClickButton } from "@/helpers";
-import { useAppContext } from "@hooks";
+import { useAppContext, useUser } from "@hooks";
 import type { AppContextParameters } from "@types";
 import { WallE_Img, WallE_2_Img, WallE_Eve_2_Img, Eve_Img, WallE_Eve_Img } from "@assets";
 
@@ -86,6 +86,9 @@ const Slide: React.FC<SlideProps> = ({ list, title, img, isActive }) => {
 };
 
 const Carroussel: React.FC = () => {
+  const user = useUser();
+  const userName = user ? user.name : "";
+
   return (
     <div className="swiper-container">
       <Swiper
@@ -116,7 +119,12 @@ const Carroussel: React.FC = () => {
           </SwiperSlide>
           <SwiperSlide>
             {({ isActive }) => (
-              <Slide list={undefined} title="Welcome to Transcendence !" img={WallE_Img} isActive={isActive} />
+              <Slide
+                list={undefined}
+                title={`Hi ${userName}, welcome to Transcendence !`}
+                img={WallE_Img}
+                isActive={isActive}
+              />
             )}
           </SwiperSlide>
           <SwiperSlide>
@@ -141,7 +149,7 @@ export const Home: React.FC<HomeProps> = ({ homeRef }) => {
 
   return (
     <div ref={homeRef} id="Home" className="home">
-      {/* <Carroussel /> */}
+      <Carroussel />
       <div className="home-play-button">
         <Link to={"/Game"} className="game-link" onClick={onClick}>
           <span>Ready to play ?</span>

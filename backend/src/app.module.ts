@@ -41,3 +41,4 @@ export class AppModule {
     consumer.apply(CurrentUserMiddleware).exclude({ path: AUTH_PATH, method: RequestMethod.ALL }).forRoutes("*");
   }
 }
+ 

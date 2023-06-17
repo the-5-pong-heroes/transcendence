@@ -6,7 +6,7 @@ import { EffectCoverflow, Mousewheel } from "swiper";
 import { handleOnClickButton } from "@/helpers";
 import { useAppContext } from "@hooks";
 import type { AppContextParameters } from "@types";
-import { WallE_Img, WallE_2_Img, WallE_Pong_Img, WallE_Eve_Img } from "@assets";
+import { WallE_Img, WallE_2_Img, WallE_Eve_2_Img, Eve_Img, WallE_Eve_Img } from "@assets";
 
 import "./Home.css";
 import "swiper/css";
@@ -16,118 +16,70 @@ interface HomeProps {
   homeRef: React.RefObject<HTMLDivElement>;
 }
 
-const Technologies: React.FC = () => {
-  const list = [
-    "React.js",
-    "React Three Fiber",
-    "Nest.js",
-    "PostgreSQL",
-    "Prisma Studio",
-    "Docker Compose",
-    "Socket.io",
-  ];
+const gameList = [
+  { text: "10-point game" },
+  { text: "⬆ | ⬇ | Pause | Esc" },
+  { text: "If you quit, the game goes on" },
+  { text: "Play in mode SOLO or DUO" },
+  { text: "May the best man win!" },
+];
 
-  const imgStyle: React.CSSProperties = {
-    backgroundImage: `url(${WallE_2_Img})`,
-    backgroundSize: "cover",
-    borderRadius: "0.5rem",
-  };
+const techList = [
+  { text: "React.js", link: "https://react.dev/" },
+  { text: "React Three Fiber", link: "https://github.com/pmndrs/react-three-fiber" },
+  { text: "Nest.js", link: "https://nestjs.com/" },
+  { text: "PostgreSQL", link: "https://www.postgresql.org/" },
+  { text: "Prisma Studio", link: "https://www.prisma.io/" },
+  { text: "Docker Compose", link: "https://docs.docker.com/compose/" },
+  { text: "Socket.io", link: "https://socket.io/" },
+];
 
-  return (
-    <div className="carroussel-slide">
-      <div className="carroussel-img" style={imgStyle}></div>
-      <div className="carroussel-heading">Technologies</div>
-      <div className="carroussel-list">
-        {list.map((technology) => (
-          <span key={technology} className="technology">
-            ➮ {technology}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
+const creditsList = [
+  { text: "mkralik" },
+  { text: "pguinie" },
+  { text: "lcavallu" },
+  { text: "llalba" },
+  { text: "efrancon" },
+];
+
+const featuresList = [
+  { text: "Play Pong against your friends", link: "/Game" },
+  { text: "Chat with your friends", link: "/Chat" },
+  { text: "Create public/private/protected channels", link: "/Chat" },
+  { text: "Update your user account settings", link: "/Settings" },
+];
+
+type ListItem = {
+  text: string;
+  link?: string;
 };
 
-const Credits: React.FC = () => {
-  const list = ["mkralik", "pguinie", "lcavallu", "llalba", "efrancon"];
+interface SlideProps {
+  list?: ListItem[];
+  title: string;
+  img: string;
+  isActive?: boolean;
+}
 
-  const imgStyle: React.CSSProperties = {
-    backgroundImage: `url(${WallE_Eve_Img})`,
-    backgroundSize: "cover",
-    borderRadius: "0.5rem",
-  };
-
+const Slide: React.FC<SlideProps> = ({ list, title, img, isActive }) => {
   return (
-    <div className="carroussel-slide">
-      <div className="carroussel-img" style={imgStyle}></div>
-      <div className="carroussel-heading">Credits</div>
-      <div className="carroussel-list">
-        {list.map((login) => (
-          <span key={login} className="technology">
-            ➮ {login}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const Subject: React.FC = () => {
-  const list = [
-    { title: "Play Pong against your friends", link: "/Game" },
-    { title: "Chat with your friends", link: "/Chat" },
-    { title: "Create public/private/protected channels", link: "/Chat" },
-    { title: "Update your user account settings", link: "/Settings" },
-  ];
-
-  const imgStyle: React.CSSProperties = {
-    backgroundImage: `url(${WallE_Img})`,
-    backgroundSize: "cover",
-    borderRadius: "0.5rem",
-  };
-
-  return (
-    <div className="carroussel-slide">
-      {/* <div className="carroussel-img" style={imgStyle}></div> */}
-      <img src={WallE_Img} />
-      <div className="carroussel-heading">Transcendence</div>
-      <div className="carroussel-heading">Available features</div>
-      <ul className="carroussel-list">
-        {list.map((feature) => (
-          <li key={feature.title} className="technology">
-            {/* <Link to={feature.title}>{feature.title}</Link> */}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
-const GameFeatures: React.FC = () => {
-  const list = [
-    "10-point game",
-    "Arrow up / Arrow down / Pause / Echap",
-    "If you quit, the game goes on",
-    "You can play in mode SOLO ord DUO",
-    "May the Best Man Win!",
-  ];
-
-  const imgStyle: React.CSSProperties = {
-    backgroundImage: `url(${WallE_Pong_Img})`,
-    backgroundSize: "cover",
-    borderRadius: "0.5rem",
-  };
-
-  return (
-    <div className="carroussel-slide">
-      <div className="carroussel-img" style={imgStyle}></div>
-      <div className="carroussel-heading">Game Features</div>
-      <div className="carroussel-list">
-        {list.map((login) => (
-          <span key={login} className="technology">
-            ➮ {login}
-          </span>
-        ))}
+    <div className={`carroussel-slide ${isActive ? "active" : ""}`}>
+      <img className="carroussel-img" src={img} alt="wall-e" />
+      <div className="carroussel-content">
+        <div className="carroussel-header">{title}</div>
+        <ul className="carroussel-list">
+          {list?.map((elem) =>
+            elem.link ? (
+              <li key={elem.text} className="carroussel-list-elem">
+                <Link to={elem.link}>{elem.text}</Link>
+              </li>
+            ) : (
+              <span key={elem.text} className="carroussel-list-elem">
+                {elem.text}
+              </span>
+            )
+          )}
+        </ul>
       </div>
     </div>
   );
@@ -137,7 +89,8 @@ const Carroussel: React.FC = () => {
   return (
     <div className="swiper-container">
       <Swiper
-        spaceBetween={10}
+        initialSlide={2}
+        spaceBetween={20}
         modules={[EffectCoverflow, Mousewheel]}
         mousewheel={true}
         direction="horizontal"
@@ -145,27 +98,32 @@ const Carroussel: React.FC = () => {
         centeredSlides
         slidesPerView="auto"
         effect="coverflow"
+        rewind={true}
         coverflowEffect={{
           rotate: 0,
           // rotate: 50,
           stretch: 0,
-          depth: 300,
+          depth: 400,
           modifier: 1,
           slideShadows: true,
         }}>
-        {/* > */}
         <div className="swiper-wrapper">
           <SwiperSlide>
-            <Subject />
+            {({ isActive }) => <Slide list={techList} title="Technologies" img={WallE_Eve_2_Img} isActive={isActive} />}
           </SwiperSlide>
           <SwiperSlide>
-            <GameFeatures />
+            {({ isActive }) => <Slide list={featuresList} title="Features" img={Eve_Img} isActive={isActive} />}
           </SwiperSlide>
           <SwiperSlide>
-            <Technologies />
+            {({ isActive }) => (
+              <Slide list={undefined} title="Welcome to Transcendence !" img={WallE_Img} isActive={isActive} />
+            )}
           </SwiperSlide>
           <SwiperSlide>
-            <Credits />
+            {({ isActive }) => <Slide list={gameList} title="Game Features" img={WallE_Eve_Img} isActive={isActive} />}
+          </SwiperSlide>
+          <SwiperSlide>
+            {({ isActive }) => <Slide list={creditsList} title="Credits" img={WallE_2_Img} isActive={isActive} />}
           </SwiperSlide>
         </div>
         <div className="swiper-pagination"></div>
@@ -183,7 +141,7 @@ export const Home: React.FC<HomeProps> = ({ homeRef }) => {
 
   return (
     <div ref={homeRef} id="Home" className="home">
-      {/* <Carroussel /> */}
+      <Carroussel />
       <div className="home-play-button">
         <Link to={"/Game"} className="game-link" onClick={onClick}>
           <span>Ready to play ?</span>

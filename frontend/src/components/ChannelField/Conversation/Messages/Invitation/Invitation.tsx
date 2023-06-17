@@ -19,7 +19,10 @@ export const Invitation: React.FC<IInvitationProps> = ({ message, theme }) => {
     if (!message.senderId || (user && user.id === message.senderId)) {
       return;
     }
-    socket.emit(ClientEvents.GameInvite, { userId: message.senderId });
+    // socket.emit(ClientEvents.GameInvite, { userId: message.senderId });
+    // TODO CHANGE INT0 CHAT INVITE EVENTS 
+    console.log("🍀", message.senderId);
+    socket.emit(ClientEvents.GameInviteResponse, { response: true, senderId: message.senderId });
   };
 
   return (

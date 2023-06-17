@@ -17,6 +17,7 @@ async function signIn(email: string, password: string): Promise<User> {
     throw new ResponseError(message ? message : "Fetch request failed", response);
   }
   const payload = (await response.json()) as UserAuth;
+  console.log("twoFA: ", payload.twoFA);
 
   return payload.user;
 }

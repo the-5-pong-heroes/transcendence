@@ -124,13 +124,13 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
     return data;
   }
 
-  // function openPopup(twoFACode: string) {
-  //   const popup = document.getElementById("popup");
-  //   if (popup) {
-  //     popup.style.display = "block";
-  //     popup.dataset.twoFACode = twoFACode;
-  //   }
-  // }
+  function openPopup(twoFACode: string) {
+    const popup = document.getElementById("popup");
+    if (popup) {
+      popup.style.display = "block";
+      popup.dataset.twoFACode = twoFACode;
+    }
+  }
 
   // function closePopup() {
   //   const popup = document.getElementById("popup");
@@ -139,7 +139,6 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
   //     popup.removeAttribute("data-twoFACode");
   //   }
   // }
-
 
   if (!user) {
     return null;
@@ -187,9 +186,9 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
             <input type="file" accept=".jpg, .jpeg, .png" onChange={handleFileChange} /> Select an image
           </label>
         </div>
-        {/* <div className="settings-col update-2fa"> */}
+        <div className="settings-col update-2fa">
           <Toggle2FA />
-        {/* </div> */}
+        </div>
       </div>
       <div className="settings-block block2">
         <Unfollow friends={settings.friends} handleUnfollow={handleUnfollow} />

@@ -3,12 +3,17 @@ import { UserService } from "src/user/user.service";
 import { PrismaService } from "src/database/prisma.service";
 import { Request, Response } from "express";
 import { google } from "googleapis";
-import { User } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { GOOGLE_CLIENT_ID, GOOGLE_SECRET, GOOGLE_REDIRECT_URI } from "src/common/constants";
 
 interface Token {
   access_token: string | null | undefined;
 }
+
+const userWithAuth = Prisma.validator<Prisma.UserArgs>()({
+  include: { auth: true },
+});
+type UserWithAuth = Prisma.UserGetPayload<typeof userWithAuth>;
 
 @Injectable({})
 export class GoogleService {
@@ -82,7 +87,7 @@ export class GoogleService {
     name: string,
     email: string,
     isRegistered: boolean,
-  ): Promise<User> {
+  ): Promise<UserWithAuth> {
     try {
       const user = await this.prisma.user.create({
         data: {
@@ -97,6 +102,7 @@ export class GoogleService {
           status: "ONLINE",
           lastLogin: new Date(),
         },
+        include: { auth: true },
       });
       return user;
     } catch (error) {

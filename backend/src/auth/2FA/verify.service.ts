@@ -33,8 +33,10 @@ export class VerifyService {
         },
       });
     }
-    return user;
-    //res.redirect(301, `http://localhost:5173/`);
+    console.log("✨ validate2FA: ", req.signedCookies, user);
+    // return user;
+    res.redirect(301, `http://localhost:5173/`);
+    // res.status(200).json({ message: "Welcome !", user: user });
   }
 
   async updateVerify2FA(user: User) {

@@ -119,13 +119,6 @@ export class AuthService {
     const payload = { email: auth.email, sub: auth.userId };
     const user = await this.userService.findOne(auth.userId);
     const accessToken = this.jwtService.sign(payload);
-    // console.log("accessToken", accessToken);
-    // if (auth.twoFAactivated) {
-    //   console.log("🔐🔐🔐");
-    //   this.verify2FAService.updateVerify2FA(user);
-    //   this.Generate2FA.sendActivationMail(user);
-    //   res.redirect(301, `http://localhost:5173/Login?displayPopup=true`);
-    // }
     await this.prisma.auth.update({
       where: {
         userId: auth.userId,
@@ -134,6 +127,12 @@ export class AuthService {
         accessToken: accessToken,
       },
     });
+    // console.log("accessToken", accessToken);
+    if (auth.twoFAactivated) {
+      console.log("🔐🔐🔐");
+      this.verify2FAService.updateVerify2FA(user);
+      this.Generate2FA.sendActivationMail(user);
+    }
     res
       .cookie("access_token", accessToken, {
         httpOnly: true,
@@ -143,7 +142,7 @@ export class AuthService {
         signed: true,
       })
       .status(200)
-      .json({ message: "Welcome back !", user: user });
+      .json({ message: "Welcome back !", user: user, twoFA: auth.twoFAactivated });
   }
 
   async signInGoogle(@Res() res: Response, userInfos: GoogleUserInfos): Promise<void> {
@@ -159,6 +158,7 @@ export class AuthService {
         },
       });
       user = await this.userService.findOne(userByEmail.userId);
+      this.updateCookies(res, userInfos.accessToken, user);
     } else {
       user = await this.googleService.createDataBaseUserFromGoogle(
         userInfos.accessToken,
@@ -166,6 +166,20 @@ export class AuthService {
         userInfos.email,
         true,
       );
+    }
+    if (user.auth?.twoFAactivated) {
+      this.verify2FAService.updateVerify2FA(user);
+      this.Generate2FA.sendActivationMail(user);
+      res
+        .cookie("access_token", userInfos.accessToken, {
+          httpOnly: true,
+          secure: false,
+          sameSite: "strict",
+          expires: new Date(Date.now() + 86400 * 1000),
+          signed: true,
+        })
+        .redirect(301, `${CLIENT_URL}/Login?displayPopup=true`);
+      return;
     }
     res
       .cookie("access_token", userInfos.accessToken, {
@@ -203,6 +217,7 @@ export class AuthService {
 
   async getUser(req: Request, res: Response): Promise<any> {
     const access_token = req.signedCookies.access_token;
+    console.log("💫 getUser: ", access_token);
     if (!access_token) {
       return res.status(200).json({ message: "User not connected", user: null });
     }
@@ -210,10 +225,10 @@ export class AuthService {
     if (!user) {
       return res.status(404).json({ message: "Invalid token" });
     }
-    // if (user.auth?.twoFAactivated && !user.auth.otp_verified) {
-    //   console.log("🌪️ twofa =", user.auth.twoFAactivated, "otp_verified =", user.auth.otp_verified);
-    //   return res.status(200).json({ message: "User not connected", user: null });
-    // }
+    if (user.auth?.twoFAactivated && !user.auth.otp_verified) {
+      console.log("🌪️ twofa =", user.auth.twoFAactivated, "otp_verified =", user.auth.otp_verified);
+      return res.status(200).json({ message: "User not connected", user: null });
+    }
     res.status(200).json({ message: "Successfully fetched user", user: user });
   }
 

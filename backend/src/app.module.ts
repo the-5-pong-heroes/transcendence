@@ -16,7 +16,7 @@ import { PrismaService } from "./database/prisma.service";
 import { GoogleStrategy } from "./auth/google/google.strategy";
 
 const AUTH_PATH =
-  "/auth/(Oauth42/login|Oauth|auth42/callback|user|signin|signup|signout|google|google/callback|twoFAactivated)";
+  "/auth/(Oauth42/login|Oauth|auth42/callback|user|signin|signup|signout|google|google/callback|twoFAactivated|2FA/verify|2FA/generate)";
 
 @Module({
   imports: [

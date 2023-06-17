@@ -3,8 +3,14 @@ import { HttpException, HttpStatus, Injectable, Req, Res } from "@nestjs/common"
 import { PrismaService } from "src/database/prisma.service";
 import * as fs from "fs";
 import { Request, Response } from "express";
+import { Prisma } from "@prisma/client";
 
 const myHTML = fs.readFileSync("./index.html", "utf8");
+
+const userWithAuth = Prisma.validator<Prisma.UserArgs>()({
+  include: { auth: true },
+});
+type UserWithAuth = Prisma.UserGetPayload<typeof userWithAuth>;
 
 @Injectable()
 export class Generate2FAService {
@@ -23,9 +29,8 @@ export class Generate2FAService {
         auth: true,
       },
     });
-    console.log("User :", user);
     // console.log("🪭 generateService: ", user);
-    //this.updateUser(user);
+    this.updateUser(user);
     const code = user?.auth?.twoFASecret;
     const twoFAactivated = true;
     return res.json({
@@ -68,9 +73,11 @@ export class Generate2FAService {
     try {
       const email = user42.auth.email;
       const code2FA = this.generateRandomCode(6);
-      this.sendEmailToUser(email, user42, code2FA);
+      console.log("sendActivationMail: ", email, code2FA);
+      // this.sendEmailToUser(email, user42, code2FA);
       await this.storeCodeToDataBase(code2FA, user42);
       this.updateUser(user42);
+      console.log("code2FA: ", code2FA);
       return code2FA;
     } catch (error) {
       throw new HttpException(

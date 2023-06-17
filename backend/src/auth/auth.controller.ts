@@ -105,14 +105,12 @@ export class AuthController {
     const user = await this.authService.validateUser(accessToken);
     if (!user) return res.status(404).json({ message: "Invalid token" });
     if (!user.auth) return res.status(200).json({ message: "User has no authentication" });
-    // console.log("💥💥💥 twoFAactivated: ", user.auth.twoFAactivated);
     return res.status(200).json({ twoFAactivated: user.auth.twoFAactivated });
   }
 
   @Put("twoFAtoggle")
   async twoFAtoggle(@Req() req: Request, @Res() res: Response) {
     const { isToggled } = req.body;
-    // console.log("✨✨✨", req.body);
     const accessToken = req.signedCookies.access_token;
     if (!accessToken) return res.status(200).json({ message: "User not connected" });
     const user = await this.authService.validateUser(accessToken);
@@ -129,6 +127,7 @@ export class AuthController {
 
   @Get("2FA/verify")
   async verify2FA(@Req() req: Request, @Res() res: Response) {
+    console.log("💥 verify2FA");
     return this.verify2FAService.validate2FA(req, res);
   }
 

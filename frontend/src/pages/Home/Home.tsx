@@ -141,7 +141,7 @@ export const Home: React.FC<HomeProps> = ({ homeRef }) => {
 
   return (
     <div ref={homeRef} id="Home" className="home">
-      <Carroussel />
+      {/* <Carroussel /> */}
       <div className="home-play-button">
         <Link to={"/Game"} className="game-link" onClick={onClick}>
           <span>Ready to play ?</span>

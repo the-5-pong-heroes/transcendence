@@ -5,6 +5,8 @@ import { useSignIn } from "./hooks";
 
 import { BASE_URL } from "@/constants";
 import { Logo_42, Logo_Google, Logo_Eve } from "@assets";
+import { customFetch } from "@/helpers";
+
 import "./Login.css";
 
 export const Login42: React.FC = () => {
@@ -91,8 +93,11 @@ export const Login: React.FC = () => {
   }
 
   async function updateVerify2FA() {
-    const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/verify";
-    window.open(url, "_self");
+    // const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/verify";
+    // window.open(url, "_self");
+    console.log("updateVerify2FA");
+    const response = await customFetch("get", "auth/2FA/verify");
+    console.log(response);
   }
 
   async function submitVerificationCode() {
@@ -104,7 +109,7 @@ export const Login: React.FC = () => {
         const twoFACode = popup.dataset.twoFACode;
         console.log("twoFA = ", twoFACode);
         console.log("verif = ", verificationCode);
-        if (verificationCode === twoFACode) {
+        if (verificationCode !== twoFACode) {
           alert("Code de vérification correct !");
           closePopup();
           await updateVerify2FA();

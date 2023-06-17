@@ -142,15 +142,34 @@ export class GameService {
 
   public async inviteToGameResponse(response: boolean, senderId: string, client: AuthenticatedSocket): Promise<void> {
     const sender = this.connectedSockets.get(senderId);
-    // console.log(this.connectedSockets);
-    console.log("🍀 sender: ", sender === undefined, senderId);
     if (sender === undefined) {
       response &&
         client.emit(ServerEvents.LobbyMessage, "Too late, the sender of the invitation is no longer available...");
       return;
     }
+    this.runInviteToGame(response, sender, client);
+  }
+
+  public async inviteToGameLink(userId: string, client: AuthenticatedSocket): Promise<void> {
+    for (const [socketId, socket] of this.connectedSockets) {
+      if (userId === socket.data.userId) {
+        const sender = this.connectedSockets.get(socketId);
+        if (sender === undefined) {
+          client.emit(ServerEvents.LobbyMessage, "Too late, the sender of the invitation is no longer available...");
+          return;
+        }
+        this.runInviteToGame(true, sender, client);
+        break;
+      }
+    }
+  }
+
+  private async runInviteToGame(
+    response: boolean,
+    sender: AuthenticatedSocket,
+    client: AuthenticatedSocket,
+  ): Promise<void> {
     const senderStatus = await this.userService.getStatus(sender?.data.userId);
-    console.log("🍀🍀🍀 senderStatus: ", senderStatus);
     if (senderStatus !== "ONLINE") {
       response &&
         client.emit(ServerEvents.LobbyMessage, "Too late, the sender of the invitation is no longer available...");

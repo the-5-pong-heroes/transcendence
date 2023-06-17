@@ -95,7 +95,7 @@ model ChannelUser {
 
   role Role     @default(USER)
 
-  isAuthorized  Boolean   @default(false)
+  isAuthorized  Boolean   @default(true)
   isMuted       Boolean   @default(false)
   mutedUntil    DateTime?
 }

@@ -37,6 +37,7 @@
       gap: 10px;
       padding: 10px;
       border-radius: 7px;
+      color: black;
       }
 
     .TypeIcon {
@@ -91,6 +92,10 @@
   }
 
   .ActiveType {
+    filter: invert(1);
+  }
+
+  .TypeNotOwner {
     filter: invert(1);
   }
   

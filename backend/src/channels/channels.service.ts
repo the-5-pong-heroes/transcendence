@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { CreateChannelDto } from "./dto/create-channel.dto";
 import { PrismaService } from "../database/prisma.service";
 import { UsersService } from "../users/users.service";
-// import { UsersService } from "../users_paul/users.service";
 import { Channel, ChannelUser } from "@prisma/client";
 import { UpdateChannelDto } from "./dto/update-channel.dto";
 
@@ -204,7 +203,7 @@ export class ChannelsService {
     return [...channels, ...endUsers];
   }
 
-  async update(updateChannelDto: UpdateChannelDto) {
+  async update(updateChannelDto: UpdateChannelDto): Promise<Channel> {
     const { users, banned, ...data } = updateChannelDto;
     return this.prismaService.channel.update({
       where: { id: updateChannelDto.id },

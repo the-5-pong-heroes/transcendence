@@ -1,12 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { UserContext, UserContextType } from "../../../contexts";
 import { type IChannel } from "../../../interfaces";
 
-// import { socket } from "../../../socket";
 import styles from "./ProtectedChannel.module.scss";
 
-import { useUser, useSocket } from "@hooks";
+import { useUser, useSocket, useTheme } from "@hooks";
 
 interface IProtectedChannelProps {
   activeChannel: IChannel | null;
@@ -15,8 +13,9 @@ interface IProtectedChannelProps {
 export const ProtectedChannel: React.FC<IProtectedChannelProps> = ({ activeChannel }) => {
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
-  // const { user } = useContext(UserContext) as UserContextType;
+
   const user = useUser();
+  const theme = useTheme();
   const socket = useSocket();
 
   const handleChange = (event: any) => {
@@ -25,8 +24,6 @@ export const ProtectedChannel: React.FC<IProtectedChannelProps> = ({ activeChann
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    // const token = window.localStorage.getItem('access_token');
-    // if (!token || !user?.id || !activeChannel || password === "") return;
     if (!user?.id || !activeChannel || password === "") {
       return;
     }
@@ -42,7 +39,7 @@ export const ProtectedChannel: React.FC<IProtectedChannelProps> = ({ activeChann
   }, []);
 
   return (
-    <div className={styles.ProtectedChannel}>
+    <div className={`${styles.ProtectedChannel} ${theme === "light" ? styles.ProtectedChannelLight : ""}`}>
       <form className={styles.Form} onSubmit={handleSubmit}>
         <div>Enter password channel please:</div>
         <input className={styles.Password} type="password" value={password} onChange={handleChange} required={true} />

@@ -16,9 +16,6 @@ export const ChannelProvider: React.FC<ProviderParameters> = ({ children }) => {
   const socket = useSocket();
 
   const fetchData = async (changeChannel = true) => {
-    // const	token = localStorage.getItem('access_token');
-    // if (!token) return;
-    // const	config = { headers: { 'Authorization': token }};
     const config = { credentials: "include" as RequestCredentials };
     const response = await fetch("http://localhost:3000/chat", config);
     if (!response.ok) {

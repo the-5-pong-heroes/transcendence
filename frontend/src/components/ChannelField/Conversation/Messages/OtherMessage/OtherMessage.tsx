@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import styles from "./OtherMessage.module.scss";
@@ -6,6 +6,7 @@ import styles from "./OtherMessage.module.scss";
 import { type IMessage } from "@/interfaces";
 import { useUser, useSocket } from "@hooks";
 import { ResponseError } from "@/helpers";
+import { DefaultAvatar } from "@/assets";
 
 interface IOtherMessageProps {
   message: IMessage;
@@ -89,7 +90,11 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
 
   return (
     <div className={`${styles.OtherMessage} ${theme === "light" ? styles.OtherMessageLight : styles.OtherMessageDark}`}>
-      <div className={styles.Avatar} onClick={() => setShowOptions()} />
+      <div
+        className={styles.Avatar}
+        onClick={() => setShowOptions()}
+        style={{backgroundImage: `url(${message.sender?.avatar ? message.sender.avatar : DefaultAvatar})` }}
+      />
       {showOptions && (
         <div className={styles.Options} ref={optionsRef}>
           <div className={styles.Option} onClick={handleViewProfile}>

@@ -28,6 +28,7 @@ export class MessagesService {
         sender: {
           select: {
             name: true,
+            avatar: true,
           },
         },
       },

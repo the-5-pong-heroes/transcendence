@@ -11,7 +11,6 @@ import {
   BadRequestException,
   UnauthorizedException,
 } from "@nestjs/common";
-// import { AuthGuard } from "@nestjs/passport";
 import { ChannelUser } from "@prisma/client";
 import { PrismaService } from "../database/prisma.service";
 import { MessagesService } from "../messages/messages.service";
@@ -21,7 +20,6 @@ import { UpdateChannelDto } from "./dto/update-channel.dto";
 import { UserGuard } from "src/auth/user.guard";
 
 @Controller("chat")
-// @UseGuards(AuthGuard("jwt"))
 @UseGuards(UserGuard)
 export class ChannelsController {
   constructor(

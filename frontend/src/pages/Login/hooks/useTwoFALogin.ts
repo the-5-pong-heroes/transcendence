@@ -22,7 +22,7 @@ async function verifyTwoFA(): Promise<User> {
 
 type IUseTwoFA = UseMutateFunction<User>;
 
-export function useTwoFA(): IUseTwoFA {
+export function useTwoFALogin(): IUseTwoFA {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 

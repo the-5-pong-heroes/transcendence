@@ -2,8 +2,6 @@ import { useQueryClient, type UseMutateFunction, useMutation } from "react-query
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { useTwoFA } from "./useTwoFA";
-
 import { ResponseError, type ErrorMessage, customFetch } from "@/helpers";
 import { USER_QUERY_KEY } from "@/constants";
 import type { UserAuth, User } from "@types";
@@ -29,7 +27,7 @@ async function signIn(email: string, password: string): Promise<User | null> {
 }
 
 type IUseSignIn = UseMutateFunction<
-  User,
+  User | null,
   unknown,
   {
     email: string;
@@ -40,20 +38,18 @@ type IUseSignIn = UseMutateFunction<
 export function useSignIn(): IUseSignIn {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const twoFALogin = useTwoFA();
 
   const { mutate: signInMutation } = useMutation<User | null, unknown, { email: string; password: string }>(
     ({ email, password }) => signIn(email, password),
     {
       onSuccess: (data) => {
         if (!data) {
-          console.log("💋💋💋");
-
-          return twoFALogin();
+          navigate("/Login?displayPopup=true");
+        } else {
+          queryClient.setQueryData([USER_QUERY_KEY], data);
+          toast.success("🎉 Signed in successfully!");
+          navigate("/");
         }
-        queryClient.setQueryData([USER_QUERY_KEY], data);
-        toast.success("🎉 Signed in successfully!");
-        navigate("/");
       },
       onError: (error) => {
         if (error instanceof ResponseError) {

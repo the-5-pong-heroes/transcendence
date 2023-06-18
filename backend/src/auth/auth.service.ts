@@ -127,9 +127,7 @@ export class AuthService {
         accessToken: accessToken,
       },
     });
-    // console.log("accessToken", accessToken);
     if (auth.twoFAactivated) {
-      console.log("🔐🔐🔐");
       this.verify2FAService.updateVerify2FA(user);
       this.Generate2FA.sendActivationMail(user);
     }
@@ -158,7 +156,6 @@ export class AuthService {
         },
       });
       user = await this.userService.findOne(userByEmail.userId);
-      this.updateCookies(res, userInfos.accessToken, user);
     } else {
       user = await this.googleService.createDataBaseUserFromGoogle(
         userInfos.accessToken,
@@ -167,19 +164,11 @@ export class AuthService {
         true,
       );
     }
+    let url = CLIENT_URL;
     if (user.auth?.twoFAactivated) {
       this.verify2FAService.updateVerify2FA(user);
       this.Generate2FA.sendActivationMail(user);
-      res
-        .cookie("access_token", userInfos.accessToken, {
-          httpOnly: true,
-          secure: false,
-          sameSite: "strict",
-          expires: new Date(Date.now() + 86400 * 1000),
-          signed: true,
-        })
-        .redirect(301, `${CLIENT_URL}/Login?displayPopup=true`);
-      return;
+      url = `${CLIENT_URL}/Login?displayPopup=true`;
     }
     res
       .cookie("access_token", userInfos.accessToken, {
@@ -189,7 +178,7 @@ export class AuthService {
         expires: new Date(Date.now() + 86400 * 1000),
         signed: true,
       })
-      .redirect(301, CLIENT_URL);
+      .redirect(301, url);
   }
 
   async signOut(res: Response): Promise<void> {
@@ -197,7 +186,6 @@ export class AuthService {
   }
 
   async validateUser(access_token: string): Promise<UserWithAuth | null> {
-    // console.log("🏃‍♀️ access_token: ", access_token);
     try {
       const user = await this.prisma.user.findFirst({
         where: {

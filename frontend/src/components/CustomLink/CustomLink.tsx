@@ -5,7 +5,7 @@ import { useAppContext } from "@hooks";
 
 interface LinkProps {
   to: string;
-  className: string;
+  className?: string;
   children: React.ReactNode;
 }
 

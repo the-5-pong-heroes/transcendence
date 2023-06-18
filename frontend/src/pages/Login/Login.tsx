@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useSignIn, useTwoFA } from "./hooks";
+import { useSignIn, useTwoFALogin } from "./hooks";
 
 import { BASE_URL } from "@/constants";
 import { Logo_42, Logo_Google, Logo_Eve } from "@assets";
@@ -40,11 +40,11 @@ export const LoginGoogle: React.FC = () => {
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const signIn = useSignIn();
-  const twoFALogin = useTwoFA();
+  const twoFALogin = useTwoFALogin();
   const queryParams = new URLSearchParams(window.location.search);
   const displayPopup = queryParams.get("displayPopup") === "true";
   const twoFACode = React.useState("");
-  const [isActivated, setIsActivated] = React.useState(false);
+  const [isActivated, setIsActivated] = useState<boolean>(false);
 
   const onSignIn: React.FormEventHandler<HTMLFormElement> = (form) => {
     form.preventDefault();
@@ -60,8 +60,8 @@ export const Login: React.FC = () => {
     }
   };
 
-  if (displayPopup === true) {
-    handle2FAfunction();
+  if (displayPopup) {
+    handle2FAfunction().catch((error) => console.log(error));
   }
 
   async function handle2FAfunction(): Promise<any> {

@@ -7,6 +7,7 @@ import { handleOnClickButton } from "@/helpers";
 import { useAppContext, useUser } from "@hooks";
 import type { AppContextParameters } from "@types";
 import { WallE_Img, WallE_2_Img, WallE_Eve_2_Img, Eve_Img, WallE_Eve_Img } from "@assets";
+import { CustomLink } from "@/components";
 
 import "./Home.css";
 import "swiper/css";
@@ -46,7 +47,7 @@ const featuresList = [
   { text: "Play Pong against your friends", link: "/Game" },
   { text: "Chat with your friends", link: "/Chat" },
   { text: "Create public/private/protected channels", link: "/Chat" },
-  { text: "Update your user account settings", link: "/Settings" },
+  { text: "Customize your profile", link: "/Settings" },
 ];
 
 type ListItem = {
@@ -71,7 +72,7 @@ const Slide: React.FC<SlideProps> = ({ list, title, img, isActive }) => {
           {list?.map((elem) =>
             elem.link ? (
               <li key={elem.text} className="carroussel-list-elem">
-                <Link to={elem.link}>{elem.text}</Link>
+                <CustomLink to={elem.link}>{elem.text}</CustomLink>
               </li>
             ) : (
               <span key={elem.text} className="carroussel-list-elem">

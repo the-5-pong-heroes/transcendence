@@ -1,8 +1,6 @@
-import { HttpException, HttpStatus, Injectable, Req, Res } from "@nestjs/common";
+import { Injectable, Req, Res } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
 import { Request, Response } from "express";
-import * as bcrypt from "bcrypt";
-import { userInfo } from "os";
 import { User } from "@prisma/client";
 
 @Injectable()
@@ -33,9 +31,7 @@ export class VerifyService {
         },
       });
     }
-    console.log("✨ validate2FA: ", req.signedCookies, user);
-    // return user;
-    // res.redirect(301, `http://localhost:5173/`);
+    console.log("✨ validate2FA: ", req.signedCookies);
     res.status(200).json({ message: "Welcome !", user: user });
   }
 

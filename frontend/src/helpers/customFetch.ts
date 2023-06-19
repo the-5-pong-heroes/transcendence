@@ -41,6 +41,5 @@ export async function customFetch(
   };
   const request: Request = new Request(`${BASE_URL}/${path}`, options);
   const response: Response = await fetch(request);
-
   return response;
 }

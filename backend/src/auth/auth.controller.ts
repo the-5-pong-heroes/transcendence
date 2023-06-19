@@ -105,8 +105,8 @@ export class AuthController {
   }
 
   @Get("2FA/generate")
-  async generate2FA(@Req() req: Request, @Res() res: Response) {
-    return this.Generate2FA.generateService(req, res);
+  async generate2FA(@Req() req: Request) {
+    return this.Generate2FA.generateService(req);
   }
 
   @Get("2FA/verify")
@@ -115,8 +115,8 @@ export class AuthController {
   }
 
   @Get("2FA/disable")
-  async disable2FA(@Req() req: Request, @Res() res: Response) {
-    return this.enable2FAService.disable2FA(req, res);
+  async disable2FA(@Req() req: Request) {
+    return this.enable2FAService.disable2FA(req);
   }
 
   //    @Get("google/callback")

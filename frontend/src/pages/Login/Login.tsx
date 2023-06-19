@@ -42,7 +42,6 @@ export const Login: React.FC = () => {
   const queryParams = new URLSearchParams(window.location.search);
   const displayPopup = queryParams.get("displayPopup") === "true";
   const twoFACode = React.useState("");
-  const [isActivated, setIsActivated] = React.useState(false);
 
   const onSignIn: React.FormEventHandler<HTMLFormElement> = (form) => {
     form.preventDefault();
@@ -66,20 +65,20 @@ export const Login: React.FC = () => {
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code: twoFACode, twoFAactivated: isActivated }),
+      body: JSON.stringify({ code: twoFACode}),
     });
     const data = await response.json();
     if (displayPopup === true) {
-      openPopup(data.code);
+      openPopup();
     }
     return data;
   }
 
-  async function openPopup(twoFACode: string) {
+  async function openPopup() {
     const popup = document.getElementById("popup");
     if (popup) {
       popup.style.display = "block";
-      popup.dataset.twoFACode = twoFACode;
+      popup.dataset.twoFACode = "test";
     }
   }
 
@@ -87,7 +86,6 @@ export const Login: React.FC = () => {
     const popup = document.getElementById("popup");
     if (popup) {
       popup.style.display = "none";
-      popup.removeAttribute("data-twoFACode");
     }
   }
 

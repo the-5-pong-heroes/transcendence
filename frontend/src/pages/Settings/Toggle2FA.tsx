@@ -37,21 +37,16 @@ export const Toggle2FA: React.FC = () => {
   async function toggle2FA() {
     if (isActivated === true)
     {
-      console.log("Hello 1");
-      const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/disable";
-      console.log("Hello 2");
-      const response = await customFetch("GET", url );
-      console.log("Hello 3");
+      const response = await customFetch("GET", "auth/2FA/disable");
+      console.log("response: ", response);
     }
     else{
-      console.log("Hello 1");
-      const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/generate";
-      console.log("Hello 2");
-      const response = await fetch(url);
-      console.log("Hello 3");
+      const response = await customFetch("GET", "auth/2FA/generate");
+      console.log("response: ", response);
     }
-    console.log("toggle2FA");
+    console.log("isActivated1: ", isActivated);
     setIsActivated(!isActivated);
+    console.log("isActivated2: ", isActivated);
   }
 
   useEffect(() => {

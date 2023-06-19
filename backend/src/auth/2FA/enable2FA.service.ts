@@ -6,7 +6,7 @@ import { HttpException, HttpStatus, Injectable, Req, Res } from "@nestjs/common"
 export class EnableService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async disable2FA(@Req() req: Request, @Res() res: Response) {
+  async disable2FA(@Req() req: Request) {
     const accessToken = req.cookies.access_token;
     const user = await this.prisma.user.findFirst({
       where: {
@@ -31,7 +31,6 @@ export class EnableService {
         },
       });
     }
-    return user;
   }
 
   async eable2FA(@Req() req: Request, @Res() res: Response) {

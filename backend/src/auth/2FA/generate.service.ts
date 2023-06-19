@@ -14,7 +14,7 @@ const myHTML = fs.readFileSync("./index.html", "utf8");
 export class Generate2FAService {
   constructor(private readonly mailerService: MailerService, private prisma: PrismaService) {}
 
-  async generateService(@Req() req: Request, @Res() res: Response) {
+  async generateService(@Req() req: Request) {
     const accessToken = req.cookies.access_token;
     const user = await this.prisma.user.findFirst({
       where: {
@@ -27,7 +27,6 @@ export class Generate2FAService {
       },
     });
     this.updateUser(user);
-    return user;
   }
 
   async updateUser(user: (User & { auth: Auth | null }) | null) {

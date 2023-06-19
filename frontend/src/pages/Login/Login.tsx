@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 
 import { useSignIn } from "./hooks";
 
-import { BASE_URL, API_42 } from "@/constants";
+import { BASE_URL, API42_URL, API42_CLIENT_ID, API42_REDIRECT } from "@/constants";
 import { Logo_42, Logo_Google, Logo_Eve } from "@assets";
 import "./Login.css";
 
 export const Login42: React.FC = () => {
   const handleOnClick = (): void => {
-    window.open(API_42, "_self");
+    window.open(API42_URL, "_self");
   };
 
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ export const Login42: React.FC = () => {
   const [isActivated, setIsActivated] = React.useState(false);
 
   const handleAuth42 = (): void => {
-    window.open(API_42, "_self");
+    window.open(API42_URL, "_self");
   };
 
   // const handleAuthGoogle = () => {

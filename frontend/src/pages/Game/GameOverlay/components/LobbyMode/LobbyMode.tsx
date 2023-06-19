@@ -26,7 +26,7 @@ export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode,
   };
 
   return (
-    <div className="game-modal-cross">
+    <div className="game-modal cross">
       <CloseButton />
       <div className="game-button-wrapper">
         <GameButton

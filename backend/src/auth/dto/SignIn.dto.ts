@@ -1,14 +1,11 @@
-import { IsString, IsNotEmpty, MaxLength, MinLength } from "class-validator";
+import { IsString, IsEmail, IsNotEmpty, Length } from "class-validator";
 
 export class SignInDto {
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(30)
+  @IsEmail()
   email: string;
 
   @IsString()
   @IsNotEmpty()
-  @MaxLength(50)
-  @MinLength(8)
+  @Length(8, 50)
   password: string;
 }

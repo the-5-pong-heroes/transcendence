@@ -62,7 +62,7 @@
   background: linear-gradient(45deg, hsla(276, 37%, 20%, 0.99), hsla(261, 46%, 30%, 0.99), hsla(248, 43%, 25%, 0.99));
 }
 
-.game-modal-cross {
+.game-modal.cross {
   position: absolute;
   z-index: 2;
   height: 160px;
@@ -111,10 +111,18 @@
     height: 150px;
     width: 480px;
   }
+  .game-modal-cross {
+    height: 100px;
+    width: 300px;
+  }
 }
 
 @media (max-width: 350px), (max-height: 440px) {
   .game-modal {
+    height: 40%;
+    width: 75%;
+  }
+  .game-modal-cross {
     height: 40%;
     width: 75%;
   }

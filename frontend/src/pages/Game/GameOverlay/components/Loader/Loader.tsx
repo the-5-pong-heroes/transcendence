@@ -13,7 +13,7 @@ export const Loader: React.FC<LoaderParameters> = ({ loader }) => {
   }
 
   return (
-    <div className="game-modal-cross">
+    <div className="game-modal cross">
       <CloseButton />
       <div className="loader-wrapper">
         <div className="loader"></div>

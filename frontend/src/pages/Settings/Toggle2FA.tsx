@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "@/hooks";
 import "./Toggle2FA.css";
+import { customFetch } from "../../helpers";
 
 export const Toggle2FA: React.FC = () => {
   const [isActivated, setIsActivated] = useState<boolean>(false);
@@ -39,7 +40,7 @@ export const Toggle2FA: React.FC = () => {
       console.log("Hello 1");
       const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/disable";
       console.log("Hello 2");
-      const response = await fetch(url);
+      const response = await customFetch("GET", url );
       console.log("Hello 3");
     }
     else{

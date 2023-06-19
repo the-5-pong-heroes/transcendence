@@ -19,7 +19,4 @@ export type User = {
   addedBy: {
     userId: string;
   }[];
-  auth: {
-    two
-  }
 };

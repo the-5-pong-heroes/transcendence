@@ -8,16 +8,20 @@ import { Logo_42, Logo_Google, Logo_Eve } from "@assets";
 import "./Login.css";
 
 export const Login42: React.FC = () => {
-  const handleOnClick = (): void => {
-    window.open(API42_URL, "_self");
+  const body = {
+    client_id: API42_CLIENT_ID,
+    redirect_uri: API42_REDIRECT,
+    response_type: "code",
+    scope: "public",
   };
+  const url_42_auth = API42_URL + "?" + new URLSearchParams(body).toString();
 
   const navigate = useNavigate();
   const twoFACode = React.useState("");
   const [isActivated, setIsActivated] = React.useState(false);
 
   const handleAuth42 = (): void => {
-    window.open(API42_URL, "_self");
+    window.open(url_42_auth, "_self");
   };
 
   // const handleAuthGoogle = () => {

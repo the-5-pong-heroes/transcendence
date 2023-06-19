@@ -1,6 +1,4 @@
-include ./env/docker.example.env
-export $(sed 's/=.*//' ./env/docker.example.env)
-
+# updates the path to your environment file below
 DOCKER_ENV_FILE		= ./env/docker.example.env
 
 ifneq ($(shell docker compose version 2>/dev/null),)

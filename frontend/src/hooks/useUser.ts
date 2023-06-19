@@ -6,7 +6,7 @@ import * as fetch from "@/helpers/fetch";
 
 async function fetchUser(): Promise<User | null> {
   const data = await fetch.get<UserAuth>("/auth/user");
-
+  
   return data.user;
 }
 
@@ -34,6 +34,5 @@ export function useUserQuery(): IUseUser {
 
 export function useUser(): User | null {
   const { user } = useUserQuery();
-  console.log("useUser", user);
   return user;
 }

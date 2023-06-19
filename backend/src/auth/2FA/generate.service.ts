@@ -5,6 +5,8 @@ import * as bcrypt from "bcrypt";
 import * as fs from "fs";
 import * as path from "path";
 import { Request, Response } from "express";
+import { User } from "@prisma/client";
+import { Auth } from "@prisma/client";
 
 const myHTML = fs.readFileSync("./index.html", "utf8");
 
@@ -24,25 +26,19 @@ export class Generate2FAService {
         auth: true,
       },
     });
-    //this.updateUser(user);
-    const code = user?.auth?.twoFASecret;
-    const twoFAactivated = true;
-    return res.json({
-      code,
-      twoFAactivated,
-    });
+    this.updateUser(user);
+    return user;
   }
 
-  async updateUser(user: any) {
+  async updateUser(user: (User & { auth: Auth | null }) | null) {
     try {
-      const userid = user.id;
+      const userid = user?.id;
       const updatedUser = await this.prisma.user.update({
         where: { id: userid },
         data: {
           auth: {
             update: {
               twoFAactivated: true,
-              otp_enabled: true,
               otp_validated: false,
             },
           },
@@ -56,7 +52,7 @@ export class Generate2FAService {
       throw new HttpException(
         {
           status: HttpStatus.BAD_REQUEST,
-          error: "Fail to update user in Disable 2FA ",
+          error: "Fail to update user in Generate 2FA ",
         },
         HttpStatus.BAD_REQUEST,
       );
@@ -107,9 +103,6 @@ export class Generate2FAService {
 
   async storeCodeToDataBase(code2FA: string, user42: any) {
     try {
-      //const saltOrRounds = 10;
-      //const password = code2FA;
-      //const hash = await bcrypt.hash(password, saltOrRounds);
       const userid = user42.id;
       const updatedUser = await this.prisma.user.update({
         where: { id: userid },

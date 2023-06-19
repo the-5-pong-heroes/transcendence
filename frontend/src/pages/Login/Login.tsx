@@ -108,7 +108,7 @@ export const Login: React.FC = () => {
         if (verificationCode === twoFACode) {
           alert("Code de vérification correct !");
           closePopup();
-          await updateVerify2FA();
+          updateVerify2FA();
           navigate("/");
         } else {
           alert("Code de vérification incorrect. Veuillez réessayer.");

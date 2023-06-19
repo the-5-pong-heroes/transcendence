@@ -33,7 +33,7 @@ export class AuthController {
     private verify2FAService: VerifyService,
   ) {}
 
-  @Get("Oauth42/login")
+  @Post("Oauth42/login")
   async getUserByToken(@Req() req: Request) {
     return await this.authService.getUserByToken(req);
   }
@@ -104,7 +104,7 @@ export class AuthController {
     return this.authService.checkIfTokenValid(req, res);
   }
 
-  @Post("2FA/generate")
+  @Get("2FA/generate")
   async generate2FA(@Req() req: Request, @Res() res: Response) {
     return this.Generate2FA.generateService(req, res);
   }

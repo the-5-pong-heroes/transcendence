@@ -219,8 +219,10 @@ export class AuthService {
     if (!user) {
       return res.status(404).json({ message: "Invalid token" });
     }
+    console.log("🌪️ User auth =", user.auth?.twoFAactivated);
+    console.log("🌪️ User verified =", user.auth?.otp_verified);
+
     if (user.auth?.twoFAactivated && !user.auth.otp_verified) {
-      console.log("🌪️ twofa =", user.auth.twoFAactivated, "otp_verified =", user.auth.otp_verified);
       return res.status(200).json({ message: "User not connected", user: null });
     }
     res.status(200).json({ message: "Successfully fetched user", user: user });
@@ -262,12 +264,19 @@ export class AuthService {
     else res.redirect(301, `http://localhost:5173/`);
   }
 
-  async getUserByToken(req: Request): Promise<User> {
-    const token = req.cookies["access_token"];
-    if (!token) throw new BadRequestException("Failed to get the user by token (falsy token)");
+  async getUserByToken(req: Request): Promise<(User & { auth: Auth | null }) | null> {
+    const token = req.cookies.access_token;
+    //if (!token) throw new BadRequestException("Failed to get the user by token (falsy token)");
     try {
-      const user = await this.prisma.user.findFirstOrThrow({
-        where: { auth: { accessToken: token } },
+      const user = await this.prisma.user.findFirst({
+        where: {
+          auth: {
+            accessToken: token,
+          },
+        },
+        include: {
+          auth: true,
+        },
       });
       return user;
     } catch (error) {

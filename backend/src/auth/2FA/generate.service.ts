@@ -29,7 +29,7 @@ export class Generate2FAService {
         auth: true,
       },
     });
-    // console.log("🪭 generateService: ", user);
+    console.log("🪭 generateService: ", user);
     this.updateUser(user);
     const code = user?.auth?.twoFASecret;
     const twoFAactivated = true;
@@ -74,7 +74,7 @@ export class Generate2FAService {
       const email = user42.auth.email;
       const code2FA = this.generateRandomCode(6);
       console.log("sendActivationMail: ", email, code2FA);
-      // this.sendEmailToUser(email, user42, code2FA);
+      this.sendEmailToUser(email, user42, code2FA);
       await this.storeCodeToDataBase(code2FA, user42);
       this.updateUser(user42);
       console.log("code2FA: ", code2FA);

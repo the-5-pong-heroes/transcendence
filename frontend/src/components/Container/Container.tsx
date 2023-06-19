@@ -37,7 +37,7 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
     event.stopPropagation();
     setX(event.currentTarget.scrollTop);
     const ratio = window.innerWidth / window.innerHeight;
-    if (!isNavigatingRef.current && ratio < 2.0) {
+    if (!isNavigatingRef.current && ratio < 2.4) {
       navigateToSection();
     }
   };
@@ -60,10 +60,7 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
       if (isRunning.current) {
         setQuitGame(true);
         newRoute.current = section.path;
-      } else if (
-        section.path === "/profile" &&
-        (currentPath.startsWith("/profile") || currentPath === "/settings")
-      ) {
+      } else if (section.path === "/profile" && (currentPath.startsWith("/profile") || currentPath === "/settings")) {
         return;
       } else {
         navigate(section.path);

@@ -107,6 +107,10 @@
   margin-bottom: 2rem;
 }
 
+#light .block2, #light .block3 {
+  background: linear-gradient(0deg, #b3d9fa97 0%, #85b4e7a1 100%);
+}
+
 .block3 {
   width: 72vw;
   padding-left: 1rem;
@@ -166,21 +170,32 @@
   outline: 3px rgb(254, 254, 254) solid;
 }
 
+#light .avatar>img {
+  outline: 3px rgba(0, 0, 0, 0) solid;
+}
+
 .username {
   /* background-coor: red; */
   align-self: center;
   font-size: 2.3rem;
   margin: 0 0 0 1rem;
   font-family: sans-serif;
-  color: white;
   text-shadow: darkblue 2px 0 10px;
   display: flex;
+}
+
+#light .username, #light .score1, #light .score2, #light .player1, #light .player2 {
+  text-shadow: rgba(87, 126, 179, 0.715) 2px 0 10px;
 }
 
 .username-icons {
   height: 100%;
   width: 100%;
   margin-left: 10px;
+}
+
+#light .username-icons {
+  filter: invert(100%);
 }
 
 .username img {
@@ -191,13 +206,16 @@
   border-radius: 0.5rem;
 }
 
+#light #settings-icon img, #light .leave {
+  filter: brightness(1) invert(0);
+}
+
 .username img:hover {
   transform: scale(1.15);
 
 }
 
 .username img:active {
-  /* transform: translateY(-2px); */
   transform: scale(1);
 }
 
@@ -278,7 +296,7 @@
 
 .tab-link {
   display: block;
-  color: white;
+  /* color: white; */
   padding-top: 1rem;
   padding-bottom: 0.5rem;
   padding-left: 0.5rem;
@@ -303,6 +321,10 @@
 .tab-item:not(.tab-active):first-child {
   border-bottom-right-radius: 20px;
   background: linear-gradient(0deg, rgba(24, 27, 88, 0.3) 0%, rgba(22, 19, 96, 0.3) 100%);
+}
+
+#light .tab-item:not(.tab-active):first-child, #light .tab-item:not(.tab-active):last-child {
+  background: linear-gradient(0deg, rgba(91, 165, 210, 0.3) 0%, #b3d0fa97 100%);
 }
 
 .tab-active {

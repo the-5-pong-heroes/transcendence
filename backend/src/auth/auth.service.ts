@@ -205,7 +205,6 @@ export class AuthService {
 
   async getUser(req: Request, res: Response): Promise<any> {
     const access_token = req.signedCookies.access_token;
-    console.log("💫 getUser: ", access_token);
     if (!access_token) {
       return res.status(200).json({ message: "User not connected", user: null });
     }

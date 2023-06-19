@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes, Navigate, useParams } from "react-router-dom";
+import { Route, Routes, Navigate, useParams, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -27,7 +27,9 @@ const App: React.FC = () => {
         <Route path="/Login" element={user ? <Navigate to="/" /> : <Login />} />
         <Route path="/Signup" element={user ? <Navigate to="/" /> : <Signup />} />
         <Route element={<NotFoundLayout />}>
-          <Route path="*" element={<NotFound notFoundRef={notFoundRef} />} />
+          {/* <Route path="*" element={<NotFound notFoundRef={notFoundRef} />} /> */}
+          <Route path="/404" element={<NotFound notFoundRef={notFoundRef} />} />
+          <Route path="*" element={<UnkownRouteHandler to="/404" />} />
         </Route>
         <Route element={<AppLayout user={user} />}>
           <Route path="/" element={<Home homeRef={homeRef} />} />
@@ -53,3 +55,13 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+interface UnknownRouteProps {
+  to: string;
+}
+
+const UnkownRouteHandler: React.FC<UnknownRouteProps> = ({ to }) => {
+  const prevRoute = useLocation();
+
+  return <Navigate to={to} state={{ prevRoute }} replace />;
+};

@@ -77,7 +77,8 @@ export const Login: React.FC = () => {
     return data;
   }
 
-  async function openPopup(twoFACode: string) {
+  function openPopup(twoFACode: string): void {
+    setIsActivated(true);
     const popup = document.getElementById("popup");
     if (popup) {
       popup.style.display = "block";
@@ -85,18 +86,18 @@ export const Login: React.FC = () => {
     }
   }
 
-  async function closePopup() {
+  function closePopup(): void {
     const popup = document.getElementById("popup");
     if (popup) {
       popup.style.display = "none";
       popup.removeAttribute("data-twoFACode");
     }
+    setIsActivated(false);
   }
 
-  async function updateVerify2FA() {
-    // const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/verify";
-    // window.open(url, "_self");
-    twoFALogin();
+  function updateVerify2FA(): void {
+    const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/verify";
+    window.open(url, "_self");
   }
 
   async function submitVerificationCode() {
@@ -108,14 +109,15 @@ export const Login: React.FC = () => {
         const twoFACode = popup.dataset.twoFACode;
         console.log("twoFA = ", twoFACode);
         console.log("verif = ", verificationCode);
-        if (verificationCode !== twoFACode) {
-          alert("Code de vérification correct !");
-          closePopup();
-          await updateVerify2FA();
-          navigate("/");
-        } else {
-          alert("Code de vérification incorrect. Veuillez réessayer.");
-        }
+        twoFALogin({ code: verificationCode });
+        // if (verificationCode !== twoFACode) {
+        //   alert("Code de vérification correct !");
+        //   closePopup();
+        //   updateVerify2FA();
+        //   navigate("/");
+        // } else {
+        //   alert("Code de vérification incorrect. Veuillez réessayer.");
+        // }
       }
     }
   }
@@ -132,19 +134,23 @@ export const Login: React.FC = () => {
             Sign up
           </button>
         </div>
-        <div className="continue-with">
-          <Login42 />
-          <LoginGoogle />
+        {!isActivated && (
+          <div className="continue-with" id="continue-with">
+            <Login42 />
+            <LoginGoogle />
+          </div>
+        )}
+        {isActivated && (
           <div id="popup" style={{ display: "none" }}>
             <div className="popup-modal">
               <div className="popup-content">
                 <p>Please enter the verification code sent to your email:</p>
                 <input type="text" id="verificationCode" style={{ color: "black" }} />
-                <button onClick={submitVerificationCode}> Valider</button>
+                <button onClick={submitVerificationCode}>Valider</button>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </form>
     </div>
   );

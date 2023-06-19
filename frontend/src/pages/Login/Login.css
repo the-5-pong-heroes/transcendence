@@ -107,7 +107,7 @@
   width: 220px;
   border-radius: 5px;
   text-indent: 8px;
-  color:rgb(0, 0, 0)
+  color: rgb(0, 0, 0);
 }
 
 .submit {
@@ -127,88 +127,111 @@
 }
 
 @media (max-width: 600px) {
-	#login-robot {
-		display: none;
-	}
+  #login-robot {
+    display: none;
+  }
 
-	.form {
-		padding: 40px;
-		width: 350px;
-	}
+  .form {
+    padding: 40px;
+    width: 350px;
+  }
 
-	.continue-with {
-		margin: 0;
-	}
+  .continue-with {
+    margin: 0;
+  }
 }
 
 .walle-button {
-	background-color: #E67E22; /* Couleur de fond */
-	color: white; /* Couleur du texte */
-	border: none; /* Suppression de la bordure */
-	border-radius: 4px; /* Arrondi des coins */
-	padding: 10px 20px; /* Espacement interne */
-	font-size: 16px; /* Taille de police */
-	font-weight: bold; /* Gras */
-	cursor: pointer; /* Curseur en forme de main */
-	transition: background-color 0.3s; /* Transition pour l'effet de survol */
-  }
-  
-  .walle-button:hover {
-	background-color: #FFA726; /* Couleur de fond au survol */
-  }
-  
-  .walle-button:active {
-	background-color: #D35400; /* Couleur de fond lors du clic */
-  }
+  background-color: #e67e22; /* Couleur de fond */
+  color: white; /* Couleur du texte */
+  border: none; /* Suppression de la bordure */
+  border-radius: 4px; /* Arrondi des coins */
+  padding: 10px 20px; /* Espacement interne */
+  font-size: 16px; /* Taille de police */
+  font-weight: bold; /* Gras */
+  cursor: pointer; /* Curseur en forme de main */
+  transition: background-color 0.3s; /* Transition pour l'effet de survol */
+}
 
-  .column {
-	flex: 1 0 0%;
-  }
+.walle-button:hover {
+  background-color: #ffa726; /* Couleur de fond au survol */
+}
 
-  .column-details span:first-child {
-	font-style: italic;
-	margin-right: 4px;
-  }
-  
-  .column-details span:not(:first-child) {
-	font-size: 1.5rem;
-  }
-  .on-off {
-	position: relative;
-	width: 80px;
-	height: 30px;
-	border-radius: 15px;
-	background-color: #ccc;
-	cursor: pointer;
-	overflow: hidden;
-  }
-  
-  .on-off .handle {
-	position: absolute;
-	top: 2px;
-	left: 2px;
-	width: 26px;
-	height: 26px;
-	border-radius: 50%;
-	background-color: #fff;
-	transition: transform 0.3s ease-in-out;
-  }
-  
-  .on-off.on .handle {
-	transform: translateX(50px);
-	background-color: orange; /* Couleur de fond lorsque le bouton est en position "on" */
-  }
-  
-  .on-off.off .handle {
-	background-color: #ccc; /* Couleur de fond par défaut */
-  }
-  
-  .on-off .status {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	font-size: 10px;
-	color: #fff;
-  }
-  
+.walle-button:active {
+  background-color: #d35400; /* Couleur de fond lors du clic */
+}
+
+.column {
+  flex: 1 0 0%;
+}
+
+.column-details span:first-child {
+  font-style: italic;
+  margin-right: 4px;
+}
+
+.column-details span:not(:first-child) {
+  font-size: 1.5rem;
+}
+.on-off {
+  position: relative;
+  width: 80px;
+  height: 30px;
+  border-radius: 15px;
+  background-color: #ccc;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.on-off .handle {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: #fff;
+  transition: transform 0.3s ease-in-out;
+}
+
+.on-off.on .handle {
+  transform: translateX(50px);
+  background-color: orange; /* Couleur de fond lorsque le bouton est en position "on" */
+}
+
+.on-off.off .handle {
+  background-color: #ccc; /* Couleur de fond par défaut */
+}
+
+.on-off .status {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  color: #fff;
+}
+
+.popup-modal {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  padding: 0px 50px;
+  font-size: 0.9rem;
+  /* background-color: red; */
+}
+
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.popup-content input {
+  border-radius: 3px;
+}
+
+.popup-content button:hover {
+  font-weight: 600;
+}

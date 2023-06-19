@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Mousewheel } from "swiper";
 
+import { gameList, techList, creditsList, featuresList } from "./List";
+
 import { handleOnClickButton } from "@/helpers";
 import { useAppContext, useUser } from "@hooks";
 import type { AppContextParameters } from "@types";
@@ -12,43 +14,6 @@ import { CustomLink } from "@/components";
 import "./Home.css";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
-
-interface HomeProps {
-  homeRef: React.RefObject<HTMLDivElement>;
-}
-
-const gameList = [
-  { text: "10-point game" },
-  { text: "⬆ | ⬇ | Pause | Esc" },
-  { text: "If you quit, the game goes on" },
-  { text: "Play in mode SOLO or DUO" },
-  { text: "May the best man win!" },
-];
-
-const techList = [
-  { text: "React.js", link: "https://react.dev/" },
-  { text: "React Three Fiber", link: "https://github.com/pmndrs/react-three-fiber" },
-  { text: "Nest.js", link: "https://nestjs.com/" },
-  { text: "PostgreSQL", link: "https://www.postgresql.org/" },
-  { text: "Prisma Studio", link: "https://www.prisma.io/" },
-  { text: "Docker Compose", link: "https://docs.docker.com/compose/" },
-  { text: "Socket.io", link: "https://socket.io/" },
-];
-
-const creditsList = [
-  { text: "mkralik" },
-  { text: "pguinie" },
-  { text: "lcavallu" },
-  { text: "llalba" },
-  { text: "efrancon" },
-];
-
-const featuresList = [
-  { text: "Play Pong against your friends", link: "/Game" },
-  { text: "Chat with your friends", link: "/Chat" },
-  { text: "Create public/private/protected channels", link: "/Chat" },
-  { text: "Customize your profile", link: "/Settings" },
-];
 
 type ListItem = {
   text: string;
@@ -71,7 +36,7 @@ const Slide: React.FC<SlideProps> = ({ list, title, img, isActive }) => {
         <ul className="carroussel-list">
           {list?.map((elem) =>
             elem.link ? (
-              <li key={elem.text} className="carroussel-list-elem">
+              <li key={elem.text} className="carroussel-list-link">
                 <CustomLink to={elem.link}>{elem.text}</CustomLink>
               </li>
             ) : (
@@ -140,6 +105,10 @@ const Carroussel: React.FC = () => {
     </div>
   );
 };
+
+interface HomeProps {
+  homeRef: React.RefObject<HTMLDivElement>;
+}
 
 export const Home: React.FC<HomeProps> = ({ homeRef }) => {
   const { gameState, isNavigatingRef }: AppContextParameters = useAppContext();

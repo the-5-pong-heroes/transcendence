@@ -16,10 +16,4 @@ export class SignUpDto {
   @MaxLength(50)
   @MinLength(8)
   password: string;
-
-  constructor(name: string, email: string, password: string) {
-    this.name = name;
-    this.email = email;
-    this.password = password;
-  }
 }

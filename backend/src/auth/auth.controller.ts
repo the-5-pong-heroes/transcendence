@@ -10,7 +10,7 @@ import { GoogleService } from "src/auth/google/google.service";
 import { Generate2FAService } from "./2FA/generate.service";
 import { EnableService } from "./2FA/enable2FA.service";
 import { VerifyService } from "./2FA/verify.service";
-import { UserDto } from "./dto";
+import { UserDto, TwoFADto } from "./dto";
 
 @Injectable()
 export class GoogleOauthGuard extends AuthGuard("google") {}
@@ -125,30 +125,18 @@ export class AuthController {
     return this.Generate2FA.generateService(req, res);
   }
 
-  @Get("2FA/verify")
-  async verify2FA(@Req() req: Request, @Res() res: Response) {
-    console.log("💥 verify2FA");
-    return this.verify2FAService.validate2FA(req, res);
+  // @Get("2FA/verify")
+  // async verify2FA(@Req() req: Request, @Res() res: Response) {
+  //   return this.verify2FAService.validate2FA(req, res);
+  // }
+
+  @Post("2FA/verify")
+  async verify2FA(@Req() req: Request, @Res() res: Response, @Body() data: TwoFADto) {
+    return this.verify2FAService.validate2FA(req, res, data.code);
   }
 
   @Get("2FA/disable")
   async disable2FA(@Req() req: Request, @Res() res: Response) {
     return this.enable2FAService.disable2FA(req, res);
   }
-
-  //    @Get("google/callback")
-  //      async handleGoogleRedirection(@Req() req: Request, @Res() res: Response) {
-  //       const codeFromUrl = req.query.code as string;
-  //       const token: any = await this.googleService.getTokenFromGoogle(codeFromUrl);
-  //       const userInfos : any = await this.googleService.getUserFromGoogle(token);
-  //       this.authService.createCookies(res, userInfos);
-  //       const userExists = await this.userService.getUserByEmail(userInfos.email);
-  //       this.authService.updateCookies(res, token, userExists);
-  //       //this.authService.RedirectConnectingUser(req, res, userExists?.email);
-  //    }
-
-  //    @Get("logout")
-  //    async deleteCookies(@Req() req: Request, @Res() res: Response) {
-  //      await this.authService.deleteCookies(res);
-  //    }
 }

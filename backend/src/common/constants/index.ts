@@ -1,12 +1,2 @@
 export { CLIENT_URL, SERVER_URL, ALLOWED_ORIGINS } from "./env";
-export {
-  GOOGLE_CLIENT_ID,
-  GOOGLE_SECRET,
-  GOOGLE_REDIRECT_URI,
-  API_42_ID,
-  API_42_SECRET,
-  API_42_USER,
-  API_42_NEW_TOKEN,
-  API_42_REDIRECT,
-} from "./auth";
-export { GMAIL_USER, GMAIL_PASSWORD } from "./2fa";
+export { API_42_USER, API_42_NEW_TOKEN, API_42_REDIRECT } from "./auth";

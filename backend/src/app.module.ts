@@ -15,6 +15,7 @@ import { CurrentUserMiddleware } from "./common/middleware/current-user.middlewa
 import { PrismaService } from "./database/prisma.service";
 import { GoogleStrategy } from "./auth/google/google.strategy";
 import { AUTH_EXEMPT_ROUTES } from "./common/constants/auth";
+import { validate } from "./env.validation";
 
 @Module({
   imports: [
@@ -28,7 +29,10 @@ import { AUTH_EXEMPT_ROUTES } from "./common/constants/auth";
     FriendshipModule,
     BlockedModule,
     PrismaModule,
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      validate, // checks that no env var is missing or invalid
+      isGlobal: true,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService, GoogleStrategy, PrismaService],

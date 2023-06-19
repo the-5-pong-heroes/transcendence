@@ -16,7 +16,6 @@ import { GoogleService } from "./google/google.service";
 import { PrismaModule } from "src/database/prisma.module";
 import { UserGuard } from "./user.guard";
 import { UserModule } from "src/user/user.module";
-import { GMAIL_PASSWORD, GMAIL_USER } from "src/common/constants";
 
 @Module({
   imports: [
@@ -31,8 +30,8 @@ import { GMAIL_PASSWORD, GMAIL_USER } from "src/common/constants";
         port: 465,
         host: "smtp.gmail.com",
         auth: {
-          user: GMAIL_USER,
-          pass: GMAIL_PASSWORD,
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_PASSWORD,
         },
       },
     }),

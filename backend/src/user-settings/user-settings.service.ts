@@ -1,6 +1,7 @@
 import { ConflictException, Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { User } from "@prisma/client";
-import { IMG_BB_API_KEY, UPLOAD_URL } from "src/common/constants/others";
+import { UPLOAD_URL } from "src/common/constants/others";
 import { PrismaService } from "src/database/prisma.service";
 // import { CreateUserSettingDto } from "./dto/create-user-setting.dto";
 // import { UpdateUserSettingDto } from "./dto/update-user-setting.dto";
@@ -15,7 +16,7 @@ export interface UserSettings {
 
 @Injectable()
 export class UserSettingsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private config: ConfigService) {}
 
   async getUserSettings(user: User) {
     // : Promise<UserSettings>
@@ -55,7 +56,7 @@ export class UserSettingsService {
   async updateAvatar(user: User, avatar: Express.Multer.File) {
     const formData = new FormData();
     formData.append("image", avatar.buffer.toString("base64"));
-    formData.append("key", IMG_BB_API_KEY);
+    formData.append("key", this.config.get("IMG_BB_API_KEY") as string);
     let payload;
     try {
       const resp = await fetch(UPLOAD_URL, { method: "POST", body: formData });

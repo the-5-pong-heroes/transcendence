@@ -167,11 +167,11 @@
   margin: 0;
   margin-top: 2vw;
   margin-bottom: 2vw;
-  outline: 3px rgb(254, 254, 254) solid;
+  outline: 2px rgb(254, 254, 254) solid;
 }
 
 #light .avatar>img {
-  outline: 3px rgba(0, 0, 0, 0) solid;
+  outline: 2px rgba(0, 0, 0, 0) solid;
 }
 
 .username {
@@ -232,7 +232,7 @@
 }
 
 #settings-icon {
-  height: 30px;
+  width: 30px;
 }
 
 .bullet-orange {

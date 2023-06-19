@@ -37,7 +37,7 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
     event.stopPropagation();
     setX(event.currentTarget.scrollTop);
     const ratio = window.innerWidth / window.innerHeight;
-    if (!isNavigatingRef.current && ratio < 2.4) {
+    if (!isNavigatingRef.current && ratio > 1.0 && ratio < 2.4) {
       navigateToSection();
     }
   };

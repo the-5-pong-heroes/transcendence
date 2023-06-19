@@ -52,14 +52,14 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
   return (
     <div ref={boardRef} id="Leaderboard" className="Leaderboard">
       <div className="row firstRow">
-        <div className="col">Avatar</div>
+        <div className="col avatar">Avatar</div>
         <div className="col">Username</div>
-        <div className="col">Score</div>
-        <div className="col">Wins</div>
-        <div className="col">Defeats</div>
-        <div className="col">Level</div>
-        <div className="col">Status</div>
-        <div className="col">Friend</div>
+        <div className="col score">Score</div>
+        <div className="col wins">Wins</div>
+        <div className="col defeats">Defeats</div>
+        <div className="col level">Level</div>
+        <div className="col status">Status</div>
+        <div className="col friends">Friend</div>
         <div className="col">Ranking</div>
       </div>
       <UserData users={users} />

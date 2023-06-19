@@ -8,6 +8,7 @@ import { ThemeButton } from "./ThemeButton";
 import { Container } from "./Container";
 import { InvitationModal } from "./Invitation";
 import { ShootingStar } from "./ShootingStar";
+import { ScrollToPage } from "./Navbar/components/ScrollToPage";
 
 import { type User } from "@types";
 import { useTheme } from "@/hooks";
@@ -23,6 +24,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ user }) => {
     <SocketProvider>
       <Navbar />
       <ThemeButton />
+      <ScrollToPage />
       <InvitationModal />
       <div className="App-container">
         <Container>

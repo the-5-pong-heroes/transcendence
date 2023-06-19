@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Routes, Navigate, useParams, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,12 +9,29 @@ import type { AppContextParameters, PageRefs } from "./@types";
 import { useAppContext, useUserQuery } from "./hooks";
 import "./App.css";
 
+const useNavigationRoute = (): void => {
+  const { isNavigatingRef }: AppContextParameters = useAppContext();
+
+  const location = useLocation();
+  const [currentLoc, setCurrentLoc] = useState<string>("/");
+
+  useEffect(() => {
+    // execute on location change
+    setCurrentLoc(location.pathname);
+    console.log("Location changed!", location.pathname, currentLoc);
+    isNavigatingRef.current = true;
+    setTimeout(() => (isNavigatingRef.current = false), 2000);
+  }, [location, currentLoc, isNavigatingRef]);
+};
+
 const App: React.FC = () => {
   const { theme, pageRefs }: AppContextParameters = useAppContext();
   const { homeRef, profileRef, myProfileRef, settingsRef, gameRef, boardRef, chatRef, notFoundRef }: PageRefs =
     pageRefs;
   const { user, isLoading } = useUserQuery();
   const { uuid } = useParams();
+
+  useNavigationRoute();
 
   if (isLoading) {
     // Show loading page while user data is being fetched

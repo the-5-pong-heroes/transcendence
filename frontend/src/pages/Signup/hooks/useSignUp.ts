@@ -2,11 +2,9 @@ import { useQueryClient, type UseMutateFunction, useMutation } from "react-query
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { ResponseError } from "@/helpers";
+import { ResponseError, customFetch } from "@/helpers";
 import { USER_QUERY_KEY } from "@/constants";
 import type { UserAuth, User } from "@types";
-// import * as fetch from "@/helpers/customFetch";
-import { customFetch } from "@/helpers";
 
 type SignUpBody = {
   name: string;
@@ -14,20 +12,16 @@ type SignUpBody = {
   password: string;
 };
 
-interface ErrorMessage {
-  message: string;
-}
-
 async function signUp(name: string, email: string, password: string): Promise<User> {
-  const signUpBody = {
+  const signUpBody: SignUpBody = {
     name: name,
     email: email,
     password: password,
   };
-  const data = await customFetch<UserAuth>("post", "/auth/signup", signUpBody);
-  // const data = await customFetch<UserAuth, SignUpBody>("post", "/auth/signup", signUpBody);
+  const response = await customFetch("POST", "auth/signup", signUpBody);
+  const payload = (await response.json()) as UserAuth;
 
-  return data.user;
+  return payload.user;
 }
 
 type IUseSignUp = UseMutateFunction<
@@ -54,9 +48,9 @@ export function useSignUp(): IUseSignUp {
       },
       onError: (error) => {
         if (error instanceof ResponseError) {
-          toast.error(`Ops.. ${error.message}. Try again!`);
+          toast.error(`Oops.. ${error.message}. Try again!`);
         } else {
-          toast.error(`Ops.. Error on sign up. Try again!`);
+          toast.error(`Oops.. Error on sign up. Try again!`);
         }
       },
     }

@@ -5,9 +5,10 @@ import type { UserAuth, User } from "@types";
 import { customFetch } from "@/helpers";
 
 async function fetchUser(): Promise<User | null> {
-  const data = await customFetch<UserAuth>("get", "/auth/user");
+  const response = await customFetch("GET", "auth/user");
+  const payload = await response.json();
 
-  return data.user;
+  return payload.user;
 }
 
 interface IUseUser {

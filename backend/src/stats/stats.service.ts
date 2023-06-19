@@ -119,7 +119,7 @@ export class StatsService {
   }
 
   private isFriend(friends: { name: string; id: string }[], userId: string): boolean {
-    return friends.map((item: any) => item.id).includes(userId);
+    return friends.map((item: { name: string; id: string }) => item.id).includes(userId);
   }
 
   private async getGamesStats(): Promise<GamesStats> {

@@ -1,6 +1,7 @@
+import * as path from "path";
+
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import * as path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -29,6 +30,6 @@ export default defineConfig({
     },
     host: true, // listens on all addresses and not only localhost
     strictPort: true, // exits when the port is not available
-    port: parseInt(process.env.FRONTEND_PORT),
+    port: parseInt(process.env.VITE_PORT),
   },
 });

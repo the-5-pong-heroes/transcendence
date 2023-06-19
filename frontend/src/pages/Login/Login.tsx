@@ -3,29 +3,30 @@ import { useNavigate } from "react-router-dom";
 
 import { useSignIn } from "./hooks";
 
-import { BASE_URL } from "@/constants";
+import { BASE_URL, API42_URL, API42_CLIENT_ID, API42_REDIRECT } from "@/constants";
 import { Logo_42, Logo_Google, Logo_Eve } from "@assets";
 import "./Login.css";
 
 export const Login42: React.FC = () => {
-  const handleOnClick = (): void => {
-    const url = `${import.meta.env.VITE_API42_URI}`;
-    window.open(url, "_self");
+  const body = {
+    client_id: API42_CLIENT_ID,
+    redirect_uri: API42_REDIRECT,
+    response_type: "code",
+    scope: "public",
   };
+  const url_42_auth = API42_URL + "?" + new URLSearchParams(body).toString();
 
   const navigate = useNavigate();
   const twoFACode = React.useState("");
   const [isActivated, setIsActivated] = React.useState(false);
 
-  const handleAuth42 = () => {
-    const url = `${import.meta.env.VITE_API42_URI}`;
-    window.open(url, "_self");
+  const handleAuth42 = (): void => {
+    window.open(url_42_auth, "_self");
   };
 
   // const handleAuthGoogle = () => {
   //   navigate("/auth/google");
   // };
-
 
   return (
     <div className="Login_with" onClick={handleAuth42}>
@@ -102,8 +103,7 @@ export const Login: React.FC = () => {
 //   const [isActivated, setIsActivated] = React.useState(false);
 
 //   const handleAuth42 = () => {
-//     let url = `${import.meta.env.VITE_API42_URI}`;
-//     window.open(url, "_self");
+//     window.open(API_42, "_self");
 //     };
 
 //   // const handleAuthGoogle = () => {
@@ -121,7 +121,7 @@ export const Login: React.FC = () => {
 //   }
 
 //   async function handle2FAfunction(): Promise<any> {
-//     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}` + '/auth/2FA/generate', {
+//     const response = await fetch(`${BASE_URL}` + '/auth/2FA/generate', {
 // 			method: 'POST',
 // 			headers: {'Content-Type': 'application/json'},
 // 			body: JSON.stringify({ code: twoFACode, twoFAactivated: isActivated })

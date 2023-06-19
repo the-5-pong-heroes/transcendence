@@ -9,7 +9,7 @@ import { ChannelContext, UserContext, UserContextType } from "@/contexts";
 // import { socket } from '@/socket';
 import { useUser, useSocket, useTheme } from "@hooks";
 import { type IMessage } from "@/interfaces";
-import { ResponseError } from "@/helpers";
+import { ResponseError, customFetch } from "@/helpers";
 
 export const Messages: React.FC = () => {
   const [messages, setMessages] = useState<IMessage[]>([]);
@@ -33,8 +33,7 @@ export const Messages: React.FC = () => {
         return setMessages([]);
       }
       // const	config = { headers: { 'Authorization': token }};
-      const response = await fetch(`http://localhost:3333/chat/${activeChannel.id}`, { credentials: "include" });
-      // if (!response.ok) return console.log(response);
+      const response = await customFetch("GET", `chat/${activeChannel.id}`);
       if (!response.ok) {
         throw new ResponseError("Failed on fetch channels request", response);
       }

@@ -1,9 +1,9 @@
-/* LAURA GOOGLE AUTH */
-export const GOOGLE_CLIENT_ID = "710896193743-ghevbabaa9s9f94qlsaqbvbrnlj30hgv.apps.googleusercontent.com";
-export const GOOGLE_SECRET = "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";
-export const GOOGLE_REDIRECT_URI = "http://localhost:3333/auth/google/callback";
+// The endpoint to exchange a code for an access token.
+export const API_42_NEW_TOKEN = "https://api.intra.42.fr/oauth/token";
+// The URL in your app where users will be sent after authorization.
+export const API_42_REDIRECT = "http://localhost:5173";
+// The route of the 42 API to get the user information.
+export const API_42_USER = "https://api.intra.42.fr/v2/me";
 
-/* EUGENIE GOOGLE AUTH */
-// export const GOOGLE_CLIENT_ID = "682581594856-b3trh699pal2gpdehc6mldlq3dg0r0bl.apps.googleusercontent.com";
-// export const GOOGLE_SECRET = "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";
-// export const GOOGLE_REDIRECT_URI = "http://localhost:3000/auth/google/callback";
+export const AUTH_EXEMPT_ROUTES =
+  "/auth/(Oauth42/login|Oauth|auth42/callback|user|signin|signup|signout|google|google/callback)";

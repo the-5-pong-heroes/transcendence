@@ -3,17 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { USER_QUERY_KEY } from "@/constants";
-import { ResponseError } from "@/helpers";
-// import * as fetch from "@/helpers/customFetch";
-import { customFetch } from "@/helpers";
+import { ResponseError, customFetch } from "@/helpers";
 
 interface Message {
   message: string;
 }
 
 async function signOut(): Promise<void> {
-  // const { message } = await fetch.get<Message>("/auth/signout");
-  const { message } = await customFetch<Message>("get", "/auth/signout");
+  const response = await customFetch("GET", "auth/signout");
+  const { message } = (await response.json()) as Message;
 }
 
 type IUseSignOut = UseMutateFunction<void>;
@@ -32,9 +30,9 @@ export function useSignOut(): IUseSignOut {
     },
     onError: (error) => {
       if (error instanceof ResponseError) {
-        toast.error(`Ops.. ${error.message}. Try again!`);
+        toast.error(`Oops.. ${error.message}. Try again!`);
       } else {
-        toast.error(`Ops.. Error on sign out. Try again!`);
+        toast.error(`Oops.. Error on sign out. Try again!`);
       }
     },
   });

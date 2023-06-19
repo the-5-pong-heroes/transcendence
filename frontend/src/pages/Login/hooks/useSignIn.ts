@@ -13,15 +13,15 @@ type SignInBody = {
 };
 
 async function signIn(email: string, password: string): Promise<User> {
-  const signInBody = {
+  const signInBody: SignInBody = {
     email: email,
     password: password,
   };
-  // const data = await fetch.post<SignInBody, UserAuth>("/auth/signin", signInBody);
-  const data = await customFetch<UserAuth>("post", "/auth/signin", signInBody);
-  // const data = await customFetch<UserAuth, SignInBody>("post", "/auth/signin", signInBody);
 
-  return data.user;
+  const response = await customFetch("POST", "auth/signin", signInBody);
+  const payload = (await response.json()) as UserAuth;
+
+  return payload.user;
 }
 
 type IUseSignIn = UseMutateFunction<
@@ -47,9 +47,9 @@ export function useSignIn(): IUseSignIn {
       },
       onError: (error) => {
         if (error instanceof ResponseError) {
-          toast.error(`Ops.. ${error.message}. Try again!`);
+          toast.error(`Oops.. ${error.message}. Try again!`);
         } else {
-          toast.error(`Ops.. Error on sign in. Try again!`);
+          toast.error(`Oops.. Error on sign in. Try again!`);
         }
       },
     }

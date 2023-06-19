@@ -30,8 +30,8 @@ import { UserModule } from "src/user/user.module";
         port: 465,
         host: "smtp.gmail.com",
         auth: {
-          user: "wallE.transcendence@gmail.com",
-          pass: "fsyuokyiumczzmdb",
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_PASSWORD,
         },
       },
     }),

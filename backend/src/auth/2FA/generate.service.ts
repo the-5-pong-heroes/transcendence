@@ -1,5 +1,5 @@
 import { MailerService } from "@nestjs-modules/mailer";
-import { HttpException, HttpStatus, Injectable, Req, Res } from "@nestjs/common";
+import { BadRequestException, Injectable, Req, Res } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
 import * as bcrypt from "bcrypt";
 import * as fs from "fs";
@@ -48,13 +48,7 @@ export class Generate2FAService {
       });
       return updatedUser;
     } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: "Fail to update user in Generate 2FA ",
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException("Fail to update user in Generate 2FA");
     }
   }
 
@@ -67,13 +61,7 @@ export class Generate2FAService {
       this.updateUser(user42);
       return code2FA;
     } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: "Invalid email",
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException("Invalid email");
     }
   }
 
@@ -118,13 +106,7 @@ export class Generate2FAService {
       });
       return updatedUser;
     } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: "Error to store secret in database",
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException("Error to store secret in database");
     }
   }
 }

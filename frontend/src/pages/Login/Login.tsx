@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useSignIn } from "./hooks";
@@ -47,9 +47,33 @@ export const LoginGoogle: React.FC = () => {
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const signIn = useSignIn();
-  const queryParams = new URLSearchParams(window.location.search);
-  const displayPopup = queryParams.get("displayPopup") === "true";
-  const twoFACode = React.useState("");
+  const [isActivated, setIsActivated] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchToggle2FA = async () => {
+      const toggledValue = await twoFAstatus();
+      setIsActivated(toggledValue);
+    };
+
+    fetchToggle2FA();
+  }, []);
+  
+  async function twoFAstatus(): Promise<boolean> {
+    try {
+      const response = await customFetch("GET", "auth/2FA/status");
+      //if (response.ok) {
+        const data = await response.json();
+        if (data.twoFA === true)
+          return true;
+      //}
+      else
+        return false;
+    }
+    catch (error) {
+      console.log("status 2FA not updated")
+    }
+    return false;
+  }
 
   const onSignIn: React.FormEventHandler<HTMLFormElement> = (form) => {
     form.preventDefault();
@@ -96,7 +120,7 @@ export const Login: React.FC = () => {
           <Login42 />
           <LoginGoogle />
           {
-            displayPopup &&
+            isActivated === true &&
           <div id="popup">
               <div className="popup-modal">
                 <div className="popup-content">

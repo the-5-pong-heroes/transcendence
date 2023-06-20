@@ -33,19 +33,14 @@ export const Toggle2FA: React.FC = () => {
     if (isActivated === true)
     {
       const response = await customFetch("GET", "auth/2FA/disable");
-      console.log("response: ", response);
     }
     else{
       const response = await customFetch("GET", "auth/2FA/generate");
-      console.log("response: ", response);
     }
-    console.log("isActivated1: ", isActivated);
     setIsActivated(!isActivated);
-    console.log("isActivated2: ", isActivated);
   }
 
   useEffect(() => {
-    console.log("2FA toggled= ", isActivated);
   }, [isActivated])
 
   return (

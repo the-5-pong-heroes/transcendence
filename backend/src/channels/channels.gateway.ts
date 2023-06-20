@@ -60,15 +60,12 @@ export class ChannelsGateway {
       channelId: channel.id,
       userId: payload.channelId,
     });
-	console.log(user1);
-	console.log(user2);
     this.server.emit("updateChannels", false);
     client.emit("updateChannels", true);
   }
 
   @SubscribeMessage("wantJoin")
   async wantJoin(client: Socket, payload: UserWantJoinChannelDto) {
-    console.log(payload);
     if (payload.type === undefined) return this.createDirectChannel(client, payload);
     const channel = await this.channelsService.findOne(payload.channelId);
     const banChannel = await this.prismaService.channelBan.findFirst({
@@ -148,13 +145,13 @@ export class ChannelsGateway {
       };
       this.handleMessage(client, {
         content: `${user.name} is now ${
-          channelUser.isMuted
+          channelUser.isMuted && payload.mutedUntil
             ? `mute until ${new Date(payload.mutedUntil).toLocaleDateString("fr-FR", options)}`
             : "unmute"
         }`,
         channelId: channelUser.channelId,
       });
-      if (payload.isMuted) {
+      if (payload.isMuted && payload.mutedUntil) {
         setTimeout(async () => {
           const newChannelUser = await this.channelUsersService.findOne(payload.id);
           if (!newChannelUser || !newChannelUser.mutedUntil) return;

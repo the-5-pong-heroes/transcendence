@@ -29,7 +29,7 @@ export const UserProvider: React.FC<ProviderParameters> = ({ children }) => {
       //   return; // Set Error Message
       // }
       const config = { credentials: "include" as RequestCredentials };
-      const response = await fetch(`http://localhost:3000/users/me`, config);
+      const response = await fetch(`http://localhost:3333/users/me`, config);
       if (!response.ok) {
         throw new ResponseError("Failed on fetch channels request", response);
       }

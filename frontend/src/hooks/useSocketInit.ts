@@ -6,7 +6,7 @@ import { useSocketEvents } from "./useSocketEvents";
 
 import { ClientEvents } from "@Game/@types";
 
-const ENDPOINT = "ws://localhost:3000";
+const ENDPOINT = "ws://localhost:3333";
 
 interface SocketProps {
   setSocketReady: React.Dispatch<React.SetStateAction<boolean>>;

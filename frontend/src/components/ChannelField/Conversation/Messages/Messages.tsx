@@ -33,7 +33,7 @@ export const Messages: React.FC = () => {
         return setMessages([]);
       }
       // const	config = { headers: { 'Authorization': token }};
-      const response = await fetch(`http://localhost:3000/chat/${activeChannel.id}`, { credentials: "include" });
+      const response = await fetch(`http://localhost:3333/chat/${activeChannel.id}`, { credentials: "include" });
       // if (!response.ok) return console.log(response);
       if (!response.ok) {
         throw new ResponseError("Failed on fetch channels request", response);

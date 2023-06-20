@@ -15,6 +15,9 @@ import { Friends } from "./Friends";
 import { useSocket } from "@hooks";
 import { ClientEvents } from "@Game/@types";
 
+import { customFetch } from "@/helpers";
+
+
 export interface GameData {
   playerOne: { id: string; name: string };
   playerOneScore: number;
@@ -39,10 +42,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
 
   const fetchHistory = async () => {
     try {
-      const resp = await fetch(`http://localhost:3000/profile/history/${uuid ? uuid : ""}`, {
-        mode: "cors",
-        credentials: "include",
-      });
+      const resp = await customFetch("GET", `profile/history/${uuid ? uuid : ""}`);
       const data = await resp.json();
       if (data) {
         setHistory(data);
@@ -54,10 +54,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
 
   const fetchUser = async () => {
     try {
-      const resp = await fetch(`http://localhost:3000/profile/${uuid ? uuid : ""}`, {
-        mode: "cors",
-        credentials: "include",
-      });
+      const resp = await customFetch("GET", `profile/${uuid ? uuid : ""}`);
       const data = await resp.json();
       if (data) {
         const LEVELS: string[] = ["plant", "walle", "eve", "energy"];
@@ -89,7 +86,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
   }
 
   async function followFriend() {
-    const url = "http://localhost:3000";
+    const url = "http://localhost:3333";
     try {
       console.log("uuid", uuid);
       const response = await fetch(url + "/friendship", {

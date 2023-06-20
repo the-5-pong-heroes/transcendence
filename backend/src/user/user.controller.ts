@@ -3,6 +3,8 @@ import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { Request } from "express";
+import { CurrentUser } from "src/common/decorators";
+import { User } from "@prisma/client";
 
 @Controller("users")
 export class UserController {
@@ -25,8 +27,8 @@ export class UserController {
   }
 
   @Get("me")
-  async findMe(@Req() req: any) {
-    return await this.userService.findOneById(req.currentUser.id);
+  async findMe(@CurrentUser() user: User) {
+    return await this.userService.findOneById(user.id);
   }
 
   @Get(":id")
@@ -40,11 +42,12 @@ export class UserController {
   }
 
   @Delete(":id")
-  async remove(@Param("id") id: string, @Req() req: any) {
-    const user = await this.userService.findOneById(id);
-    // if (req.currentUser.roles === 0 && req.currentUser.id !== user?.id) {
-    //   throw new BadRequestException("Unauthorized");
-    // }
-    return this.userService.remove(id);
+  async remove(@Param("id") id: string) {
+    if (id) {
+      const user = await this.userService.findOneById(id);
+      if (user) {
+        this.userService.remove(id);
+      }
+    }
   }
 }

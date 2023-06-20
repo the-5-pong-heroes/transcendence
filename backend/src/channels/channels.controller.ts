@@ -5,7 +5,6 @@ import {
   Body,
   Param,
   Delete,
-  Req,
   Put,
   BadRequestException,
   UnauthorizedException,
@@ -16,6 +15,8 @@ import { MessagesService } from "../messages/messages.service";
 import { ChannelsService } from "./channels.service";
 import { CreateChannelDto } from "./dto/create-channel.dto";
 import { UpdateChannelDto } from "./dto/update-channel.dto";
+import { CurrentUser } from "src/common/decorators";
+import { User } from "@prisma/client";
 
 @Controller("chat")
 export class ChannelsController {
@@ -31,8 +32,8 @@ export class ChannelsController {
   }
 
   @Get()
-  findAll(@Req() req: any) {
-    return this.channelsService.findAll(req.currentUser.id);
+  findAll(@CurrentUser() user: User) {
+    return this.channelsService.findAll(user.id);
   }
 
   @Get(":id")
@@ -41,18 +42,18 @@ export class ChannelsController {
   }
 
   @Get("search/:name")
-  searchChannels(@Param("name") name: string, @Req() req: any) {
+  searchChannels(@Param("name") name: string, @CurrentUser() user: User) {
     return this.channelsService.searchAll({
       channelName: name,
-      userId: req.currentUser.id,
+      userId: user.id,
     });
   }
 
   @Put(":id")
-  async update(@Param("id") id: string, @Req() req: any, @Body() updateChannelDto: UpdateChannelDto) {
+  async update(@Param("id") id: string, @CurrentUser() currentUser: User, @Body() updateChannelDto: UpdateChannelDto) {
     if (id != updateChannelDto.id) throw new BadRequestException("Wrong Channel");
     const user = await this.prismaService.user.findUnique({
-      where: { id: req.currentUser.id },
+      where: { id: currentUser.id },
     });
     const channel = await this.channelsService.findOne(updateChannelDto.id);
     if (
@@ -65,7 +66,7 @@ export class ChannelsController {
   }
 
   @Delete(":id")
-  async remove(@Param("id") id: string, @Req() req: any) {
+  async remove(@Param("id") id: string) {
     const channel = await this.channelsService.findOneWithOwner(id);
     //if (channel.users.some((user) => user.userId !== req.currentUser.id))
     //throw new UnauthorizedException("You are not the owner of this channel");

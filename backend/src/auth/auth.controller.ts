@@ -1,4 +1,4 @@
-import { Injectable, Get, Put, Controller, Post, Body, UseGuards, Req, Res } from "@nestjs/common";
+import { Get, Put, Controller, Post, Body, UseGuards, Req, Res } from "@nestjs/common";
 import { Request, Response } from "express";
 
 import { AuthGuard } from "@nestjs/passport";
@@ -9,10 +9,9 @@ import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
 import { Generate2FAService } from "./2FA/generate.service";
 import { EnableService } from "./2FA/enable2FA.service";
 import { VerifyService } from "./2FA/verify.service";
-import { UserDto, TwoFADto } from "./dto";
-
-@Injectable()
-export class GoogleOauthGuard extends AuthGuard("google") {}
+import { UserDto, TwoFADto, AuthCallbackDto } from "./dto";
+import { Auth } from "@prisma/client";
+import { GoogleOauthGuard } from "./google/google-auth.guards";
 
 @Controller("auth")
 export class AuthController {
@@ -38,8 +37,10 @@ export class AuthController {
   @Get("auth42/callback")
   async getToken(@Req() req: Request, @Res() res: Response) {
     if (req.signedCookies.access_token) res.redirect(301, `http://localhost:5173/`);
-    const codeFromUrl = req.query.code as string;
-    const token = await this.Oauth42.accessToken(codeFromUrl);
+    const authCallbackDto = new AuthCallbackDto();
+    authCallbackDto.code = req.query.code as string;
+    // const codeFromUrl = req.query.code as string;
+    const token = await this.Oauth42.accessToken(authCallbackDto.code);
     const user42infos = await this.Oauth42.access42UserInformation(token.access_token);
     this.authService.createCookies(res, token);
     if (!user42infos.email) res.redirect(301, `http://localhost:5173/`);
@@ -66,6 +67,8 @@ export class AuthController {
   @UseGuards(AuthGuard("local"))
   @Post("signin")
   async signIn(@Req() req: any, @Res({ passthrough: true }) res: Response): Promise<void> {
+  // async signIn(auth: Auth, @Res({ passthrough: true }) res: Response): Promise<void> {
+    console.log("🌈 req: ", req.user);
     await this.authService.signIn(res, req.user);
   }
 
@@ -75,20 +78,8 @@ export class AuthController {
   }
 
   @Get("user")
-  async getUser(@Req() req: any, @Res() res: Response): Promise<void> {
+  async getUser(@Req() req: Request, @Res() res: Response): Promise<void> {
     await this.authService.getUser(req, res);
-  }
-
-  @Get("google")
-  @UseGuards(GoogleOauthGuard)
-  async googleLogin() {
-    /* void */
-  }
-
-  @Get("google/callback")
-  @UseGuards(GoogleOauthGuard)
-  async googleAuthCallback(@Req() req: any, @Res() res: Response) {
-    await this.authService.signInGoogle(res, req.user);
   }
 
   @Get("token")
@@ -136,5 +127,20 @@ export class AuthController {
   @Get("2FA/disable")
   async disable2FA(@Req() req: Request, @Res() res: Response) {
     return this.enable2FAService.disable2FA(req, res);
+  }
+
+  /*****************  GOOGLE AUTH  ****************/
+
+  @Get("google")
+  @UseGuards(GoogleOauthGuard)
+  async googleLogin() {
+    /* void */
+  }
+
+  @Get("google/callback")
+  @UseGuards(GoogleOauthGuard)
+  async googleAuthCallback(@Req() req: any, @Res() res: Response) {
+    console.log("🌵");
+    await this.authService.signInGoogle(res, req.user);
   }
 }

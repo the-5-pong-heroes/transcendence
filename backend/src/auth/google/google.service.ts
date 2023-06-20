@@ -4,7 +4,6 @@ import { PrismaService } from "src/database/prisma.service";
 import { Request, Response } from "express";
 import { google } from "googleapis";
 import { Prisma } from "@prisma/client";
-import { User } from "@prisma/client";
 import { ConfigService } from "@nestjs/config";
 
 interface Token {
@@ -69,6 +68,7 @@ export class GoogleService {
   }
 
   async getOauth2ClientGoogle() {
+    console.log("🍀");
     const client_id = this.config.get("GOOGLE_CLIENT_ID");
     const secret = this.config.get("GOOGLE_SECRET");
     const redirect_url = this.config.get("GOOGLE_REDIRECT_URI");

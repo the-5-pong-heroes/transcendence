@@ -35,6 +35,7 @@
 
 .btn-effect svg {
   height: 40px;
+  /* height: 40px; */
   left: 0;
   position: absolute;
   top: 0;
@@ -56,7 +57,6 @@
 .btn-effect:hover {
   background: rgba(255, 255, 255, 0);
   font-weight: 400;
-  /* letter-spacing: 1px; */
   letter-spacing: 0.4rem;
   background-color: rgba(255, 255, 255, 0.03);
 }
@@ -76,4 +76,51 @@
 
 #light .btn-effect:hover rect {
   stroke: #000000;
+}
+
+@media (max-width: 780px) {
+  .game-btn {
+    font-size: 0.7rem;
+    font-weight: 300;
+    letter-spacing: 0.2rem;
+    padding: 0;
+    margin: 0;
+    /* background-color: red; */
+  }
+  .btn-effect:hover {
+    letter-spacing: 0.3rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .game-btn {
+    font-size: 0.6rem;
+    font-weight: 300;
+    letter-spacing: 0.15rem;
+  }
+  .btn-effect svg {
+    border-radius: 7px;
+  }
+  .btn-effect {
+    border-radius: 7px;
+  }
+  .btn-effect:hover {
+    letter-spacing: 0.2rem;
+    border-radius: 7px;
+  }
+}
+
+@media (max-width: 480px), (max-height: 440px) {
+  .game-btn {
+    font-size: 0.5rem;
+    font-weight: 200;
+    letter-spacing: 0.09rem;
+    height: 30px;
+  }
+  .btn-effect svg {
+    height: 30px;
+  }
+  .btn-effect:hover {
+    letter-spacing: 0.1rem;
+  }
 }

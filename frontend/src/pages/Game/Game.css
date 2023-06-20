@@ -62,25 +62,7 @@
   background: linear-gradient(45deg, hsla(276, 37%, 20%, 0.99), hsla(261, 46%, 30%, 0.99), hsla(248, 43%, 25%, 0.99));
 }
 
-.game-modal.cross {
-  position: absolute;
-  z-index: 2;
-  height: 160px;
-  width: 500px;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  border-radius: 15px;
-  transition: 0.5s ease-out;
-  box-shadow: 7px 7px 20px 5px rgba(255, 255, 255, 0.12);
-  background: linear-gradient(45deg, hsla(276, 37%, 20%, 0.99), hsla(261, 46%, 30%, 0.99), hsla(248, 43%, 25%, 0.99));
-}
-
 #light .game-modal {
-  background: var(--global-game-gradient-light);
-}
-
-#light .game-modal-cross {
   background: var(--global-game-gradient-light);
 }
 
@@ -106,23 +88,28 @@
   padding-top: 20px;
 }
 
-@media (max-width: 680px) {
+@media (max-width: 780px) {
   .game-modal {
-    height: 150px;
-    width: 480px;
+    height: 120px;
+    width: 420px;
   }
-  .game-modal-cross {
-    height: 100px;
-    width: 300px;
+  .game-button-wrapper {
+    padding-top: 20px;
   }
 }
 
-@media (max-width: 350px), (max-height: 440px) {
+@media (max-width: 600px) {
   .game-modal {
-    height: 40%;
-    width: 75%;
+    height: 100px;
+    width: 350px;
+    border-radius: 12px;
+
   }
-  .game-modal-cross {
+}
+
+@media (max-width: 480px), (max-height: 440px) {
+  .game-modal {
+    border-radius: 10px;
     height: 40%;
     width: 75%;
   }

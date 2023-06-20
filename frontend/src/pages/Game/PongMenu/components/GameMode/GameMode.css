@@ -113,13 +113,7 @@
   width: 100%;
 }
 
-/* @media (max-width: 720px) {
-  .gameMode-btn {
-    margin: 10px;
-  } 
-} */
-
-@media (max-width: 720px) {
+@media (max-width: 720px) OR (max-height: 480px) {
   .gameMode-btn {
     font-size: 0.8rem;
     padding: 1rem 1rem;
@@ -131,39 +125,31 @@
   }
 }
 
-@media (max-width: 680px) {
-  .button {
-    font-size: 0.6em;
-    height: 30px;
-    width: 110px;
-    margin: 20px;
-  }
-}
-
-@media (max-height: 480px) {
+@media (max-width: 600px) OR (max-height: 380px) {
   .gameMode-btn {
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     letter-spacing: 0.5rem;
-    padding: 10px;
-    padding-right: 0.08rem;
   }
   .gameMode-btn:hover {
     letter-spacing: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) OR (max-height: 320px) {
+  .gameMode-btn {
+    font-size: 0.6rem;
+    letter-spacing: 0.3rem;
+    padding: 10px;
+    padding-right: 0.08rem;
+    /* background-color: red; */
+  }
+  .gameMode-btn:hover {
+    letter-spacing: 0.4rem;
   }
   .button {
     font-size: 0.6em;
     height: 25px;
     width: 100px;
     margin: 10px;
-  }
-}
-
-@media (max-height: 380px) {
-  .gameMode-btn {
-    font-size: 0.5rem;
-    letter-spacing: 0.3rem; 
-  }
-  .gameMode-btn:hover {
-    letter-spacing: 0.4rem;
   }
 }

@@ -33,7 +33,7 @@ export const Result: React.FC<ResultProps> = ({ result, winner = "The bot", inde
   ];
 
   return (
-    <div id="result-modal" className="game-modal cross">
+    <div id="result-modal" className="game-modal">
       <CloseButton />
       <div>
         {result === "Winner" && (

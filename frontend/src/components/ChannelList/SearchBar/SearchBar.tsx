@@ -1,13 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
 import styles from "./SearchBar.module.scss";
 
-import { UserContext, UserContextType } from "@/contexts";
-// import { socket } from '@/socket';
 import { type IChannel } from "@/interfaces";
 import { useUser, useSocket, useTheme } from "@hooks";
-import { ResponseError } from "@/helpers";
-import { BASE_URL } from "@/constants";
+import { customFetch, ResponseError } from "@/helpers";
 
 interface ISearch {
   id: string;
@@ -18,7 +15,6 @@ interface ISearch {
 export const SearchBar: React.FC = () => {
   const [preview, setPreview] = useState<ISearch[]>([]);
   const [input, setInput] = useState<string>("");
-  // const { user } = useContext(UserContext) as UserContextType;
   const user = useUser();
   const socket = useSocket();
   const theme = useTheme();
@@ -26,16 +22,12 @@ export const SearchBar: React.FC = () => {
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setInput(value);
-    // const token = localStorage.getItem('access_token');
-    // if (!value || !token) return setPreview([]);
 
     if (!value) {
       return setPreview([]);
     }
 
-    fetch(`${BASE_URL}/chat/search/${value}`, {
-      credentials: "include",
-    })
+    customFetch("GET", `chat/search/${value}`)
       .then((response) => {
         if (!response.ok) {
           throw new ResponseError("Failed on fetch channels request", response);
@@ -49,12 +41,6 @@ export const SearchBar: React.FC = () => {
       .catch((error) => {
         console.error(error);
       });
-
-    // const config = {headers: { 'Authorization': token }}
-    // const response = await fetch(`http://localhost:3000/chat/search/${value}`, config);
-    // if (!response.ok) return console.log(response);
-    // const data = await response.json();
-    // setPreview(data);
   };
 
   const handlePreviewClick = (channel: ISearch) => {

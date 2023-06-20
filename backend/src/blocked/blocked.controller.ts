@@ -1,11 +1,9 @@
 import { Body, Controller, Post, Req, UseGuards } from "@nestjs/common";
-// import { AuthGuard } from "@nestjs/passport";
 import { BlockedService } from "./blocked.service";
 import { UserGuard } from "src/auth/user.guard";
 
 @Controller("blocked")
 @UseGuards(UserGuard)
-// @UseGuards(AuthGuard("jwt"))
 export class BlockedController {
   constructor(private readonly blockedService: BlockedService) {}
 

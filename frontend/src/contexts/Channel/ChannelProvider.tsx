@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 
 import { ChannelContext } from "./ChannelContext";
 
-// import { socket } from "@/socket";
 import { useSocket } from "@hooks";
 import { type IChannel } from "@/interfaces";
+import { customFetch } from "@/helpers";
 
 interface ProviderParameters {
   children: React.ReactNode;
@@ -16,8 +16,7 @@ export const ChannelProvider: React.FC<ProviderParameters> = ({ children }) => {
   const socket = useSocket();
 
   const fetchData = async (changeChannel = true) => {
-    const config = { credentials: "include" as RequestCredentials };
-    const response = await fetch("http://localhost:3000/chat", config);
+    const response = await customFetch("GET", "chat");
     if (!response.ok) {
       return;
     }

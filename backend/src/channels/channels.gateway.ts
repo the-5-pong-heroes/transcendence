@@ -3,13 +3,11 @@ import { Socket, Server } from "socket.io";
 import { ChannelUsersService } from "../channel-users/channel-users.service";
 import { PrismaService } from "../database/prisma.service";
 import { UsersService } from "../users/users.service";
-// import { UsersService } from "../users_paul/users.service";
-import { CreateMessageDto } from "../messages/dto/create-message.dto";
+import { CreateMessageDto, DisableInvitationDto } from "../messages/dto";
 import { MessagesService } from "../messages/messages.service";
 import { ChannelsService } from "./channels.service";
 import { CreateChannelDto } from "./dto/create-channel.dto";
 import { BlockedService } from "src/blocked/blocked.service";
-import { Channel, User } from "@prisma/client";
 
 @WebSocketGateway({
   cors: {
@@ -302,5 +300,11 @@ export class ChannelsGateway {
       await this.blockedService.delete(payload);
     }
     client.emit("reloadUser");
+  }
+
+  @SubscribeMessage("disableInvitation")
+  async disableInvitation(client: Socket, payload: DisableInvitationDto) {
+    await this.messagesService.disableInvitation(payload.messageId);
+    this.server.to(payload.channelId).emit("updateChannels", false);
   }
 }

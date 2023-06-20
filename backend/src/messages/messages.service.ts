@@ -35,6 +35,14 @@ export class MessagesService {
     });
   }
 
+  disableInvitation(messageId: string): Promise<Message> {
+    console.log(messageId);
+    return this.prismaService.message.update({
+      where: { id: messageId },
+      data: { content: "/InviteToPlayDisabled" },
+    });
+  }
+
   deleteAll(channelId: string) {
     return this.prismaService.message.deleteMany({ where: { channelId } });
   }

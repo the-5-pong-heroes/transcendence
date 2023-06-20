@@ -5,7 +5,7 @@ import styles from "./OtherMessage.module.scss";
 
 import { type IMessage } from "@/interfaces";
 import { useUser, useSocket } from "@hooks";
-import { ResponseError } from "@/helpers";
+import { customFetch, ResponseError } from "@/helpers";
 import { DefaultAvatar } from "@/assets";
 
 interface IOtherMessageProps {
@@ -31,30 +31,12 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
 
   const handleFriend = async () => {
     if (!userIsFriend) {
-      const config = {
-        method: "POST",
-        mode: "cors" as RequestMode,
-        credentials: "include" as RequestCredentials,
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-        body: JSON.stringify({ newFriendId: message.senderId }),
-      };
-      const response = await fetch("http://localhost:3000/friendship", config);
+      const response = await customFetch("POST", "friendship", { newFriendId: message.senderId });
       if (!response.ok) {
         throw new ResponseError("Failed on fetch channels request", response);
       }
     } else {
-      const config = {
-        method: "DELETE",
-        mode: "cors" as RequestMode,
-        credentials: "include" as RequestCredentials,
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-        body: JSON.stringify({ friendId: message.senderId }),
-      };
-      const response = await fetch("http://localhost:3000/friendship", config);
+      const response = await customFetch("DELETE", "friendship", { friendId: message.senderId });
       if (!response.ok) {
         throw new ResponseError("Failed on fetch channels request", response);
       }
@@ -63,7 +45,7 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
     setShowOptions();
   };
 
-  const handleBlock = async () => {
+  const handleBlock = () => {
     socket.emit("block", { blockedUserId: message.senderId, toBlock: !userIsBlocked, userId: user?.id });
     setShowOptions();
   };

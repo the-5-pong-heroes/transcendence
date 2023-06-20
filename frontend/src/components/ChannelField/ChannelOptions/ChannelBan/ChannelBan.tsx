@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { ChannelContext } from "../../../../contexts";
 import { type IChannelBan, type IChannelUser } from "../../../../interfaces";
 
-// import { socket } from "../../../../socket";
 import styles from "./ChannelBan.module.scss";
 
 import { useUser, useSocket, useTheme } from "@hooks";
@@ -16,7 +15,6 @@ export const ChannelBan: React.FC<IChannelBanProps> = ({ banned }) => {
   const [activeUser, setActiveUser] = useState<IChannelBan>();
   const [userRole, setUserRole] = useState<string>();
 
-  // const { user } = useContext(UserContext) as UserContextType;
   const user = useUser();
   const socket = useSocket();
   const { activeChannel } = useContext(ChannelContext);
@@ -31,8 +29,6 @@ export const ChannelBan: React.FC<IChannelBanProps> = ({ banned }) => {
   }, [user]);
 
   const handleUnban = () => {
-    // const token = localStorage.getItem('access_token');
-    // if (!token || !activeUser) return;
     if (!activeUser) {
       return;
     }

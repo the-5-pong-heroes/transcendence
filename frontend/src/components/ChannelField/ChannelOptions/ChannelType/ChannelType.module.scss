@@ -11,6 +11,8 @@
     flex-flow: column nowrap;
     align-items: stretch;
     gap: 10px;
+	border-radius: 8px;
+	padding: 10px;
 
     .Type {
       cursor: pointer;
@@ -81,12 +83,20 @@
 }
 
 .ChannelTypeLight {
+  .ChannelTypeOptions {
+    background-color: rgba(255, 255, 255, .2);
+  }
+
   .Button {
     background-color: rgba(255, 0, 38, .9);
   }
 }
 
 .ChannelTypeDark {
+  .ChannelTypeOptions {
+    background-color: rgba(0, 0, 0, .2);
+  }
+
   .Type {
     filter: invert(1);
   }

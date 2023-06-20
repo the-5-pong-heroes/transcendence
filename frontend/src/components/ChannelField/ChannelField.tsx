@@ -19,14 +19,14 @@ export const ChannelField: React.FC = () => {
   return activeChannel ? (
     <div className={styles.ChannelField}>
       <ChannelHeader setShowOptions={setShowOptions} />
-      {activeChannel.messages?.length ? (
+	  {activeChannel.type === "PROTECTED" && !activeChannel.messages?.length ? (
+        <ProtectedChannel activeChannel={activeChannel} />
+      ) : (
         showOptions ? (
           <ChannelOptions />
         ) : (
           <Conversation />
         )
-      ) : (
-        <ProtectedChannel activeChannel={activeChannel} />
       )}
     </div>
   ) : (

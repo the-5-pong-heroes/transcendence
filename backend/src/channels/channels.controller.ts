@@ -70,8 +70,5 @@ export class ChannelsController {
   @Delete(":id")
   async remove(@Param("id") id: string, @Req() req: any) {
     const channel = await this.channelsService.findOneWithOwner(id);
-    //if (channel.users.some((user) => user.userId !== req.user.id))
-    //throw new UnauthorizedException("You are not the owner of this channel");
-    //return this.channelsService.delete(id);
   }
 }

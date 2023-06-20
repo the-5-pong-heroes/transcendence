@@ -26,10 +26,10 @@ export const ChannelItem: React.FC<ChannelItemProps> = ({ item }) => {
     }
     const lastMessage = item.messages[0];
     let str = "";
-    if (lastMessage.sender?.name && lastMessage.content !== "/InviteToPlay") {
+    if (lastMessage.sender?.name && lastMessage.content.substring(0, 13) !== "/InviteToPlay") {
       str += lastMessage.sender.name + ": ";
     }
-    if (lastMessage.sender?.name && lastMessage.content === "/InviteToPlay") {
+    if (lastMessage.sender?.name && lastMessage.content.substring(0, 13) === "/InviteToPlay") {
       str += lastMessage.sender.name + " sent an invite to play";
     } else {
       str += lastMessage.content;

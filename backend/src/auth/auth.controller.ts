@@ -52,7 +52,6 @@ export class AuthController {
     this.authService.createCookies(res, token);
     if (!user42infos) res.redirect(301, `http://localhost:5173/`);
     else {
-      console.log("maaail = ", user42infos.email);
       const userExists = await this.userService.getUserByEmail(user42infos.email);
       if (!userExists) this.authService.createDataBase42User(user42infos, token, user42infos.login, false);
       else {

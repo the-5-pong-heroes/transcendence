@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, Req, Res, Body, HttpException, HttpStatus } from "@nestjs/common";
+import { Injectable, BadRequestException, Req, Res, Body, HttpStatus } from "@nestjs/common";
 import { Request, Response, request } from "express";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
@@ -64,7 +64,6 @@ export class AuthService {
     }
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(password, salt);
-
     const newUser = new CreateUserDto(name, email, hash);
     const createdUser = await this.userService.create(newUser);
 
@@ -127,7 +126,6 @@ export class AuthService {
     const userByEmail = await this.findOne(userInfos.email);
     let user;
     if (userByEmail) {
-      // console.log("🌪️ User already exists !", userByEmail.userId);
       await this.prisma.auth.update({
         where: {
           userId: userByEmail.userId,
@@ -219,9 +217,6 @@ export class AuthService {
     if (!user) {
       return res.status(404).json({ message: "Invalid token" });
     }
-    console.log("🌪️ User auth =", user.auth?.twoFAactivated);
-    console.log("🌪️ User verified =", user.auth?.otp_verified);
-
     if (user.auth?.twoFAactivated && !user.auth.otp_verified) {
       return res.status(200).json({ message: "User not connected", user: null });
     }
@@ -284,7 +279,7 @@ export class AuthService {
     }
   }
 
-  async handleDataBaseCreation(@Req() req: Request, @Res() res: Response, @Body() userDto: UserDto) {
+  async handleDataBaseCreation(@Req() req: Request, @Res() res: Response, @Body() userData: UserDto) {
     const token: string = req.cookies.access_token;
     const user42infos = await this.Oauth42.access42UserInformation(token);
     if (user42infos) {

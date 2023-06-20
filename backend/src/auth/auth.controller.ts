@@ -5,13 +5,13 @@ import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
 import { CreateUserDto } from "../user/dto";
 import { User } from "@prisma/client";
-import { UserDto } from "./dto";
 import { UserService } from "src/user/user.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
 import { GoogleService } from "src/auth/google/google.service";
 import { Generate2FAService } from "./2FA/generate.service";
 import { EnableService } from "./2FA/enable2FA.service";
 import { VerifyService } from "./2FA/verify.service";
+import { UserDto } from "./dto";
 
 @Injectable()
 export class GoogleOauthGuard extends AuthGuard("google") {}
@@ -39,8 +39,8 @@ export class AuthController {
   }
 
   @Post("Oauth")
-  async userOauthCreationInDataBase(@Req() req: Request, @Res() res: Response, @Body() UserDto: UserDto) {
-    await this.authService.handleDataBaseCreation(req, res, UserDto);
+  async userOauthCreationInDataBase(@Req() req: Request, @Res() res: Response, @Body() userData: UserDto) {
+    await this.authService.handleDataBaseCreation(req, res, userData);
   }
 
   @Get("auth42/callback")

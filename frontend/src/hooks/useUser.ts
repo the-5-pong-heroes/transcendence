@@ -2,12 +2,13 @@ import { useQuery } from "react-query";
 
 import { USER_QUERY_KEY } from "@/constants";
 import type { UserAuth, User } from "@types";
-import * as fetch from "@/helpers/fetch";
+import { customFetch } from "@/helpers";
 
 async function fetchUser(): Promise<User | null> {
-  const data = await fetch.get<UserAuth>("/auth/user");
-  
-  return data.user;
+  const response = await customFetch("GET", "auth/user");
+  const payload = await response.json();
+
+  return payload.user;
 }
 
 interface IUseUser {

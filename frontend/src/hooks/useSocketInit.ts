@@ -5,8 +5,7 @@ import { useUser } from "./useUser";
 import { useSocketEvents } from "./useSocketEvents";
 
 import { ClientEvents } from "@Game/@types";
-
-const ENDPOINT = "ws://localhost:3333";
+import { WS_ENDPOINT } from "@/constants";
 
 interface SocketProps {
   setSocketReady: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,16 +22,9 @@ export const useSocketInit = ({ setSocketReady }: SocketProps): SocketValues => 
 
   useEffect(() => {
     if (user) {
-      socketRef.current = io(ENDPOINT, {
+      socketRef.current = io(WS_ENDPOINT, {
         autoConnect: false,
         withCredentials: true,
-        transportOptions: {
-          polling: {
-            extraHeaders: {
-              // Authorization: `Bearer ${user.accessToken}`,
-            },
-          },
-        },
         auth: {
           name: user?.name,
           id: user?.id,

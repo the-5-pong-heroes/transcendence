@@ -1,13 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards, BadRequestException } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { UserGuard } from "src/auth/user.guard";
 import { Request } from "express";
 
 @Controller("users")
 export class UserController {
   constructor(private userService: UserService) {}
+
+  @Post()
+  async create(@Body() createUserDto: CreateUserDto) {
+    return this.userService.create(createUserDto);
+  }
 
   @Get()
   async getUsers(@Req() req: Request) {
@@ -22,7 +26,7 @@ export class UserController {
 
   @Get("me")
   async findMe(@Req() req: any) {
-    return await this.userService.findOneById(req.user?.id);
+    return await this.userService.findOneById(req.currentUser.id);
   }
 
   @Get(":id")
@@ -38,7 +42,7 @@ export class UserController {
   @Delete(":id")
   async remove(@Param("id") id: string, @Req() req: any) {
     const user = await this.userService.findOneById(id);
-    // if (req.user.roles === 0 && req.user.id !== user?.id) {
+    // if (req.currentUser.roles === 0 && req.currentUser.id !== user?.id) {
     //   throw new BadRequestException("Unauthorized");
     // }
     return this.userService.remove(id);

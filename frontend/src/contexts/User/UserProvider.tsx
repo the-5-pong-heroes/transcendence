@@ -5,7 +5,7 @@ import { UserContext } from "./UserContext";
 
 import { type IUser } from "@/interfaces";
 // import { socket } from "@/socket";
-import { ResponseError } from "@/helpers";
+import { ResponseError, customFetch } from "@/helpers";
 import { useSocket } from "@hooks";
 import type { SocketParameters } from "@types";
 
@@ -20,16 +20,8 @@ export const UserProvider: React.FC<ProviderParameters> = ({ children }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // const token = localStorage.getItem("access_token");
-      // if (!token) return navigate("/Login");
-      // const config = { headers: { Authorization: token } };
-      // const response = await fetch("http://localhost:3000/users/me", config);
-      // if (!response.ok) {
-      //   localStorage.setItem("access_token", "");
-      //   return; // Set Error Message
-      // }
-      const config = { credentials: "include" as RequestCredentials };
-      const response = await fetch(`http://localhost:3333/users/me`, config);
+      const response = await customFetch("GET", "users/me");
+
       if (!response.ok) {
         throw new ResponseError("Failed on fetch channels request", response);
       }

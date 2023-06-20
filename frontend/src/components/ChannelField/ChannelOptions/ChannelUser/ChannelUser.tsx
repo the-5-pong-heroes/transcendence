@@ -7,7 +7,7 @@ import { type IChannelUser } from "../../../../interfaces";
 import styles from "./ChannelUser.module.scss";
 
 import { useUser, useSocket, useTheme } from "@hooks";
-import { ClientEvents } from "@Game/@types";
+import { InviteButton } from "@/components";
 
 interface IChannelUserProps {
   users: [IChannelUser];
@@ -72,13 +72,6 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
     socket.emit("banChannelUser", { id: activeUser.id, bannedUntil: new Date(Date.now() + untilNumber * 60000) });
     setUntilOption("");
     setUntilNumber(0);
-  };
-
-  const inviteToPlay = (id?: string): void => {
-    if (!id) {
-      return;
-    }
-    socket.emit(ClientEvents.GameInvite, { userId: id });
   };
 
   useEffect(() => {
@@ -151,12 +144,12 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
                 disabled={!activeUser || activeUser.role === "OWNER"}>
                 Ban
               </button>
-              <button
+              <InviteButton
+                id={activeUser?.user.id}
                 className={styles.Button}
-                onClick={() => inviteToPlay(activeUser?.user.id)}
                 disabled={!activeUser || user?.id === activeUser?.user.id}>
                 Invite to play
-              </button>
+              </InviteButton>
             </div>
           )}
         </div>

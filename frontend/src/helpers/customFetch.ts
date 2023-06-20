@@ -11,7 +11,6 @@ import { BASE_URL } from "@/constants";
  * @param config - The RequestInit object to consider in the request
  * @returns the fetch Response (and not the body text of the response parsed as as JSON)
  */
-
 export async function customFetch(
   method: string,
   path: string,
@@ -41,5 +40,6 @@ export async function customFetch(
   };
   const request: Request = new Request(`${BASE_URL}/${path}`, options);
   const response: Response = await fetch(request);
+
   return response;
 }

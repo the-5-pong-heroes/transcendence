@@ -6,8 +6,7 @@ import { UserContext, UserContextType } from "@/contexts";
 // import { socket } from '@/socket';
 import { type IChannel } from "@/interfaces";
 import { useUser, useSocket, useTheme } from "@hooks";
-import { ResponseError } from "@/helpers";
-import { BASE_URL } from "@/constants";
+import { ResponseError, customFetch } from "@/helpers";
 
 interface ISearch {
   id: string;
@@ -33,9 +32,7 @@ export const SearchBar: React.FC = () => {
       return setPreview([]);
     }
 
-    fetch(`${BASE_URL}/chat/search/${value}`, {
-      credentials: "include",
-    })
+    customFetch("GET", `chat/search/${value}`)
       .then((response) => {
         if (!response.ok) {
           throw new ResponseError("Failed on fetch channels request", response);
@@ -49,12 +46,6 @@ export const SearchBar: React.FC = () => {
       .catch((error) => {
         console.error(error);
       });
-
-    // const config = {headers: { 'Authorization': token }}
-    // const response = await fetch(`http://localhost:3000/chat/search/${value}`, config);
-    // if (!response.ok) return console.log(response);
-    // const data = await response.json();
-    // setPreview(data);
   };
 
   const handlePreviewClick = (channel: ISearch) => {

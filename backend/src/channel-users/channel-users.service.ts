@@ -5,7 +5,7 @@ import { CreateChannelUserDto } from "./dto/create-channel-user.dto";
 import { UpdateChannelUserDto } from "./dto/update-channel-user.dto";
 
 @Injectable()
-export class ChannelusersService {
+export class ChannelUsersService {
   constructor(private prismaService: PrismaService) {}
 
   async create(data: CreateChannelUserDto): Promise<ChannelUser> {

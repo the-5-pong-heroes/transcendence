@@ -1,15 +1,16 @@
-import { Injectable, CanActivate } from "@nestjs/common";
+import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
 import { Socket } from "socket.io";
 
 import { AuthService } from "src/auth/auth.service";
 import { parse } from "cookie";
 
 @Injectable()
-export class WsGuard implements CanActivate {
+export class WebSocketGuard implements CanActivate {
   constructor(private authService: AuthService) {}
 
-  async canActivate(context: any): Promise<boolean> {
-    const client: Socket = context;
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const wsContext = context.switchToWs();
+    const client: Socket = wsContext.getClient();
     const cookieHeader = client.handshake.headers.cookie;
     if (!cookieHeader || !client.handshake.auth) {
       client.disconnect();

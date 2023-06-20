@@ -7,13 +7,13 @@ import {
   MessageBody,
   ConnectedSocket,
 } from "@nestjs/websockets";
-import { Logger, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Logger, UsePipes, ValidationPipe, UseInterceptors } from "@nestjs/common";
 import { Socket, Server } from "socket.io";
 import { UserMoveDto, LobbyJoinDto, GameJoinDto, GameInviteDto, GameInviteResponseDto } from "./dto";
 import { GameService } from "./game.service";
 import { AuthenticatedSocket, ClientEvents } from "./@types";
-import { WsGuard } from "./ws.guard";
 import { ALLOWED_ORIGINS } from "src/common/constants";
+import { WebSocketInterceptor } from "src/common/interceptors";
 
 @WebSocketGateway({
   cors: {
@@ -21,11 +21,12 @@ import { ALLOWED_ORIGINS } from "src/common/constants";
     credentials: true,
   },
 })
+@UseInterceptors(WebSocketInterceptor)
 @UsePipes(new ValidationPipe({ transform: true }))
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger: Logger = new Logger(GameGateway.name);
 
-  constructor(private readonly gameService: GameService, private readonly wsGuard: WsGuard) {}
+  constructor(private readonly gameService: GameService) {}
 
   afterInit(server: Server) {
     this.gameService.server = server;
@@ -33,7 +34,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   async handleConnection(client: Socket): Promise<void> {
-    await this.wsGuard.canActivate(client);
     await this.gameService.setupClient(client as AuthenticatedSocket);
   }
 

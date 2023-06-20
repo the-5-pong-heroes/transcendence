@@ -12,8 +12,8 @@ import { type UserStats } from "../Leaderboard/Leaderboard";
 import { MatchHistory } from "./MatchHistory";
 import { Friends } from "./Friends";
 
-import { useSocket } from "@hooks";
-import { ClientEvents } from "@Game/@types";
+import { customFetch } from "@/helpers";
+import { InviteButton } from "@/components";
 
 import { customFetch } from "@/helpers";
 
@@ -32,8 +32,6 @@ interface ProfileProps {
 export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
   const { uuid } = useParams();
 
-  const socket = useSocket();
-
   const [history, setHistory] = useState([] as GameData[]);
 
   const [user, setUser] = useState({} as UserStats);
@@ -42,10 +40,10 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
 
   const fetchHistory = async () => {
     try {
-      const resp = await customFetch("GET", `profile/history/${uuid ? uuid : ""}`);
-      const data = await resp.json();
-      if (data) {
-        setHistory(data);
+      const response = await customFetch("GET", `profile/history/${uuid ? uuid : ""}`);
+      const payload = await response.json();
+      if (payload) {
+        setHistory(payload);
       }
     } catch (err) {
       console.error(err);
@@ -54,13 +52,13 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
 
   const fetchUser = async () => {
     try {
-      const resp = await customFetch("GET", `profile/${uuid ? uuid : ""}`);
-      const data = await resp.json();
-      if (data) {
+      const response = await customFetch("GET", `profile/${uuid ? uuid : ""}`);
+      const payload = await response.json();
+      if (payload) {
         const LEVELS: string[] = ["plant", "walle", "eve", "energy"];
-        data.levelPicture = [Plant, Walle, Eve, Energy][LEVELS.indexOf(data.level)];
-        data.status = data.status === "IN_GAME" ? "PLAYING" : data.status;
-        setUser(data);
+        payload.levelPicture = [Plant, Walle, Eve, Energy][LEVELS.indexOf(payload.level)];
+        payload.status = payload.status === "IN_GAME" ? "PLAYING" : payload.status;
+        setUser(payload);
       }
     } catch (err) {
       console.error(err);
@@ -76,37 +74,14 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
     return null;
   }
 
-  function switchTab(event: any) {
-    const tabText: string = event.target.innerText;
-    if (tabText === "Match history") {
-      setCurrentTab("Match history");
-    } else {
-      setCurrentTab("Friends");
-    }
-  }
-
-  async function followFriend() {
-    const url = "http://localhost:3333";
+  async function followFriend(): Promise<void> {
     try {
-      console.log("uuid", uuid);
-      const response = await fetch(url + "/friendship", {
-        method: "POST",
-        body: JSON.stringify({ newFriendId: uuid }),
-        credentials: "include",
-      });
-      const data = await response.json();
+      const body = { newFriendId: uuid };
+      const data = await customFetch("POST", "friendship", body);
     } catch (err) {
       console.error("Error adding a friend: ", err);
     }
   }
-
-  const inviteToPlay = (id?: string): void => {
-    console.log("🏓", id);
-    if (!id) {
-      return;
-    }
-    socket.emit(ClientEvents.GameInvite, { userId: id });
-  };
 
   return (
     <div ref={profileRef} id="Profile" className="Profile">
@@ -127,12 +102,9 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
             </Link>
           )}
           {!user.isMe && (
-            // <Link to={"/Game"}>
-            //   <img src={GameLight} />
-            // </Link>
-            <button onClick={() => inviteToPlay(user.id)}>
+            <InviteButton id={user.id}>
               <img src={GameLight} />
-            </button>
+            </InviteButton>
           )}
           {!user.isMe && !user.isFriend && <img className="addpointer" src={addFriend} onClick={followFriend} />}
         </div>
@@ -165,10 +137,18 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
       </div>
       <div className="block3">
         <ul className="tab tabs">
-          <li className={`tab-item${currentTab === "Match history" ? " tab-active" : ""}`} onClick={switchTab}>
+          <li
+            className={`tab-item${currentTab === "Match history" ? " tab-active" : ""}`}
+            onClick={() => {
+              setCurrentTab("Match history");
+            }}>
             <div className="tab-link">Match history</div>
           </li>
-          <li className={`tab-item${currentTab === "Friends" ? " tab-active" : ""}`} onClick={switchTab}>
+          <li
+            className={`tab-item${currentTab === "Friends" ? " tab-active" : ""}`}
+            onClick={() => {
+              setCurrentTab("Friends");
+            }}>
             <div className="tab-link">Friends</div>
           </li>
         </ul>

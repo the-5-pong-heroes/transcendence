@@ -5,5 +5,8 @@
     "module": "dist/index.js",
     "dependencies": {
         "cannon-es": "^0.20.0"
+    },
+    "devDependencies": {
+        "yarn-upgrade-all": "^0.7.2"
     }
 }

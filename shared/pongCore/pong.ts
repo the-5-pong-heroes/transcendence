@@ -1,5 +1,3 @@
-/* eslint max-lines: ["warn", 275] */
-
 import {
   GAME_WIDTH,
   GAME_HEIGHT,
@@ -158,7 +156,7 @@ export class Pong {
       this.ball.accX = Math.abs(this.ball.accX);
     }
     this.rotFactor = getRandomRotFactor();
-  }; 
+  };
 
   public paddleLastMove(paddleSide: PaddleSide): PaddleMove {
     if (paddleSide === "right") {

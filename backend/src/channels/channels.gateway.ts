@@ -13,7 +13,7 @@ import {
 	SubmitPasswordDto,
 	UpdateChannelTypeDto
 } from "./dto";
-import { UpdateChannelUserDto, ChannelUserIdDto } from "../channel-users/dto";
+import { UpdateChannelUserDto, ChannelUserIdDto, BanChannelUserDto } from "../channel-users/dto";
 import { CreateMessageDto, DisableInvitationDto } from "../messages/dto";
 import { BlockedService } from "src/blocked/blocked.service";
 
@@ -181,7 +181,7 @@ export class ChannelsGateway {
   }
 
   @SubscribeMessage("banChannelUser")
-  async banChannelUser(client: Socket, payload: any) {
+  async banChannelUser(client: Socket, payload: BanChannelUserDto) {
     const { user, channelId } = await this.channelUsersService.findUser(payload.id);
     await this.channelUsersService.delete(payload.id);
     const options: Intl.DateTimeFormatOptions = {

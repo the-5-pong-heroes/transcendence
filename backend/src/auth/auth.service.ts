@@ -3,7 +3,7 @@ import { Request, Response, request } from "express";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 
-import { Prisma, Auth, User } from "@prisma/client";
+import { Auth, User } from "@prisma/client";
 import { UserService } from "src/user/user.service";
 import { SignInDto, SignUpDto } from "./dto";
 import { CreateUserDto } from "../user/dto";
@@ -15,16 +15,12 @@ import { CLIENT_URL } from "src/common/constants";
 import { Generate2FAService } from "./2FA/generate.service";
 import { EnableService } from "./2FA/enable2FA.service";
 import { VerifyService } from "./2FA/verify.service";
+import { UserWithAuth } from "src/common/@types";
 
 export interface UserAuth {
   message: string;
   user: User;
 }
-
-const userWithAuth = Prisma.validator<Prisma.UserArgs>()({
-  include: { auth: true },
-});
-type UserWithAuth = Prisma.UserGetPayload<typeof userWithAuth>;
 
 interface GoogleUserInfos {
   email: string;
@@ -98,7 +94,7 @@ export class AuthService {
       .json({ message: "Welcome !", user: createdUser });
   }
 
-  async validateUserJwt(signInDto: SignInDto): Promise<any> {
+  async validateUserJwt(signInDto: SignInDto): Promise<Auth> {
     const { email, password } = signInDto;
     const userAuth = await this.findOne(email);
     if (!userAuth) {
@@ -110,11 +106,11 @@ export class AuthService {
         throw new BadRequestException("Invalid credentials");
       }
     }
-    const { password: _, ...result } = userAuth;
-    return result;
+    return userAuth;
   }
 
-  async signIn(@Res({ passthrough: true }) res: Response, auth: Auth): Promise<void> {
+  async signIn(@Res({ passthrough: true }) res: Response, signInDto: SignInDto): Promise<void> {
+    const auth = await this.validateUserJwt(signInDto);
     const payload = { email: auth.email, sub: auth.userId };
     const user = await this.userService.findOne(auth.userId);
     const accessToken = this.jwtService.sign(payload);
@@ -203,19 +199,23 @@ export class AuthService {
   }
 
   async getUser(req: Request, res: Response): Promise<any> {
-    const access_token = req.signedCookies.access_token;
-    if (!access_token) {
-      return res.status(200).json({ message: "User not connected", user: null });
+    try {
+      const access_token = req.signedCookies.access_token;
+      if (!access_token) {
+        return res.status(200).json({ message: "User not connected", user: null });
+      }
+      const user = await this.validateUser(access_token);
+      if (!user) {
+        return res.status(404).json({ message: "Invalid token" });
+      }
+      if (user.auth?.twoFAactivated && !user.auth.otp_verified) {
+        console.log("🌪️ twofa =", user.auth.twoFAactivated, "otp_verified =", user.auth.otp_verified);
+        return res.status(200).json({ message: "User not connected", user: null });
+      }
+      res.status(200).json({ message: "Successfully fetched user", user: user });
+    } catch (error) {
+      res.status(403).json({ message: "Forbidden" });
     }
-    const user = await this.validateUser(access_token);
-    if (!user) {
-      return res.status(404).json({ message: "Invalid token" });
-    }
-    if (user.auth?.twoFAactivated && !user.auth.otp_verified) {
-      console.log("🌪️ twofa =", user.auth.twoFAactivated, "otp_verified =", user.auth.otp_verified);
-      return res.status(200).json({ message: "User not connected", user: null });
-    }
-    res.status(200).json({ message: "Successfully fetched user", user: user });
   }
 
   async twoFAtoggle(email: string, twoFAactivated: boolean): Promise<Auth> {
@@ -256,41 +256,41 @@ export class AuthService {
     }
   }
 
-  async RedirectConnectingUser(@Req() req: Request, @Res() res: Response, email: string | null | undefined) {
-    if (!email) res.redirect(301, `http://localhost:5173/Profile`);
-    else res.redirect(301, `http://localhost:5173/`);
-  }
+  // async RedirectConnectingUser(@Req() req: Request, @Res() res: Response, email: string | null | undefined) {
+  //   if (!email) res.redirect(301, `http://localhost:5173/Profile`);
+  //   else res.redirect(301, `http://localhost:5173/`);
+  // }
 
-  async getUserByToken(req: Request): Promise<User> {
-    const token = req.signedCookies["access_token"];
-    if (!token) throw new BadRequestException("Failed to get the user by token (falsy token)");
-    try {
-      const user = await this.prisma.user.findFirstOrThrow({
-        where: { auth: { accessToken: token } },
-      });
-      return user;
-    } catch (error) {
-      throw new BadRequestException("Failed to get the user by token (no user found)");
-    }
-  }
+  // async getUserByToken(req: Request): Promise<User> {
+  //   const token = req.signedCookies["access_token"];
+  //   if (!token) throw new BadRequestException("Failed to get the user by token (falsy token)");
+  //   try {
+  //     const user = await this.prisma.user.findFirstOrThrow({
+  //       where: { auth: { accessToken: token } },
+  //     });
+  //     return user;
+  //   } catch (error) {
+  //     throw new BadRequestException("Failed to get the user by token (no user found)");
+  //   }
+  // }
 
-  async handleDataBaseCreation(@Req() req: Request, @Res() res: Response, @Body() userDto: UserDto) {
-    const token: string = req.signedCookies.access_token;
-    const user42infos = await this.Oauth42.access42UserInformation(token);
-    if (user42infos) {
-      const finalUser = await this.Oauth42.createDataBase42User(
-        user42infos,
-        token,
-        req.body.name,
-        req.body.isRegistered,
-      );
-      return res.status(200).json({
-        statusCode: 200,
-        path: finalUser,
-      });
-    }
-    await this.googleService.handleGoogleUserCreation(res, req);
-  }
+  // async handleDataBaseCreation(@Req() req: Request, @Res() res: Response, @Body() userDto: UserDto) {
+  //   const token: string = req.signedCookies.access_token;
+  //   const user42infos = await this.Oauth42.access42UserInformation(token);
+  //   if (user42infos) {
+  //     const finalUser = await this.Oauth42.createDataBase42User(
+  //       user42infos,
+  //       token,
+  //       req.body.name,
+  //       req.body.isRegistered,
+  //     );
+  //     return res.status(200).json({
+  //       statusCode: 200,
+  //       path: finalUser,
+  //     });
+  //   }
+  //   await this.googleService.handleGoogleUserCreation(res, req);
+  // }
 
   async createCookies(@Res() res: Response, token: any) {
     const cookies = res.cookie("access_token", token.access_token, {
@@ -335,19 +335,19 @@ export class AuthService {
     }
   }
 
-  async checkIfTokenValid(@Req() req: Request, @Res() res: Response) {
-    const token: string = req.signedCookies.access_token;
+  // async checkIfTokenValid(@Req() req: Request, @Res() res: Response) {
+  //   const token: string = req.signedCookies.access_token;
 
-    const token42Valid = await this.Oauth42.access42UserInformation(token); // check token from user if user is from 42
-    const dataGoogleValid = await this.googleService.getUserFromGoogleByCookies(req); // check now if the token from google is valid
-    if (!token42Valid && !dataGoogleValid) {
-      throw new BadRequestException("InvalidToken", {
-        description: "Json empty, the token is invalid",
-      });
-    }
-    return res.status(200).json({
-      statusCode: 200,
-      path: request.url,
-    });
-  }
+  //   const token42Valid = await this.Oauth42.access42UserInformation(token); // check token from user if user is from 42
+  //   const dataGoogleValid = await this.googleService.getUserFromGoogleByCookies(req); // check now if the token from google is valid
+  //   if (!token42Valid && !dataGoogleValid) {
+  //     throw new BadRequestException("InvalidToken", {
+  //       description: "Json empty, the token is invalid",
+  //     });
+  //   }
+  //   return res.status(200).json({
+  //     statusCode: 200,
+  //     path: request.url,
+  //   });
+  // }
 }

@@ -1,4 +1,4 @@
-import { Get, Put, Controller, Post, Body, UseGuards, Req, Res } from "@nestjs/common";
+import { Get, Put, Controller, Post, Body, UseGuards, Req, Res, Query } from "@nestjs/common";
 import { Request, Response } from "express";
 
 import { AuthGuard } from "@nestjs/passport";
@@ -9,7 +9,7 @@ import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
 import { Generate2FAService } from "./2FA/generate.service";
 import { EnableService } from "./2FA/enable2FA.service";
 import { VerifyService } from "./2FA/verify.service";
-import { UserDto, TwoFADto, AuthCallbackDto } from "./dto";
+import { UserDto, TwoFADto, AuthCallbackDto, SignInDto, SignUpDto } from "./dto";
 import { Auth } from "@prisma/client";
 import { GoogleOauthGuard } from "./google/google-auth.guards";
 
@@ -24,22 +24,21 @@ export class AuthController {
     private verify2FAService: VerifyService,
   ) {}
 
-  @Get("Oauth42/login")
-  async getUserByToken(@Req() req: Request) {
-    return await this.authService.getUserByToken(req);
-  }
+  // @Get("Oauth42/login")
+  // async getUserByToken(@Req() req: Request) {
+  //   return await this.authService.getUserByToken(req);
+  // }
 
-  @Post("Oauth")
-  async userOauthCreationInDataBase(@Req() req: Request, @Res() res: Response, @Body() userData: UserDto) {
-    await this.authService.handleDataBaseCreation(req, res, userData);
-  }
+  // @Post("Oauth")
+  // async userOauthCreationInDataBase(@Req() req: Request, @Res() res: Response, @Body() userData: UserDto) {
+  //   await this.authService.handleDataBaseCreation(req, res, userData);
+  // }
 
   @Get("auth42/callback")
   async getToken(@Req() req: Request, @Res() res: Response) {
-    if (req.signedCookies.access_token) res.redirect(301, `http://localhost:5173/`);
+    if (req.signedCookies.access_token) res.redirect(301, `http://localhost:5173/`); // TODO CHECK USER !!!!
     const authCallbackDto = new AuthCallbackDto();
     authCallbackDto.code = req.query.code as string;
-    // const codeFromUrl = req.query.code as string;
     const token = await this.Oauth42.accessToken(authCallbackDto.code);
     const user42infos = await this.Oauth42.access42UserInformation(token.access_token);
     this.authService.createCookies(res, token);
@@ -60,16 +59,15 @@ export class AuthController {
   }
 
   @Post("signup")
-  async signUp(@Res({ passthrough: true }) res: Response, @Body() data: CreateUserDto): Promise<void> {
+  async signUp(@Res({ passthrough: true }) res: Response, @Body() data: SignUpDto): Promise<void> {
     await this.authService.signUp(res, data);
   }
 
   @UseGuards(AuthGuard("local"))
   @Post("signin")
-  async signIn(@Req() req: any, @Res({ passthrough: true }) res: Response): Promise<void> {
-  // async signIn(auth: Auth, @Res({ passthrough: true }) res: Response): Promise<void> {
-    console.log("🌈 req: ", req.user);
-    await this.authService.signIn(res, req.user);
+  async signIn(@Res({ passthrough: true }) res: Response, @Body() signInDto: SignInDto): Promise<void> {
+    console.log("🌈 signInDto: ", signInDto);
+    await this.authService.signIn(res, signInDto);
   }
 
   @Get("signout")
@@ -80,11 +78,6 @@ export class AuthController {
   @Get("user")
   async getUser(@Req() req: Request, @Res() res: Response): Promise<void> {
     await this.authService.getUser(req, res);
-  }
-
-  @Get("token")
-  async checkIfTokenValid(@Req() req: Request, @Res() res: Response) {
-    return this.authService.checkIfTokenValid(req, res);
   }
 
   @Get("twoFAactivated")
@@ -134,6 +127,7 @@ export class AuthController {
   @Get("google")
   @UseGuards(GoogleOauthGuard)
   async googleLogin() {
+    console.log("🐥");
     /* void */
   }
 
@@ -143,4 +137,9 @@ export class AuthController {
     console.log("🌵");
     await this.authService.signInGoogle(res, req.user);
   }
+
+  // @Get("token")
+  // async checkIfTokenValid(@Req() req: Request, @Res() res: Response) {
+  //   return this.authService.checkIfTokenValid(req, res);
+  // }
 }

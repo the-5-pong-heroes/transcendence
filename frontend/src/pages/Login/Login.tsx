@@ -6,6 +6,7 @@ import { useSignIn, useTwoFALogin } from "./hooks";
 import { BASE_URL, API42_URL, API42_CLIENT_ID, API42_REDIRECT } from "@/constants";
 import { Logo_42, Logo_Google, Logo_Eve } from "@assets";
 import { customFetch } from "@/helpers";
+import type { UserAuth } from "@types";
 
 import "./Login.css";
 
@@ -25,10 +26,6 @@ export const Login42: React.FC = () => {
   const handleAuth42 = (): void => {
     window.open(url_42_auth, "_self");
   };
-
-  // const handleAuthGoogle = () => {
-  //   navigate("/auth/google");
-  // };
 
   return (
     <div className="Login_with" onClick={handleAuth42}>

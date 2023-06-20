@@ -1,24 +1,14 @@
 import { PrismaService } from "../database/prisma.service";
 import { ConflictException, HttpException, HttpStatus, Injectable, NotFoundException, Req } from "@nestjs/common";
 import { Request } from "express";
-import { Prisma, Auth, User, UserStatus } from "@prisma/client";
+import { Auth, User, UserStatus } from "@prisma/client";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
-
-// type IUser = User & { auth: Auth | null };
-
-const userWithAuth = Prisma.validator<Prisma.UserArgs>()({
-  include: { auth: true },
-});
-type UserWithAuth = Prisma.UserGetPayload<typeof userWithAuth>;
+import { UserWithAuth } from "src/common/@types";
 
 @Injectable({})
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
-
-  async getAllUsers(blockedOf: string) {
-    const users = await this.prisma.user.findMany({});
-  }
 
   async getUserByEmail(email: string) {
     try {

@@ -5,15 +5,11 @@ import { Request, Response } from "express";
 import { google } from "googleapis";
 import { Prisma } from "@prisma/client";
 import { ConfigService } from "@nestjs/config";
+import { UserWithAuth } from "src/common/@types";
 
 interface Token {
   access_token: string | null | undefined;
 }
-
-const userWithAuth = Prisma.validator<Prisma.UserArgs>()({
-  include: { auth: true },
-});
-type UserWithAuth = Prisma.UserGetPayload<typeof userWithAuth>;
 
 @Injectable({})
 export class GoogleService {
@@ -68,7 +64,6 @@ export class GoogleService {
   }
 
   async getOauth2ClientGoogle() {
-    console.log("🍀");
     const client_id = this.config.get("GOOGLE_CLIENT_ID");
     const secret = this.config.get("GOOGLE_SECRET");
     const redirect_url = this.config.get("GOOGLE_REDIRECT_URI");
@@ -84,7 +79,6 @@ export class GoogleService {
     return oauth2Client;
   }
 
-  // async createDataBaseUserFromGoogle(@Res() res: Response, userGoogle: any, name: string, isRegistered: boolean) {
   async createDataBaseUserFromGoogle(
     accessToken: string,
     name: string,
@@ -119,23 +113,23 @@ export class GoogleService {
     }
   }
 
-  async getTokenFromGoogle(code: string) {
-    const oauth2Client = await this.getOauth2ClientGoogle();
-    const { tokens } = await oauth2Client.getToken(code);
-    const token: Token = {
-      access_token: tokens.access_token,
-    };
-    await oauth2Client.setCredentials({
-      access_token: tokens.access_token,
-    });
-    // const userInfoClient = google.oauth2("v2").userinfo;
-    // const userInfoResponse = await userInfoClient.get({
-    //   auth: oauth2Client,
-    // });
-    const userInfoClient = google.oauth2("v2").userinfo;
-    const userInfoResponse = await userInfoClient.get({
-      auth: oauth2Client,
-    });
-    return token;
-  }
+  // async getTokenFromGoogle(code: string) {
+  //   const oauth2Client = await this.getOauth2ClientGoogle();
+  //   const { tokens } = await oauth2Client.getToken(code);
+  //   const token: Token = {
+  //     access_token: tokens.access_token,
+  //   };
+  //   await oauth2Client.setCredentials({
+  //     access_token: tokens.access_token,
+  //   });
+  //   // const userInfoClient = google.oauth2("v2").userinfo;
+  //   // const userInfoResponse = await userInfoClient.get({
+  //   //   auth: oauth2Client,
+  //   // });
+  //   const userInfoClient = google.oauth2("v2").userinfo;
+  //   const userInfoResponse = await userInfoClient.get({
+  //     auth: oauth2Client,
+  //   });
+  //   return token;
+  // }
 }

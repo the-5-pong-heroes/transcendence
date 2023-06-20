@@ -15,12 +15,6 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Get()
-  async getUsers(@Req() req: Request) {
-    const blockedOf = req.query.blockedOf as string;
-    return this.userService.getAllUsers(blockedOf);
-  }
-
   @Post("me/username/get")
   getUsername(@Req() req: Request) {
     return this.userService.getUsername(req);

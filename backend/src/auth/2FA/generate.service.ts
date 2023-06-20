@@ -3,14 +3,9 @@ import { HttpException, HttpStatus, Injectable, Req, Res } from "@nestjs/common"
 import { PrismaService } from "src/database/prisma.service";
 import * as fs from "fs";
 import { Request, Response } from "express";
-import { Prisma } from "@prisma/client";
+// import { UserWithAuth } from "src/common/@types";
 
 const myHTML = fs.readFileSync("./index.html", "utf8");
-
-const userWithAuth = Prisma.validator<Prisma.UserArgs>()({
-  include: { auth: true },
-});
-type UserWithAuth = Prisma.UserGetPayload<typeof userWithAuth>;
 
 @Injectable()
 export class Generate2FAService {

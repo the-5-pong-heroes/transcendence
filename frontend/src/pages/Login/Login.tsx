@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useSignIn } from "./hooks";
 
-import { BASE_URL, API42_URL, API42_CLIENT_ID, API42_REDIRECT } from "@/constants";
+
+import { CLIENT_URL, BASE_URL, API42_URL, API42_CLIENT_ID, API42_REDIRECT } from "@/constants";
 import { Logo_42, Logo_Google, Logo_Eve } from "@assets";
 import "./Login.css";
 import { customFetch } from "@/helpers";
@@ -16,16 +17,16 @@ export const Login42: React.FC = () => {
     scope: "public",
   };
   const url_42_auth = API42_URL + "?" + new URLSearchParams(body).toString();
-
-  const handleAuth42 = (): void => {
-    window.open(url_42_auth, "_self");
-  };
+  
+  useEffect(() => {
+    console.log("api = ", url_42_auth);
+  }, []);
 
   return (
-    <div className="Login_with" onClick={handleAuth42}>
+    <a className="Login_with" href={url_42_auth}>
       <span>Continue with </span>
       <img id="logo-42" alt="42 Logo" src={Logo_42} />      
-    </div>
+    </a>
   );
 };
 
@@ -72,8 +73,7 @@ export const Login: React.FC = () => {
         const response = await customFetch("POST", "auth/2FA/verify", { twoFACode: twoFACode });
         if (response.ok) {
           alert("Code de vérification correct !");
-          const url = `${import.meta.env.VITE_FRONTEND_URL}`;
-          window.open(url, "_self");
+          window.open(CLIENT_URL, "_self");
         } else {
           alert("Code de vérification incorrect. Veuillez réessayer.");
         }

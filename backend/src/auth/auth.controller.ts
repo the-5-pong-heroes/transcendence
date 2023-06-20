@@ -50,8 +50,9 @@ export class AuthController {
     const token = await this.Oauth42.accessToken(codeFromUrl);
     const user42infos = await this.Oauth42.access42UserInformation(token.access_token);
     this.authService.createCookies(res, token);
-    if (!user42infos.email) res.redirect(301, `http://localhost:5173/`);
+    if (!user42infos) res.redirect(301, `http://localhost:5173/`);
     else {
+      console.log("maaail = ", user42infos.email);
       const userExists = await this.userService.getUserByEmail(user42infos.email);
       if (!userExists) this.authService.createDataBase42User(user42infos, token, user42infos.login, false);
       else {
@@ -117,6 +118,11 @@ export class AuthController {
   @Get("2FA/disable")
   async disable2FA(@Req() req: Request) {
     return this.enable2FAService.disable2FA(req);
+  }
+
+  @Get("2FA/status")
+  async status2FA(@Req() req: Request) {
+    return this.enable2FAService.status2FA(req);
   }
 
   //    @Get("google/callback")

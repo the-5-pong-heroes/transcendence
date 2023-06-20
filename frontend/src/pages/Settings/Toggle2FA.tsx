@@ -20,19 +20,14 @@ export const Toggle2FA: React.FC = () => {
 
 
   async function handletoggle2FA(): Promise<boolean> {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}` + "/auth/Oauth42/login", {
-      method: "POST", //mettre un GET
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user: user }),
-    });
-    const data = await response.json();
-    console.log("auth= ", data.auth);
-    if (data.auth.twoFAactivated === true) {
-      return true;
-    } else {
-      return false;
+    const response = await customFetch("GET", "auth/2FA/status");
+    if (response.ok) {
+      const data = await response.json();
+      if (data.twoFA === true)
+        return true;
     }
-  }
+    return false;
+    }
 
   async function toggle2FA() {
     if (isActivated === true)

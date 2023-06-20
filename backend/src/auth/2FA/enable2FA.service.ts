@@ -60,4 +60,24 @@ export class EnableService {
     }
     return user;
   }
+
+  async status2FA(@Req() req: Request) {
+    const accessToken = req.cookies.access_token;
+    const user = await this.prisma.user.findFirst({
+      where: {
+        auth: {
+          accessToken: accessToken,
+        },
+      },
+      include: {
+        auth: true,
+      },
+    });
+    if (user)
+    {
+      if (user.auth?.twoFAactivated === true)
+        return {"twoFA" : true};
+    }
+    return {"twoFA" : false};
+  }
 }

@@ -10,7 +10,7 @@ interface TwoFAactivated {
 }
 
 async function fetch2FAactivated(): Promise<boolean> {
-  const response = await customFetch("get", "auth/twoFAactivated");
+  const response = await customFetch("GET", "auth/twoFAactivated");
   if (!response.ok) {
     throw new ResponseError("Fetch request failed", response);
   }

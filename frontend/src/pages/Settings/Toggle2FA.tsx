@@ -9,7 +9,7 @@ export const Toggle2FA: React.FC = () => {
 
   const onClick = (): void => {
     toggleTwoFA();
-    customFetch("put", "auth/twoFAtoggle", { isToggled: !twoFA }).catch((error) => {
+    customFetch("PUT", "auth/twoFAtoggle", { isToggled: !twoFA }).catch((error) => {
       // throw new ResponseError("Fetch request failed", error);
       console.log(error);
     });

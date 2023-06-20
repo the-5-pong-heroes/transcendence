@@ -1,6 +1,6 @@
 import { PrismaService } from "../../database/prisma.service";
 import { Request, Response } from "express";
-import { HttpException, HttpStatus, Injectable, Req, Res } from "@nestjs/common";
+import { Injectable, Req, Res } from "@nestjs/common";
 
 @Injectable()
 export class EnableService {

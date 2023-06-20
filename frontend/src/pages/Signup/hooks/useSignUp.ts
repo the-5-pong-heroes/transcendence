@@ -12,7 +12,7 @@ async function signUp(name: string, email: string, password: string): Promise<Us
     email: email,
     password: password,
   };
-  const response = await customFetch("post", "auth/signup", signUpBody);
+  const response = await customFetch("POST", "auth/signup", signUpBody);
   if (!response.ok) {
     const { message } = (await response.json()) as ErrorMessage;
     throw new ResponseError(message ? message : "Fetch request failed", response);
@@ -46,9 +46,9 @@ export function useSignUp(): IUseSignUp {
       },
       onError: (error) => {
         if (error instanceof ResponseError) {
-          toast.error(`Ops.. ${error.message}. Try again!`);
+          toast.error(`Oops.. ${error.message}. Try again!`);
         } else {
-          toast.error(`Ops.. Error on sign up. Try again!`);
+          toast.error(`Oops.. Error on sign up. Try again!`);
         }
       },
     }

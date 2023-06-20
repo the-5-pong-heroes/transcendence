@@ -4,7 +4,8 @@ import { PrismaService } from "src/database/prisma.service";
 import { Request, Response } from "express";
 import { google } from "googleapis";
 import { Prisma } from "@prisma/client";
-import { GOOGLE_CLIENT_ID, GOOGLE_SECRET, GOOGLE_REDIRECT_URI } from "src/common/constants";
+import { User } from "@prisma/client";
+import { ConfigService } from "@nestjs/config";
 
 interface Token {
   access_token: string | null | undefined;
@@ -17,7 +18,7 @@ type UserWithAuth = Prisma.UserGetPayload<typeof userWithAuth>;
 
 @Injectable({})
 export class GoogleService {
-  constructor(private prisma: PrismaService, private userService: UserService) {}
+  constructor(private prisma: PrismaService, private userService: UserService, private config: ConfigService) {}
 
   async handleGoogleUserCreation(@Res() res: Response, @Req() req: Request) {
     try {
@@ -55,7 +56,6 @@ export class GoogleService {
     try {
       const oauth2Client = await this.getOauth2ClientGoogle();
       await oauth2Client.setCredentials(tokens);
-      const userInfoClient = google.oauth2("v2").userinfo;
       const { data } = await google.oauth2("v2").userinfo.get({ auth: oauth2Client });
       const userInfos = {
         email: data.email,
@@ -69,7 +69,10 @@ export class GoogleService {
   }
 
   async getOauth2ClientGoogle() {
-    const oauth2Client = new google.auth.OAuth2(GOOGLE_CLIENT_ID, GOOGLE_SECRET, GOOGLE_REDIRECT_URI);
+    const client_id = this.config.get("GOOGLE_CLIENT_ID");
+    const secret = this.config.get("GOOGLE_SECRET");
+    const redirect_url = this.config.get("GOOGLE_REDIRECT_URI");
+    const oauth2Client = new google.auth.OAuth2(client_id, secret, redirect_url);
     const scopes = [
       "https://www.googleapis.com/auth/userinfo.profile",
       "https://www.googleapis.com/auth/userinfo.email",

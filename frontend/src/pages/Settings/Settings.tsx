@@ -10,6 +10,7 @@ import { DefaultAvatar, Leave } from "@/assets";
 import { LoadingIcon } from "@/components/loading/loading";
 import { customFetch } from "@/helpers";
 import { useUser } from "@hooks";
+import { BASE_URL } from "@/constants";
 
 interface SettingsProps {
   settingsRef: React.RefObject<HTMLDivElement>;
@@ -32,31 +33,23 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
 
   const [avatar, setAvatar] = useState(null);
 
-  const [selectedFile, setSelectedFile] = useState(null);
-
   const signOut = useSignOut();
   const user = useUser();
-
-  const url = "http://localhost:3333/settings";
 
   const twoFACode = React.useState("");
   const [isActivated, setIsActivated] = React.useState(false);
 
-  async function handleFileChange(event: any) {
+  async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>): Promise<void> {
+    if (!event.target.files) {
+      return;
+    }
     const file = event.target.files[0];
-    setSelectedFile(file);
     if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
       try {
         setUploading(true);
-        const response = await fetch(url + "/upload", {
-          credentials: "include",
-          method: "POST",
-          body: formData,
-        });
-        const data = await response.json();
-        setAvatar(data.avatar);
+        const response = await customFetch("POST", "upload", { file: file });
+        const payload = await response.json();
+        setAvatar(payload.avatar);
         setUploading(false);
       } catch (err) {
         console.error("Error uploading image: ", err);
@@ -66,12 +59,12 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
 
   const fetchSettings = async () => {
     try {
-      const resp = await fetch(url, { credentials: "include" });
-      const data = await resp.json();
-      if (data) {
-        setSettings(data);
-        setUsername(data.name);
-        setAvatar(data.avatar);
+      const response = await customFetch("GET", "settings");
+      const payload = await response.json();
+      if (payload) {
+        setSettings(payload);
+        setUsername(payload.name);
+        setAvatar(payload.avatar);
       }
     } catch (err) {
       console.error(err);
@@ -81,19 +74,14 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
   async function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
       try {
-        const resp = await fetch(url, {
-          method: "PATCH",
-          headers: { Accept: "application/json", "Content-Type": "application/json;charset=utf-8" },
-          body: JSON.stringify({ name: username }),
-          credentials: "include",
-        });
-        if (!resp.ok) {
+        const response = await customFetch("PATCH", "settings", { name: username });
+        if (!response.ok) {
           alert("Your username must be unique and 3 to 20 characters long.");
 
           return;
         }
-        const data = await resp.json();
-        if (data) {
+        const payload = await response.json();
+        if (payload) {
           setSettings({ ...settings, name: username });
         }
       } catch (err) {
@@ -110,12 +98,22 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
     }));
   }
 
+  async function toggle2FA(isToggled: boolean) {
+    console.log("2FA: ", isToggled);
+    if (!isToggled) {
+      const url = `${BASE_URL}` + "/auth/2FA/disable";
+      window.open(url, "_self");
+    } else {
+      try {
+        const data = await handle2FAfunction();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
+
   async function handle2FAfunction(): Promise<any> {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code: twoFACode, twoFAactivated: isActivated }),
-    });
+    const response = await customFetch("POST", "auth/2FA/generate", { code: twoFACode, twoFAactivated: isActivated });
     const data = await response.json();
     if (data.twoFAactivated === true) {
       openPopup(data.code);
@@ -144,10 +142,8 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
     return null;
   }
 
-  const deleteUser = (): void => {
-    customFetch("delete", `users/${user?.id}`).catch((error) => {
-      console.error(error);
-    });
+  const deleteUser = async (): Promise<void> => {
+    void (await customFetch("DELETE", `users/${user?.id}`));
     signOut();
   };
 

@@ -13,10 +13,10 @@ import {
 import { UserSettingsService } from "./user-settings.service";
 // import { CreateUserSettingDto } from "./dto/create-user-setting.dto";
 import { UpdateUsernameDto } from "./dto/update-username.dto";
-import { UserSettings } from "./user-settings.service";
 import { CurrentUser } from "src/common/decorators";
 import { User } from "@prisma/client";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { MAX_FILE_SIZE, VALID_FILE_TYPES } from "src/common/constants/others";
 
 @Controller("settings")
 export class UserSettingsController {
@@ -39,9 +39,10 @@ export class UserSettingsController {
     @CurrentUser() user: User,
     @UploadedFile(
       new ParseFilePipe({
+        fileIsRequired: true,
         validators: [
-          new FileTypeValidator({ fileType: ".(png|jpeg|jpg)" }),
-          new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 4 }),
+          new MaxFileSizeValidator({ maxSize: MAX_FILE_SIZE }),
+          new FileTypeValidator({ fileType: VALID_FILE_TYPES }),
         ],
       }),
     )

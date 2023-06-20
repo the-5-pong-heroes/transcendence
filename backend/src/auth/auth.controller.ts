@@ -6,7 +6,6 @@ import { AuthService } from "./auth.service";
 import { CreateUserDto } from "../user/dto";
 import { UserService } from "src/user/user.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
-import { GoogleService } from "src/auth/google/google.service";
 import { Generate2FAService } from "./2FA/generate.service";
 import { EnableService } from "./2FA/enable2FA.service";
 import { VerifyService } from "./2FA/verify.service";
@@ -21,7 +20,6 @@ export class AuthController {
     private authService: AuthService,
     private Oauth42: Oauth42Service,
     private userService: UserService,
-    private googleService: GoogleService,
     private Generate2FA: Generate2FAService,
     private enable2FAService: EnableService,
     private verify2FAService: VerifyService,
@@ -33,8 +31,8 @@ export class AuthController {
   }
 
   @Post("Oauth")
-  async userOauthCreationInDataBase(@Req() req: Request, @Res() res: Response, @Body() UserDto: UserDto) {
-    await this.authService.handleDataBaseCreation(req, res, UserDto);
+  async userOauthCreationInDataBase(@Req() req: Request, @Res() res: Response, @Body() userData: UserDto) {
+    await this.authService.handleDataBaseCreation(req, res, userData);
   }
 
   @Get("auth42/callback")

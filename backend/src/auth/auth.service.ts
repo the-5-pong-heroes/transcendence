@@ -74,7 +74,6 @@ export class AuthService {
     }
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(password, salt);
-
     const newUser = new CreateUserDto(name, email, hash);
     const createdUser = await this.userService.create(newUser);
 

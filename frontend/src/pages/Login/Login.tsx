@@ -3,17 +3,32 @@ import { useNavigate } from "react-router-dom";
 
 import { useSignIn, useTwoFALogin } from "./hooks";
 
-import { BASE_URL } from "@/constants";
+import { BASE_URL, API42_URL, API42_CLIENT_ID, API42_REDIRECT } from "@/constants";
 import { Logo_42, Logo_Google, Logo_Eve } from "@assets";
 import { customFetch } from "@/helpers";
 
 import "./Login.css";
 
 export const Login42: React.FC = () => {
-  const handleAuth42 = () => {
-    const url = `${import.meta.env.VITE_API42_URI}`;
-    window.open(url, "_self");
+  const body = {
+    client_id: API42_CLIENT_ID,
+    redirect_uri: API42_REDIRECT,
+    response_type: "code",
+    scope: "public",
   };
+  const url_42_auth = API42_URL + "?" + new URLSearchParams(body).toString();
+
+  const navigate = useNavigate();
+  const twoFACode = React.useState("");
+  const [isActivated, setIsActivated] = React.useState(false);
+
+  const handleAuth42 = (): void => {
+    window.open(url_42_auth, "_self");
+  };
+
+  // const handleAuthGoogle = () => {
+  //   navigate("/auth/google");
+  // };
 
   return (
     <div className="Login_with" onClick={handleAuth42}>

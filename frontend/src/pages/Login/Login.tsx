@@ -6,6 +6,7 @@ import { useSignIn } from "./hooks";
 import { BASE_URL } from "@/constants";
 import { Logo_42, Logo_Google, Logo_Eve } from "@assets";
 import "./Login.css";
+import { customFetch } from "@/helpers";
 
 export const Login42: React.FC = () => {
 
@@ -57,63 +58,21 @@ export const Login: React.FC = () => {
     }
   };
 
-  if (displayPopup === true) {
-    handle2FAfunction();
-  }
-
-  async function handle2FAfunction(): Promise<any> {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code: twoFACode}),
-    });
-    const data = await response.json();
-    if (displayPopup === true) {
-      openPopup();
-    }
-    return data;
-  }
-
-  async function openPopup() {
-    const popup = document.getElementById("popup");
-    if (popup) {
-      popup.style.display = "block";
-      popup.dataset.twoFACode = "test";
-    }
-  }
-
-  async function closePopup() {
-    const popup = document.getElementById("popup");
-    if (popup) {
-      popup.style.display = "none";
-    }
-  }
-
-  async function updateVerify2FA() {
-    const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/verify";
-    window.open(url, "_self");
-  }
-
   async function submitVerificationCode() {
-    const verificationCodeInput = document.getElementById("verificationCode") as HTMLInputElement;
-    if (verificationCodeInput) {
-      const verificationCode = verificationCodeInput.value;
-      const popup = document.getElementById("popup");
-      if (popup) {
-        const twoFACode = popup.dataset.twoFACode;
-        console.log("twoFA = ", twoFACode);
-        console.log("verif = ", verificationCode);
-        if (verificationCode === twoFACode) {
+      const popup = document.getElementById("verificationCode");
+      if (popup instanceof HTMLInputElement) {
+        const twoFACode = popup.value;
+        console.log("twoFAcode = ",twoFACode);
+        const response = await customFetch("POST", "auth/2FA/verify", { twoFACode: twoFACode });
+        if (response.ok) {
           alert("Code de vérification correct !");
-          closePopup();
-          updateVerify2FA();
-          navigate("/");
+          const url = `${import.meta.env.VITE_FRONTEND_URL}`;
+          window.open(url, "_self");
         } else {
           alert("Code de vérification incorrect. Veuillez réessayer.");
         }
       }
     }
-  }
 
   return (
     <div className="Login">
@@ -130,7 +89,9 @@ export const Login: React.FC = () => {
         <div className="continue-with">
           <Login42 />
           <LoginGoogle />
-          <div id="popup" style={{ display: "none" }}>
+          {
+            displayPopup &&
+          <div id="popup">
               <div className="popup-modal">
                 <div className="popup-content">
                   <p>Please enter the verification code sent to your email:</p>
@@ -139,6 +100,7 @@ export const Login: React.FC = () => {
                 </div>
               </div>
             </div>
+          }
         </div>
       </form>
     </div>

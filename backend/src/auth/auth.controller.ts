@@ -109,9 +109,9 @@ export class AuthController {
     return this.Generate2FA.generateService(req);
   }
 
-  @Get("2FA/verify")
-  async verify2FA(@Req() req: Request, @Res() res: Response) {
-    return this.verify2FAService.validate2FA(req, res);
+  @Post("2FA/verify")
+  async verify2FA(@Req() req: Request, @Res() res: Response, @Body("twoFACode") code: string) {
+    return this.verify2FAService.validate2FA(req, res, code);
   }
 
   @Get("2FA/disable")

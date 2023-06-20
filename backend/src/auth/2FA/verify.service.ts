@@ -9,7 +9,7 @@ import { User } from "@prisma/client";
 export class VerifyService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async validate2FA(@Req() req: Request, @Res() res: Response) {
+  async validate2FA(@Req() req: Request, @Res() res: Response, code: string) {
     const accessToken = req.cookies.access_token;
     const user = await this.prisma.user.findFirst({
       where: {
@@ -22,18 +22,22 @@ export class VerifyService {
       },
     });
     if (user) {
-      await this.prisma.user.update({
-        where: { id: user.id },
-        data: {
-          auth: {
-            update: {
-              otp_verified: true,
+      if (code === user.auth?.twoFASecret) {
+        await this.prisma.user.update({
+          where: { id: user.id },
+          data: {
+            auth: {
+              update: {
+                otp_verified: true,
+              },
             },
           },
-        },
-      });
+        });
+        return res.status(HttpStatus.OK).json({ message: "2FA verified" });
+      } else {
+        return res.status(HttpStatus.BAD_REQUEST).json({ message: "2FA code is not valid" });
+      }
     }
-    return user;
   }
 
   async updateVerify2FA(user: User) {

@@ -263,20 +263,19 @@ export class AuthService {
     await this.googleService.handleGoogleUserCreation(res, req);
   }
 
-  async createCookies(@Res() res: Response, token: any) {
-    const cookies = res.cookie("access_token", token.access_token, {
+  createCookies(@Res() res: Response, token: string): void {
+    res.cookie("access_token", token, {
       httpOnly: true,
       secure: false,
       sameSite: "strict",
       expires: new Date(Date.now() + 86400 * 1000),
     });
-    const Googlecookies = res.cookie("FullToken", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "strict",
-      expires: new Date(Date.now() + 86400 * 1000),
-    });
-    return cookies;
+    // const Googlecookies = res.cookie("FullToken", token, {
+    //   httpOnly: true,
+    //   secure: false,
+    //   sameSite: "strict",
+    //   expires: new Date(Date.now() + 86400 * 1000),
+    // });
   }
 
   async updateCookies(@Res() res: Response, token: any, userInfos: any) {

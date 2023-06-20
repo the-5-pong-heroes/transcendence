@@ -22,7 +22,7 @@ export class UserController {
 
   @Get("me")
   async findMe(@Req() req: any) {
-    return await this.userService.findOneById(req.user.id);
+    return await this.userService.findOneById(req.user?.id);
   }
 
   @Get(":id")

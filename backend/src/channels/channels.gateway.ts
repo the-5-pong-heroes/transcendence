@@ -28,10 +28,6 @@ export class ChannelsGateway {
 
   @SubscribeMessage("create")
   async create(client: Socket, payload: CreateChannelDto) {
-    if (payload.name === "Delete") {
-      await this.prismaService.channel.deleteMany();
-      return;
-    }
     if (payload.name === "") return "Channel must have name.";
     const user = await this.usersService.findOneById(payload.users.userId);
     if (!user) return "User does not exist";
@@ -48,10 +44,10 @@ export class ChannelsGateway {
     if (!user) return "User does not exist";
     payload.type = "DIRECT";
     const channel = await this.channelsService.createDirect(payload);
-    await this.channelUsersService.create({
+    console.log(await this.channelUsersService.create({
       channelId: channel.id,
       userId: payload.userId,
-    });
+    }));
     await this.channelUsersService.create({
       channelId: channel.id,
       userId: payload.channelId,
@@ -62,6 +58,7 @@ export class ChannelsGateway {
 
   @SubscribeMessage("wantJoin")
   async wantJoin(client: Socket, payload: any) {
+    console.log(payload);
     if (payload.type === undefined) return this.createDirectChannel(client, payload);
     const channel = await this.channelsService.findOne(payload.channelId);
     const banChannel = await this.prismaService.channelBan.findFirst({

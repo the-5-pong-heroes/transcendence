@@ -1,5 +1,5 @@
 # updates the path to your environment file below
-DOCKER_ENV_FILE		= ./env/docker.example.env
+DOCKER_ENV_FILE		= ./env/docker.env
 
 ifneq ($(shell docker compose version 2>/dev/null),)
   DOCKER_COMPOSE	= docker compose --env-file ${DOCKER_ENV_FILE}
@@ -20,7 +20,7 @@ check-env:
 	fi
 
 run: check-env
-	$(DOCKER_COMPOSE) up --build --remove-orphans --force-recreate
+	$(DOCKER_COMPOSE) up --build --remove-orphans
 
 list:
 	${SUDO} docker container ps -a

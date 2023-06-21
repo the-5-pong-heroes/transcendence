@@ -1,17 +1,51 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useUser } from "@/hooks";
 import "./Toggle2FA.css";
+import { customFetch } from "../../helpers";
 
-export const Toggle2FA = ({ toggled, onClick }: { toggled: boolean; onClick: (isToggled: boolean) => void }) => {
-  const [isToggled, toggle] = useState(toggled);
+export const Toggle2FA: React.FC = () => {
+  const [isActivated, setIsActivated] = useState<boolean>(false);
+  
+  const user = useUser();
+    
+  useEffect(() => {
+    const fetchToggle2FA = async () => {
+      const toggledValue = await handletoggle2FA();
+      setIsActivated(toggledValue);
+      console.log("toggledValue: ", toggledValue)
+    };
 
-  const callback = () => {
-    toggle(!isToggled);
-    onClick(!isToggled);
-  };
+    fetchToggle2FA();
+  }, []);
+
+
+  async function handletoggle2FA(): Promise<boolean> {
+    const response = await customFetch("GET", "auth/2FA/status");
+    if (response.ok) {
+      const data = await response.json();
+      if (data.twoFA === true)
+        return true;
+    }
+    return false;
+    }
+
+  async function toggle2FA() {
+    if (isActivated === true)
+    {
+      const response = await customFetch("GET", "auth/2FA/disable");
+    }
+    else{
+      const response = await customFetch("GET", "auth/2FA/generate");
+    }
+    setIsActivated(!isActivated);
+  }
+
+  useEffect(() => {
+  }, [isActivated])
 
   return (
     <label className="toggle-btn">
-      <input type="checkbox" defaultChecked={isToggled} onClick={callback} />
+      <input type="checkbox" checked={isActivated} onChange={toggle2FA} />
       <span />
       <strong>2FA</strong>
     </label>

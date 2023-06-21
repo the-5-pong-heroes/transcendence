@@ -1,4 +1,4 @@
-import { Injectable, Req, Res } from "@nestjs/common";
+import { Injectable, Req, Res, HttpStatus } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
 import { Request, Response } from "express";
 import { User } from "@prisma/client";
@@ -24,19 +24,23 @@ export class VerifyService {
       return res.status(400).json({ message: "Invalid code !", user: null });
     }
     if (user) {
-      await this.prisma.user.update({
-        where: { id: user.id },
-        data: {
-          auth: {
-            update: {
-              otp_verified: true,
+      if (code === user.auth?.twoFASecret) {
+        await this.prisma.user.update({
+          where: { id: user.id },
+          data: {
+            auth: {
+              update: {
+                otp_verified: true,
+              },
             },
           },
-        },
-      });
+        });
+        return res.status(HttpStatus.OK).json({ message: "2FA verified" });
+      } else {
+        return res.status(HttpStatus.BAD_REQUEST).json({ message: "2FA code is not valid" });
+      }
+    // res.status(200).json({ message: "Welcome !", user: user });
     }
-    console.log("✨ validate2FA: ");
-    res.status(200).json({ message: "Welcome !", user: user });
   }
 
   // async validate2FA(@Req() req: Request, @Res() res: Response) {

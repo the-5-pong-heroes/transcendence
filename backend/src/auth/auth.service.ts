@@ -218,14 +218,12 @@ export class AuthService {
     }
   }
 
-  async twoFAtoggle(email: string, twoFAactivated: boolean): Promise<Auth> {
-    return this.prisma.auth.update({
-      where: { email },
-      data: { twoFAactivated },
-    });
-  }
-
-  /***********       LAURA'S CODE      ***********/
+  // async twoFAtoggle(email: string, twoFAactivated: boolean): Promise<Auth> {
+  //   return this.prisma.auth.update({
+  //     where: { email },
+  //     data: { twoFAactivated },
+  //   });
+  // }
 
   async createDataBase42User(user42: any, token: Token, username: string, isRegistered: boolean) {
     try {
@@ -256,23 +254,24 @@ export class AuthService {
     }
   }
 
-  // async RedirectConnectingUser(@Req() req: Request, @Res() res: Response, email: string | null | undefined) {
-  //   if (!email) res.redirect(301, `http://localhost:5173/Profile`);
-  //   else res.redirect(301, `http://localhost:5173/`);
-  // }
-
-  // async getUserByToken(req: Request): Promise<User> {
-  //   const token = req.signedCookies["access_token"];
-  //   if (!token) throw new BadRequestException("Failed to get the user by token (falsy token)");
-  //   try {
-  //     const user = await this.prisma.user.findFirstOrThrow({
-  //       where: { auth: { accessToken: token } },
-  //     });
-  //     return user;
-  //   } catch (error) {
-  //     throw new BadRequestException("Failed to get the user by token (no user found)");
-  //   }
-  // }
+  async getUserByToken(req: Request): Promise<(User & { auth: Auth | null }) | null> {
+    const token = req.cookies.access_token;
+    try {
+      const user = await this.prisma.user.findFirst({
+        where: {
+          auth: {
+            accessToken: token,
+          },
+        },
+        include: {
+          auth: true,
+        },
+      });
+      return user;
+    } catch (error) {
+      throw new BadRequestException("Failed to get the user by token (no user found)");
+    }
+  }
 
   // async handleDataBaseCreation(@Req() req: Request, @Res() res: Response, @Body() userDto: UserDto) {
   //   const token: string = req.signedCookies.access_token;

@@ -12,8 +12,10 @@ import { type UserStats } from "../Leaderboard/Leaderboard";
 import { MatchHistory } from "./MatchHistory";
 import { Friends } from "./Friends";
 
-import { customFetch } from "@/helpers";
 import { InviteButton } from "@/components";
+
+import { customFetch } from "@/helpers";
+
 
 export interface GameData {
   playerOne: { id: string; name: string };

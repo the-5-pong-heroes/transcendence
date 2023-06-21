@@ -1,9 +1,9 @@
 import { MailerService } from "@nestjs-modules/mailer";
-import { HttpException, HttpStatus, Injectable, Req, Res } from "@nestjs/common";
+import { BadRequestException, Injectable, Req } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
 import * as fs from "fs";
-import { Request, Response } from "express";
-// import { UserWithAuth } from "src/common/@types";
+import { Request } from "express";
+import { UserWithAuth } from "src/common/@types";
 
 const myHTML = fs.readFileSync("./index.html", "utf8");
 
@@ -11,9 +11,8 @@ const myHTML = fs.readFileSync("./index.html", "utf8");
 export class Generate2FAService {
   constructor(private readonly mailerService: MailerService, private prisma: PrismaService) {}
 
-  async generateService(@Req() req: Request, @Res() res: Response) {
+  async generateService(@Req() req: Request) {
     const accessToken = req.signedCookies.access_token;
-    console.log("Access Token :", accessToken);
     const user = await this.prisma.user.findFirst({
       where: {
         auth: {
@@ -24,26 +23,19 @@ export class Generate2FAService {
         auth: true,
       },
     });
-    console.log("🪭 generateService: ", user);
     this.updateUser(user);
-    const code = user?.auth?.twoFASecret;
-    const twoFAactivated = true;
-    return res.json({
-      code,
-      twoFAactivated,
-    });
   }
 
-  async updateUser(user: any) {
+  // async updateUser(user: (User & { auth: Auth | null }) | null) {
+  async updateUser(user: UserWithAuth | null) {
     try {
-      const userid = user.id;
+      const userid = user?.id;
       const updatedUser = await this.prisma.user.update({
         where: { id: userid },
         data: {
           auth: {
             update: {
               twoFAactivated: true,
-              otp_enabled: true,
               otp_validated: false,
             },
           },
@@ -54,13 +46,7 @@ export class Generate2FAService {
       });
       return updatedUser;
     } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: "Fail to update user in Disable 2FA ",
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException("Fail to update user in Generate 2FA");
     }
   }
 
@@ -75,13 +61,7 @@ export class Generate2FAService {
       console.log("code2FA: ", code2FA);
       return code2FA;
     } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: "Invalid email",
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException("Invalid email");
     }
   }
 
@@ -110,9 +90,6 @@ export class Generate2FAService {
 
   async storeCodeToDataBase(code2FA: string, user42: any) {
     try {
-      //const saltOrRounds = 10;
-      //const password = code2FA;
-      //const hash = await bcrypt.hash(password, saltOrRounds);
       const userid = user42.id;
       const updatedUser = await this.prisma.user.update({
         where: { id: userid },
@@ -129,13 +106,7 @@ export class Generate2FAService {
       });
       return updatedUser;
     } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: "Error to store secret in database",
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException("Error to store secret in database");
     }
   }
 }

@@ -1,5 +1,5 @@
-export { SignInDto } from "./SignIn.dto";
-export { SignUpDto } from "./SignUp.dto";
+export { SignInDto } from "./sign-in.dto";
+export { SignUpDto } from "./sign-up.dto";
 export { UserDto } from "./auth.dto";
-export { TwoFADto } from "./TwoFA.dto";
+export { TwoFADto } from "./two-FA.dto";
 export { AuthCallbackDto } from "./auth-callback.dto";

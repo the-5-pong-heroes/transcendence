@@ -10,7 +10,6 @@ import { DefaultAvatar, Leave } from "@/assets";
 import { LoadingIcon } from "@/components/loading/loading";
 import { customFetch } from "@/helpers";
 import { useUser } from "@hooks";
-import { BASE_URL } from "@/constants";
 
 interface SettingsProps {
   settingsRef: React.RefObject<HTMLDivElement>;
@@ -36,15 +35,14 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
   const signOut = useSignOut();
   const user = useUser();
 
-  const twoFACode = React.useState("");
-  const [isActivated, setIsActivated] = React.useState(false);
+  const url = "http://localhost:3333/settings";
 
-  async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>): Promise<void> {
+  async function handleFileChange(event: any) {
     if (!event.target.files) {
       return;
     }
     const file = event.target.files[0];
-    if (file) {
+    f (file) {
       try {
         setUploading(true);
         const response = await customFetch("POST", "upload", { file: file });
@@ -97,46 +95,6 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
       friends: updatedFriends,
     }));
   }
-
-  async function toggle2FA(isToggled: boolean) {
-    console.log("2FA: ", isToggled);
-    if (!isToggled) {
-      const url = `${BASE_URL}` + "/auth/2FA/disable";
-      window.open(url, "_self");
-    } else {
-      try {
-        const data = await handle2FAfunction();
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  }
-
-  async function handle2FAfunction(): Promise<any> {
-    const response = await customFetch("POST", "auth/2FA/generate", { code: twoFACode, twoFAactivated: isActivated });
-    const data = await response.json();
-    if (data.twoFAactivated === true) {
-      openPopup(data.code);
-    }
-
-    return data;
-  }
-
-  function openPopup(twoFACode: string) {
-    const popup = document.getElementById("popup");
-    if (popup) {
-      popup.style.display = "block";
-      popup.dataset.twoFACode = twoFACode;
-    }
-  }
-
-  // function closePopup() {
-  //   const popup = document.getElementById("popup");
-  //   if (popup) {
-  //     popup.style.display = "none";
-  //     popup.removeAttribute("data-twoFACode");
-  //   }
-  // }
 
   if (!user) {
     return null;

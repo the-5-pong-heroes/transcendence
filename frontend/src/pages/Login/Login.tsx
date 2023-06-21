@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useSignIn, useTwoFALogin } from "./hooks";
 
-import { BASE_URL, API42_URL, API42_CLIENT_ID, API42_REDIRECT } from "@/constants";
+
+import { CLIENT_URL, BASE_URL, API42_URL, API42_CLIENT_ID, API42_REDIRECT } from "@/constants";
 import { Logo_42, Logo_Google, Logo_Eve } from "@assets";
 import { customFetch } from "@/helpers";
 import type { UserAuth } from "@types";
@@ -18,20 +19,16 @@ export const Login42: React.FC = () => {
     scope: "public",
   };
   const url_42_auth = API42_URL + "?" + new URLSearchParams(body).toString();
-
-  const navigate = useNavigate();
-  const twoFACode = React.useState("");
-  const [isActivated, setIsActivated] = React.useState(false);
-
-  const handleAuth42 = (): void => {
-    window.open(url_42_auth, "_self");
-  };
+  
+  useEffect(() => {
+    console.log("api = ", url_42_auth);
+  }, []);
 
   return (
-    <div className="Login_with" onClick={handleAuth42}>
+    <a className="Login_with" href={url_42_auth}>
       <span>Continue with </span>
-      <img id="logo-42" alt="42 Logo" src={Logo_42} />
-    </div>
+      <img id="logo-42" alt="42 Logo" src={Logo_42} />      
+    </a>
   );
 };
 
@@ -53,10 +50,33 @@ export const Login: React.FC = () => {
   const navigate = useNavigate();
   const signIn = useSignIn();
   const twoFALogin = useTwoFALogin();
-  const queryParams = new URLSearchParams(window.location.search);
-  const displayPopup = queryParams.get("displayPopup") === "true";
-  const twoFACode = React.useState("");
   const [isActivated, setIsActivated] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchToggle2FA = async () => {
+      const toggledValue = await twoFAstatus();
+      setIsActivated(toggledValue);
+    };
+
+    fetchToggle2FA();
+  }, []);
+  
+  async function twoFAstatus(): Promise<boolean> {
+    try {
+      const response = await customFetch("GET", "auth/2FA/status");
+      //if (response.ok) {
+        const data = await response.json();
+        if (data.twoFA === true)
+          return true;
+      //}
+      else
+        return false;
+    }
+    catch (error) {
+      console.log("status 2FA not updated")
+    }
+    return false;
+  }
 
   const onSignIn: React.FormEventHandler<HTMLFormElement> = (form) => {
     form.preventDefault();
@@ -72,67 +92,21 @@ export const Login: React.FC = () => {
     }
   };
 
-  if (displayPopup) {
-    handle2FAfunction().catch((error) => console.log(error));
-  }
-
-  async function handle2FAfunction(): Promise<any> {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code: twoFACode, twoFAactivated: isActivated }),
-    });
-    const data = await response.json();
-    if (displayPopup === true) {
-      openPopup(data.code);
-    }
-    return data;
-  }
-
-  function openPopup(twoFACode: string): void {
-    setIsActivated(true);
-    const popup = document.getElementById("popup");
-    if (popup) {
-      popup.style.display = "block";
-      popup.dataset.twoFACode = twoFACode;
-    }
-  }
-
-  function closePopup(): void {
-    const popup = document.getElementById("popup");
-    if (popup) {
-      popup.style.display = "none";
-      popup.removeAttribute("data-twoFACode");
-    }
-    setIsActivated(false);
-  }
-
-  function updateVerify2FA(): void {
-    const url = `${import.meta.env.VITE_BACKEND_URL}` + "/auth/2FA/verify";
-    window.open(url, "_self");
-  }
-
   async function submitVerificationCode() {
-    const verificationCodeInput = document.getElementById("verificationCode") as HTMLInputElement;
-    if (verificationCodeInput) {
-      const verificationCode = verificationCodeInput.value;
-      const popup = document.getElementById("popup");
-      if (popup) {
-        const twoFACode = popup.dataset.twoFACode;
-        console.log("twoFA = ", twoFACode);
-        console.log("verif = ", verificationCode);
-        twoFALogin({ code: verificationCode });
-        // if (verificationCode !== twoFACode) {
-        //   alert("Code de vérification correct !");
-        //   closePopup();
-        //   updateVerify2FA();
-        //   navigate("/");
-        // } else {
-        //   alert("Code de vérification incorrect. Veuillez réessayer.");
-        // }
+      const popup = document.getElementById("verificationCode");
+      if (popup instanceof HTMLInputElement) {
+        const twoFACode = popup.value;
+        console.log("twoFAcode = ",twoFACode);
+        // twoFALogin({ code: verificationCode });
+        const response = await customFetch("POST", "auth/2FA/verify", { twoFACode: twoFACode });
+        if (response.ok) {
+          alert("Code de vérification correct !");
+          window.open(CLIENT_URL, "_self");
+        } else {
+          alert("Code de vérification incorrect. Veuillez réessayer.");
+        }
       }
     }
-  }
 
   return (
     <div className="Login">
@@ -146,19 +120,18 @@ export const Login: React.FC = () => {
             Sign up
           </button>
         </div>
-        {!isActivated && (
+        {isActivated ? (
           <div className="continue-with" id="continue-with">
             <Login42 />
             <LoginGoogle />
           </div>
-        )}
-        {isActivated && (
-          <div id="popup" style={{ display: "none" }}>
+        ) : (
+          <div id="popup">
             <div className="popup-modal">
               <div className="popup-content">
                 <p>Please enter the verification code sent to your email:</p>
                 <input type="text" id="verificationCode" style={{ color: "black" }} />
-                <button onClick={submitVerificationCode}>Valider</button>
+                <button onClick={submitVerificationCode}> Valider</button>
               </div>
             </div>
           </div>

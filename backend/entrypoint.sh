@@ -1,7 +1,8 @@
 # aborts everything on errors
 set -e
 
-export POSTGRES_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
+# evaluates the env variable expected by Prisma
+# export POSTGRES_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
 
 echo "💡 Initializing Prisma..."
 yarn prisma generate --schema=./src/prisma/schema.prisma

@@ -1,9 +1,8 @@
-import { Get, Put, Controller, Post, Body, UseGuards, Req, Res, Query } from "@nestjs/common";
+import { Get, Put, Controller, Post, Body, UseGuards, Req, Res } from "@nestjs/common";
 import { Request, Response } from "express";
 
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
-import { CreateUserDto } from "../user/dto";
 import { UserService } from "src/user/user.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
 import { Generate2FAService } from "./2FA/generate.service";
@@ -24,10 +23,10 @@ export class AuthController {
     private verify2FAService: VerifyService,
   ) {}
 
-  // @Get("Oauth42/login")
-  // async getUserByToken(@Req() req: Request) {
-  //   return await this.authService.getUserByToken(req);
-  // }
+  @Post("Oauth42/login")
+  async getUserByToken(@Req() req: Request) {
+    return await this.authService.getUserByToken(req);
+  }
 
   // @Post("Oauth")
   // async userOauthCreationInDataBase(@Req() req: Request, @Res() res: Response, @Body() userData: UserDto) {
@@ -36,23 +35,23 @@ export class AuthController {
 
   @Get("auth42/callback")
   async getToken(@Req() req: Request, @Res() res: Response) {
-    if (req.signedCookies.access_token) res.redirect(301, `http://localhost:5173/`); // TODO CHECK USER !!!!
+    if (req.signedCookies.access_token) return; // TODO CHECK USER !!!!
     const authCallbackDto = new AuthCallbackDto();
     authCallbackDto.code = req.query.code as string;
     const token = await this.Oauth42.accessToken(authCallbackDto.code);
     const user42infos = await this.Oauth42.access42UserInformation(token.access_token);
     this.authService.createCookies(res, token);
-    if (!user42infos.email) res.redirect(301, `http://localhost:5173/`);
+    if (!user42infos) return;
     else {
       const userExists = await this.userService.getUserByEmail(user42infos.email);
       if (!userExists) this.authService.createDataBase42User(user42infos, token, user42infos.login, false);
       else {
         this.authService.updateCookies(res, token, userExists);
-        if (!userExists.auth?.twoFAactivated) res.redirect(301, `http://localhost:5173/`); // ou /Profile ?
+        if (!userExists.auth?.twoFAactivated) return; // ou /Profile ?
         else {
           this.verify2FAService.updateVerify2FA(userExists);
           this.Generate2FA.sendActivationMail(userExists);
-          res.redirect(301, `http://localhost:5173/Login?displayPopup=true`);
+          //res.redirect(301, `http://localhost:5173/Login?displayPopup=true`);
         }
       }
     }
@@ -102,24 +101,28 @@ export class AuthController {
     return res.status(200);
   }
 
-  @Post("2FA/generate")
-  async generate2FA(@Req() req: Request, @Res() res: Response) {
-    return this.Generate2FA.generateService(req, res);
+  @Get("2FA/generate")
+  async generate2FA(@Req() req: Request) {
+    return this.Generate2FA.generateService(req);
   }
-
-  // @Get("2FA/verify")
-  // async verify2FA(@Req() req: Request, @Res() res: Response) {
-  //   return this.verify2FAService.validate2FA(req, res);
-  // }
 
   @Post("2FA/verify")
-  async verify2FA(@Req() req: Request, @Res() res: Response, @Body() data: TwoFADto) {
-    return this.verify2FAService.validate2FA(req, res, data.code);
+    async verify2FA(@Req() req: Request, @Res() res: Response, @Body() data: TwoFADto) {
+      return this.verify2FAService.validate2FA(req, res, data.code);
   }
+  // @Post("2FA/verify")
+  // async verify2FA(@Req() req: Request, @Res() res: Response, @Body("twoFACode") code: string) {
+  //   return this.verify2FAService.validate2FA(req, res, code);
+  // }
 
   @Get("2FA/disable")
-  async disable2FA(@Req() req: Request, @Res() res: Response) {
-    return this.enable2FAService.disable2FA(req, res);
+  async disable2FA(@Req() req: Request) {
+    return this.enable2FAService.disable2FA(req);
+  }
+
+  @Get("2FA/status")
+  async status2FA(@Req() req: Request) {
+    return this.enable2FAService.status2FA(req);
   }
 
   /*****************  GOOGLE AUTH  ****************/

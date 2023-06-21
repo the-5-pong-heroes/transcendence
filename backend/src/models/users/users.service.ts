@@ -4,7 +4,7 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "@prisma/client";
 
 @Injectable()
-export class UsersService {
+export class userService {
   create(createUserDto: CreateUserDto) {
     return "This action adds a new user";
   }

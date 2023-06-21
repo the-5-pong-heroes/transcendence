@@ -44,7 +44,7 @@ export const Game: React.FC<GameProps> = ({ gameRef }) => {
   const { socketReady }: SocketParameters = useSocketContext();
 
   return (
-    <div ref={gameRef} id="Game" className="game-container">
+    <div ref={gameRef} id="Game" className={"game-container"}>
       <div className="game" style={gameStyle}>
         <ErrorBoundary
           fallbackRender={fallbackRender}

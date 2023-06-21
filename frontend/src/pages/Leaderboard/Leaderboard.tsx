@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import "./Leaderboard.css";
 import UserData from "./UserData";
 
+import { customFetch } from "@/helpers";
+
 interface LeaderboardProps {
   boardRef: React.RefObject<HTMLDivElement>;
 }
@@ -31,14 +33,10 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
 
   const fetchUsers = async () => {
     try {
-      const resp = await fetch("http://localhost:3000/leaderboard", {
-        mode: "cors",
-        credentials: "include",
-      });
-
-      const data = await resp.json();
-      if (data.length > 0) {
-        setUsers(data);
+      const response = await customFetch("GET", "leaderboard");
+      const payload = await response.json();
+      if (payload.length > 0) {
+        setUsers(payload);
       }
     } catch (err) {
       console.error(err);
@@ -66,7 +64,3 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
     </div>
   );
 };
-
-{
-  /* <h1 className="title">Leaderboard</h1> */
-}

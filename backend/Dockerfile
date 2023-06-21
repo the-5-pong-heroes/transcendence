@@ -8,6 +8,8 @@ WORKDIR /app
 
 COPY --chown=node:node ./shared ./shared
 
+COPY --chown=node:node ./backend/index.html ./backend/index.html
+
 COPY --chown=node:node ./backend/package*.json ./backend/yarn.lock ./backend/
 
 WORKDIR /app/shared

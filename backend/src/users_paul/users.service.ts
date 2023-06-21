@@ -4,7 +4,7 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { Auth, User } from "@prisma/client";
 
 @Injectable()
-export class UsersService {
+export class userService {
   constructor(private prismaService: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<Auth> {

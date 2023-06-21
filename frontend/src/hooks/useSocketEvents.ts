@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { type Socket } from "socket.io-client";
-import { useNavigate } from "react-router-dom";
 
+import { useCustomNavigate } from "./useCustomNavigate";
 import { useAppContext } from "./useAppContext";
 
 import { useSignOut } from "@/pages/Login/hooks";
@@ -26,7 +26,7 @@ interface SocketEventsProps {
 
 export const useSocketEvents = ({ socketRef }: SocketEventsProps): void => {
   const { setInvitation, senderSocket, senderName }: InvitationState = useAppContext().invitationState;
-  const navigate = useNavigate();
+  const navigate = useCustomNavigate();
   const signOut = useSignOut();
 
   useEffect(() => {

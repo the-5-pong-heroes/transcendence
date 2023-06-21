@@ -1,7 +1,5 @@
-include ./env/docker.example.env
-export $(sed 's/=.*//' ./env/docker.example.env)
-
-DOCKER_ENV_FILE		= ./env/docker.example.env
+# updates the path to your environment file below
+DOCKER_ENV_FILE		= ./env/docker.env
 
 ifneq ($(shell docker compose version 2>/dev/null),)
   DOCKER_COMPOSE	= docker compose --env-file ${DOCKER_ENV_FILE}
@@ -10,8 +8,6 @@ else
 endif
 
 DATABASE_VOLUME		= $(shell basename "$(CURDIR)_postgresql_data")
-
-RM					= rm -rf
 
 SUDO 				= @sudo
 
@@ -52,9 +48,9 @@ re: fclean all
 RESET		= \033[0m
 RED			= \033[1;31m
 GREEN		= \033[1;32m
-YELLOW		= \033[1;33m
+YELLOW	= \033[1;33m
 BLUE		= \033[1;34m
 WHITE		= \033[1;37m
-ORANGE		= \033[0;38;5;208m
+ORANGE	= \033[0;38;5;208m
 UP			= \033[A
 CUT			= \033[K

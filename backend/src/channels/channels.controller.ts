@@ -5,7 +5,6 @@ import {
   Body,
   Param,
   Delete,
-  UseGuards,
   Req,
   Put,
   BadRequestException,
@@ -17,10 +16,8 @@ import { MessagesService } from "../messages/messages.service";
 import { ChannelsService } from "./channels.service";
 import { CreateChannelDto } from "./dto/create-channel.dto";
 import { UpdateChannelDto } from "./dto/update-channel.dto";
-import { UserGuard } from "src/auth/user.guard";
 
 @Controller("chat")
-@UseGuards(UserGuard)
 export class ChannelsController {
   constructor(
     private readonly prismaService: PrismaService,
@@ -35,7 +32,7 @@ export class ChannelsController {
 
   @Get()
   findAll(@Req() req: any) {
-    return this.channelsService.findAll(req.user.id);
+    return this.channelsService.findAll(req.currentUser.id);
   }
 
   @Get(":id")
@@ -47,7 +44,7 @@ export class ChannelsController {
   searchChannels(@Param("name") name: string, @Req() req: any) {
     return this.channelsService.searchAll({
       channelName: name,
-      userId: req.user.id,
+      userId: req.currentUser.id,
     });
   }
 
@@ -55,7 +52,7 @@ export class ChannelsController {
   async update(@Param("id") id: string, @Req() req: any, @Body() updateChannelDto: UpdateChannelDto) {
     if (id != updateChannelDto.id) throw new BadRequestException("Wrong Channel");
     const user = await this.prismaService.user.findUnique({
-      where: { id: req.user.id },
+      where: { id: req.currentUser.id },
     });
     const channel = await this.channelsService.findOne(updateChannelDto.id);
     if (
@@ -65,10 +62,5 @@ export class ChannelsController {
     )
       throw new UnauthorizedException("You are not authorized to modify this channel");
     await this.channelsService.update(updateChannelDto);
-  }
-
-  @Delete(":id")
-  async remove(@Param("id") id: string, @Req() req: any) {
-    const channel = await this.channelsService.findOneWithOwner(id);
   }
 }

@@ -1,16 +1,15 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import React from "react";
 
-import { UserSettings } from "./Settings";
 import "../Profile/Profile.css";
+import { customFetch } from "@/helpers";
 
-export const Unfollow = ({
-  friends,
-  handleUnfollow,
-}: {
+interface UnfollowProps {
   friends: { id: string; name: string }[];
   handleUnfollow: (friendId: string) => void;
-}) => {
+}
+
+export const Unfollow: React.FC<UnfollowProps> = ({ friends, handleUnfollow }) => {
   if (!friends || friends.length == 0) {
     return (
       <div className="noFriendYet">
@@ -19,18 +18,14 @@ export const Unfollow = ({
     );
   }
 
-  async function removeFriend(uuid: string) {
-    const url = "http://localhost:3000";
-    try {
+  function removeFriend(uuid: string): void {
+    if (window.confirm("Are you sure you want to remove this friend?")) {
       handleUnfollow(uuid);
-      const response = await fetch(url + "/friendship", {
-        method: "DELETE",
-        body: JSON.stringify({ friendId: uuid }),
-        credentials: "include",
-      });
-      const data = await response.json();
-    } catch (err) {
-      console.error("Error removing friend: ", err);
+
+      return void customFetch("DELETE", "friendship", { friendId: uuid });
+      // (async () => {
+      //   await customFetch("DELETE", "friendship", { friendId: uuid });
+      // })();
     }
   }
 
@@ -45,7 +40,7 @@ export const Unfollow = ({
             <span
               className="cross"
               onClick={() => {
-                window.confirm("Are you sure you want to remove this friend?") && removeFriend(friend.id);
+                removeFriend(friend.id);
               }}>
               ✗
             </span>

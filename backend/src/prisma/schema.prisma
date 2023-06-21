@@ -31,13 +31,15 @@ model User {
 model Auth {
   userId        String   @id @db.Uuid
   user          User     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  email         String   @unique
-  accessToken   String   @default("noToken")
-  isRegistered  Boolean  @default(false)
-  password      String
-  otp_enabled   Boolean?  @default(false)
-  otp_verified  Boolean?  @default(false)
-  otp_validated Boolean?  @default(false)
+  email           String   @unique
+  password        String?   
+  accessToken     String   @default("noToken")
+  isRegistered    Boolean  @default(false)
+  twoFAactivated  Boolean?  @default(false)
+  twoFASecret     String?
+  otp_enabled     Boolean?  @default(false)
+  otp_verified    Boolean?  @default(false)
+  otp_validated   Boolean?  @default(false)
 }
 
 model Blocked {

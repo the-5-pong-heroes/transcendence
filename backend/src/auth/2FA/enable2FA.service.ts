@@ -1,12 +1,13 @@
 import { PrismaService } from "../../database/prisma.service";
-import { Request, Response } from "express";
-import { BadRequestException, Injectable, Req, Res } from "@nestjs/common";
+import { Request } from "express";
+import { BadRequestException, Injectable, Req } from "@nestjs/common";
+import { TwoFA } from "../interface";
 
 @Injectable()
 export class EnableService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async disable2FA(@Req() req: Request) {
+  async disable2FA(@Req() req: Request): Promise<void> {
     const accessToken = req.signedCookies.access_token;
     const user = await this.prisma.user.findFirst({
       where: {
@@ -33,35 +34,7 @@ export class EnableService {
     }
   }
 
-  async eable2FA(@Req() req: Request) {
-    const accessToken = req.signedCookies.access_token;
-    const user = await this.prisma.user.findFirst({
-      where: {
-        auth: {
-          accessToken: accessToken,
-        },
-      },
-      include: {
-        auth: true,
-      },
-    });
-    if (user) {
-      await this.prisma.user.update({
-        where: { id: user.id },
-        data: {
-          auth: {
-            update: {
-              twoFAactivated: true,
-              otp_validated: false,
-            },
-          },
-        },
-      });
-    }
-    return user;
-  }
-
-  async status2FA(@Req() req: Request) {
+  async status2FA(@Req() req: Request): Promise<TwoFA> {
     try {
       const accessToken = req.signedCookies.access_token;
       const user = await this.prisma.user.findFirst({

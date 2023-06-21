@@ -1,6 +1,5 @@
-import { Get, Put, Controller, Post, Body, UseGuards, Req, Res } from "@nestjs/common";
+import { Get, Controller, Post, Body, UseGuards, Req, Res } from "@nestjs/common";
 import { Request, Response } from "express";
-
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
 import { UserService } from "src/user/user.service";
@@ -8,9 +7,10 @@ import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
 import { Generate2FAService } from "./2FA/generate.service";
 import { EnableService } from "./2FA/enable2FA.service";
 import { VerifyService } from "./2FA/verify.service";
-import { UserDto, TwoFADto, AuthCallbackDto, SignInDto, SignUpDto } from "./dto";
-import { Auth } from "@prisma/client";
+import { TwoFADto, AuthCallbackDto, SignInDto, SignUpDto } from "./dto";
 import { GoogleOauthGuard } from "./google/google-auth.guards";
+import { UserWithAuth } from "src/common/@types";
+import { TwoFA, UserGoogleInfos } from "./interface";
 
 @Controller("auth")
 export class AuthController {
@@ -23,30 +23,48 @@ export class AuthController {
     private verify2FAService: VerifyService,
   ) {}
 
+  /*****************************************************************************************/
+  /*                                     GET LOGGED USER                                   */
+  /*****************************************************************************************/
+
+  @Get("user")
+  async getUser(@Req() req: Request, @Res() res: Response): Promise<void> {
+    await this.authService.getUser(req, res);
+  }
+
+  /*****************************************************************************************/
+  /*                                        42 AUTH                                        */
+  /*****************************************************************************************/
+
   @Post("Oauth42/login")
-  async getUserByToken(@Req() req: Request) {
-    return await this.authService.getUserByToken(req);
+  async getUserByToken(@Req() req: Request): Promise<UserWithAuth | null> {
+    const token = req.signedCookies.access_token;
+    if (token && token !== undefined) {
+      return await this.authService.validateUser(token);
+    }
+    return null;
   }
 
   // @Post("Oauth")
-  // async userOauthCreationInDataBase(@Req() req: Request, @Res() res: Response, @Body() userData: UserDto) {
-  //   await this.authService.handleDataBaseCreation(req, res, userData);
+  // async userOauthCreationInDataBase(@Req() req: Request, @Res() res: Response): Promise<void> {
+  //   await this.authService.handleDataBaseCreation(req, res);
   // }
 
   @Get("auth42/callback")
-  async getToken(@Req() req: Request, @Res() res: Response) {
+  async getToken(@Req() req: Request, @Res() res: Response): Promise<void> {
     if (req.signedCookies.access_token) return; // TODO CHECK USER !!!!
     const authCallbackDto = new AuthCallbackDto();
     authCallbackDto.code = req.query.code as string;
     const token = await this.Oauth42.accessToken(authCallbackDto.code);
-    const user42infos = await this.Oauth42.access42UserInformation(token.access_token);
+    const user42infos = await this.Oauth42.access42UserInformation(token);
+    console.log("✨ user42infos: ", user42infos);
     this.authService.createCookies(res, token);
     if (!user42infos) return;
     else {
       const userExists = await this.userService.getUserByEmail(user42infos.email);
       if (!userExists) this.authService.createDataBase42User(user42infos, token, user42infos.login, false);
       else {
-        this.authService.updateCookies(res, token, userExists);
+        this.authService.updateTokenCookies(res, token, userExists.id);
         if (!userExists.auth?.twoFAactivated) return; // ou /Profile ?
         else {
           this.verify2FAService.updateVerify2FA(userExists);
@@ -57,6 +75,10 @@ export class AuthController {
     }
   }
 
+  /*****************************************************************************************/
+  /*                                  SIMPLE USER LOGIN                                    */
+  /*****************************************************************************************/
+
   @Post("signup")
   async signUp(@Res({ passthrough: true }) res: Response, @Body() data: SignUpDto): Promise<void> {
     await this.authService.signUp(res, data);
@@ -65,22 +87,24 @@ export class AuthController {
   @UseGuards(AuthGuard("local"))
   @Post("signin")
   async signIn(@Res({ passthrough: true }) res: Response, @Body() signInDto: SignInDto): Promise<void> {
-    console.log("🌈 signInDto: ", signInDto);
     await this.authService.signIn(res, signInDto);
   }
+
+  /*****************************************************************************************/
+  /*                                         LOGOUT                                        */
+  /*****************************************************************************************/
 
   @Get("signout")
   async signout(@Res() res: Response): Promise<void> {
     await this.authService.signOut(res);
   }
 
-  @Get("user")
-  async getUser(@Req() req: Request, @Res() res: Response): Promise<void> {
-    await this.authService.getUser(req, res);
-  }
+  /*****************************************************************************************/
+  /*                                      2FA HANDLING                                     */
+  /*****************************************************************************************/
 
   @Get("2FA/generate")
-  async generate2FA(@Req() req: Request) {
+  async generate2FA(@Req() req: Request): Promise<void> {
     return this.Generate2FA.generateService(req);
   }
 
@@ -90,32 +114,31 @@ export class AuthController {
   }
 
   @Get("2FA/disable")
-  async disable2FA(@Req() req: Request) {
+  async disable2FA(@Req() req: Request): Promise<void> {
     return this.enable2FAService.disable2FA(req);
   }
 
   @Get("2FA/status")
-  async status2FA(@Req() req: Request) {
+  async status2FA(@Req() req: Request): Promise<TwoFA> {
     return this.enable2FAService.status2FA(req);
   }
 
-  // @Get("token")
-  // async checkIfTokenValid(@Req() req: Request, @Res() res: Response) {
-  //   return this.authService.checkIfTokenValid(req, res);
-  // }
-
-  /*****************  GOOGLE AUTH  ****************/
+  /*****************************************************************************************/
+  /*                                      GOOGLE AUTH                                      */
+  /*****************************************************************************************/
 
   @Get("google")
   @UseGuards(GoogleOauthGuard)
-  async googleLogin() {
+  async googleLogin(): Promise<void> {
     /* void */
   }
 
   @Get("google/callback")
   @UseGuards(GoogleOauthGuard)
-  async googleAuthCallback(@Req() req: any, @Res() res: Response) {
-    console.log("🌵");
-    await this.authService.signInGoogle(res, req.user);
+  async googleAuthCallback(@Res({ passthrough: true }) res: Response, @Req() req: Request): Promise<void> {
+    if (!req.user) {
+      return;
+    }
+    await this.authService.signInGoogle(res, req.user as UserGoogleInfos);
   }
 }

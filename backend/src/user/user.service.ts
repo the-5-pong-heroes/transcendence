@@ -3,7 +3,7 @@ import { ConflictException, Injectable, NotFoundException } from "@nestjs/common
 import { User, UserStatus } from "@prisma/client";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { UserWithAuth } from "src/common/@types";
+import { UserWithAuth, UserWithFriends } from "src/common/@types";
 
 @Injectable({})
 export class UserService {
@@ -26,23 +26,6 @@ export class UserService {
       return null;
     }
   }
-
-  // async getUsername(@Req() req: Request) {
-  //   const accessToken = req.signedCookies.access_token;
-  //   try {
-  //     const user = await this.prisma.user.findFirst({
-  //       where: {
-  //         auth: {
-  //           accessToken: accessToken,
-  //         },
-  //       },
-  //       include: {
-  //         auth: true,
-  //       },
-  //     });
-  //     return user;
-  //   } catch (error) {}
-  // }
 
   async remove(id: string): Promise<void> {
     const user = await this.prisma.user.findUnique({
@@ -100,10 +83,9 @@ export class UserService {
     return result;
   }
 
-  // TODO TYPE
-  async findOneById(id: string | undefined): Promise<any | null> {
+  async findOneById(id: string | undefined): Promise<UserWithFriends | null> {
     if (!id) return null;
-    return this.prisma.user.findUnique({
+    const user = this.prisma.user.findUnique({
       where: { id },
       select: {
         id: true,
@@ -127,6 +109,7 @@ export class UserService {
         auth: true,
       },
     });
+    return user;
   }
 
   async findUserByName(name: string): Promise<UserWithAuth | null> {
@@ -173,9 +156,9 @@ export class UserService {
     return null;
   }
 
-  // TODO TYPE
+  // TODO TYPE ANY !
   async searchFirstMatch(payload: any, size: number): Promise<any[]> {
-    return this.prisma.user.findMany({
+    const users = this.prisma.user.findMany({
       where: {
         name: {
           startsWith: payload.channelName,
@@ -210,9 +193,10 @@ export class UserService {
         name: true,
       },
     });
+    return users;
   }
 
-  // TODO TYPE
+  // TODO TYPE ANY !
   async searchEndMatch(payload: any, channels: any[], size: number): Promise<any[]> {
     return this.prisma.user.findMany({
       where: {

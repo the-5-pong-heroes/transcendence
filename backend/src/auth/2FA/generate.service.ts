@@ -11,7 +11,7 @@ const myHTML = fs.readFileSync("./index.html", "utf8");
 export class Generate2FAService {
   constructor(private readonly mailerService: MailerService, private prisma: PrismaService) {}
 
-  async generateService(@Req() req: Request) {
+  async generateService(@Req() req: Request): Promise<void> {
     const accessToken = req.signedCookies.access_token;
     const user = await this.prisma.user.findFirst({
       where: {
@@ -26,8 +26,7 @@ export class Generate2FAService {
     this.updateUser(user);
   }
 
-  // async updateUser(user: (User & { auth: Auth | null }) | null) {
-  async updateUser(user: UserWithAuth | null) {
+  async updateUser(user: UserWithAuth | null): Promise<UserWithAuth> {
     try {
       const userid = user?.id;
       const updatedUser = await this.prisma.user.update({
@@ -50,7 +49,7 @@ export class Generate2FAService {
     }
   }
 
-  async sendActivationMail(user: UserWithAuth) {
+  async sendActivationMail(user: UserWithAuth): Promise<void> {
     if (!user.auth) {
       return;
     }
@@ -61,7 +60,6 @@ export class Generate2FAService {
       this.sendEmailToUser(email, user, code2FA);
       await this.storeCodeToDataBase(code2FA, user);
       this.updateUser(user);
-      return code2FA;
     } catch (error) {
       throw new BadRequestException("Invalid email");
     }
@@ -77,7 +75,7 @@ export class Generate2FAService {
     return result;
   }
 
-  async sendEmailToUser(email: string, user: UserWithAuth, code2FA: string) {
+  async sendEmailToUser(email: string, user: UserWithAuth, code2FA: string): Promise<void> {
     let htmlWithCode = myHTML.replace("{{code2FA}}", code2FA);
     htmlWithCode = htmlWithCode.replace("{{userName}}", user.name);
     console.log("sendEmailToUser email: ", email);
@@ -92,9 +90,9 @@ export class Generate2FAService {
     console.log("💋 email send");
   }
 
-  async storeCodeToDataBase(code2FA: string, user42: any) {
+  async storeCodeToDataBase(code2FA: string, user: UserWithAuth): Promise<UserWithAuth> {
     try {
-      const userid = user42.id;
+      const userid = user.id;
       const updatedUser = await this.prisma.user.update({
         where: { id: userid },
         data: {

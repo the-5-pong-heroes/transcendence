@@ -7,7 +7,7 @@ import { UserWithAuth } from "src/common/@types";
 export class VerifyService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async validate2FA(@Req() req: Request, @Res() res: Response, code: string) {
+  async validate2FA(@Req() req: Request, @Res() res: Response, code: string): Promise<void> {
     const accessToken = req.signedCookies.access_token;
     const user = await this.prisma.user.findFirst({
       where: {
@@ -21,7 +21,9 @@ export class VerifyService {
     });
     console.log("🔐", user?.auth?.twoFASecret);
     if (code !== user?.auth?.twoFASecret) {
-      return res.status(400).json({ message: "Invalid code !", user: null });
+      res.status(400).json({ message: "Invalid code !", user: null });
+      return;
+      // return res.status(400).json({ message: "Invalid code !", user: null });
     }
     if (user) {
       if (code === user.auth?.twoFASecret) {
@@ -35,14 +37,17 @@ export class VerifyService {
             },
           },
         });
-        return res.status(HttpStatus.OK).json({ message: "2FA verified", user: user });
+        res.status(HttpStatus.OK).json({ message: "2FA verified", user: user });
+        return;
+        // return res.status(HttpStatus.OK).json({ message: "2FA verified", user: user });
       } else {
-        return res.status(HttpStatus.BAD_REQUEST).json({ message: "2FA code is not valid", user: null });
+        res.status(HttpStatus.BAD_REQUEST).json({ message: "2FA code is not valid", user: null });
+        // return res.status(HttpStatus.BAD_REQUEST).json({ message: "2FA code is not valid", user: null });
       }
     }
   }
 
-  async updateVerify2FA(user: UserWithAuth) {
+  async updateVerify2FA(user: UserWithAuth): Promise<UserWithAuth> {
     if (user) {
       await this.prisma.user.update({
         where: { id: user.id },

@@ -6,15 +6,18 @@ import { UsersService } from "../users/users.service";
 import { MessagesService } from "../messages/messages.service";
 import { ChannelsService } from "./channels.service";
 import {
-	CreateChannelDto,
-	CreateDirectChannelDto,
-	UserWantJoinChannelDto,
-	ConfirmJoinDto,
-	SubmitPasswordDto,
-	UpdateChannelTypeDto
+  CreateChannelDto,
+  CreateDirectChannelDto,
+  UserWantJoinChannelDto,
+  ConfirmJoinDto,
+  SubmitPasswordDto,
+  UpdateChannelTypeDto,
+  UnbanChannelUserDto,
+  DeleteChannelDto,
 } from "./dto";
 import { UpdateChannelUserDto, ChannelUserIdDto, BanChannelUserDto } from "../channel-users/dto";
 import { CreateMessageDto, DisableInvitationDto } from "../messages/dto";
+import { BlockedUserDto } from "../users/dto";
 import { BlockedService } from "src/blocked/blocked.service";
 
 @WebSocketGateway({
@@ -50,13 +53,13 @@ export class ChannelsGateway {
   async createDirectChannel(client: Socket, payload: CreateDirectChannelDto) {
     const user = await this.usersService.findOneById(payload.channelId);
     if (!user) return "User does not exist";
-	payload.type = "DIRECT";
+    payload.type = "DIRECT";
     const channel = await this.channelsService.createDirect(payload);
-    const user1 = await this.channelUsersService.create({
+    await this.channelUsersService.create({
       channelId: channel.id,
       userId: payload.userId,
     });
-    const user2 = await this.channelUsersService.create({
+    await this.channelUsersService.create({
       channelId: channel.id,
       userId: payload.channelId,
     });
@@ -76,10 +79,8 @@ export class ChannelsGateway {
     });
     if (banChannel) return;
     const { type: _, ...channelUser } = payload;
-    if (channel.type === "PROTECTED")
-		await this.channelUsersService.create({ ...channelUser, isAuthorized: false });
-	else
-		await this.channelUsersService.create(channelUser);
+    if (channel.type === "PROTECTED") await this.channelUsersService.create({ ...channelUser, isAuthorized: false });
+    else await this.channelUsersService.create(channelUser);
     if (channel.type !== "PROTECTED") return this.confirmJoin(client, payload);
     client.emit("updateChannels", true);
   }
@@ -182,6 +183,7 @@ export class ChannelsGateway {
 
   @SubscribeMessage("banChannelUser")
   async banChannelUser(client: Socket, payload: BanChannelUserDto) {
+    console.log("banChannelUser", payload, new Date(payload.bannedUntil).getTime() - new Date().getTime());
     const { user, channelId } = await this.channelUsersService.findUser(payload.id);
     await this.channelUsersService.delete(payload.id);
     const options: Intl.DateTimeFormatOptions = {
@@ -222,7 +224,7 @@ export class ChannelsGateway {
   }
 
   @SubscribeMessage("unbanChannelUser")
-  async unbanChannelUser(client: Socket, payload: any) {
+  async unbanChannelUser(client: Socket, payload: UnbanChannelUserDto) {
     await this.prismaService.channelBan.delete({ where: { id: payload.id } });
     this.server.to(payload.channelId).emit("updateChannels", false);
   }
@@ -238,7 +240,7 @@ export class ChannelsGateway {
   }
 
   @SubscribeMessage("delete")
-  async delete(client: Socket, payload: any) {
+  async delete(client: Socket, payload: DeleteChannelDto) {
     const channel = await this.channelsService.findOneWithOwner(payload.channelId);
     if (!channel) return "This channel does not exist.";
     if (channel.users.some((user) => user.userId !== payload.userId)) return "You are not channel's owner.";
@@ -250,7 +252,7 @@ export class ChannelsGateway {
   }
 
   @SubscribeMessage("quit")
-  async quit(client: Socket, payload: any) {
+  async quit(client: Socket, payload: DeleteChannelDto) {
     client.leave(payload.channelId);
     const channel = await this.channelsService.findOne(payload.channelId);
     const channelUser = await this.channelUsersService.findFirst({
@@ -295,7 +297,7 @@ export class ChannelsGateway {
   }
 
   @SubscribeMessage("block")
-  async block(client: Socket, payload: any) {
+  async block(client: Socket, payload: BlockedUserDto) {
     const user = await this.usersService.findOneById(payload.userId);
     if (!user) return;
     const blocked = await this.usersService.findOneById(payload.blockedUserId);

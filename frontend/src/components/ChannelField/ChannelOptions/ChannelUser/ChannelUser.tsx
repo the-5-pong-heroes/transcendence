@@ -51,6 +51,7 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
       return;
     }
     socket.emit("kickChannelUser", { id: activeUser.id });
+    setActiveUser(null);
   };
 
   const banUser = (event: any): void => {
@@ -61,6 +62,7 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
     socket.emit("banChannelUser", { id: activeUser.id, bannedUntil: new Date(Date.now() + untilNumber * 60000) });
     setUntilOption("");
     setUntilNumber(0);
+    setActiveUser(null);
   };
 
   useEffect(() => {
@@ -142,6 +144,7 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
           <input
             className={styles.UntilInput}
             type="number"
+            min="0"
             value={untilNumber}
             onChange={(event) => setUntilNumber(+event.target.value)}
           />

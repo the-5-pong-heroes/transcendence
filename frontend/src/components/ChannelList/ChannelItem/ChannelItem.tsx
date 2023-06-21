@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 
 import styles from "./ChannelItem.module.scss";
 
@@ -6,11 +6,12 @@ import { type IChannel } from "@/interfaces";
 import { ChannelContext } from "@/contexts";
 import { useTheme } from "@hooks";
 
-interface ChannelItemProps {
+interface IChannelItemProps {
   item: IChannel;
+  setShowOptions: Dispatch<SetStateAction<boolean>>;
 }
 
-export const ChannelItem: React.FC<ChannelItemProps> = ({ item }) => {
+export const ChannelItem: React.FC<IChannelItemProps> = ({ item, setShowOptions }) => {
   const [preview, setPreview] = useState<string>("");
 
   const { activeChannel, setActiveChannel } = useContext(ChannelContext);
@@ -40,6 +41,13 @@ export const ChannelItem: React.FC<ChannelItemProps> = ({ item }) => {
     setPreview(str);
   }, [item]);
 
+  const handleClick = (): void => {
+    if (setActiveChannel) {
+      setActiveChannel(item);
+    }
+    setShowOptions(false);
+  };
+
   return (
     <div
       className={`
@@ -47,7 +55,7 @@ export const ChannelItem: React.FC<ChannelItemProps> = ({ item }) => {
         ${theme === "light" ? styles.ChannelItemLight : styles.ChannelItemDark}
         ${activeChannel?.id === item.id && styles.ActiveItem}
       `}
-      onClick={() => setActiveChannel && setActiveChannel(item)}>
+      onClick={handleClick}>
       <div className={styles.Name}>{item.name}</div>
       <div className={styles.Preview}>{preview}</div>
     </div>

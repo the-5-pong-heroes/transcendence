@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 
 import { ChannelHeader } from "./ChannelHeader";
 import { ChannelOptions } from "./ChannelOptions";
@@ -9,9 +9,12 @@ import styles from "./ChannelField.module.scss";
 import { ChannelContext } from "@/contexts";
 import { useTheme } from "@/hooks";
 
-export const ChannelField: React.FC = () => {
-  const [showOptions, setShowOptions] = useState<boolean>(false);
+interface IChannelField {
+  showOptions: boolean;
+  setShowOptions: Dispatch<SetStateAction<boolean>>;
+}
 
+export const ChannelField: React.FC<IChannelField> = ({ showOptions, setShowOptions }) => {
   const { activeChannel } = useContext(ChannelContext);
 
   const theme = useTheme();

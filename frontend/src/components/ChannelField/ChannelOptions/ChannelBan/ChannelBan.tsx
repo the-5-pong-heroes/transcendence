@@ -45,7 +45,7 @@ export const ChannelBan: React.FC<IChannelBanProps> = ({ banned }) => {
               key={usr.user.id}
               className={`${styles.ChannelUserItem} ${activeUser === usr && styles.ActiveUser}`}
               onClick={() => setActiveUser(usr)}>
-              <div>{usr.user.id}</div>
+              <div>{usr.user.name}</div>
               <div>{new Date(usr.bannedUntil).toLocaleDateString("fr-FR", { minute: "numeric", hour: "numeric" })}</div>
             </div>
           );

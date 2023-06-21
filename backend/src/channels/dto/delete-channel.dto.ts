@@ -1,15 +1,11 @@
 import { IsString, IsNotEmpty } from "class-validator";
 
-export class SubmitPasswordDto {
-  @IsString()
-  @IsNotEmpty()
-  userId: string;
-
+export class DeleteChannelDto {
   @IsString()
   @IsNotEmpty()
   channelId: string;
 
   @IsString()
   @IsNotEmpty()
-  password: string;
+  userId: string;
 }

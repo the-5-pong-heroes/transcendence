@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { Dispatch, SetStateAction, useContext, useEffect } from "react";
 
 import { CreateChat } from "./CreateChat";
 import { SearchBar } from "./SearchBar";
@@ -8,7 +8,11 @@ import styles from "./ChannelList.module.scss";
 import { useUser, useTheme, useSocket } from "@hooks";
 import { ChannelContext } from "@/contexts";
 
-export const ChannelList: React.FC = () => {
+interface IChannelList {
+  setShowOptions: Dispatch<SetStateAction<boolean>>;
+}
+
+export const ChannelList: React.FC<IChannelList> = ({ setShowOptions }) => {
   const user = useUser();
   const theme = useTheme();
   const socket = useSocket();
@@ -46,7 +50,7 @@ export const ChannelList: React.FC = () => {
         <SearchBar />
       </div>
       {channels?.map((item, index) => (
-        <ChannelItem key={index} item={item} />
+        <ChannelItem key={index} item={item} setShowOptions={setShowOptions} />
       ))}
     </div>
   );

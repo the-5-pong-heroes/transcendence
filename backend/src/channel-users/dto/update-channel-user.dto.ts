@@ -1,23 +1,23 @@
-import { IsString, IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsBoolean, IsNotEmpty, IsOptional } from "class-validator";
 import { Role } from "@prisma/client";
 
 export class UpdateChannelUserDto {
-	@IsString()
-	@IsNotEmpty()
-	id: string;
+  @IsString()
+  @IsNotEmpty()
+  id: string;
 
-	@IsOptional()
-	role?: Role;
+  @IsOptional()
+  role?: Role;
 
-	@IsBoolean()
-	@IsOptional()
-	isMuted?: boolean;
+  @IsBoolean()
+  @IsOptional()
+  isMuted?: boolean;
 
-	@IsString()
-	@IsOptional()
-	mutedUntil?: string;
+  @IsString()
+  @IsOptional()
+  mutedUntil?: string;
 
-	@IsBoolean()
-	@IsOptional()
-	isAuthorized?: boolean;
+  @IsBoolean()
+  @IsOptional()
+  isAuthorized?: boolean;
 }

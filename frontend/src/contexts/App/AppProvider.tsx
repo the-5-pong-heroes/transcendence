@@ -51,7 +51,7 @@ const useInitInvitationState = (): InvitationState => {
 
 export const AppProvider: React.FC<ProviderParameters> = ({ children }) => {
   const [theme, setTheme] = useState<ThemeMode>("dark");
-  const { twoFA, setTwoFA } = useTwoFA();
+  // const { twoFA, setTwoFA } = useTwoFA();
 
   const toggleTheme = (): void => {
     setTheme((curr) => (curr === "light" ? "dark" : "light"));
@@ -63,9 +63,9 @@ export const AppProvider: React.FC<ProviderParameters> = ({ children }) => {
   const isNavigatingRef = useRef<boolean>(false);
 
   const appContext = useMemo((): AppContextParameters => {
-    const toggleTwoFA = (): void => {
-      setTwoFA((curr) => !curr);
-    };
+    // const toggleTwoFA = (): void => {
+    //   setTwoFA((curr) => !curr);
+    // };
 
     return {
       theme,
@@ -74,10 +74,10 @@ export const AppProvider: React.FC<ProviderParameters> = ({ children }) => {
       gameState,
       invitationState,
       isNavigatingRef,
-      twoFA,
-      toggleTwoFA,
+      // twoFA,
+      // toggleTwoFA,
     };
-  }, [theme, pageRefs, gameState, invitationState, isNavigatingRef, twoFA, setTwoFA]);
+  }, [theme, pageRefs, gameState, invitationState, isNavigatingRef]);
 
   return <AppContext.Provider value={appContext}>{children}</AppContext.Provider>;
 };

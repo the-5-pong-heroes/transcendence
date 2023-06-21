@@ -20,7 +20,6 @@ export interface UserSettings {
   name: string;
   avatar: string | null;
   friends: { id: string; name: string }[];
-  // 2FA
 }
 
 export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
@@ -42,7 +41,7 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
       return;
     }
     const file = event.target.files[0];
-    f (file) {
+    if (file) {
       try {
         setUploading(true);
         const response = await customFetch("POST", "upload", { file: file });

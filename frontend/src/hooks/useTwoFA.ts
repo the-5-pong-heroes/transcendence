@@ -26,14 +26,14 @@ interface ITwoFA {
 
 export function useTwoFA(): ITwoFA {
   const [twoFA, setTwoFA] = useState<boolean>();
-  useQuery<boolean>([USER_QUERY_KEY_2FA], async (): Promise<boolean> => fetch2FAactivated(), {
-    // refetchOnMount: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    onSuccess: (data) => {
-      setTwoFA(data);
-    },
-  });
+  // useQuery<boolean>([USER_QUERY_KEY_2FA], async (): Promise<boolean> => fetch2FAactivated(), {
+  //   // refetchOnMount: false,
+  //   refetchOnReconnect: false,
+  //   refetchOnWindowFocus: false,
+  //   onSuccess: (data) => {
+  //     setTwoFA(data);
+  //   },
+  // });
 
   return {
     twoFA: twoFA ?? false,

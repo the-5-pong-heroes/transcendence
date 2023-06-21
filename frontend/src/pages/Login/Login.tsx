@@ -1,15 +1,17 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useSignIn, useTwoFALogin } from "./hooks";
 
-
-import { CLIENT_URL, BASE_URL, API42_URL, API42_CLIENT_ID, API42_REDIRECT } from "@/constants";
+import { BASE_URL, API42_URL, API42_CLIENT_ID, API42_REDIRECT } from "@/constants";
 import { Logo_42, Logo_Google, Logo_Eve } from "@assets";
 import { customFetch } from "@/helpers";
-import type { UserAuth } from "@types";
 
 import "./Login.css";
+
+interface TwoFAStatus {
+  twoFA: boolean;
+}
 
 export const Login42: React.FC = () => {
   const body = {
@@ -19,7 +21,7 @@ export const Login42: React.FC = () => {
     scope: "public",
   };
   const url_42_auth = API42_URL + "?" + new URLSearchParams(body).toString();
-  
+
   useEffect(() => {
     console.log("api = ", url_42_auth);
   }, []);
@@ -27,7 +29,7 @@ export const Login42: React.FC = () => {
   return (
     <a className="Login_with" href={url_42_auth}>
       <span>Continue with </span>
-      <img id="logo-42" alt="42 Logo" src={Logo_42} />      
+      <img id="logo-42" alt="42 Logo" src={Logo_42} />
     </a>
   );
 };
@@ -53,28 +55,25 @@ export const Login: React.FC = () => {
   const [isActivated, setIsActivated] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchToggle2FA = async () => {
+    const fetchToggle2FA = async (): Promise<void> => {
       const toggledValue = await twoFAstatus();
       setIsActivated(toggledValue);
+      console.log("🌵 toggledValue: ", toggledValue);
     };
 
-    fetchToggle2FA();
+    fetchToggle2FA().catch(() => console.log());
   }, []);
-  
+
   async function twoFAstatus(): Promise<boolean> {
     try {
       const response = await customFetch("GET", "auth/2FA/status");
-      //if (response.ok) {
-        const data = await response.json();
-        if (data.twoFA === true)
-          return true;
-      //}
-      else
-        return false;
+      const data = (await response.json()) as TwoFAStatus;
+
+      return data.twoFA;
+    } catch (error) {
+      console.log("status 2FA not updated");
     }
-    catch (error) {
-      console.log("status 2FA not updated")
-    }
+
     return false;
   }
 
@@ -92,21 +91,21 @@ export const Login: React.FC = () => {
     }
   };
 
-  async function submitVerificationCode() {
-      const popup = document.getElementById("verificationCode");
-      if (popup instanceof HTMLInputElement) {
-        const twoFACode = popup.value;
-        console.log("twoFAcode = ",twoFACode);
-        // twoFALogin({ code: verificationCode });
-        const response = await customFetch("POST", "auth/2FA/verify", { twoFACode: twoFACode });
-        if (response.ok) {
-          alert("Code de vérification correct !");
-          window.open(CLIENT_URL, "_self");
-        } else {
-          alert("Code de vérification incorrect. Veuillez réessayer.");
-        }
-      }
+  function submitVerificationCode(): void {
+    const popup = document.getElementById("verificationCode");
+    if (popup instanceof HTMLInputElement) {
+      const twoFACode = popup.value;
+      console.log("twoFAcode = ", twoFACode);
+      twoFALogin({ code: twoFACode });
+      // const response = await customFetch("POST", "auth/2FA/verify", { code: twoFACode });
+      // if (response.ok) {
+      //   alert("Code de vérification correct !");
+      //   window.open(CLIENT_URL, "_self");
+      // } else {
+      //   alert("Code de vérification incorrect. Veuillez réessayer.");
+      // }
     }
+  }
 
   return (
     <div className="Login">
@@ -120,7 +119,7 @@ export const Login: React.FC = () => {
             Sign up
           </button>
         </div>
-        {isActivated ? (
+        {!isActivated ? (
           <div className="continue-with" id="continue-with">
             <Login42 />
             <LoginGoogle />

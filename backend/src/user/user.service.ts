@@ -1,7 +1,6 @@
 import { PrismaService } from "../database/prisma.service";
-import { ConflictException, HttpException, HttpStatus, Injectable, NotFoundException, Req } from "@nestjs/common";
-import { Request } from "express";
-import { Auth, User, UserStatus } from "@prisma/client";
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import { User, UserStatus } from "@prisma/client";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UserWithAuth } from "src/common/@types";
@@ -10,7 +9,7 @@ import { UserWithAuth } from "src/common/@types";
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getUserByEmail(email: string) {
+  async getUserByEmail(email: string): Promise<UserWithAuth | null> {
     try {
       const user = await this.prisma.user.findFirst({
         where: {
@@ -23,27 +22,29 @@ export class UserService {
         },
       });
       return user;
-    } catch (error) {}
+    } catch (error) {
+      return null;
+    }
   }
 
-  async getUsername(@Req() req: Request) {
-    const accessToken = req.signedCookies.access_token;
-    try {
-      const user = await this.prisma.user.findFirst({
-        where: {
-          auth: {
-            accessToken: accessToken,
-          },
-        },
-        include: {
-          auth: true,
-        },
-      });
-      return user;
-    } catch (error) {}
-  }
+  // async getUsername(@Req() req: Request) {
+  //   const accessToken = req.signedCookies.access_token;
+  //   try {
+  //     const user = await this.prisma.user.findFirst({
+  //       where: {
+  //         auth: {
+  //           accessToken: accessToken,
+  //         },
+  //       },
+  //       include: {
+  //         auth: true,
+  //       },
+  //     });
+  //     return user;
+  //   } catch (error) {}
+  // }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<void> {
     const user = await this.prisma.user.findUnique({
       where: { id },
     });
@@ -52,7 +53,7 @@ export class UserService {
     else await this.prisma.user.delete({ where: { id } });
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<UserWithAuth> {
     const user = await this.prisma.user.findUnique({
       where: { name: createUserDto.name },
     });
@@ -70,12 +71,19 @@ export class UserService {
           },
         },
       },
+      include: {
+        auth: true,
+      },
     });
     return newUser;
   }
 
   async findAll(): Promise<User[]> {
-    const result: User[] = await this.prisma.user.findMany();
+    const result: User[] = await this.prisma.user.findMany({
+      include: {
+        auth: true,
+      },
+    });
     return result;
   }
 
@@ -92,6 +100,7 @@ export class UserService {
     return result;
   }
 
+  // TODO TYPE
   async findOneById(id: string | undefined): Promise<any | null> {
     if (!id) return null;
     return this.prisma.user.findUnique({
@@ -115,28 +124,21 @@ export class UserService {
             userId: true,
           },
         },
+        auth: true,
       },
     });
   }
 
-  async findUserByName(name: string): Promise<User | null> {
-    const result: User | null = await this.prisma.user.findUnique({
-      where: { name: name },
+  async findUserByName(name: string): Promise<UserWithAuth | null> {
+    const result = await this.prisma.user.findUnique({
+      where: {
+        name: name,
+      },
+      include: {
+        auth: true,
+      },
     });
     return result;
-  }
-
-  async findUserAuthByEmail(email: string): Promise<Auth | null> {
-    if (!email) {
-      return null;
-    }
-    const user = this.prisma.auth.findUnique({
-      where: {
-        email: email,
-      },
-    });
-
-    return user;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<void> {
@@ -171,6 +173,7 @@ export class UserService {
     return null;
   }
 
+  // TODO TYPE
   async searchFirstMatch(payload: any, size: number): Promise<any[]> {
     return this.prisma.user.findMany({
       where: {
@@ -209,6 +212,7 @@ export class UserService {
     });
   }
 
+  // TODO TYPE
   async searchEndMatch(payload: any, channels: any[], size: number): Promise<any[]> {
     return this.prisma.user.findMany({
       where: {

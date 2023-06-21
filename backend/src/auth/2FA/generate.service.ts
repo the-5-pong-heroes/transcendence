@@ -50,15 +50,17 @@ export class Generate2FAService {
     }
   }
 
-  async sendActivationMail(user42: any) {
+  async sendActivationMail(user: UserWithAuth) {
+    if (!user.auth) {
+      return;
+    }
     try {
-      const email = user42.auth.email;
+      const email = user.auth.email;
       const code2FA = this.generateRandomCode(6);
       console.log("sendActivationMail: ", email, code2FA);
-      this.sendEmailToUser(email, user42, code2FA);
-      await this.storeCodeToDataBase(code2FA, user42);
-      this.updateUser(user42);
-      console.log("code2FA: ", code2FA);
+      this.sendEmailToUser(email, user, code2FA);
+      await this.storeCodeToDataBase(code2FA, user);
+      this.updateUser(user);
       return code2FA;
     } catch (error) {
       throw new BadRequestException("Invalid email");
@@ -75,9 +77,10 @@ export class Generate2FAService {
     return result;
   }
 
-  async sendEmailToUser(email: string, user42: any, code2FA: string) {
+  async sendEmailToUser(email: string, user: UserWithAuth, code2FA: string) {
     let htmlWithCode = myHTML.replace("{{code2FA}}", code2FA);
-    htmlWithCode = htmlWithCode.replace("{{userName}}", user42.name);
+    htmlWithCode = htmlWithCode.replace("{{userName}}", user.name);
+    console.log("sendEmailToUser email: ", email);
 
     this.mailerService.sendMail({
       to: `${email}`,
@@ -86,6 +89,7 @@ export class Generate2FAService {
       text: "transcendence !",
       html: htmlWithCode,
     });
+    console.log("💋 email send");
   }
 
   async storeCodeToDataBase(code2FA: string, user42: any) {

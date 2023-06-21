@@ -11,11 +11,11 @@ import { PrismaService } from "../database/prisma.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
 import { GoogleService } from "src/auth/google/google.service";
 import { UserDto } from "./dto";
-import { CLIENT_URL } from "src/common/constants";
 import { Generate2FAService } from "./2FA/generate.service";
 import { EnableService } from "./2FA/enable2FA.service";
 import { VerifyService } from "./2FA/verify.service";
 import { UserWithAuth } from "src/common/@types";
+import { CLIENT_URL } from "src/common/constants";
 
 export interface UserAuth {
   message: string;
@@ -140,7 +140,7 @@ export class AuthService {
 
   async signInGoogle(@Res() res: Response, userInfos: GoogleUserInfos): Promise<void> {
     const userByEmail = await this.findOne(userInfos.email);
-    let user;
+    let user: UserWithAuth;
     if (userByEmail) {
       await this.prisma.auth.update({
         where: {
@@ -174,6 +174,7 @@ export class AuthService {
         signed: true,
       })
       .redirect(301, url);
+    console.log("End signInGoogle");
   }
 
   async signOut(res: Response): Promise<void> {
@@ -218,13 +219,6 @@ export class AuthService {
     }
   }
 
-  // async twoFAtoggle(email: string, twoFAactivated: boolean): Promise<Auth> {
-  //   return this.prisma.auth.update({
-  //     where: { email },
-  //     data: { twoFAactivated },
-  //   });
-  // }
-
   async createDataBase42User(user42: any, token: Token, username: string, isRegistered: boolean) {
     try {
       const user = await this.prisma.user.create({
@@ -255,7 +249,7 @@ export class AuthService {
   }
 
   async getUserByToken(req: Request): Promise<(User & { auth: Auth | null }) | null> {
-    const token = req.cookies.access_token;
+    const token = req.signedCookies.access_token;
     try {
       const user = await this.prisma.user.findFirst({
         where: {

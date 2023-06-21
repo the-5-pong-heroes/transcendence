@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { Request } from "express";
 import { CurrentUser } from "src/common/decorators";
 import { User } from "@prisma/client";
 
@@ -15,10 +14,10 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Post("me/username/get")
-  getUsername(@Req() req: Request) {
-    return this.userService.getUsername(req);
-  }
+  // @Post("me/username/get")
+  // getUsername(@Req() req: Request) {
+  //   return this.userService.getUsername(req);
+  // }
 
   @Get("me")
   async findMe(@CurrentUser() user: User) {

@@ -79,41 +79,15 @@ export class AuthController {
     await this.authService.getUser(req, res);
   }
 
-  @Get("twoFAactivated")
-  async getTwoFAactivated(@Req() req: Request, @Res() res: Response) {
-    const accessToken = req.signedCookies.access_token;
-    if (!accessToken) return res.status(200).json({ message: "User not connected" });
-    const user = await this.authService.validateUser(accessToken);
-    if (!user) return res.status(404).json({ message: "Invalid token" });
-    if (!user.auth) return res.status(200).json({ message: "User has no authentication" });
-    return res.status(200).json({ twoFAactivated: user.auth.twoFAactivated });
-  }
-
-  @Put("twoFAtoggle")
-  async twoFAtoggle(@Req() req: Request, @Res() res: Response) {
-    const { isToggled } = req.body;
-    const accessToken = req.signedCookies.access_token;
-    if (!accessToken) return res.status(200).json({ message: "User not connected" });
-    const user = await this.authService.validateUser(accessToken);
-    if (!user) return res.status(404).json({ message: "Invalid token" });
-    if (!user.auth) return res.status(200).json({ message: "User has no authentication" });
-    await this.authService.twoFAtoggle(user.auth.email, isToggled);
-    return res.status(200);
-  }
-
   @Get("2FA/generate")
   async generate2FA(@Req() req: Request) {
     return this.Generate2FA.generateService(req);
   }
 
   @Post("2FA/verify")
-    async verify2FA(@Req() req: Request, @Res() res: Response, @Body() data: TwoFADto) {
-      return this.verify2FAService.validate2FA(req, res, data.code);
+  async verify2FA(@Req() req: Request, @Res() res: Response, @Body() data: TwoFADto) {
+    return this.verify2FAService.validate2FA(req, res, data.code);
   }
-  // @Post("2FA/verify")
-  // async verify2FA(@Req() req: Request, @Res() res: Response, @Body("twoFACode") code: string) {
-  //   return this.verify2FAService.validate2FA(req, res, code);
-  // }
 
   @Get("2FA/disable")
   async disable2FA(@Req() req: Request) {
@@ -125,12 +99,16 @@ export class AuthController {
     return this.enable2FAService.status2FA(req);
   }
 
+  // @Get("token")
+  // async checkIfTokenValid(@Req() req: Request, @Res() res: Response) {
+  //   return this.authService.checkIfTokenValid(req, res);
+  // }
+
   /*****************  GOOGLE AUTH  ****************/
 
   @Get("google")
   @UseGuards(GoogleOauthGuard)
   async googleLogin() {
-    console.log("🐥");
     /* void */
   }
 
@@ -140,9 +118,4 @@ export class AuthController {
     console.log("🌵");
     await this.authService.signInGoogle(res, req.user);
   }
-
-  // @Get("token")
-  // async checkIfTokenValid(@Req() req: Request, @Res() res: Response) {
-  //   return this.authService.checkIfTokenValid(req, res);
-  // }
 }

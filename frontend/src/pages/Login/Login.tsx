@@ -1,7 +1,4 @@
 import React, {useEffect, useState} from "react";
-import { useNavigate } from "react-router-dom";
-
-import { useSignIn } from "./hooks";
 
 
 import { CLIENT_URL, BASE_URL, API42_URL, API42_CLIENT_ID, API42_REDIRECT } from "@/constants";
@@ -31,18 +28,7 @@ export const Login42: React.FC = () => {
 };
 
 export const Login: React.FC = () => {
-  const navigate = useNavigate();
-  const signIn = useSignIn();
   const [isActivated, setIsActivated] = useState<boolean>(false);
-
-  useEffect(() => {
-    const fetchToggle2FA = async () => {
-      const toggledValue = await twoFAstatus();
-      setIsActivated(toggledValue);
-    };
-
-    fetchToggle2FA();
-  }, []);
   
   async function twoFAstatus(): Promise<boolean> {
     try {
@@ -94,14 +80,6 @@ export const Login: React.FC = () => {
     <div className="Login">
       <form className="form" onSubmit={onSignIn}>
         <img id="login-robot" src={Logo_Eve} />
-        <input className="input" type="text" name="email" placeholder="Email" required />
-        <input className="input" type="password" name="password" placeholder="Password" required />
-        <div className="form-sign">
-          <input className="submit" type="submit" value="Sign in" />
-          <button className="login-link" onClick={() => navigate("/Signup")}>
-            Sign up
-          </button>
-        </div>
         <div className="continue-with">
           <Login42 />
           {

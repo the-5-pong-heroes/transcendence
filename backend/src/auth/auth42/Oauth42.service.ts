@@ -25,15 +25,19 @@ export class Oauth42Service {
       const client_id = this.config.get("API_42_ID");
       const secret = this.config.get("API_42_SECRET");
       // const uri = this.config.get("VITE_API42_URI");
+      console.log("👙👙👙👙", `grant_type=authorization_code&client_id=${client_id}&client_secret=${secret}&code=${req}&redirect_uri=${API_42_REDIRECT}`);
       const response = await fetch(API_42_NEW_TOKEN, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `grant_type=authorization_code&client_id=${client_id}&client_secret=${secret}&code=${req}&redirect_uri=${API_42_REDIRECT}`,
+        // body: `grant_type=authorization_code&client_id=${client_id}&client_secret=${secret}&code=${req}&redirect_uri=${API_42_REDIRECT}`,
+        body: `grant_type=authorization_code&client_id=${client_id}&client_secret=${secret}&code=${req}&redirect_uri=http://localhost:3333/auth/auth42/callback`,
       });
+      // const data = await response.json();
       const data = (await response.json()) as Token;
       if (!data) {
         throw new BadRequestException("the user token is empty");
       }
+      console.log("👗", data.access_token);
       return data.access_token;
     } catch (error) {
       throw new BadRequestException("Error to get the user by token3");
@@ -47,6 +51,7 @@ export class Oauth42Service {
       });
       if (response.ok) {
         const data = (await response.json()) as User42Infos;
+        console.log("🦖🦖🦖🦖", data.email, data.login);
         return data;
       }
     } catch (error) {

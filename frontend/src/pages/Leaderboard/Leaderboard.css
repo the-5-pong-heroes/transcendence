@@ -8,6 +8,7 @@
   display: flex;
   flex-flow: column nowrap;
   margin: 0;
+  padding-top: 100px;
   align-items: center;
   justify-content: center;
   user-select: none;
@@ -26,7 +27,7 @@
 }
 
 .scroll-div {
-  max-height: 60vh;
+  /* max-height: 60vh; */
   overflow: auto;
   scrollbar-color: darkblue lightblue;
   scrollbar-width: thin;
@@ -39,7 +40,7 @@
   flex-wrap: wrap;
   margin-top: calc(-1 * var(--bs-gutter-y));
   border-radius: 20px;
-  background: linear-gradient(0deg, rgba(42, 45, 112, 0.5) 0%, rgba(80, 75, 210, 0.5) 100%);
+  background: linear-gradient(0deg, rgba(42, 45, 112, 0.639) 0%, rgba(80, 75, 210, 0.61) 100%);
   margin-bottom: 0.8rem;
   padding: 1rem;
   width: 82vw;
@@ -163,6 +164,9 @@
 }
 
 @media (max-width: 680px) {
+  .Leaderboard {
+    padding-top: 80px;
+  }
   .col.status {
     display: none;
   }
@@ -180,13 +184,13 @@
   .firstRow,
   .row .col:last-child {
     font-weight: 500;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
   }
   .col.score {
     display: none;
   }
   .col.name {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
   }
   .firstRow > * {
     padding: 0rem;

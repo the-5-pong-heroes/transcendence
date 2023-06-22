@@ -38,6 +38,9 @@
       &:disabled {
         cursor: auto;
       }
+      &:hover {
+        transform: scale(1.08);
+      }
     }
 
     .Invite {
@@ -52,6 +55,9 @@
 
       &:disabled {
         cursor: auto;
+      }
+      &:hover {
+        transform: scale(1.08);
       }
     }
   }

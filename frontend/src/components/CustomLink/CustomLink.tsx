@@ -14,7 +14,7 @@ export const CustomLink: React.FC<LinkProps> = ({ to, className, children }) => 
 
   const onClick = (): void => {
     isNavigatingRef.current = true;
-    setTimeout(() => (isNavigatingRef.current = false), 2000);
+    setTimeout(() => (isNavigatingRef.current = false), 3000);
   };
 
   return (

@@ -20,7 +20,7 @@ const useNavigationRoute = (): void => {
     setCurrentLoc(location.pathname);
     // console.log("Location changed!", location.pathname, currentLoc);
     isNavigatingRef.current = true;
-    setTimeout(() => (isNavigatingRef.current = false), 2000);
+    setTimeout(() => (isNavigatingRef.current = false), 3000);
   }, [location, currentLoc, isNavigatingRef]);
 };
 

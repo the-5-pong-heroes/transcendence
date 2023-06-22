@@ -107,6 +107,7 @@ export class AuthService {
 
   async createDataBase42User(user42: User42Infos, token: string, username: string, isRegistered: boolean) {
     try {
+      console.log("👙", username, token);
       const user = await this.prisma.user.create({
         data: {
           name: username,

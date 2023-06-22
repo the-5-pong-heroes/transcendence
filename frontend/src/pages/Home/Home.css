@@ -8,31 +8,23 @@
   color: #fff;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   flex-direction: column;
-}
-
-.home h1 {
-  font-size: 60px;
+  padding-top: 70px;
 }
 
 #light .home {
   color: #000000;
 }
 
-#dark .home h1 {
-  color: #ffffff;
-}
-
 .home-play-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 10vh;
-  width: 60vw;
   font-size: 1.5rem;
-  margin: 30px;
+  margin: 10px;
   color: #ffffff;
+  /* background-color: rgba(23, 176, 23, 0.546); */
 }
 
 #light .home-play-button {
@@ -57,7 +49,6 @@
   display: block;
   border-radius: 28px;
   background-color: #6e5898;
-  /* background-color: rgba(237, 123, 255, 0.5); */
   width: 56px;
   height: 56px;
   transition: all 0.3s ease;
@@ -65,7 +56,6 @@
 
 #light .game-link:before {
   background-color: #b9d4fd; 
-  /* background-color: #dbbff0;  */
 }
 
 .game-link span {
@@ -102,12 +92,10 @@
 .game-link:hover:before {
   width: 100%;
   background-color: #6e5898;
-  /* background-color: rgb(237, 123, 255, 0.6); */
 }
 
 #light .game-link:hover:before {
   background-color: #b9d4fd; 
-  /* background-color: #dbbff0;  */
 }
 .game-link:hover svg {
   transform: translateX(0);
@@ -115,16 +103,6 @@
 
 .game-link:active {
   transform: scale(0.96);
-}
-
-@media (max-width: 680px) {
-  .home h1 {
-    font-size: 40px;
-  }
-  .game-link span {
-    font-size: 10px;
-    line-height: 18px;
-  }
 }
 
 .swiper-container {
@@ -138,9 +116,9 @@
 }
 
 .swiper {
+  /* background-color: rgba(205, 48, 48, 0.442); */
   padding-top: 50px;
   padding-bottom: 80px;
-  /* background-color: rgba(255, 0, 0, 0.352); */
 }
 
 .swiper .swiper-slide {
@@ -153,13 +131,12 @@
   background-size: cover;
   background-color: #6e5898;
   border-radius: 1rem;
-  width: 320px;
+  width: 315px;
   height: 410px;
   border-radius: 0.7rem;
 }
 
 #light .swiper .swiper-slide {
-  /* color: #644b93; */
   color: #000000;
   /* background-color: #cadfff; */
   background-color: #bdd6fb;
@@ -232,7 +209,44 @@
   font-weight: 600;
 }
 
-@media (max-width: 780px) {
+@media (max-width: 1080px) OR (max-height: 680px) {
+  .game-link {
+    padding: 15px 18px;
+  }
+  .game-link span {
+    font-size: 14px;
+  }
+  .game-link:before {
+    width: 48px;
+    height: 48px;
+  }
+  .swiper .swiper-slide {
+    width: 275px;
+    height: 370px;
+  }
+  .carroussel-content {
+    height: 255px;
+    /* background-color: red; */
+  }
+  .carroussel-header {
+    font-size: 1rem;
+  }
+  .carroussel-list {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 780px) OR (max-height: 580px) {
+  .game-link {
+    padding: 12px 15px;
+  }
+  .game-link span {
+    font-size: 12px;
+  }
+  .game-link:before {
+    width: 42px;
+    height: 42px;
+  }
   .swiper .swiper-slide {
     width: 220px;
     height: 300px;
@@ -250,8 +264,29 @@
   }
 }
 
-@media (max-width: 350px) {
-  .swiper .swiper-slide {
+@media (max-width: 480px) {
+  .swiper-container {
     display: none;
+  }
+}
+
+@media (max-height: 480px) AND (min-width: 480px) {
+  .game-link {
+    display: none;
+  }
+  .swiper .swiper-slide {
+    width: 190px;
+    height: 250px;
+  }
+  .carroussel-content {
+    height: 168px;
+    /* background-color: rgba(255, 0, 0, 0.675); */
+  }
+  .carroussel-header {
+    font-size: 0.8rem;
+    padding-bottom: 3px;
+  }
+  .carroussel-list {
+    font-size: 0.6rem;
   }
 }

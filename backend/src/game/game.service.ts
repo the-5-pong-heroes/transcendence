@@ -48,7 +48,7 @@ export class GameService {
       }
     }
     this.connectedSockets.set(client.id, client);
-    await this.userService.updateStatus(client.data.userId, "ONLINE");
+    await this.userService.updateStatus(client.handshake.auth.id, "ONLINE");
     client.emit(ServerEvents.GameList, this.getListOfLobbies());
   }
 
@@ -230,7 +230,7 @@ export class GameService {
     const lobby = client.data.lobby;
     lobby?.removeClient(client);
     this.connectedSockets.delete(client.id);
-    await this.userService.updateStatus(client.data.userId, "OFFLINE"); // PROBLEM HERE
+    await this.userService.updateStatus(client.handshake.auth.id, "OFFLINE"); // PROBLEM HERE
     for (const [socketId, socket] of this.connectedSockets) {
       if (client.data.userId === socket.data.userId) {
         this.server.to(socketId).emit(ServerEvents.Disconnect, null);

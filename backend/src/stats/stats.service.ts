@@ -141,7 +141,8 @@ export class StatsService {
         playerOneData.defeats += 1;
       }
       gamesStats[playerOne.id] = playerOneData;
-      gamesStats[playerTwo?.id] = playerTwoData;
+	  if (playerTwo)
+		  gamesStats[playerTwo.id] = playerTwoData;
     });
     const ranks = Object.keys(gamesStats).sort((a, b) => {
       return gamesStats[b].score - gamesStats[a].score;

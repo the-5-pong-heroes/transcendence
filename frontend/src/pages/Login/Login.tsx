@@ -47,20 +47,6 @@ export const Login: React.FC = () => {
     return false;
   }
 
-  const onSignIn: React.FormEventHandler<HTMLFormElement> = (form) => {
-    form.preventDefault();
-    const formData = new FormData(form.currentTarget);
-    const email = formData.get("email");
-    const password = formData.get("password");
-
-    if (typeof email === "string" && typeof password === "string") {
-      signIn({
-        email,
-        password,
-      });
-    }
-  };
-
   async function submitVerificationCode() {
       const popup = document.getElementById("verificationCode");
       if (popup instanceof HTMLInputElement) {
@@ -78,7 +64,6 @@ export const Login: React.FC = () => {
 
   return (
     <div className="Login">
-      <form className="form" onSubmit={onSignIn}>
         <img id="login-robot" src={Logo_Eve} />
         <div className="continue-with">
           <Login42 />
@@ -95,7 +80,6 @@ export const Login: React.FC = () => {
             </div>
           }
         </div>
-      </form>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 export interface UserAuth {
   message: string;
   user: User;
+  twoFA?: boolean;
 }
 
 export type UserStatus = "ONLINE" | "OFFLINE" | "IN_GAME";

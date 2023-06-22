@@ -1,13 +1,10 @@
-import { Injectable, UseGuards } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { Server, Socket } from "socket.io";
 import { LobbyMode, GameMode, AuthenticatedSocket, ServerEvents, LobbyState, PaddleMove } from "./@types";
 import { GameLobby } from "./game.lobby";
 import { PrismaService } from "../database/prisma.service";
 import { UserService } from "src/user/user.service";
 import { AuthService } from "src/auth/auth.service";
-import { parse } from "cookie";
-
-const LOBBY_MAX_LIFETIME = 1000 * 60 * 60;
 
 @Injectable()
 export class GameService {
@@ -41,6 +38,12 @@ export class GameService {
   }
 
   public async setupClient(client: AuthenticatedSocket): Promise<void> {
+    if (!client.handshake.auth) {
+      client.disconnect();
+    }
+    client.data.userName = client.handshake.auth.name;
+    client.data.userId = client.handshake.auth.id;
+    client.data.readyToPlay = false;
     for (const [, socket] of this.connectedSockets) {
       if (socket.data.userId === client.handshake.auth.id) {
         client.emit(ServerEvents.Connect);
@@ -79,7 +82,7 @@ export class GameService {
     }
     lobby = this.createLobby(lobbyMode, gameMode, client);
     lobby.dispatchLobbyState();
-    // this.broadcastLobbies();
+    this.broadcastLobbies();
   }
 
   public joinLobbyById(lobbyId: string, client: AuthenticatedSocket): void {
@@ -101,7 +104,6 @@ export class GameService {
         return lobby;
       }
     }
-
     return null;
   }
 
@@ -111,7 +113,7 @@ export class GameService {
     await this.delay(1000);
     lobby.startGame();
     lobby.dispatchLobbyState();
-    // this.broadcastLobbies();
+    this.broadcastLobbies();
   }
 
   /************     VIEW GAME    ************/
@@ -145,6 +147,28 @@ export class GameService {
         client.emit(ServerEvents.LobbyMessage, "Too late, the sender of the invitation is no longer available...");
       return;
     }
+    this.runInviteToGame(response, sender, client);
+  }
+
+  public async inviteToGameLink(userId: string, client: AuthenticatedSocket): Promise<void> {
+    for (const [socketId, socket] of this.connectedSockets) {
+      if (userId === socket.data.userId) {
+        const sender = this.connectedSockets.get(socketId);
+        if (sender === undefined) {
+          client.emit(ServerEvents.LobbyMessage, "Too late, the sender of the invitation is no longer available...");
+          return;
+        }
+        this.runInviteToGame(true, sender, client);
+        break;
+      }
+    }
+  }
+
+  private async runInviteToGame(
+    response: boolean,
+    sender: AuthenticatedSocket,
+    client: AuthenticatedSocket,
+  ): Promise<void> {
     const senderStatus = await this.userService.getStatus(sender?.data.userId);
     if (senderStatus !== "ONLINE") {
       response &&
@@ -156,12 +180,14 @@ export class GameService {
         ServerEvents.LobbyMessage,
         `Your invitation to play send to ${client.data.userName} has been accepted 🤝`,
       );
+      console.log("🏓");
       /* Create lobby */
       const newLobby = this.createLobby("duo", "2D", sender);
       newLobby.addPlayer(client, "left");
       newLobby.dispatchToLobby(ServerEvents.GameInviteStart, null);
       await this.waitForPlayerIsReady(client);
       await this.waitForPlayerIsReady(sender);
+      console.log("🏓 waitForPlayerIsReady");
       this.startGame(newLobby);
     } else {
       sender.emit(ServerEvents.LobbyMessage, `Your invitation send to ${client.data.userName} has been declined...`);
@@ -223,7 +249,7 @@ export class GameService {
 
   public removeLobby(lobbyId: string): void {
     this.lobbies.delete(lobbyId);
-    // this.broadcastLobbies();
+    this.broadcastLobbies();
   }
 
   public async removeSocket(client: AuthenticatedSocket): Promise<void> {
@@ -265,7 +291,7 @@ export class GameService {
   private broadcastLobbies(): void {
     const listOfLobbies: LobbyState[] = this.getListOfLobbies();
     this.server.emit(ServerEvents.GameList, listOfLobbies);
-    this.displayLobbies();
+    // this.displayLobbies();
   }
 
   private displayLobbies(): void {

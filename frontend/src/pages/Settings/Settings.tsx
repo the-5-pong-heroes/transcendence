@@ -10,8 +10,6 @@ import { DefaultAvatar, Leave } from "@/assets";
 import { LoadingIcon } from "@/components/loading/loading";
 import { customFetch } from "@/helpers";
 import { useUser } from "@hooks";
-import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
-import { BASE_URL } from "@/constants";
 
 interface SettingsProps {
   settingsRef: React.RefObject<HTMLDivElement>;
@@ -22,7 +20,6 @@ export interface UserSettings {
   name: string;
   avatar: string | null;
   friends: { id: string; name: string }[];
-  // 2FA
 }
 
 export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
@@ -143,7 +140,7 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
           </label>
         </div>
         <div className="settings-col update-2fa">
-          <Toggle2FA/>
+          <Toggle2FA />
         </div>
       </div>
       <div className="settings-block block2">

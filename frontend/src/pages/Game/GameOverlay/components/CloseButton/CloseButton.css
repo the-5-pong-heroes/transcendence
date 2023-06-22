@@ -61,3 +61,54 @@
 .close-button:after {
   transform: rotate(-45deg);
 }
+
+@media (max-width: 780px) OR (max-height: 480px) {
+  .close-button-wrapper {
+    margin: 7px;
+    height: 25px;
+    width: 25px;
+    border-radius: 3px;
+  }
+
+  .close-button:before,
+  .close-button:after {
+    margin-top: 4px;
+    margin-left: 12px;
+    height: 18px;
+    width: 1px;
+  }
+}
+
+@media (max-width: 600px) OR (max-height: 380px) {
+  .close-button-wrapper {
+    margin: 7px;
+    height: 18px;
+    width: 18px;
+    /* background-color: red; */
+  }
+
+  .close-button:before,
+  .close-button:after {
+    margin-top: 3px;
+    margin-left: 8.5px;
+    height: 12px;
+    width: 1px;
+  }
+}
+
+@media (max-width: 480px) {
+  .close-button-wrapper {
+    margin: 2px;
+    height: 17px;
+    width: 17px;
+    /* background-color: red; */
+  }
+
+  .close-button:before,
+  .close-button:after {
+    margin-top: 3px;
+    margin-left: 8px;
+    height: 12px;
+    width: 1px;
+  }
+}

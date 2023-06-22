@@ -1,16 +1,14 @@
-import { HttpException, HttpStatus, Injectable, Req, Res } from "@nestjs/common";
+import { Injectable, Req, Res, HttpStatus } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
 import { Request, Response } from "express";
-import * as bcrypt from "bcrypt";
-import { userInfo } from "os";
-import { User } from "@prisma/client";
+import { UserWithAuth } from "src/common/@types";
 
 @Injectable()
 export class VerifyService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async validate2FA(@Req() req: Request, @Res() res: Response, code: string) {
-    const accessToken = req.cookies.access_token;
+  async validate2FA(@Req() req: Request, @Res() res: Response, code: string): Promise<void> {
+    const accessToken = req.signedCookies.access_token;
     const user = await this.prisma.user.findFirst({
       where: {
         auth: {
@@ -21,6 +19,12 @@ export class VerifyService {
         auth: true,
       },
     });
+    console.log("🔐", user?.auth?.twoFASecret);
+    if (code !== user?.auth?.twoFASecret) {
+      res.status(400).json({ message: "Invalid code !", user: null });
+      return;
+      // return res.status(400).json({ message: "Invalid code !", user: null });
+    }
     if (user) {
       if (code === user.auth?.twoFASecret) {
         await this.prisma.user.update({
@@ -33,14 +37,17 @@ export class VerifyService {
             },
           },
         });
-        return res.status(HttpStatus.OK).json({ message: "2FA verified" });
+        res.status(HttpStatus.OK).json({ message: "2FA verified", user: user });
+        return;
+        // return res.status(HttpStatus.OK).json({ message: "2FA verified", user: user });
       } else {
-        return res.status(HttpStatus.BAD_REQUEST).json({ message: "2FA code is not valid" });
+        res.status(HttpStatus.BAD_REQUEST).json({ message: "2FA code is not valid", user: null });
+        // return res.status(HttpStatus.BAD_REQUEST).json({ message: "2FA code is not valid", user: null });
       }
     }
   }
 
-  async updateVerify2FA(user: User) {
+  async updateVerify2FA(user: UserWithAuth): Promise<UserWithAuth> {
     if (user) {
       await this.prisma.user.update({
         where: { id: user.id },

@@ -33,7 +33,7 @@ export const Navbar: React.FC = () => {
 
   return (
     <div className="navbar" id="navbar">
-      <ScrollToPage />
+      {/* <ScrollToPage /> */}
       <BurgerButton showNavbar={showNavbar} handleShowNavbar={handleShowNavbar} />
       <Link to="/" onClick={onClick}>
         <img src={theme === "light" ? LogoWallELight : LogoWallE} className="logo-wall-e" />

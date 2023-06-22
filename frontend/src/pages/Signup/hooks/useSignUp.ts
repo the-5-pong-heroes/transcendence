@@ -2,23 +2,21 @@ import { useQueryClient, type UseMutateFunction, useMutation } from "react-query
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { ResponseError, customFetch } from "@/helpers";
+import { ResponseError, type ErrorMessage, customFetch } from "@/helpers";
 import { USER_QUERY_KEY } from "@/constants";
 import type { UserAuth, User } from "@types";
 
-type SignUpBody = {
-  name: string;
-  email: string;
-  password: string;
-};
-
 async function signUp(name: string, email: string, password: string): Promise<User> {
-  const signUpBody: SignUpBody = {
+  const signUpBody = {
     name: name,
     email: email,
     password: password,
   };
   const response = await customFetch("POST", "auth/signup", signUpBody);
+  if (!response.ok) {
+    const { message } = (await response.json()) as ErrorMessage;
+    throw new ResponseError(message ? message : "Fetch request failed", response);
+  }
   const payload = (await response.json()) as UserAuth;
 
   return payload.user;

@@ -38,7 +38,8 @@
     "semantic-ui-react": "^2.1.4",
     "shared": "file:../shared",
     "socket.io-client": "^4.6.2",
-    "three": "^0.153.0"
+    "three": "^0.153.0",
+    "swiper": "^9.4.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.13",

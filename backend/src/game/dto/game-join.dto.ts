@@ -4,8 +4,4 @@ export class GameJoinDto {
   @IsString()
   @IsNotEmpty()
   lobbyId: string;
-
-  constructor(id: string) {
-    this.lobbyId = id;
-  }
 }

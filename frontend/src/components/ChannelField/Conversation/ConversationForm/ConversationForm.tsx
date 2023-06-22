@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 
-import { ChannelContext, UserContext, UserContextType } from "../../../../contexts";
+import { ChannelContext } from "../../../../contexts";
 import { type IChannelUser } from "../../../../interfaces";
 
-// import { socket } from '../../../../socket';
-import { Rocket } from "../../../../assets";
+import { Rocket, Game} from "../../../../assets";
 
 import styles from "./ConversationForm.module.scss";
 
@@ -16,7 +15,6 @@ export const ConversationForm: React.FC = () => {
 
   const user = useUser();
   const socket = useSocket();
-  // const { user } = useContext(UserContext) as UserContextType;
   const { activeChannel } = useContext(ChannelContext);
   if (activeChannel === undefined) {
     throw new Error("Undefined Active Channel");
@@ -24,11 +22,9 @@ export const ConversationForm: React.FC = () => {
   const theme = useTheme();
 
   const submit = () => {
-    // const token = localStorage.getItem('access_token');
-    // if (!token || message === "" || !activeChannel || !user) return;
     if (message === "" || !activeChannel || !user) {
       return;
-    } // TODO faire une redirection
+    }
     const sentMessage = {
       content: message,
       channelId: activeChannel.id,
@@ -60,6 +56,11 @@ export const ConversationForm: React.FC = () => {
     event.target.style.height = "30px";
   };
 
+  const sendInviteToPlay = () => {
+    setMessage("/InviteToPlay");
+    submit()
+  }
+
   useEffect(() => {
     window.addEventListener("keypress", handleKeyPress);
 
@@ -86,13 +87,22 @@ export const ConversationForm: React.FC = () => {
         title={isMuted ? "You are mute" : undefined}
         style={{ cursor: `${isMuted && "not-allowed"}` }}
       />
-      <button
-        className={`${styles.Submit} ${theme === "light" ? styles.SubmitLight : styles.SubmitDark}`}
-        title="Send"
-        type="submit"
-        style={{ backgroundImage: `url(${Rocket})` }}
-        disabled={!activeChannel}
-      />
+      <div className={styles.Buttons}>
+        <button
+          className={`${styles.Submit} ${theme === "light" ? styles.SubmitLight : styles.SubmitDark}`}
+          title="Send"
+          type="submit"
+          style={{ backgroundImage: `url(${Rocket})` }}
+          disabled={!activeChannel}
+        />
+        <button
+          className={`${styles.Invite} ${theme === "light" ? styles.InviteLight : styles.InviteDark}`}
+          title="Invite to Game"
+          onClick={sendInviteToPlay}
+          style={{ backgroundImage: `url(${Game})` }}
+          disabled={!activeChannel}
+        />
+      </div>
     </form>
   );
 };

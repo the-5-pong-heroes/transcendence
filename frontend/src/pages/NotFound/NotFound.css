@@ -17,12 +17,29 @@
 }
 
 .notFound-text {
-  font-size: 3vw;
+  font-size: 1.7rem;
   margin: 20px;
 }
 
 #video {
-  width: 90vw;
+  width: 1000px;
   object-fit: "cover";
-  border-radius: 1.0rem;
+  border-radius: 1rem;
+}
+
+@media (max-height: 600px) {
+  .notFound-text {
+    font-size: 1.3rem;
+    margin: 15px;
+  }
+  #video {
+    border-radius: 0.7rem;
+    width: 600px;
+  }
+}
+
+@media (max-height: 380px) {
+  #video {
+    display: none;
+  }
 }

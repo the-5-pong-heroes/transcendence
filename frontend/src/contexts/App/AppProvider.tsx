@@ -3,6 +3,7 @@ import React, { useMemo, useState, useRef } from "react";
 import { AppContext } from "./AppContext";
 
 import type { AppContextParameters, ThemeMode, PageRefs, GameState, InvitationState } from "@types";
+import { useTwoFA } from "@/hooks/useTwoFA";
 
 interface ProviderParameters {
   children: React.ReactNode;
@@ -50,6 +51,7 @@ const useInitInvitationState = (): InvitationState => {
 
 export const AppProvider: React.FC<ProviderParameters> = ({ children }) => {
   const [theme, setTheme] = useState<ThemeMode>("dark");
+  // const { twoFA, setTwoFA } = useTwoFA();
 
   const toggleTheme = (): void => {
     setTheme((curr) => (curr === "light" ? "dark" : "light"));
@@ -61,6 +63,10 @@ export const AppProvider: React.FC<ProviderParameters> = ({ children }) => {
   const isNavigatingRef = useRef<boolean>(false);
 
   const appContext = useMemo((): AppContextParameters => {
+    // const toggleTwoFA = (): void => {
+    //   setTwoFA((curr) => !curr);
+    // };
+
     return {
       theme,
       toggleTheme,
@@ -68,6 +74,8 @@ export const AppProvider: React.FC<ProviderParameters> = ({ children }) => {
       gameState,
       invitationState,
       isNavigatingRef,
+      // twoFA,
+      // toggleTwoFA,
     };
   }, [theme, pageRefs, gameState, invitationState, isNavigatingRef]);
 

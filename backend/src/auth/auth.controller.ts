@@ -1,26 +1,17 @@
-import { Injectable, Get, Controller, Post, Body, UseGuards, Req, Res, Query } from "@nestjs/common";
+import { Get, Controller, Post, Body, UseGuards, Req, Res, Query } from "@nestjs/common";
 import { Request, Response } from "express";
-
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
-import { CreateUserDto } from "../user/dto";
-import { User } from "@prisma/client";
 import { UserService } from "src/user/user.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
-import { GoogleService } from "src/auth/google/google.service";
 import { Generate2FAService } from "./2FA/generate.service";
 import { EnableService } from "./2FA/enable2FA.service";
 import { VerifyService } from "./2FA/verify.service";
-import { UserDto } from "./dto";
 import { CodeDto } from "./dto/code.dto";
-
-@Injectable()
-export class GoogleOauthGuard extends AuthGuard("google") {}
-
-export interface UserAuth {
-  message: string;
-  user: User;
-}
+import { TwoFADto, SignInDto, SignUpDto } from "./dto";
+import { GoogleOauthGuard } from "./google/google-auth.guards";
+import { UserWithAuth } from "src/common/@types";
+import { TwoFA, UserGoogleInfos } from "./interface";
 
 @Controller("auth")
 export class AuthController {
@@ -28,34 +19,59 @@ export class AuthController {
     private authService: AuthService,
     private Oauth42: Oauth42Service,
     private userService: UserService,
-    private googleService: GoogleService,
     private Generate2FA: Generate2FAService,
     private enable2FAService: EnableService,
     private verify2FAService: VerifyService,
   ) {}
 
-  @Post("Oauth42/login")
-  async getUserByToken(@Req() req: Request) {
-    return await this.authService.getUserByToken(req);
+  /*****************************************************************************************/
+  /*                                     GET LOGGED USER                                   */
+  /*****************************************************************************************/
+
+  @Get("user")
+  async getUser(@Req() req: Request, @Res() res: Response): Promise<void> {
+    await this.authService.getUser(req, res);
   }
 
-  @Post("Oauth")
-  async userOauthCreationInDataBase(@Req() req: Request, @Res() res: Response, @Body() userData: UserDto) {
-    await this.authService.handleDataBaseCreation(req, res, userData);
+  /*****************************************************************************************/
+  /*                                        42 AUTH                                        */
+  /*****************************************************************************************/
+
+  @Post("Oauth42/login")
+  async getUserByToken(@Req() req: Request): Promise<UserWithAuth | null> {
+    const token = req.signedCookies.access_token;
+    if (token && token !== undefined) {
+      return await this.authService.validateUser(token);
+    }
+    return null;
   }
+
+  // @Post("Oauth")
+  // async userOauthCreationInDataBase(@Req() req: Request, @Res() res: Response): Promise<void> {
+  //   await this.authService.handleDataBaseCreation(req, res);
+  // }
 
   @Get("auth42/callback")
   async getToken(@Query() codeDto: CodeDto, @Res() res: Response) {
     const { code } = codeDto;
     const token = await this.Oauth42.accessToken(code);
     const user42infos = await this.Oauth42.access42UserInformation(token);
+
+    // async getToken(@Req() req: Request, @Res() res: Response): Promise<void> {
+    //   if (req.signedCookies.access_token) return; // TODO CHECK USER !!!!
+    //   const authCallbackDto = new AuthCallbackDto();
+    //   authCallbackDto.code = req.query.code as string;
+    //   const token = await this.Oauth42.accessToken(authCallbackDto.code);
+    //   const user42infos = await this.Oauth42.access42UserInformation(token);
+    // console.log("✨ user42infos: ", user42infos);
+
     this.authService.createCookies(res, token);
     if (!user42infos.email) res.redirect(301, `http://localhost:5173/`);
     else {
       const userExists = await this.userService.getUserByEmail(user42infos.email);
       if (!userExists) this.authService.createDataBase42User(user42infos, token, user42infos.login, false);
       else {
-        this.authService.updateCookies(res, token, userExists);
+        this.authService.updateTokenCookies(res, token, userExists.id);
         if (!userExists.auth?.twoFAactivated) return; // ou /Profile ?
         else {
           this.verify2FAService.updateVerify2FA(userExists);
@@ -66,77 +82,70 @@ export class AuthController {
     }
   }
 
+  /*****************************************************************************************/
+  /*                                  SIMPLE USER LOGIN                                    */
+  /*****************************************************************************************/
+
   @Post("signup")
-  async signUp(@Res({ passthrough: true }) res: Response, @Body() data: CreateUserDto): Promise<void> {
+  async signUp(@Res({ passthrough: true }) res: Response, @Body() data: SignUpDto): Promise<void> {
     await this.authService.signUp(res, data);
   }
 
   @UseGuards(AuthGuard("local"))
   @Post("signin")
-  async signIn(@Req() req: any, @Res({ passthrough: true }) res: Response): Promise<void> {
-    await this.authService.signIn(res, req.user);
+  async signIn(@Res({ passthrough: true }) res: Response, @Body() signInDto: SignInDto): Promise<void> {
+    await this.authService.signIn(res, signInDto);
   }
+
+  /*****************************************************************************************/
+  /*                                         LOGOUT                                        */
+  /*****************************************************************************************/
 
   @Get("signout")
   async signout(@Res() res: Response): Promise<void> {
     await this.authService.signOut(res);
   }
 
-  @Get("user")
-  async getUser(@Req() req: any, @Res() res: Response): Promise<void> {
-    await this.authService.getUser(req, res);
+  /*****************************************************************************************/
+  /*                                      2FA HANDLING                                     */
+  /*****************************************************************************************/
+
+  @Get("2FA/generate")
+  async generate2FA(@Req() req: Request): Promise<void> {
+    return this.Generate2FA.generateService(req);
   }
+
+  @Post("2FA/verify")
+  async verify2FA(@Req() req: Request, @Res() res: Response, @Body() data: TwoFADto) {
+    return this.verify2FAService.validate2FA(req, res, data.code);
+  }
+
+  @Get("2FA/disable")
+  async disable2FA(@Req() req: Request): Promise<void> {
+    return this.enable2FAService.disable2FA(req);
+  }
+
+  @Get("2FA/status")
+  async status2FA(@Req() req: Request): Promise<TwoFA> {
+    return this.enable2FAService.status2FA(req);
+  }
+
+  /*****************************************************************************************/
+  /*                                      GOOGLE AUTH                                      */
+  /*****************************************************************************************/
 
   @Get("google")
   @UseGuards(GoogleOauthGuard)
-  async googleLogin() {
+  async googleLogin(): Promise<void> {
     /* void */
   }
 
   @Get("google/callback")
   @UseGuards(GoogleOauthGuard)
-  async googleAuthCallback(@Req() req: any, @Res() res: Response) {
-    await this.authService.signInGoogle(res, req.user);
+  async googleAuthCallback(@Res({ passthrough: true }) res: Response, @Req() req: Request): Promise<void> {
+    if (!req.user) {
+      return;
+    }
+    await this.authService.signInGoogle(res, req.user as UserGoogleInfos);
   }
-
-  @Get("token")
-  async checkIfTokenValid(@Req() req: Request, @Res() res: Response) {
-    return this.authService.checkIfTokenValid(req, res);
-  }
-
-  @Get("2FA/generate")
-  async generate2FA(@Req() req: Request) {
-    return this.Generate2FA.generateService(req);
-  }
-
-  @Post("2FA/verify")
-  async verify2FA(@Req() req: Request, @Res() res: Response, @Body("twoFACode") code: string) {
-    return this.verify2FAService.validate2FA(req, res, code);
-  }
-
-  @Get("2FA/disable")
-  async disable2FA(@Req() req: Request) {
-    return this.enable2FAService.disable2FA(req);
-  }
-
-  @Get("2FA/status")
-  async status2FA(@Req() req: Request) {
-    return this.enable2FAService.status2FA(req);
-  }
-
-  //    @Get("google/callback")
-  //      async handleGoogleRedirection(@Req() req: Request, @Res() res: Response) {
-  //       const codeFromUrl = req.query.code as string;
-  //       const token: any = await this.googleService.getTokenFromGoogle(codeFromUrl);
-  //       const userInfos : any = await this.googleService.getUserFromGoogle(token);
-  //       this.authService.createCookies(res, userInfos);
-  //       const userExists = await this.userService.getUserByEmail(userInfos.email);
-  //       this.authService.updateCookies(res, token, userExists);
-  //       //this.authService.RedirectConnectingUser(req, res, userExists?.email);
-  //    }
-
-  //    @Get("logout")
-  //    async deleteCookies(@Req() req: Request, @Res() res: Response) {
-  //      await this.authService.deleteCookies(res);
-  //    }
 }

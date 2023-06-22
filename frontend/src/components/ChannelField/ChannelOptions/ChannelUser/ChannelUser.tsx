@@ -1,13 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { UserContext, UserContextType } from "../../../../contexts";
 import { type IChannelUser } from "../../../../interfaces";
 
-// import { socket } from "../../../../socket";
 import styles from "./ChannelUser.module.scss";
 
 import { useUser, useSocket, useTheme } from "@hooks";
-import { InviteButton } from "@/components";
+import { InviteButton } from "@/components/InviteButton";
 
 interface IChannelUserProps {
   users: [IChannelUser];
@@ -21,26 +19,21 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
   const [untilNumber, setUntilNumber] = useState<number>(0);
   const [userRole, setUserRole] = useState<string>();
 
-  // const { user } = useContext(UserContext) as UserContextType;
   const user = useUser();
   const socket = useSocket();
   const theme = useTheme();
 
-  const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     const { value } = event.target;
 
-    // const token = localStorage.getItem('access_token');
-    // if (!token || !activeUser) return;
     if (!activeUser) {
       return;
     }
     socket.emit("updateChannelUser", { id: activeUser.id, role: value });
   };
 
-  const toggleMuteUser = (event: any) => {
+  const toggleMuteUser = (event: any): void => {
     event.preventDefault();
-    // const token = localStorage.getItem('access_token');
-    // if (!token || !activeUser) return;
     if (!activeUser) {
       return;
     }
@@ -53,19 +46,15 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
     setUntilNumber(0);
   };
 
-  const kickUser = () => {
-    // const token = localStorage.getItem('access_token');
-    // if (!token || !activeUser) return;
+  const kickUser = (): void => {
     if (!activeUser) {
       return;
     }
     socket.emit("kickChannelUser", { id: activeUser.id });
   };
 
-  const banUser = (event: any) => {
+  const banUser = (event: any): void => {
     event?.preventDefault();
-    // const token = localStorage.getItem('access_token');
-    // if (!token || !activeUser) return;
     if (!activeUser) {
       return;
     }
@@ -144,12 +133,6 @@ export const ChannelUser: React.FC<IChannelUserProps> = ({ users }) => {
                 disabled={!activeUser || activeUser.role === "OWNER"}>
                 Ban
               </button>
-              <InviteButton
-                id={activeUser?.user.id}
-                className={styles.Button}
-                disabled={!activeUser || user?.id === activeUser?.user.id}>
-                Invite to play
-              </InviteButton>
             </div>
           )}
         </div>

@@ -1,13 +1,28 @@
-import React from "react";
-import { Route, Routes, Navigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Route, Routes, Navigate, useParams, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { AppLayout, NotFoundLayout } from "./components";
+import { AppLayout, NotFoundLayout, LoadingPage } from "./components";
 import { Login, Signup, Home, Profile, Game, Settings, Leaderboard, Chat, NotFound } from "./pages";
 import type { AppContextParameters, PageRefs } from "./@types";
 import { useAppContext, useUserQuery } from "./hooks";
 import "./App.css";
+
+const useNavigationRoute = (): void => {
+  const { isNavigatingRef }: AppContextParameters = useAppContext();
+
+  const location = useLocation();
+  const [currentLoc, setCurrentLoc] = useState<string>("/");
+
+  useEffect(() => {
+    // execute on location change
+    setCurrentLoc(location.pathname);
+    // console.log("Location changed!", location.pathname, currentLoc);
+    isNavigatingRef.current = true;
+    setTimeout(() => (isNavigatingRef.current = false), 2000);
+  }, [location, currentLoc, isNavigatingRef]);
+};
 
 const App: React.FC = () => {
   const { theme, pageRefs }: AppContextParameters = useAppContext();
@@ -16,13 +31,11 @@ const App: React.FC = () => {
   const { user, isLoading } = useUserQuery();
   const { uuid } = useParams();
 
+  useNavigationRoute();
+
   if (isLoading) {
-    // Show loading state while user data is being fetched
-    return (
-      <div className="loading-app">
-        <div>Loading...</div>
-      </div>
-    );
+    // Show loading page while user data is being fetched
+    return <LoadingPage />;
   }
 
   return (
@@ -31,7 +44,9 @@ const App: React.FC = () => {
         <Route path="/Login" element={user ? <Navigate to="/" /> : <Login />} />
         <Route path="/Signup" element={user ? <Navigate to="/" /> : <Signup />} />
         <Route element={<NotFoundLayout />}>
-          <Route path="*" element={<NotFound notFoundRef={notFoundRef} />} />
+          {/* <Route path="*" element={<NotFound notFoundRef={notFoundRef} />} /> */}
+          <Route path="/404" element={<NotFound notFoundRef={notFoundRef} />} />
+          <Route path="*" element={<UnkownRouteHandler to="/404" />} />
         </Route>
         <Route element={<AppLayout user={user} />}>
           <Route path="/" element={<Home homeRef={homeRef} />} />
@@ -57,3 +72,13 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+interface UnknownRouteProps {
+  to: string;
+}
+
+const UnkownRouteHandler: React.FC<UnknownRouteProps> = ({ to }) => {
+  const prevRoute = useLocation();
+
+  return <Navigate to={to} state={{ prevRoute }} replace />;
+};

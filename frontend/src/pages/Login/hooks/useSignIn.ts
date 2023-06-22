@@ -2,30 +2,32 @@ import { useQueryClient, type UseMutateFunction, useMutation } from "react-query
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { ResponseError, customFetch } from "@/helpers";
+import { ResponseError, type ErrorMessage, customFetch } from "@/helpers";
 import { USER_QUERY_KEY } from "@/constants";
 import type { UserAuth, User } from "@types";
-// import * as fetch from "@/helpers/customFetch";
 
-type SignInBody = {
-  email: string;
-  password: string;
-};
-
-async function signIn(email: string, password: string): Promise<User> {
-  const signInBody: SignInBody = {
+async function signIn(email: string, password: string): Promise<User | null> {
+  const signInBody = {
     email: email,
     password: password,
   };
-
   const response = await customFetch("POST", "auth/signin", signInBody);
+  if (!response.ok) {
+    const { message } = (await response.json()) as ErrorMessage;
+    throw new ResponseError(message ? message : "Fetch request failed", response);
+  }
   const payload = (await response.json()) as UserAuth;
+  console.log("twoFA: ", payload.twoFA);
+
+  if (payload.twoFA) {
+    return null;
+  }
 
   return payload.user;
 }
 
 type IUseSignIn = UseMutateFunction<
-  User,
+  User | null,
   unknown,
   {
     email: string;
@@ -37,13 +39,17 @@ export function useSignIn(): IUseSignIn {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const { mutate: signInMutation } = useMutation<User, unknown, { email: string; password: string }>(
+  const { mutate: signInMutation } = useMutation<User | null, unknown, { email: string; password: string }>(
     ({ email, password }) => signIn(email, password),
     {
       onSuccess: (data) => {
-        queryClient.setQueryData([USER_QUERY_KEY], data);
-        toast.success("🎉 Signed in successfully!");
-        navigate("/");
+        if (!data) {
+          navigate("/Login?displayPopup=true");
+        } else {
+          queryClient.setQueryData([USER_QUERY_KEY], data);
+          toast.success("🎉 Signed in successfully!");
+          navigate("/");
+        }
       },
       onError: (error) => {
         if (error instanceof ResponseError) {

@@ -1,10 +1,12 @@
-import { Link } from "react-router-dom";
+import React from "react";
 
 import { DefaultAvatar } from "../../assets";
 
 import { type UserStats } from "./Leaderboard";
 import { UserLevel } from "./UserLevel";
 import { UserStatus } from "./UserStatus";
+
+import { CustomLink } from "@/components";
 
 const UserData = ({ users }: { users: UserStats[] }) => {
   return (
@@ -14,20 +16,23 @@ const UserData = ({ users }: { users: UserStats[] }) => {
 
         return (
           <div className={`row${isMe ? " me" : ""}`} key={i}>
-            <div className="col">
+            <div className="col avatar">
               <img src={DefaultAvatar} alt="profilePicture" />
             </div>
-            <div className="col">
-              <Link to={`/profile/${id}`} className="link-prof">
+            <div className="col name">
+              <CustomLink to={`/Profile/${id}`} className="link-prof">
                 {name}
-              </Link>
+              </CustomLink>
+              {/* <Link to={`/Profile/${id}`} onClick={onClick} className="link-prof">
+                {name}
+              </Link> */}
             </div>
-            <div className="col">{score}</div>
-            <div className="col">{wins}</div>
-            <div className="col">{defeats}</div>
+            <div className="col score">{score}</div>
+            <div className="col wins ">{wins}</div>
+            <div className="col defeats">{defeats}</div>
             <UserLevel myClassName="col level" level={level} />
             <UserStatus myClassName="col status" status={status} />
-            <div className="col">
+            <div className="col friends">
               <span className={isFriend ? "friend" : "not-friend"}>{isFriend ? "✓" : isMe ? "-" : "✗"}</span>
             </div>
             <div className="col">{rank}</div>

@@ -4,12 +4,12 @@ import { Strategy, ExtractJwt } from "passport-jwt";
 import { Request } from "express";
 
 import { JwtPayload } from "../interface/jwt-payload.interface";
-import { UserService } from "src/user/user.service";
+import { AuthService } from "../auth.service";
 import { Auth } from "@prisma/client";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private readonly userService: UserService) {
+  constructor(private readonly authService: AuthService) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([JwtStrategy.extractJWTFromCookie]),
       ignoreExpiration: false,
@@ -18,18 +18,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   private static extractJWTFromCookie(req: Request): string | null {
-    if (req.cookies && req.cookies.access_token) {
-      return req.cookies.access_token;
+    if (req.signedCookies && req.signedCookies.access_token) {
+      return req.signedCookies.access_token;
     }
     return null;
   }
 
   async validate(payload: JwtPayload): Promise<Auth> {
     const { email } = payload;
-    const user = await this.userService.findUserAuthByEmail(email);
-    if (!user) {
+    const auth = await this.authService.findOne(email);
+    if (!auth) {
       throw new UnauthorizedException();
     }
-    return user;
+    return auth;
   }
 }

@@ -3,6 +3,8 @@ import { PrismaService } from "../../database/prisma.service";
 // import fetch from "node-fetch";
 import { API_42_NEW_TOKEN, API_42_REDIRECT_SUCCESS, API_42_USER_INFO } from "src/common/constants/auth";
 import { ConfigService } from "@nestjs/config";
+import { Token } from "src/common/@types";
+import { User42Infos } from "../interface";
 
 @Injectable()
 export class Oauth42Service {
@@ -26,24 +28,24 @@ export class Oauth42Service {
           redirect_uri: API_42_REDIRECT_SUCCESS,
         }),
       });
-      const data = await response.json();
+      const data = (await response.json()) as Token;
       if (!data) {
         throw new BadRequestException("The API did not return a valid token");
       }
-      return data;
+      return data.access_token;
     } catch (error) {
       throw new BadRequestException(`Failed to get the user token with the code ${code}`);
     }
   }
 
-  async access42UserInformation(accessToken: string) {
+  async access42UserInformation(accessToken: string): Promise<User42Infos | null> {
     try {
       const response = await fetch(API_42_USER_INFO, {
         method: "GET",
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as User42Infos;
         return data;
       }
     } catch (error) {
@@ -52,7 +54,7 @@ export class Oauth42Service {
     return null;
   }
 
-  async createDataBase42User(user42: any, token: string, username: string, isRegistered: boolean) {
+  async createDataBase42User(user42: User42Infos, token: string, username: string, isRegistered: boolean) {
     try {
       const user = await this.prisma.user.create({
         data: {

@@ -1,5 +1,16 @@
+import { IsString, IsNotEmpty, MaxLength, IsOptional } from "class-validator";
+
 export class CreateMessageDto {
-  content!: string;
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(1024)
+  content: string;
+
+  @IsString()
+  @IsOptional()
   senderId?: string;
-  channelId!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  channelId: string;
 }

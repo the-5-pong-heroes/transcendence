@@ -8,7 +8,7 @@ export const UserStatus = ({ myClassName, status }: { myClassName: string; statu
       <span className={status === "ONLINE" ? "bullet-green" : status === "PLAYING" ? "bullet-orange" : "bullet-red"}>
         {status !== "PLAYING" ? "•" : "◦"}
       </span>
-      <span>{status}</span>
+      <span className="status-text">{status}</span>
     </div>
   );
 };

@@ -37,7 +37,8 @@ export const GameProvider: React.FC<ProviderParameters> = ({ children }) => {
   }, [quitGame, setQuitGame, socket, playRef]);
 
   useEffect(() => {
-    socket.emit(ClientEvents.GameConnect);
+    // console.log("💋 ClientEvents.GameConnect");
+    setTimeout(() => (socket.emit(ClientEvents.GameConnect), 1000));
 
     return () => {
       // socket.emit(ClientEvents.LobbyLeave);

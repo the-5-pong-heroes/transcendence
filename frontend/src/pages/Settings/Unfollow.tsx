@@ -22,10 +22,7 @@ export const Unfollow: React.FC<UnfollowProps> = ({ friends, handleUnfollow }) =
     if (window.confirm("Are you sure you want to remove this friend?")) {
       handleUnfollow(uuid);
 
-      return void customFetch("DELETE", "friendship", { friendId: uuid });
-      // (async () => {
-      //   await customFetch("DELETE", "friendship", { friendId: uuid });
-      // })();
+      return void customFetch("PUT", "friendship", { friendId: uuid });
     }
   }
 

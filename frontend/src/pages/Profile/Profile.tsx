@@ -77,6 +77,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
     try {
       const body = { newFriendId: uuid };
       const data = await customFetch("POST", "friendship", body);
+	  fetchUser();
     } catch (err) {
       console.error("Error adding a friend: ", err);
     }

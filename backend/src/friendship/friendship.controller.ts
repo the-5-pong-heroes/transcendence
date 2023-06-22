@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Post, Req } from "@nestjs/common";
+import { Body, Controller, Put, Post, Req } from "@nestjs/common";
 import { FriendshipService } from "./friendship.service";
 
 @Controller("friendship")
@@ -10,7 +10,7 @@ export class FriendshipController {
     this.friendshipService.create(data, req.currentUser);
   }
 
-  @Delete()
+  @Put()
   delete(@Body() data: any, @Req() req: any) {
     this.friendshipService.delete(data, req.currentUser);
   }

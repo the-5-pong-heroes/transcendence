@@ -5,7 +5,7 @@ import { useSignIn } from "./hooks";
 
 
 import { CLIENT_URL, BASE_URL, API42_URL, API42_CLIENT_ID, API42_REDIRECT } from "@/constants";
-import { Logo_42, Logo_Google, Logo_Eve } from "@assets";
+import { Logo_42, Logo_Eve } from "@assets";
 import "./Login.css";
 import { customFetch } from "@/helpers";
 
@@ -27,20 +27,6 @@ export const Login42: React.FC = () => {
       <span>Continue with </span>
       <img id="logo-42" alt="42 Logo" src={Logo_42} />      
     </a>
-  );
-};
-
-export const LoginGoogle: React.FC = () => {
-  const handleOnClick = (): void => {
-    const url = `${BASE_URL}/auth/google`;
-    window.open(url, "_self");
-  };
-
-  return (
-    <div className="Login_with" onClick={handleOnClick}>
-      <span>Continue with</span>
-      <img id="logo-Google" alt="Google Logo" src={Logo_Google} />
-    </div>
   );
 };
 
@@ -118,7 +104,6 @@ export const Login: React.FC = () => {
         </div>
         <div className="continue-with">
           <Login42 />
-          <LoginGoogle />
           {
             isActivated === true &&
           <div id="popup">

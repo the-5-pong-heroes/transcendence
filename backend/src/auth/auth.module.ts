@@ -11,8 +11,6 @@ import { AuthService } from "./auth.service";
 import { LocalStrategy } from "./strategy/local.strategy";
 import { JwtStrategy } from "./strategy/jwt.strategy";
 import { Oauth42Service } from "./auth42/Oauth42.service";
-import { GoogleStrategy } from "./google/google.strategy";
-import { GoogleService } from "./google/google.service";
 import { PrismaModule } from "src/database/prisma.module";
 import { UserGuard } from "./user.guard";
 import { UserModule } from "src/user/user.module";
@@ -39,8 +37,6 @@ import { UserModule } from "src/user/user.module";
   ],
   controllers: [AuthController],
   providers: [
-    GoogleStrategy,
-    GoogleService,
     AuthService,
     Oauth42Service,
     UserService,

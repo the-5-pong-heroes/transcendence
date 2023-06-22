@@ -48,7 +48,7 @@ export class Oauth42Service {
         return data;
       }
     } catch (error) {
-      console.log("Fetch42 user doesnt work, next step is testing with googleapi");
+      console.log("Fetch42 user doesnt work");
     }
     return null;
   }

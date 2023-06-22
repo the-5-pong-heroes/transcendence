@@ -10,19 +10,12 @@ import { CreateUserDto } from "../user/dto";
 import { User } from "@prisma/client";
 import { PrismaService } from "../database/prisma.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
-import { GoogleService } from "src/auth/google/google.service";
 import { UserDto } from "./dto";
 import { CLIENT_URL } from "src/common/constants";
 
 export interface UserAuth {
   message: string;
   user: User;
-}
-
-interface GoogleUserInfos {
-  email: string;
-  name: string;
-  accessToken: string;
 }
 
 interface Token {
@@ -36,7 +29,6 @@ export class AuthService {
     private userService: UserService,
     private prisma: PrismaService,
     private Oauth42: Oauth42Service,
-    private googleService: GoogleService,
   ) {}
 
   async findOne(email: string): Promise<Auth | null> {
@@ -120,37 +112,6 @@ export class AuthService {
       })
       .status(200)
       .json({ message: "Welcome back !", user: user });
-  }
-
-  async signInGoogle(@Res() res: Response, userInfos: GoogleUserInfos): Promise<void> {
-    const userByEmail = await this.findOne(userInfos.email);
-    let user;
-    if (userByEmail) {
-      await this.prisma.auth.update({
-        where: {
-          userId: userByEmail.userId,
-        },
-        data: {
-          accessToken: userInfos.accessToken,
-        },
-      });
-      user = await this.userService.findOne(userByEmail.userId);
-    } else {
-      user = await this.googleService.createDataBaseUserFromGoogle(
-        userInfos.accessToken,
-        userInfos.name,
-        userInfos.email,
-        true,
-      );
-    }
-    res
-      .cookie("access_token", userInfos.accessToken, {
-        httpOnly: true,
-        secure: false,
-        sameSite: "strict",
-        expires: new Date(Date.now() + 86400 * 1000),
-      })
-      .redirect(301, CLIENT_URL);
   }
 
   async signOut(res: Response): Promise<void> {
@@ -294,17 +255,10 @@ export class AuthService {
         path: finalUser,
       });
     }
-    await this.googleService.handleGoogleUserCreation(res, req);
   }
 
   async createCookies(@Res() res: Response, token: any) {
     const cookies = res.cookie("access_token", token.access_token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "strict",
-      expires: new Date(Date.now() + 600000),
-    });
-    const Googlecookies = res.cookie("FullToken", token, {
       httpOnly: true,
       secure: false,
       sameSite: "strict",
@@ -342,8 +296,7 @@ export class AuthService {
     const token: string = req.cookies.access_token;
 
     const token42Valid = await this.Oauth42.access42UserInformation(token); // check token from user if user is from 42
-    const dataGoogleValid = await this.googleService.getUserFromGoogleByCookies(req); // check now if the token from google is valid
-    if (!token42Valid && !dataGoogleValid) {
+    if (!token42Valid) {
       throw new BadRequestException("InvalidToken", {
         description: "Json empty, the token is invalid",
       });

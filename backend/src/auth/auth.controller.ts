@@ -7,14 +7,12 @@ import { CreateUserDto } from "../user/dto";
 import { User } from "@prisma/client";
 import { UserService } from "src/user/user.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
-import { GoogleService } from "src/auth/google/google.service";
 import { Generate2FAService } from "./2FA/generate.service";
 import { EnableService } from "./2FA/enable2FA.service";
 import { VerifyService } from "./2FA/verify.service";
 import { UserDto } from "./dto";
 
 @Injectable()
-export class GoogleOauthGuard extends AuthGuard("google") {}
 
 export interface UserAuth {
   message: string;
@@ -27,7 +25,6 @@ export class AuthController {
     private authService: AuthService,
     private Oauth42: Oauth42Service,
     private userService: UserService,
-    private googleService: GoogleService,
     private Generate2FA: Generate2FAService,
     private enable2FAService: EnableService,
     private verify2FAService: VerifyService,
@@ -91,18 +88,6 @@ export class AuthController {
     await this.authService.getUser(req, res);
   }
 
-  @Get("google")
-  @UseGuards(GoogleOauthGuard)
-  async googleLogin() {
-    /* void */
-  }
-
-  @Get("google/callback")
-  @UseGuards(GoogleOauthGuard)
-  async googleAuthCallback(@Req() req: any, @Res() res: Response) {
-    await this.authService.signInGoogle(res, req.user);
-  }
-
   @Get("token")
   async checkIfTokenValid(@Req() req: Request, @Res() res: Response) {
     return this.authService.checkIfTokenValid(req, res);
@@ -127,20 +112,4 @@ export class AuthController {
   async status2FA(@Req() req: Request) {
     return this.enable2FAService.status2FA(req);
   }
-
-  //    @Get("google/callback")
-  //      async handleGoogleRedirection(@Req() req: Request, @Res() res: Response) {
-  //       const codeFromUrl = req.query.code as string;
-  //       const token: any = await this.googleService.getTokenFromGoogle(codeFromUrl);
-  //       const userInfos : any = await this.googleService.getUserFromGoogle(token);
-  //       this.authService.createCookies(res, userInfos);
-  //       const userExists = await this.userService.getUserByEmail(userInfos.email);
-  //       this.authService.updateCookies(res, token, userExists);
-  //       //this.authService.RedirectConnectingUser(req, res, userExists?.email);
-  //    }
-
-  //    @Get("logout")
-  //    async deleteCookies(@Req() req: Request, @Res() res: Response) {
-  //      await this.authService.deleteCookies(res);
-  //    }
 }

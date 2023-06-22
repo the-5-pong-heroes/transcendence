@@ -7,7 +7,7 @@ else
   DOCKER_COMPOSE	= docker-compose --env-file ${DOCKER_ENV_FILE}
 endif
 
-DATABASE_VOLUME		= $(shell basename "$(CURDIR)_postgresql_data")
+DATABASE_VOLUME		= $(shell basename '$(CURDIR)_postgresql_data' | tr '[:upper:]' '[:lower:]')
 
 SUDO 				= @sudo
 
@@ -20,7 +20,7 @@ check-env:
 	fi
 
 run: check-env
-	$(DOCKER_COMPOSE) up --build --remove-orphans
+	$(DOCKER_COMPOSE) up --build --remove-orphans --force-recreate
 
 list:
 	${SUDO} docker container ps -a

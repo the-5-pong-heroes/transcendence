@@ -10,7 +10,6 @@ import { DefaultAvatar, Leave } from "@/assets";
 import { LoadingIcon } from "@/components/loading/loading";
 import { customFetch } from "@/helpers";
 import { useUser } from "@hooks";
-import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
 import { BASE_URL } from "@/constants";
 
 interface SettingsProps {
@@ -22,7 +21,6 @@ export interface UserSettings {
   name: string;
   avatar: string | null;
   friends: { id: string; name: string }[];
-  // 2FA
 }
 
 export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
@@ -37,17 +35,18 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
   const signOut = useSignOut();
   const user = useUser();
 
-  const url = "http://localhost:3333/settings";
-
   async function handleFileChange(event: any) {
     if (!event.target.files) {
       return;
     }
     const file = event.target.files[0];
     if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
       try {
         setUploading(true);
-        const response = await customFetch("POST", "upload", { file: file });
+        const uploadUrl = BASE_URL + "/settings/upload";
+        const response = await fetch(uploadUrl, { method: "POST", body: formData, credentials: "include" });
         const payload = await response.json();
         setAvatar(payload.avatar);
         setUploading(false);
@@ -143,7 +142,7 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
           </label>
         </div>
         <div className="settings-col update-2fa">
-          <Toggle2FA/>
+          <Toggle2FA />
         </div>
       </div>
       <div className="settings-block block2">

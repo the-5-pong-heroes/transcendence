@@ -1,12 +1,9 @@
 import { MailerService } from "@nestjs-modules/mailer";
-import { BadRequestException, Injectable, Req, Res } from "@nestjs/common";
+import { BadRequestException, Injectable, Req } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
-import * as bcrypt from "bcrypt";
 import * as fs from "fs";
-import * as path from "path";
-import { Request, Response } from "express";
-import { User } from "@prisma/client";
-import { Auth } from "@prisma/client";
+import { Request } from "express";
+import { UserWithAuth } from "src/common/@types";
 
 const myHTML = fs.readFileSync("./index.html", "utf8");
 
@@ -14,8 +11,8 @@ const myHTML = fs.readFileSync("./index.html", "utf8");
 export class Generate2FAService {
   constructor(private readonly mailerService: MailerService, private prisma: PrismaService) {}
 
-  async generateService(@Req() req: Request) {
-    const accessToken = req.cookies.access_token;
+  async generateService(@Req() req: Request): Promise<void> {
+    const accessToken = req.signedCookies.access_token;
     const user = await this.prisma.user.findFirst({
       where: {
         auth: {
@@ -29,7 +26,7 @@ export class Generate2FAService {
     this.updateUser(user);
   }
 
-  async updateUser(user: (User & { auth: Auth | null }) | null) {
+  async updateUser(user: UserWithAuth | null): Promise<UserWithAuth> {
     try {
       const userid = user?.id;
       const updatedUser = await this.prisma.user.update({
@@ -52,14 +49,16 @@ export class Generate2FAService {
     }
   }
 
-  async sendActivationMail(user42: any) {
+  async sendActivationMail(user: UserWithAuth): Promise<void> {
+    if (!user.auth) {
+      return;
+    }
     try {
-      const email = user42.auth.email;
+      const email = user.auth.email;
       const code2FA = this.generateRandomCode(6);
-      this.sendEmailToUser(email, user42, code2FA);
-      await this.storeCodeToDataBase(code2FA, user42);
-      this.updateUser(user42);
-      return code2FA;
+      this.sendEmailToUser(email, user, code2FA);
+      await this.storeCodeToDataBase(code2FA, user);
+      this.updateUser(user);
     } catch (error) {
       throw new BadRequestException("Invalid email");
     }
@@ -75,9 +74,9 @@ export class Generate2FAService {
     return result;
   }
 
-  async sendEmailToUser(email: string, user42: any, code2FA: string) {
+  async sendEmailToUser(email: string, user: UserWithAuth, code2FA: string): Promise<void> {
     let htmlWithCode = myHTML.replace("{{code2FA}}", code2FA);
-    htmlWithCode = htmlWithCode.replace("{{userName}}", user42.name);
+    htmlWithCode = htmlWithCode.replace("{{userName}}", user.name);
 
     this.mailerService.sendMail({
       to: `${email}`,
@@ -88,9 +87,9 @@ export class Generate2FAService {
     });
   }
 
-  async storeCodeToDataBase(code2FA: string, user42: any) {
+  async storeCodeToDataBase(code2FA: string, user: UserWithAuth): Promise<UserWithAuth> {
     try {
-      const userid = user42.id;
+      const userid = user.id;
       const updatedUser = await this.prisma.user.update({
         where: { id: userid },
         data: {

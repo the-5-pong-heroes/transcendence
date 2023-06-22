@@ -24,8 +24,7 @@ async function bootstrap() {
     }),
   );
 
-  // app.use(cookieParser("MY_SECRET"));
-  app.use(cookieParser());
+  app.use(cookieParser(process.env.COOKIES_SECRET));
 
   await app.listen(3333);
 }

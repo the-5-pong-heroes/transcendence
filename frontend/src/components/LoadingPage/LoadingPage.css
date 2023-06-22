@@ -1,0 +1,46 @@
+.loading-page {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  background-image: linear-gradient(
+    to right top,
+    #eacede,
+    #ddb5d2,
+    #cd9dc9,
+    #b986c1,
+    #a171bc,
+    #9477c4,
+    #867ccb,
+    #7682d1,
+    #7e9ede,
+    #90b8e8,
+    #acd1ef,
+    #cfe8f7
+  );
+  font-size: 1.1rem;
+}
+
+.loading-wheel {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 3px solid #FFF;
+  border-right: 3px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  margin: 15px;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} 

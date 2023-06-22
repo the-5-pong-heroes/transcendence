@@ -3,29 +3,36 @@ import { Socket } from "socket.io";
 import { Observable } from "rxjs";
 import { parse } from "cookie";
 import { AuthService } from "src/auth/auth.service";
+import * as cookieParser from "cookie-parser";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class WebSocketInterceptor implements NestInterceptor {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private config: ConfigService) {}
 
   async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
     const wsContext = context.switchToWs();
     const client: Socket = wsContext.getClient();
-    const cookieHeader = client.handshake.headers.cookie;
-    if (!cookieHeader || !client.handshake.auth) {
+    const handshakeCookie = client.handshake.headers.cookie;
+    if (!handshakeCookie || !client.handshake.auth) {
       client.disconnect();
       throw new UnauthorizedException("Not authenticated");
     }
-    const cookies = parse(cookieHeader);
-    const access_token = cookies.access_token;
-    const user = await this.authService.validateUser(access_token);
+    const signedCookies = parse(handshakeCookie).access_token;
+    let token = null;
+    const cookies_salt = this.config.get("COOKIES_SECRET");
+    if (cookies_salt !== undefined) {
+      token = cookieParser.signedCookie(signedCookies, cookies_salt);
+    }
+    if (!token) {
+      client.disconnect();
+      throw new UnauthorizedException("Not authenticated");
+    }
+    const user = await this.authService.validateUser(token);
     if (!user) {
       client.disconnect();
       throw new UnauthorizedException("Not authenticated");
     }
-    client.data.userName = client.handshake.auth.name;
-    client.data.userId = client.handshake.auth.id;
-    client.data.readyToPlay = false;
 
     // Call next.handle() to continue the execution
     return next.handle();

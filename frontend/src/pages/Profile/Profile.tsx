@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import "./Profile.css";
 import { useParams, Link } from "react-router-dom";
 
-import { DefaultAvatar, Plant, Walle, Eve, Energy, Setting, addFriend, GameLight, ChatLight } from "../../assets";
+import { DefaultAvatar, Plant, Walle, Eve, Energy, Setting, AddUser, GameDarkFull, ChatDarkFull } from "../../assets";
 import { UserStatus } from "../Leaderboard/UserStatus";
 import { UserLevel } from "../Leaderboard/UserLevel";
 import { type UserStats } from "../Leaderboard/Leaderboard";
@@ -13,9 +13,7 @@ import { MatchHistory } from "./MatchHistory";
 import { Friends } from "./Friends";
 
 import { InviteButton } from "@/components";
-
 import { customFetch } from "@/helpers";
-
 
 export interface GameData {
   playerOne: { id: string; name: string };
@@ -90,22 +88,26 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
         </div>
         <div className="column username">
           {user.name}
-          {user.isMe && (
-            <Link to={"/Settings"}>
-              <img src={Setting} />
-            </Link>
-          )}
-          {!user.isMe && (
-            <Link to={"/Chat"}>
-              <img src={ChatLight} />
-            </Link>
-          )}
-          {!user.isMe && (
-            <InviteButton id={user.id}>
-              <img src={GameLight} />
-            </InviteButton>
-          )}
-          {!user.isMe && !user.isFriend && <img className="addpointer" src={addFriend} onClick={followFriend} />}
+          <div className="username-icons">
+            {user.isMe && (
+              <Link to={"/Settings"}>
+                <img src={Setting} id="settings-icon" />
+              </Link>
+            )}
+            {!user.isMe && (
+              <Link to={"/Chat"}>
+                <img src={ChatDarkFull} id="chat-icon" />
+              </Link>
+            )}
+            {!user.isMe && (
+              <InviteButton id={user.id}>
+                <img src={GameDarkFull} id="game-icon" />
+              </InviteButton>
+            )}
+            {!user.isMe && !user.isFriend && (
+              <img className="addpointer" src={AddUser} onClick={followFriend} id="friend-icon" />
+            )}
+          </div>
         </div>
         <UserStatus myClassName="column status" status={user.status} />
       </div>

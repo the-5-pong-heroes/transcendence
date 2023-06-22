@@ -9,6 +9,7 @@ export const ClientEvents = {
   GameView: "client.game.view",
   GameJoin: "client.game.join",
   GameInvite: "client.game.invite",
+  GameInviteLink: "client.game.invite.link",
   GameInviteResponse: "client.game.invite.response",
 } as const;
 

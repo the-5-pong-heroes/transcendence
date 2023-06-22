@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const WIDTH_RATIO = 0.9;
+const WIDTH_RATIO = 0.8;
 const HEIGHT_RATIO = 0.8;
 // const ASPECT_RATIO = 4 / 3;
 const ASPECT_RATIO = 1.56;

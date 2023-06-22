@@ -1,7 +1,7 @@
 export { default as Background } from "./background.webp";
-export { default as BackgroundLight } from "./backgroundLight.webp";
+// export { default as BackgroundLight } from "./backgroundLight.webp";
 // export { default as Background } from "./background.jpg";
-// export { default as BackgroundLight } from "./backgroundLight.jpg";
+export { default as BackgroundLight } from "./backgroundLight.jpg";
 export { default as Moon } from "./moon.png";
 export { default as Trash1 } from "./trash.png";
 export { default as Trash2 } from "./trashh.png";

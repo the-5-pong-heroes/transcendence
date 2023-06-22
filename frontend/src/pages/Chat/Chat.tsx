@@ -12,8 +12,6 @@ interface IChatProps {
 }
 
 const fallbackRender: React.FC<FallbackProps> = ({ error }) => {
-  console.log(error);
-
   return (
     <div role="alert" className={styles.ChatError}>
       <p>ERROR :</p>

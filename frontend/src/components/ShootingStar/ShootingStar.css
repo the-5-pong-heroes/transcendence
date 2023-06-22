@@ -1,0 +1,62 @@
+.shooting-star-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+}
+
+.shooting-star {
+    z-index: 1;
+    background-color: white;
+    position: absolute;
+    opacity: 0.3;
+    height: 4px;
+}
+
+.shooting-star.one {
+    /* background-color: red; */
+    transform: rotate(-160deg);
+    animation: shoot 8s linear infinite;
+}
+
+@keyframes shoot{
+    10%{
+        transform: rotate(-160deg) translate(-300vh, 0);
+    }
+    100%{
+        transform: rotate(-160deg) translate(-300vh, 0);
+        opacity: 0;
+    }
+}
+
+.shooting-star.two {
+    transform: rotate(-150deg);
+    animation: shoot2 10s linear infinite;
+}
+
+@keyframes shoot2{
+    10%{
+        transform: rotate(-150deg) translate(-200vw, 0);
+    }
+    100%{
+        transform: rotate(-150deg) translate(-200vw, 0);
+        opacity: 0;
+    }
+}
+
+.shooting-star.three {
+    transform: rotate(-20deg);
+    animation: shoot3 6s linear infinite;
+}
+
+@keyframes shoot3{
+    10%{
+        transform: rotate(-20deg) translate(-200vw, 0);
+    }
+    100%{
+        transform: rotate(-20deg) translate(-200vw, 0);
+        opacity: 0;
+    }
+}

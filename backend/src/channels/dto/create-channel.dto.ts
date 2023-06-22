@@ -1,6 +1,8 @@
 import { IsString, IsNotEmpty, IsOptional } from "class-validator";
 import { ChannelType, ChannelUser } from "@prisma/client";
 
+const types = ["PRIVATE", "PUBLIC", "PROTECTED", "DIRECT"] as const;
+
 export class CreateChannelDto {
   @IsString()
   @IsNotEmpty()

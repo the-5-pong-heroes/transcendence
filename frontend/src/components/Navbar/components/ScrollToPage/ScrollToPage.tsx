@@ -6,7 +6,8 @@ import type { PageRefs } from "@types";
 
 export const ScrollToPage: React.FC = () => {
   const { pathname } = useLocation();
-  const { homeRef, myProfileRef, gameRef, boardRef, chatRef, notFoundRef }: PageRefs = useAppContext().pageRefs;
+  const { homeRef, myProfileRef, settingsRef, gameRef, boardRef, chatRef, notFoundRef }: PageRefs =
+    useAppContext().pageRefs;
 
   const refs: Record<string, React.RefObject<HTMLDivElement>> = {
     "/": homeRef,
@@ -14,9 +15,12 @@ export const ScrollToPage: React.FC = () => {
     "/Leaderboard": boardRef,
     "/Chat": chatRef,
     "/Profile": myProfileRef,
-    // "/Profile": profileRef,
+    "/Settings": settingsRef,
   };
-  const ref = refs[pathname] ?? notFoundRef;
+  let ref = refs[pathname] ?? notFoundRef;
+  if (pathname.startsWith("/profile") || pathname.startsWith("/Profile")) {
+    ref = myProfileRef;
+  }
 
   useEffect(() => {
     ref.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });

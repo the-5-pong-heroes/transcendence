@@ -3,7 +3,6 @@ import { ValidationPipe } from "@nestjs/common";
 import * as cookieParser from "cookie-parser";
 import { ALLOWED_ORIGINS } from "./common/constants";
 import { AppModule } from "./app.module";
-import { COOKIES_SECRET } from "src/common/constants";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -25,7 +24,7 @@ async function bootstrap() {
     }),
   );
 
-  app.use(cookieParser(COOKIES_SECRET));
+  app.use(cookieParser(process.env.COOKIES_SECRET));
 
   await app.listen(3333);
 }

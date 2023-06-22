@@ -7,11 +7,12 @@ import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
 import { Generate2FAService } from "./2FA/generate.service";
 import { EnableService } from "./2FA/enable2FA.service";
 import { VerifyService } from "./2FA/verify.service";
-import { CodeDto } from "./dto/code.dto";
-import { TwoFADto, SignInDto, SignUpDto } from "./dto";
+
+import { TwoFADto, SignInDto, SignUpDto, AuthCallbackDto } from "./dto";
 import { GoogleOauthGuard } from "./google/google-auth.guards";
 import { UserWithAuth } from "src/common/@types";
 import { TwoFA, UserGoogleInfos } from "./interface";
+import { ConfigService } from "@nestjs/config";
 
 @Controller("auth")
 export class AuthController {
@@ -22,6 +23,7 @@ export class AuthController {
     private Generate2FA: Generate2FAService,
     private enable2FAService: EnableService,
     private verify2FAService: VerifyService,
+    private config: ConfigService,
   ) {}
 
   /*****************************************************************************************/
@@ -51,34 +53,21 @@ export class AuthController {
   //   await this.authService.handleDataBaseCreation(req, res);
   // }
 
+  // async getToken(@Req() req: Request, @Res() res: Response): Promise<void> {
   @Get("auth42/callback")
-  async getToken(@Query() codeDto: CodeDto, @Res() res: Response) {
-    const { code } = codeDto;
-    const token = await this.Oauth42.accessToken(code);
-    const user42infos = await this.Oauth42.access42UserInformation(token);
-
-    // async getToken(@Req() req: Request, @Res() res: Response): Promise<void> {
-    //   if (req.signedCookies.access_token) return; // TODO CHECK USER !!!!
-    //   const authCallbackDto = new AuthCallbackDto();
-    //   authCallbackDto.code = req.query.code as string;
-    //   const token = await this.Oauth42.accessToken(authCallbackDto.code);
-    //   const user42infos = await this.Oauth42.access42UserInformation(token);
-
-    this.authService.createCookies(res, token);
-    if (!user42infos.email) res.redirect(301, `http://localhost:5173/`);
-    else {
-      const userExists = await this.userService.getUserByEmail(user42infos.email);
-      if (!userExists) this.authService.createDataBase42User(user42infos, token, user42infos.login, false);
-      else {
-        this.authService.updateTokenCookies(res, token, userExists.id);
-        if (!userExists.auth?.twoFAactivated) return; // ou /Profile ?
-        else {
-          this.verify2FAService.updateVerify2FA(userExists);
-          this.Generate2FA.sendActivationMail(userExists);
-          //res.redirect(301, `http://localhost:5173/Login?displayPopup=true`);
-        }
-      }
+  async getToken(@Query() callbackDto: AuthCallbackDto, @Res() res: Response): Promise<void> {
+    const homepage = this.config.get("FRONTEND_URL") as string;
+    if ("error" in callbackDto && callbackDto.error) {
+      // the user has probably refused to let us access its public data
+      console.error(`❌ ${callbackDto.error}: ${callbackDto.error_description}`);
+    } else if (!("code" in callbackDto) || !callbackDto.code) {
+      // inconsistent request, wtf is happening?
+      console.error("❌ No code found in the request!");
+    } else {
+      // the request seems to be valid, let's try to get a token
+      await this.authService.proceedCode(res, callbackDto.code as string);
     }
+    res.redirect(homepage);
   }
 
   /*****************************************************************************************/

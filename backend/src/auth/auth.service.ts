@@ -104,6 +104,29 @@ export class AuthService {
   /*                                       42 LOGIN                                        */
   /*****************************************************************************************/
 
+  async proceedCode(@Res() res: Response, code: string): Promise<void> {
+    try {
+      const token = await this.Oauth42.accessToken(code);
+      const userInfo = await this.Oauth42.access42UserInformation(token);
+      if (!userInfo) return; // an error has already been logged
+      const userExists = await this.userService.getUserByEmail(userInfo.email);
+      this.createCookies(res, token); // creates or updates the cookies
+      if (!userExists) {
+        // this is a new user
+        this.createDataBase42User(userInfo, token, userInfo.login, false);
+      } else {
+        // not a new user, not its first connection
+        this.updateTokenCookies(res, token, userExists.id);
+        if (userExists.auth?.twoFAactivated) {
+          this.verify2FAService.updateVerify2FA(userExists);
+          this.Generate2FA.sendActivationMail(userExists);
+        }
+      }
+    } catch (errToken) {
+      console.error(`❌ Failed to get a token: ${errToken}`);
+    }
+  }
+
   async createDataBase42User(user42: User42Infos, token: string, username: string, isRegistered: boolean) {
     try {
       const user = await this.prisma.user.create({
@@ -129,7 +152,7 @@ export class AuthService {
       });
       return user;
     } catch (error) {
-      throw new BadRequestException("Failed to create the user");
+      throw new BadRequestException(`Failed to create the user: ${error}`);
     }
   }
 
@@ -254,6 +277,6 @@ export class AuthService {
   }
 
   async signOut(res: Response): Promise<void> {
-    res.cookie("access_token", "", { expires: new Date() }).status(200).json({ message: "Successfully logout !" });
+    res.cookie("access_token", "", { expires: new Date() }).status(200).json({ message: "Successfully logout!" });
   }
 }

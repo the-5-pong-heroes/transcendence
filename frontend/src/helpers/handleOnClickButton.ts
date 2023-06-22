@@ -18,5 +18,5 @@ export const handleOnClickButton = ({ event, path, menuRef, gameState, isNavigat
   } else {
     menuRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
-  setTimeout(() => (isNavigatingRef.current = false), 3333);
+  setTimeout(() => (isNavigatingRef.current = false), 3000); // milliseconds
 };

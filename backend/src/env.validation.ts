@@ -24,6 +24,14 @@ class EnvironmentVariables {
 
   @IsString()
   @IsNotEmpty()
+  COOKIES_SECRET: string;
+
+  @IsString()
+  @IsNotEmpty()
+  FRONTEND_URL: string;
+
+  @IsString()
+  @IsNotEmpty()
   GOOGLE_CLIENT_ID: string;
 
   @IsString()

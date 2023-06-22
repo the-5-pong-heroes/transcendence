@@ -1,5 +1,5 @@
-# updates the path to your environment file below
-DOCKER_ENV_FILE		= ./env/docker.eugenie.env
+# updates the path to your environment file below (see the files .env.example)
+DOCKER_ENV_FILE		= ./env/docker.YOUR_PATH.env
 
 ifneq ($(shell docker compose version 2>/dev/null),)
   DOCKER_COMPOSE	= docker compose --env-file ${DOCKER_ENV_FILE}

@@ -11,13 +11,16 @@ export class Oauth42Service {
   constructor(private prisma: PrismaService, private config: ConfigService) {}
 
   async accessToken(code: string): Promise<string> {
-    if (!code) throw new Error("Code is an empty string");
+    if (!code) {
+      // the data validation should have been done in the controller
+      throw new Error("Code is an empty string");
+    }
     // The client ID you received from 42 when you registered
     const client_id = this.config.get("API_42_ID");
     // The client secret you received from 42 when you registered
     const secret = this.config.get("API_42_SECRET");
     try {
-      const response = await fetch(API_42_NEW_TOKEN, {
+      const init: RequestInit = {
         method: "POST",
         headers: { "Content-Type": "application/json; charset=utf-8" },
         body: JSON.stringify({
@@ -27,10 +30,12 @@ export class Oauth42Service {
           code: code,
           redirect_uri: API_42_REDIRECT_SUCCESS,
         }),
-      });
+      };
+      const response = await fetch(API_42_NEW_TOKEN, init);
       const data = (await response.json()) as Token;
-      if (!data) {
-        throw new BadRequestException("The API did not return a valid token");
+      if (!data.access_token) {
+        // the token we've just received should not be empty
+        throw new BadRequestException("The API has returned an invalid token!");
       }
       return data.access_token;
     } catch (error) {
@@ -46,9 +51,11 @@ export class Oauth42Service {
       });
       if (response.ok) {
         const data = (await response.json()) as User42Infos;
-        return data;
+        return { id: data.id, email: data.email, login: data.login };
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error(`❌ Failed to get user information: ${error}}`);
+    }
     return null;
   }
 

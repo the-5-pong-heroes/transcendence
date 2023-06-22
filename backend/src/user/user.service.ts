@@ -157,7 +157,7 @@ export class UserService {
     }
     await this.prisma.user.update({
       where: { id: id },
-      data: { status: status },
+      data: { status },
     });
   }
 

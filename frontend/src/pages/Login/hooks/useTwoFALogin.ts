@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 import { ResponseError, type ErrorMessage, customFetch } from "@/helpers";
 import { USER_QUERY_KEY } from "@/constants";
-import type { UserAuth, User } from "@types";
+import type { User } from "@types";
 
 async function verifyTwoFA(code: string): Promise<User> {
   const response = await customFetch("POST", "auth/2FA/verify", { code: code });
@@ -12,9 +12,9 @@ async function verifyTwoFA(code: string): Promise<User> {
     const { message } = (await response.json()) as ErrorMessage;
     throw new ResponseError(message ? message : "Fetch request failed", response);
   }
-  const payload = (await response.json()) as UserAuth;
+  const user = (await response.json()) as User;
 
-  return payload.user;
+  return user;
 }
 
 type IUseTwoFA = UseMutateFunction<

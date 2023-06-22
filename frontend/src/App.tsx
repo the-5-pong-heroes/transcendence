@@ -4,7 +4,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { AppLayout, NotFoundLayout, LoadingPage } from "./components";
-import { Login, Signup, Home, Profile, Game, Settings, Leaderboard, Chat, NotFound } from "./pages";
+import { Login, Home, Profile, Game, Settings, Leaderboard, Chat, NotFound } from "./pages";
 import type { AppContextParameters, PageRefs } from "./@types";
 import { useAppContext, useUserQuery } from "./hooks";
 import "./App.css";
@@ -41,7 +41,6 @@ const App: React.FC = () => {
     <div className="App" id={theme}>
       <Routes>
         <Route path="/Login" element={user ? <Navigate to="/" /> : <Login />} />
-        <Route path="/Signup" element={user ? <Navigate to="/" /> : <Signup />} />
         <Route element={<NotFoundLayout />}>
           {/* <Route path="*" element={<NotFound notFoundRef={notFoundRef} />} /> */}
           <Route path="/404" element={<NotFound notFoundRef={notFoundRef} />} />

@@ -12,7 +12,6 @@ export { default as LogoWallE } from "./logoWallE.png";
 export { default as LogoWallELight } from "./logoWallELight.png";
 export { default as PauseIcon } from "./pause.png";
 export { default as Logo_42 } from "./42_logo.png";
-export { default as Logo_Google } from "./google_logo.png";
 export { default as Logo_Eve } from "./logo-eve.png";
 export { default as inviteToPlay } from "./inviteToPlay.png";
 export { default as addFriend } from "./addFriend.png";

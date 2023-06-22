@@ -1,15 +1,15 @@
-import { Injectable, Req, Res, HttpStatus } from "@nestjs/common";
+import { Injectable, Req, BadRequestException } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
-import { Request, Response } from "express";
+import { Request } from "express";
 import { UserWithAuth } from "src/common/@types";
 
 @Injectable()
 export class VerifyService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async validate2FA(@Req() req: Request, @Res() res: Response, code: string): Promise<void> {
+  async validate2FA(@Req() req: Request, code: string): Promise<UserWithAuth> {
     const accessToken = req.signedCookies.access_token;
-    const user = await this.prisma.user.findFirst({
+    const user = await this.prisma.user.findFirstOrThrow({
       where: {
         auth: {
           accessToken: accessToken,
@@ -19,31 +19,20 @@ export class VerifyService {
         auth: true,
       },
     });
-    if (code !== user?.auth?.twoFASecret) {
-      res.status(400).json({ message: "Invalid code !", user: null });
-      return;
-      // return res.status(400).json({ message: "Invalid code !", user: null });
+    if (code !== user.auth?.twoFASecret) {
+      throw new BadRequestException("2FA code is not valid");
     }
-    if (user) {
-      if (code === user.auth?.twoFASecret) {
-        await this.prisma.user.update({
-          where: { id: user.id },
-          data: {
-            auth: {
-              update: {
-                otp_verified: true,
-              },
-            },
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        auth: {
+          update: {
+            otp_verified: true,
           },
-        });
-        res.status(HttpStatus.OK).json({ message: "2FA verified", user: user });
-        return;
-        // return res.status(HttpStatus.OK).json({ message: "2FA verified", user: user });
-      } else {
-        res.status(HttpStatus.BAD_REQUEST).json({ message: "2FA code is not valid", user: null });
-        // return res.status(HttpStatus.BAD_REQUEST).json({ message: "2FA code is not valid", user: null });
-      }
-    }
+        },
+      },
+    });
+    return user;
   }
 
   async updateVerify2FA(user: UserWithAuth): Promise<UserWithAuth> {

@@ -1,5 +1,5 @@
 export const gameList = [
-  { text: "10-point game" },
+  { text: "5-point game" },
   { text: "⬆ | ⬇ | Pause | Esc" },
   { text: "If you quit, the game goes on" },
   { text: "Play in mode SOLO or DUO" },

@@ -36,14 +36,14 @@ export class AuthController {
   /*                                        42 AUTH                                        */
   /*****************************************************************************************/
 
-  @Post("Oauth42/login")
-  async getUserByToken(@Req() req: Request): Promise<UserWithAuth | null> {
-    const token = req.signedCookies.access_token;
-    if (token && token !== undefined) {
-      return await this.authService.validateUser(token);
-    }
-    return null;
-  }
+  // @Post("Oauth42/login")
+  // async getUserByToken(@Req() req: Request): Promise<UserWithAuth | null> {
+  //   const token = req.signedCookies.access_token;
+  //   if (token && token !== undefined) {
+  //     return await this.authService.validateUser(token);
+  //   }
+  //   return null;
+  // }
 
   // @Post("Oauth")
   // async userOauthCreationInDataBase(@Req() req: Request, @Res() res: Response): Promise<void> {
@@ -60,8 +60,10 @@ export class AuthController {
     const user42infos = await this.Oauth42.access42UserInformation(token);
     // console.log("✨ user42infos: ", user42infos);
     this.authService.createCookies(res, token);
-    if (!user42infos) return;
-    else {
+    if (!user42infos) {
+      return;
+    }
+  else {
       const userExists = await this.userService.getUserByEmail(user42infos.email);
       console.log("👙👙👙👙", userExists);
       if (!userExists) this.authService.createDataBase42User(user42infos, token, user42infos.login, false);

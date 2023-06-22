@@ -20,6 +20,7 @@ const cookieOptions: CookieOptions = {
   secure: false,
   sameSite: "strict",
   expires: new Date(Date.now() + 86400 * 1000),
+  /* To secure cookie : */
   signed: true,
 };
 

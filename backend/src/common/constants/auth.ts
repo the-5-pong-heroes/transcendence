@@ -8,4 +8,4 @@ export const API_42_USER = "https://api.intra.42.fr/v2/me";
 export const COOKIES_SECRET = process.env.COOKIES_SECRET;
 
 export const AUTH_EXEMPT_ROUTES =
-  "/auth/(Oauth42/login|Oauth|auth42/callback|user|signin|signup|signout|google|google/callback)";
+  "/auth/(auth42/callback|user|2FA/status|signout|signin|signup|google|google/callback)";

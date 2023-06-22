@@ -52,6 +52,7 @@ export const Login: React.FC = () => {
   useEffect(() => {
     const fetchToggle2FA = async () => {
       const toggledValue = await twoFAstatus();
+      console.log("toggle value = ", toggledValue);
       setIsActivated(toggledValue);
     };
 
@@ -61,11 +62,11 @@ export const Login: React.FC = () => {
   async function twoFAstatus(): Promise<boolean> {
     try {
       const response = await customFetch("GET", "auth/2FA/status");
-      //if (response.ok) {
+      if (response.ok) {
         const data = await response.json();
         if (data.twoFA === true)
           return true;
-      //}
+      }
       else
         return false;
     }

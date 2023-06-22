@@ -56,21 +56,24 @@ export const Messages: React.FC = () => {
     <div className={styles.Messages}>
       {messages.map((message, index) => {
         if (!message.senderId) {
-          return <ServerMessage key={index} message={message} theme={theme} />
+          return <ServerMessage key={index} message={message} theme={theme} />;
         }
         if (message.content.substring(0, 13) === "/InviteToPlay" && message.senderId) {
           return <Invitation key={index} message={message} theme={theme} />
         }
         if (message.senderId === user?.id) {
-          return <UserMessage key={index} message={message} theme={theme} />
+          return <UserMessage key={index} message={message} theme={theme} />;
         }
-        return <OtherMessage
-              key={index}
-              message={message}
-              theme={theme}
-              showOptions={showOptions === index}
-              setShowOptions={() => (showOptions === index ? setShowOptions(-1) : setShowOptions(index))}
-            />
+
+        return (
+          <OtherMessage
+            key={index}
+            message={message}
+            theme={theme}
+            showOptions={showOptions === index}
+            setShowOptions={() => (showOptions === index ? setShowOptions(-1) : setShowOptions(index))}
+          />
+        );
       })}
     </div>
   );

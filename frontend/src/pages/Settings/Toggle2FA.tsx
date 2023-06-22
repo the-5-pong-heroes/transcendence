@@ -11,7 +11,6 @@ export const Toggle2FA: React.FC = () => {
     const fetchToggle2FA = async () => {
       const toggledValue = await handletoggle2FA();
       setIsActivated(toggledValue);
-      console.log("toggledValue: ", toggledValue);
     };
 
     fetchToggle2FA();
@@ -21,13 +20,16 @@ export const Toggle2FA: React.FC = () => {
     const response = await customFetch("GET", "auth/2FA/status");
     if (response.ok) {
       const data = await response.json();
-      if (data.twoFA === true) return true;
+      if (data.twoFA === true) {
+        return true;
+      }
     }
+
     return false;
   }
 
   async function toggle2FA() {
-    if (isActivated === true) {
+    if (isActivated) {
       const response = await customFetch("GET", "auth/2FA/disable");
     } else {
       const response = await customFetch("GET", "auth/2FA/generate");

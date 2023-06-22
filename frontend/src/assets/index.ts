@@ -1,4 +1,4 @@
-export { Logo_42, Logo_Google, Logo_Eve } from "./icons";
+export { Logo_42, Logo_Eve } from "./icons";
 export { ChatLight, ChatDark, RobotLight, RobotDark, GameLight, GameDark, ChatDarkFull } from "./icons";
 export {
   LeaderboardLight,

@@ -295,6 +295,5 @@ export class GameService {
   private displayLobbies(): void {
     const lobbiesArray = Array.from(this.lobbies.values());
     const lobbyIds = lobbiesArray.map((lobby) => lobby.id);
-    console.log("lobbies:", lobbyIds);
   }
 }

@@ -10,6 +10,7 @@ import { DefaultAvatar, Leave } from "@/assets";
 import { LoadingIcon } from "@/components/loading/loading";
 import { customFetch } from "@/helpers";
 import { useUser } from "@hooks";
+import { BASE_URL } from "@/constants";
 
 interface SettingsProps {
   settingsRef: React.RefObject<HTMLDivElement>;
@@ -34,17 +35,18 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
   const signOut = useSignOut();
   const user = useUser();
 
-  const url = "http://localhost:3333/settings";
-
   async function handleFileChange(event: any) {
     if (!event.target.files) {
       return;
     }
     const file = event.target.files[0];
     if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
       try {
         setUploading(true);
-        const response = await customFetch("POST", "upload", { file: file });
+        const uploadUrl = BASE_URL + "/settings/upload";
+        const response = await fetch(uploadUrl, { method: "POST", body: formData, credentials: "include" });
         const payload = await response.json();
         setAvatar(payload.avatar);
         setUploading(false);

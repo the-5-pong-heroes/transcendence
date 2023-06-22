@@ -56,7 +56,6 @@ export class Generate2FAService {
     try {
       const email = user.auth.email;
       const code2FA = this.generateRandomCode(6);
-      // console.log("sendActivationMail: ", email, code2FA);
       this.sendEmailToUser(email, user, code2FA);
       await this.storeCodeToDataBase(code2FA, user);
       this.updateUser(user);

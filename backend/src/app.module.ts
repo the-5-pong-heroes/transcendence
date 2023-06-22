@@ -13,7 +13,6 @@ import { FriendshipModule } from "./friendship/friendship.module";
 import { BlockedModule } from "./blocked/blocked.module";
 import { CurrentUserMiddleware } from "./common/middleware/current-user.middleware";
 import { PrismaService } from "./database/prisma.service";
-import { GoogleStrategy } from "./auth/google/google.strategy";
 import { AUTH_EXEMPT_ROUTES } from "./common/constants/auth";
 import { validate } from "./env.validation";
 
@@ -35,7 +34,7 @@ import { validate } from "./env.validation";
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, GoogleStrategy, PrismaService],
+  providers: [AppService, PrismaService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
@@ -46,4 +45,3 @@ export class AppModule {
       .forRoutes("*");
   }
 }
- 

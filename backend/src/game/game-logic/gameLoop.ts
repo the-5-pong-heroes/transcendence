@@ -34,10 +34,8 @@ export class GameLoop {
 
   setPlayer(client: AuthenticatedSocket, side: PaddleSide): void {
     if (side === "left") {
-      // console.log(`[setUser left: ${client.id}]`);
       client.data.paddle = this.pong.paddle.left;
     } else if (side === "right") {
-      // console.log(`[setUser right: ${client.id}]`);
       client.data.paddle = this.pong.paddle.right;
     }
   }

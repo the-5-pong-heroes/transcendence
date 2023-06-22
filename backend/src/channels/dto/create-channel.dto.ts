@@ -1,5 +1,5 @@
 import { ChannelType, ChannelUser } from "@prisma/client";
-import { IsString, IsNotEmpty, IsOptional, IsDate, IsIn } from "class-validator";
+import { IsString, IsNotEmpty, IsDate, IsOptional, IsIn } from "class-validator";
 
 const types = ["PRIVATE", "PUBLIC", "PROTECTED", "DIRECT"] as const;
 

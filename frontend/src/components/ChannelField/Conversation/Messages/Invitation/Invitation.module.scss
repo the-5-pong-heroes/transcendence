@@ -1,0 +1,32 @@
+.Invitation {
+  position: relative;
+  max-width: 80%;
+  flex-shrink: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  word-wrap: break-word;
+  white-space: pre-line;
+  padding: 7px 12px;
+  align-self: center;
+  border-radius: 7px;
+}
+
+.InvitationOn {
+  cursor: pointer;
+}
+
+.InvitationLight {
+  background-color: rgba(255, 0, 38, .9);
+}
+
+.InvitationDark {
+  background-color: rgba(227, 24, 54, .9);
+}
+
+.InvitationLight.InvitationOff {
+  background-color: rgba(200, 200, 200, .9);
+}
+
+.InvitationDark.InvitationOff {
+  background-color: rgba(155, 155, 155, .9);
+}

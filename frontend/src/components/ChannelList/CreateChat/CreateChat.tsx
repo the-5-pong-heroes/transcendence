@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-// import { socket } from '../../../socket';
 import styles from "./CreateChat.module.scss";
 
 import { useUser, useSocket, useTheme } from "@hooks";
@@ -20,7 +19,6 @@ const types: string[] = ["Public", "Private", "Protected"];
 export const CreateChat: React.FC = () => {
   const [showForm, setShowForm] = useState<boolean>(false);
   const [channel, setChannel] = useState<IChannel>({ name: "", type: "PUBLIC" });
-  // const { user } = useContext(UserContext) as UserContextType;
   const user = useUser();
   const socket = useSocket();
   const theme = useTheme();
@@ -50,8 +48,6 @@ export const CreateChat: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // const token = localStorage.getItem('access_token');
-    // if (!token) return;
     socket.emit("create", channel);
     setChannel((prev: IChannel) => ({ users: prev.users, name: "", type: "PUBLIC" }));
     setShowForm(false);

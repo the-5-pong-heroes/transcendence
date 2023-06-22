@@ -12,8 +12,6 @@ import { EnableService } from "./2FA/enable2FA.service";
 import { VerifyService } from "./2FA/verify.service";
 import { UserDto } from "./dto";
 
-@Injectable()
-
 export interface UserAuth {
   message: string;
   user: User;

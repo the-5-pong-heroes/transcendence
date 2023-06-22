@@ -28,9 +28,8 @@ export class Oauth42Service {
       const response = await fetch(API_42_NEW_TOKEN, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        // body: `grant_type=authorization_code&client_id=${client_id}&client_secret=${secret}&code=${req}&redirect_uri=${API_42_REDIRECT}`,
+        body: `grant_type=authorization_code&client_id=${client_id}&client_secret=${secret}&code=${req}&redirect_uri=${API_42_REDIRECT}`,
         // body: `grant_type=authorization_code&client_id=${client_id}&client_secret=${secret}&code=${req}&redirect_uri=${uri}`,
-        body: `grant_type=authorization_code&client_id=${client_id}&client_secret=${secret}&code=${req}&redirect_uri=http://localhost:3333/auth/auth42/callback`,
       });
       // const data = await response.json();
       const data = (await response.json()) as Token;

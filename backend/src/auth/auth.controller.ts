@@ -51,7 +51,6 @@ export class AuthController {
 
   @Get("auth42/callback")
   async getToken(@Req() req: Request, @Res() res: Response): Promise<void> {
-    if (req.signedCookies.access_token) return; // TODO CHECK USER !!
     const authCallbackDto = new AuthCallbackDto();
     authCallbackDto.code = req.query.code as string;
     const token = await this.Oauth42.accessToken(authCallbackDto.code);

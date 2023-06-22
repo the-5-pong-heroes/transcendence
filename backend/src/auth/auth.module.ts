@@ -5,11 +5,8 @@ import { EnableService } from "./2FA/enable2FA.service";
 import { VerifyService } from "./2FA/verify.service";
 import { Module, forwardRef } from "@nestjs/common";
 import { PassportModule } from "@nestjs/passport";
-import { JwtModule } from "@nestjs/jwt";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
-import { LocalStrategy } from "./strategy/local.strategy";
-import { JwtStrategy } from "./strategy/jwt.strategy";
 import { Oauth42Service } from "./auth42/Oauth42.service";
 import { PrismaModule } from "src/database/prisma.module";
 import { UserGuard } from "./user.guard";
@@ -19,10 +16,6 @@ import { UserModule } from "src/user/user.module";
   imports: [
     forwardRef(() => UserModule),
     PassportModule,
-    JwtModule.register({
-      secret: "secret",
-      signOptions: { expiresIn: "1d" },
-    }),
     MailerModule.forRoot({
       transport: {
         port: 465,
@@ -36,17 +29,7 @@ import { UserModule } from "src/user/user.module";
     PrismaModule,
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    Oauth42Service,
-    UserService,
-    Generate2FAService,
-    EnableService,
-    VerifyService,
-    LocalStrategy,
-    JwtStrategy,
-    UserGuard,
-  ],
+  providers: [AuthService, Oauth42Service, UserService, Generate2FAService, EnableService, VerifyService, UserGuard],
   exports: [AuthService, UserGuard],
 })
 export class AuthModule {}

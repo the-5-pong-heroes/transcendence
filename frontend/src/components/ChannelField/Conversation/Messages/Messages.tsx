@@ -32,7 +32,6 @@ export const Messages: React.FC = () => {
       // const	config = { headers: { 'Authorization': token }};
       const response = await customFetch("GET", `chat/${activeChannel.id}`);
       if (!response.ok) {
-        console.log("🐥");
         throw new ResponseError("Failed on fetch channels request", response);
       }
       const data = await response.json();
@@ -58,21 +57,24 @@ export const Messages: React.FC = () => {
     <div className={styles.Messages}>
       {messages.map((message, index) => {
         if (!message.senderId) {
-          return <ServerMessage key={index} message={message} theme={theme} />
+          return <ServerMessage key={index} message={message} theme={theme} />;
         }
         if (message.content === "/InviteToPlay" && message.senderId) {
-          return <Invitation key={index} message={message} theme={theme} />
+          return <Invitation key={index} message={message} theme={theme} />;
         }
         if (message.senderId === user?.id) {
-          return <UserMessage key={index} message={message} theme={theme} />
+          return <UserMessage key={index} message={message} theme={theme} />;
         }
-        return <OtherMessage
-              key={index}
-              message={message}
-              theme={theme}
-              showOptions={showOptions === index}
-              setShowOptions={() => (showOptions === index ? setShowOptions(-1) : setShowOptions(index))}
-            />
+
+        return (
+          <OtherMessage
+            key={index}
+            message={message}
+            theme={theme}
+            showOptions={showOptions === index}
+            setShowOptions={() => (showOptions === index ? setShowOptions(-1) : setShowOptions(index))}
+          />
+        );
       })}
     </div>
   );

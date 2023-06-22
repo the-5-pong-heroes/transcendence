@@ -48,9 +48,7 @@ export class Oauth42Service {
         const data = (await response.json()) as User42Infos;
         return data;
       }
-    } catch (error) {
-      console.log("Fetch42 user doesnt work, next step is testing with googleapi");
-    }
+    } catch (error) {}
     return null;
   }
 

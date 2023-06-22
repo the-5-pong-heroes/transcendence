@@ -18,7 +18,6 @@ const useNavigationRoute = (): void => {
   useEffect(() => {
     // execute on location change
     setCurrentLoc(location.pathname);
-    // console.log("Location changed!", location.pathname, currentLoc);
     isNavigatingRef.current = true;
     setTimeout(() => (isNavigatingRef.current = false), 2000);
   }, [location, currentLoc, isNavigatingRef]);

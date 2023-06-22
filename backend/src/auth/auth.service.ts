@@ -77,7 +77,6 @@ export class AuthService {
         return res.status(404).json({ message: "Invalid token" });
       }
       if (user.auth?.twoFAactivated && !user.auth.otp_verified) {
-        console.log("🌪️ twofa =", user.auth.twoFAactivated, "otp_verified =", user.auth.otp_verified);
         return res.status(200).json({ message: "User not connected", user: null });
       }
       res.status(200).json({ message: "Successfully fetched user", user: user });
@@ -155,7 +154,6 @@ export class AuthService {
       url = `${CLIENT_URL}/Login?displayPopup=true`;
     }
     res.cookie("access_token", userInfos.accessToken, cookieOptions).redirect(301, url);
-    console.log("End signInGoogle");
   }
 
   async createDataBaseUserFromGoogle(userInfos: UserGoogleInfos, isRegistered: boolean): Promise<UserWithAuth> {
@@ -175,7 +173,6 @@ export class AuthService {
         },
         include: { auth: true },
       });
-      console.log(user);
       return user;
     } catch (error) {
       throw new BadRequestException("Error to create the user to the database");

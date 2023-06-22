@@ -180,14 +180,12 @@ export class GameService {
         ServerEvents.LobbyMessage,
         `Your invitation to play send to ${client.data.userName} has been accepted 🤝`,
       );
-      console.log("🏓");
       /* Create lobby */
       const newLobby = this.createLobby("duo", "2D", sender);
       newLobby.addPlayer(client, "left");
       newLobby.dispatchToLobby(ServerEvents.GameInviteStart, null);
       await this.waitForPlayerIsReady(client);
       await this.waitForPlayerIsReady(sender);
-      console.log("🏓 waitForPlayerIsReady");
       this.startGame(newLobby);
     } else {
       sender.emit(ServerEvents.LobbyMessage, `Your invitation send to ${client.data.userName} has been declined...`);
@@ -297,6 +295,5 @@ export class GameService {
   private displayLobbies(): void {
     const lobbiesArray = Array.from(this.lobbies.values());
     const lobbyIds = lobbiesArray.map((lobby) => lobby.id);
-    console.log("lobbies:", lobbyIds);
   }
 }

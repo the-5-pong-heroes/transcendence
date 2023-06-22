@@ -22,10 +22,6 @@ export const Login42: React.FC = () => {
   };
   const url_42_auth = API42_URL + "?" + new URLSearchParams(body).toString();
 
-  useEffect(() => {
-    console.log("api = ", url_42_auth);
-  }, []);
-
   return (
     <a className="Login_with" href={url_42_auth}>
       <span>Continue with </span>
@@ -58,7 +54,6 @@ export const Login: React.FC = () => {
     const fetchToggle2FA = async (): Promise<void> => {
       const toggledValue = await twoFAstatus();
       setIsActivated(toggledValue);
-      console.log("🌵 toggledValue: ", toggledValue);
     };
 
     fetchToggle2FA().catch(() => console.log());
@@ -71,7 +66,7 @@ export const Login: React.FC = () => {
 
       return data.twoFA;
     } catch (error) {
-      console.log("status 2FA not updated");
+      console.error(error);
     }
 
     return false;
@@ -95,7 +90,6 @@ export const Login: React.FC = () => {
     const popup = document.getElementById("verificationCode");
     if (popup instanceof HTMLInputElement) {
       const twoFACode = popup.value;
-      console.log("twoFAcode = ", twoFACode);
       twoFALogin({ code: twoFACode });
       // const response = await customFetch("POST", "auth/2FA/verify", { code: twoFACode });
       // if (response.ok) {

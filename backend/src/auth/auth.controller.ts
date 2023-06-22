@@ -63,7 +63,6 @@ export class AuthController {
     //   authCallbackDto.code = req.query.code as string;
     //   const token = await this.Oauth42.accessToken(authCallbackDto.code);
     //   const user42infos = await this.Oauth42.access42UserInformation(token);
-    // console.log("✨ user42infos: ", user42infos);
 
     this.authService.createCookies(res, token);
     if (!user42infos.email) res.redirect(301, `http://localhost:5173/`);

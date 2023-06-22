@@ -13,7 +13,7 @@ async function verifyTwoFA(code: string): Promise<User> {
     throw new ResponseError(message ? message : "Fetch request failed", response);
   }
   const payload = (await response.json()) as UserAuth;
-  console.log("payload: ", payload);
+  // console.log("payload: ", payload);
 
   return payload.user;
 }

@@ -56,7 +56,7 @@ export class Generate2FAService {
     try {
       const email = user.auth.email;
       const code2FA = this.generateRandomCode(6);
-      console.log("sendActivationMail: ", email, code2FA);
+      // console.log("sendActivationMail: ", email, code2FA);
       this.sendEmailToUser(email, user, code2FA);
       await this.storeCodeToDataBase(code2FA, user);
       this.updateUser(user);
@@ -78,7 +78,6 @@ export class Generate2FAService {
   async sendEmailToUser(email: string, user: UserWithAuth, code2FA: string): Promise<void> {
     let htmlWithCode = myHTML.replace("{{code2FA}}", code2FA);
     htmlWithCode = htmlWithCode.replace("{{userName}}", user.name);
-    console.log("sendEmailToUser email: ", email);
 
     this.mailerService.sendMail({
       to: `${email}`,
@@ -87,7 +86,6 @@ export class Generate2FAService {
       text: "transcendence !",
       html: htmlWithCode,
     });
-    console.log("💋 email send");
   }
 
   async storeCodeToDataBase(code2FA: string, user: UserWithAuth): Promise<UserWithAuth> {

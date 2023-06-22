@@ -32,7 +32,6 @@ export const Messages: React.FC = () => {
       // const	config = { headers: { 'Authorization': token }};
       const response = await customFetch("GET", `chat/${activeChannel.id}`);
       if (!response.ok) {
-        console.log("🐥");
         throw new ResponseError("Failed on fetch channels request", response);
       }
       const data = await response.json();

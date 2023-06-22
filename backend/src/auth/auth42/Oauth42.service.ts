@@ -37,7 +37,7 @@ export class Oauth42Service {
       if (!data) {
         throw new BadRequestException("the user token is empty");
       }
-      console.log("👗", data.access_token);
+      // console.log("data.access_token: ", data.access_token);
       return data.access_token;
     } catch (error) {
       throw new BadRequestException("Error to get the user by token3");
@@ -51,7 +51,6 @@ export class Oauth42Service {
       });
       if (response.ok) {
         const data = (await response.json()) as User42Infos;
-        console.log("🦖🦖🦖🦖", data.email, data.login);
         return data;
       }
     } catch (error) {

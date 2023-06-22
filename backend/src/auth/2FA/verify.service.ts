@@ -19,7 +19,6 @@ export class VerifyService {
         auth: true,
       },
     });
-    console.log("🔐", user?.auth?.twoFASecret);
     if (code !== user?.auth?.twoFASecret) {
       res.status(400).json({ message: "Invalid code !", user: null });
       return;

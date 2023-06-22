@@ -27,7 +27,6 @@ export class WebSocketInterceptor implements NestInterceptor {
       client.disconnect();
       throw new UnauthorizedException("Not authenticated");
     }
-    // console.log("💥 WebSocketInterceptor");
     const user = await this.authService.validateUser(token);
     if (!user) {
       client.disconnect();

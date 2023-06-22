@@ -108,7 +108,6 @@ export class AuthService {
 
   async createDataBase42User(user42: User42Infos, token: string, username: string, isRegistered: boolean) {
     try {
-      console.log("👙", username, token);
       const user = await this.prisma.user.create({
         data: {
           name: username,
@@ -158,7 +157,6 @@ export class AuthService {
       url = `${CLIENT_URL}/Login?displayPopup=true`;
     }
     res.cookie("access_token", userInfos.accessToken, cookieOptions).redirect(301, url);
-    console.log("End signInGoogle");
   }
 
   async createDataBaseUserFromGoogle(userInfos: UserGoogleInfos, isRegistered: boolean): Promise<UserWithAuth> {
@@ -178,7 +176,7 @@ export class AuthService {
         },
         include: { auth: true },
       });
-      console.log(user);
+      // console.log(user);
       return user;
     } catch (error) {
       throw new BadRequestException("Error to create the user to the database");

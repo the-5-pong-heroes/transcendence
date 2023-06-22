@@ -56,21 +56,16 @@ export class AuthController {
     const authCallbackDto = new AuthCallbackDto();
     authCallbackDto.code = req.query.code as string;
     const token = await this.Oauth42.accessToken(authCallbackDto.code);
-    console.log("👙👙👙👙", token);
     const user42infos = await this.Oauth42.access42UserInformation(token);
-    // console.log("✨ user42infos: ", user42infos);
     this.authService.createCookies(res, token);
     if (!user42infos) {
       return;
-    }
-  else {
+    } else {
       const userExists = await this.userService.getUserByEmail(user42infos.email);
-      console.log("👙👙👙👙", userExists);
       if (!userExists) this.authService.createDataBase42User(user42infos, token, user42infos.login, false);
       else {
         this.authService.updateTokenCookies(res, token, userExists.id);
         if (!userExists.auth?.twoFAactivated) {
-          console.log("🐒🐒🐒🐒🐒🐒");
           // return; // ou /Profile ?
         } else {
           this.verify2FAService.updateVerify2FA(userExists);

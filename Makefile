@@ -27,6 +27,13 @@ list:
 	${SUDO} docker images
 	${SUDO} docker volume ls
 
+seed:
+# doesn't work yet
+	cd backend && npx prisma db seed	
+
+studio:
+	npx prisma studio --schema backend/src/prisma/schema.prisma
+
 stop:
 	${SUDO} $(DOCKER_COMPOSE) stop
 

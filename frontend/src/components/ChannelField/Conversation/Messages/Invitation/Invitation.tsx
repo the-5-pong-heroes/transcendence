@@ -16,9 +16,10 @@ export const Invitation: React.FC<IInvitationProps> = ({ message, theme }) => {
   const socket = useSocket();
 
   const handleClick = (): void => {
-    if (!message.senderId || (user && user.id === message.senderId)) {
+    if (!message.senderId || (user && user.id === message.senderId) || message.content === "/InviteToPlayDisabled") {
       return;
     }
+    socket.emit("disableInvitation", { messageId: message.id, channelId: message.channelId });
     socket.emit(ClientEvents.GameInviteLink, { userId: message.senderId });
   };
 
@@ -26,7 +27,11 @@ export const Invitation: React.FC<IInvitationProps> = ({ message, theme }) => {
     <div
       className={`${styles.Invitation}
         ${theme === "light" ? styles.InvitationLight : styles.InvitationDark}
-        ${user?.id === message.senderId ? styles.InvitationOff : styles.InvitationOn}
+        ${
+          user?.id === message.senderId || message.content === "/InviteToPlayDisabled"
+            ? styles.InvitationOff
+            : styles.InvitationOn
+        }
       `}
       onClick={handleClick}>
       Invitation to play sent by {message.sender?.name}

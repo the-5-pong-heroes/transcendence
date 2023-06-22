@@ -1,7 +1,7 @@
 import { IsString, IsNotEmpty } from "class-validator";
 
-export class GetUsersDto {
+export class ChannelUserIdDto {
   @IsString()
   @IsNotEmpty()
-  readonly blockedOf: string;
+  id: string;
 }

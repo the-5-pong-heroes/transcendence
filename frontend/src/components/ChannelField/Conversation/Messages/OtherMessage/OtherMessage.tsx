@@ -1,11 +1,12 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import styles from "./OtherMessage.module.scss";
 
 import { type IMessage } from "@/interfaces";
 import { useUser, useSocket } from "@hooks";
-import { ResponseError, customFetch } from "@/helpers";
+import { customFetch, ResponseError } from "@/helpers";
+import { DefaultAvatar } from "@/assets";
 
 interface IOtherMessageProps {
   message: IMessage;
@@ -31,7 +32,6 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
   const handleFriend = async () => {
     if (!userIsFriend) {
       const response = await customFetch("POST", "friendship", { newFriendId: message.senderId });
-
       if (!response.ok) {
         throw new ResponseError("Failed on fetch channels request", response);
       }
@@ -45,7 +45,7 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
     setShowOptions();
   };
 
-  const handleBlock = async () => {
+  const handleBlock = () => {
     socket.emit("block", { blockedUserId: message.senderId, toBlock: !userIsBlocked, userId: user?.id });
     setShowOptions();
   };
@@ -72,7 +72,11 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
 
   return (
     <div className={`${styles.OtherMessage} ${theme === "light" ? styles.OtherMessageLight : styles.OtherMessageDark}`}>
-      <div className={styles.Avatar} onClick={() => setShowOptions()} />
+      <div
+        className={styles.Avatar}
+        onClick={() => setShowOptions()}
+        style={{backgroundImage: `url(${message.sender?.avatar ? message.sender.avatar : DefaultAvatar})` }}
+      />
       {showOptions && (
         <div className={styles.Options} ref={optionsRef}>
           <div className={styles.Option} onClick={handleViewProfile}>

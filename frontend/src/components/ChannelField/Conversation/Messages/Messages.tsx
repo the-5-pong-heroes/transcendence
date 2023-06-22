@@ -9,7 +9,7 @@ import styles from "./Messages.module.scss";
 import { ChannelContext } from "@/contexts";
 import { useUser, useSocket, useTheme } from "@hooks";
 import { type IMessage } from "@/interfaces";
-import { ResponseError, customFetch } from "@/helpers";
+import { customFetch, ResponseError } from "@/helpers";
 
 export const Messages: React.FC = () => {
   const [messages, setMessages] = useState<IMessage[]>([]);
@@ -29,7 +29,6 @@ export const Messages: React.FC = () => {
       if (!activeChannel) {
         return setMessages([]);
       }
-      // const	config = { headers: { 'Authorization': token }};
       const response = await customFetch("GET", `chat/${activeChannel.id}`);
       if (!response.ok) {
         throw new ResponseError("Failed on fetch channels request", response);
@@ -59,7 +58,7 @@ export const Messages: React.FC = () => {
         if (!message.senderId) {
           return <ServerMessage key={index} message={message} theme={theme} />
         }
-        if (message.content === "/InviteToPlay" && message.senderId) {
+        if (message.content.substring(0, 13) === "/InviteToPlay" && message.senderId) {
           return <Invitation key={index} message={message} theme={theme} />
         }
         if (message.senderId === user?.id) {

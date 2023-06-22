@@ -9,7 +9,6 @@ import { EnableService } from "./2FA/enable2FA.service";
 import { VerifyService } from "./2FA/verify.service";
 import { TwoFADto, AuthCallbackDto, SignInDto, SignUpDto } from "./dto";
 import { GoogleOauthGuard } from "./google/google-auth.guards";
-import { UserWithAuth } from "src/common/@types";
 import { TwoFA, UserGoogleInfos } from "./interface";
 
 @Controller("auth")
@@ -52,13 +51,14 @@ export class AuthController {
 
   @Get("auth42/callback")
   async getToken(@Req() req: Request, @Res() res: Response): Promise<void> {
-    if (req.signedCookies.access_token) return; // TODO CHECK USER !!!!
+    if (req.signedCookies.access_token) return; // TODO CHECK USER !!
     const authCallbackDto = new AuthCallbackDto();
     authCallbackDto.code = req.query.code as string;
     const token = await this.Oauth42.accessToken(authCallbackDto.code);
     const user42infos = await this.Oauth42.access42UserInformation(token);
     this.authService.createCookies(res, token);
     if (!user42infos) {
+      res.redirect(301, "http://localhost:5173/");
       return;
     } else {
       const userExists = await this.userService.getUserByEmail(user42infos.email);
@@ -66,15 +66,17 @@ export class AuthController {
       else {
         this.authService.updateTokenCookies(res, token, userExists.id);
         if (!userExists.auth?.twoFAactivated) {
-          // return; // ou /Profile ?
+          res.redirect(301, "http://localhost:5173/");
+          return;
         } else {
           this.verify2FAService.updateVerify2FA(userExists);
           this.Generate2FA.sendActivationMail(userExists);
-          //res.redirect(301, `http://localhost:5173/Login?displayPopup=true`);
+          res.redirect(301, `http://localhost:5173/`);
+          return;
         }
       }
     }
-    res.redirect(301, `http://localhost:5173/`);
+    // res.redirect(301, `http://localhost:5173/`);
   }
 
   /*****************************************************************************************/

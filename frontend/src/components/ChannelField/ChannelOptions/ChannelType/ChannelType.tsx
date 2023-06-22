@@ -122,7 +122,7 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ setReturnMessage }) =
       <input className={styles.Button} type="submit" value="Save type change" />
     </form>
   ) : (
-    <div className={styles.ChannelType}>
+    <div className={`${styles.ChannelType} ${theme === "light" ? styles.ChannelTypeLight : styles.ChannelTypeDark}`}>
       <div className={styles.ChannelTypeOptions}>
         <div className={styles.TypeNotOwner}>
           <div className={styles.TypeIcon} style={{ backgroundImage: `url(${typeIcons[activeChannel.type]})` }} />

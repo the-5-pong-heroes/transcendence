@@ -1,5 +1,5 @@
-import { Role } from "@prisma/client";
 import { IsString, IsNotEmpty, IsBoolean, IsOptional, IsIn } from "class-validator";
+import { Role } from "@prisma/client";
 
 const roles = ["USER", "ADMIN", "OWNER"] as const;
 
@@ -13,8 +13,14 @@ export class UpdateChannelUserDto {
   role?: Role;
 
   @IsBoolean()
+  @IsOptional()
   isMuted?: boolean;
 
+  @IsString()
+  @IsOptional()
+  mutedUntil?: string;
+
   @IsBoolean()
+  @IsOptional()
   isAuthorized?: boolean;
 }

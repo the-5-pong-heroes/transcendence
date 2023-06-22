@@ -52,7 +52,7 @@ async function seedUsers() {
 
     const user4 = await prisma.user.create({
       data: {
-        name: "William Wilson ",
+        name: "William Wilson",
         status: "OFFLINE",
         auth: {
           create: {
@@ -64,6 +64,22 @@ async function seedUsers() {
         },
       },
     });
+
+    const user5 = await prisma.user.create({
+      data: {
+        name: "Olivia Davis",
+        status: "ONLINE",
+        auth: {
+          create: {
+            isRegistered: true,
+            email: "odavis@student.42.fr",
+            accessToken: "a9ff9e75544854d8f0cbdb5e6356b07ae826cfae8c192c47a06a6319c3f8ef6e",
+            twoFAactivated: false,
+          },
+        },
+      },
+    });
+
     const users = await prisma.user.count();
 
     console.log("Users seeded:", users);

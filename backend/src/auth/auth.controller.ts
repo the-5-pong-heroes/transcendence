@@ -1,4 +1,4 @@
-import { Injectable, Get, Controller, Post, Body, UseGuards, Req, Res } from "@nestjs/common";
+import { Injectable, Get, Controller, Post, Body, UseGuards, Req, Res, Query } from "@nestjs/common";
 import { Request, Response } from "express";
 
 import { AuthGuard } from "@nestjs/passport";
@@ -12,6 +12,7 @@ import { Generate2FAService } from "./2FA/generate.service";
 import { EnableService } from "./2FA/enable2FA.service";
 import { VerifyService } from "./2FA/verify.service";
 import { UserDto } from "./dto";
+import { CodeDto } from "./dto/code.dto";
 
 @Injectable()
 export class GoogleOauthGuard extends AuthGuard("google") {}
@@ -44,13 +45,12 @@ export class AuthController {
   }
 
   @Get("auth42/callback")
-  async getToken(@Req() req: Request, @Res() res: Response) {
-    if (req.cookies.access_token) return;
-    const codeFromUrl = req.query.code as string;
-    const token = await this.Oauth42.accessToken(codeFromUrl);
-    const user42infos = await this.Oauth42.access42UserInformation(token.access_token);
+  async getToken(@Query() codeDto: CodeDto, @Res() res: Response) {
+    const { code } = codeDto;
+    const token = await this.Oauth42.accessToken(code);
+    const user42infos = await this.Oauth42.access42UserInformation(token);
     this.authService.createCookies(res, token);
-    if (!user42infos) return;
+    if (!user42infos.email) res.redirect(301, `http://localhost:5173/`);
     else {
       const userExists = await this.userService.getUserByEmail(user42infos.email);
       if (!userExists) this.authService.createDataBase42User(user42infos, token, user42infos.login, false);

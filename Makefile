@@ -1,5 +1,5 @@
 # updates the path to your environment file below
-DOCKER_ENV_FILE		= ./env/docker.eugenie.env
+DOCKER_ENV_FILE		= ./env/docker.env
 
 ifneq ($(shell docker compose version 2>/dev/null),)
   DOCKER_COMPOSE	= docker compose --env-file ${DOCKER_ENV_FILE}
@@ -23,9 +23,9 @@ run: check-env
 	$(DOCKER_COMPOSE) up --build --remove-orphans --force-recreate
 
 list:
-	${SUDO} docker container ps -a
-	${SUDO} docker images
-	${SUDO} docker volume ls
+	docker container ps -a
+	docker images
+	docker volume ls
 
 seed:
 # doesn't work yet
@@ -35,17 +35,17 @@ studio:
 	npx prisma studio --schema backend/src/prisma/schema.prisma
 
 stop:
-	${SUDO} $(DOCKER_COMPOSE) stop
+	$(DOCKER_COMPOSE) stop
 
 down:
-	${SUDO} $(DOCKER_COMPOSE) down
+	$(DOCKER_COMPOSE) down
 
 clean:  down
-	${SUDO} docker container prune --force
+	docker container prune --force
 
 fclean: clean
-	${SUDO} docker system prune --all --force
-	${SUDO} docker volume rm $(DATABASE_VOLUME)
+	docker system prune --all --force
+	docker volume rm $(DATABASE_VOLUME)
 	@printf "$(UP)"
 
 re: fclean all

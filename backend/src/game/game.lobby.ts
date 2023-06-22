@@ -59,6 +59,7 @@ export class GameLobby extends EventEmitter {
       play: this.gameLoop.play.getState(),
     });
     client.emit(ServerEvents.LobbyState, this.getState());
+    console.log("addViewer: ", client.data.userName);
   }
 
   public addClient(client: AuthenticatedSocket): void {

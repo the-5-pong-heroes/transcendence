@@ -52,10 +52,6 @@ class EnvironmentVariables {
 
   @IsString()
   @IsNotEmpty()
-  VITE_API42_URI: string;
-
-  @IsString()
-  @IsNotEmpty()
   IMG_BB_API_KEY: string;
 }
 

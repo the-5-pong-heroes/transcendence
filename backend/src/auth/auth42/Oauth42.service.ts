@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
 import fetch from "node-fetch";
-import { API_42_NEW_TOKEN, API_42_USER } from "src/common/constants/auth";
+import { API_42_NEW_TOKEN, API_42_REDIRECT, API_42_USER } from "src/common/constants/auth";
 import { ConfigService } from "@nestjs/config";
 
 @Injectable()
@@ -22,7 +22,7 @@ export class Oauth42Service {
     try {
       const client_id = this.config.get("API_42_ID");
       const secret = this.config.get("API_42_SECRET");
-      const uri = this.config.get("VITE_API42_URI");
+      const uri = API_42_REDIRECT;
       const response = await fetch(API_42_NEW_TOKEN, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },

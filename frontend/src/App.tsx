@@ -53,10 +53,10 @@ const App: React.FC = () => {
           <Route path="/Profile" element={<Profile key="my-profile" profileRef={myProfileRef} setGoTo={setGoTo} />}>
             <Route path=":uuid" element={<Profile key={uuid} profileRef={profileRef} setGoTo={setGoTo} />} />
           </Route>
-          <Route path="/Settings/" element={<Settings settingsRef={settingsRef} />} />
-          <Route path="/Game" element={<Game gameRef={gameRef} />} />
-          <Route path="/Leaderboard" element={<Leaderboard boardRef={boardRef} />} />
-          <Route path="/Chat" element={<Chat chatRef={chatRef} />} />
+          <Route path="/Settings/" element={<Settings settingsRef={settingsRef} setGoTo={setGoTo} />} />
+          <Route path="/Game" element={<Game gameRef={gameRef} setGoTo={setGoTo} />} />
+          <Route path="/Leaderboard" element={<Leaderboard boardRef={boardRef} setGoTo={setGoTo} />} />
+          <Route path="/Chat" element={<Chat chatRef={chatRef} setGoTo={setGoTo} />} />
         </Route>
       </Routes>
       <ToastContainer

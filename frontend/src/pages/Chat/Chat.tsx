@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 
 import { ChannelList, ChannelField } from "../../components";
@@ -9,6 +9,7 @@ import { ChannelProvider, UserProvider } from "@/contexts";
 
 interface IChatProps {
   chatRef: React.RefObject<HTMLDivElement>;
+  setGoTo: Dispatch<SetStateAction<string>>;
 }
 
 const fallbackRender: React.FC<FallbackProps> = ({ error }) => {
@@ -20,8 +21,12 @@ const fallbackRender: React.FC<FallbackProps> = ({ error }) => {
   );
 };
 
-export const Chat: React.FC<IChatProps> = ({ chatRef }) => {
+export const Chat: React.FC<IChatProps> = ({ chatRef, setGoTo }) => {
   const [showOptions, setShowOptions] = useState<boolean>(false);
+
+  useEffect(() => {
+    setGoTo("/Chat");
+  }, []);
 
   return (
     <ErrorBoundary fallbackRender={fallbackRender} onReset={(details) => {}}>

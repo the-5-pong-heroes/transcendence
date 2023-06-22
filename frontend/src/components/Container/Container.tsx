@@ -48,7 +48,9 @@ export const Container: React.FC<ContainerProps> = ({ children, goTo, setGoTo })
 
   const checkNavigation = (): void => {
 	  if (sectionSize === 0) return;
-	  if (x >= sectionSize * 3.5 && goTo.substring(0, 8) === "/Profile") {
+	  if (x >= sectionSize * 3.5 && goTo === "/Settings") {
+		  setGoTo("");
+	  } else if (x >= sectionSize * 3.5 && goTo.substring(0, 8) === "/Profile") {
 		  setGoTo("");
 	  } else if (x >= sectionSize * 2.5 && x < sectionSize * 3.5 && goTo === "/Chat") {
 		  setGoTo("");

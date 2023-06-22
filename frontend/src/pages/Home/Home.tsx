@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { useEffect, Dispatch, SetStateAction } from "react";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Mousewheel } from "swiper";
@@ -124,6 +124,10 @@ interface HomeProps {
 
 export const Home: React.FC<HomeProps> = ({ homeRef, setGoTo }) => {
   const { gameState, isNavigatingRef }: AppContextParameters = useAppContext();
+
+  useEffect(() => {
+    setGoTo("/")
+  }, []);
 
   const onClick = (event: React.MouseEvent<HTMLAnchorElement>): void => {
     setGoTo("/Game")

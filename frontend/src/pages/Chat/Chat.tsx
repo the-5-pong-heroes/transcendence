@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 
 import { ChannelList, ChannelField } from "../../components";
@@ -23,14 +23,16 @@ const fallbackRender: React.FC<FallbackProps> = ({ error }) => {
 };
 
 export const Chat: React.FC<IChatProps> = ({ chatRef }) => {
+  const [showOptions, setShowOptions] = useState<boolean>(false);
+
   return (
     <ErrorBoundary fallbackRender={fallbackRender} onReset={(details) => {}}>
       <UserProvider>
         <ChannelProvider>
           <div ref={chatRef} className={styles.Chat}>
             <div className={styles.ChatWindow}>
-              <ChannelList />
-              <ChannelField />
+              <ChannelList setShowOptions={setShowOptions} />
+              <ChannelField showOptions={showOptions} setShowOptions={setShowOptions} />
             </div>
           </div>
         </ChannelProvider>

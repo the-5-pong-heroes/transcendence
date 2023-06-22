@@ -1,13 +1,12 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import styles from "./OtherMessage.module.scss";
 
-import { UserContext, UserContextType } from "@/contexts";
 import { type IMessage } from "@/interfaces";
-// import { socket } from "@/socket";
 import { useUser, useSocket } from "@hooks";
-import { ResponseError, customFetch } from "@/helpers";
+import { customFetch, ResponseError } from "@/helpers";
+import { DefaultAvatar } from "@/assets";
 
 interface IOtherMessageProps {
   message: IMessage;
@@ -19,7 +18,6 @@ interface IOtherMessageProps {
 export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, showOptions, setShowOptions }) => {
   const [userIsBlocked, setUserIsBlocked] = useState<boolean>(false);
   const [userIsFriend, setUserIsFriend] = useState<boolean>(false);
-  // const { user } = useContext(UserContext) as UserContextType;
   const user = useUser();
   const socket = useSocket();
   const optionsRef = useRef<any>(null);
@@ -32,29 +30,22 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
   };
 
   const handleFriend = async () => {
-    // const token = localStorage.getItem('access_token');
-    // if (!token) return;
     if (!userIsFriend) {
       const response = await customFetch("POST", "friendship", { newFriendId: message.senderId });
-
       if (!response.ok) {
         throw new ResponseError("Failed on fetch channels request", response);
       }
-      // if (!response.ok) return console.log("Error friendship");
     } else {
       const response = await customFetch("DELETE", "friendship", { friendId: message.senderId });
       if (!response.ok) {
         throw new ResponseError("Failed on fetch channels request", response);
       }
-      // if (!response.ok) return console.log("Error friendship");
     }
     setUserIsFriend(!userIsFriend);
     setShowOptions();
   };
 
-  const handleBlock = async () => {
-    // const token = localStorage.getItem('access_token');
-    // if (!token) return;
+  const handleBlock = () => {
     socket.emit("block", { blockedUserId: message.senderId, toBlock: !userIsBlocked, userId: user?.id });
     setShowOptions();
   };
@@ -81,7 +72,11 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
 
   return (
     <div className={`${styles.OtherMessage} ${theme === "light" ? styles.OtherMessageLight : styles.OtherMessageDark}`}>
-      <div className={styles.Avatar} onClick={() => setShowOptions()} />
+      <div
+        className={styles.Avatar}
+        onClick={() => setShowOptions()}
+        style={{backgroundImage: `url(${message.sender?.avatar ? message.sender.avatar : DefaultAvatar})` }}
+      />
       {showOptions && (
         <div className={styles.Options} ref={optionsRef}>
           <div className={styles.Option} onClick={handleViewProfile}>

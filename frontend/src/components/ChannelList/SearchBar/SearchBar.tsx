@@ -1,12 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
 import styles from "./SearchBar.module.scss";
 
-import { UserContext, UserContextType } from "@/contexts";
-// import { socket } from '@/socket';
 import { type IChannel } from "@/interfaces";
 import { useUser, useSocket, useTheme } from "@hooks";
-import { ResponseError, customFetch } from "@/helpers";
+import { customFetch, ResponseError } from "@/helpers";
 
 interface ISearch {
   id: string;
@@ -17,7 +15,6 @@ interface ISearch {
 export const SearchBar: React.FC = () => {
   const [preview, setPreview] = useState<ISearch[]>([]);
   const [input, setInput] = useState<string>("");
-  // const { user } = useContext(UserContext) as UserContextType;
   const user = useUser();
   const socket = useSocket();
   const theme = useTheme();
@@ -25,8 +22,6 @@ export const SearchBar: React.FC = () => {
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setInput(value);
-    // const token = localStorage.getItem('access_token');
-    // if (!value || !token) return setPreview([]);
 
     if (!value) {
       return setPreview([]);

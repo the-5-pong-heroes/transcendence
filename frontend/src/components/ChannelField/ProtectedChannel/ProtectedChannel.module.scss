@@ -3,16 +3,21 @@
   height: calc(100% - 80px);
   display: flex;
   flex-flow: column nowrap;
-  align-items: stretch;
+  justify-content: center;
+  align-items: center;
 
   .Form {
-    height: 100%;
-    width: 100%;
+    width: clamp(100px, 50%, 400px);
     display: flex;
     flex-flow: column;
     justify-content: center;
     align-items: center;
     gap: 10px;
+    background-color: rgba(0, 0, 0, .4);
+    outline: solid 1px white;
+    border-radius: 8px;
+    color: white;
+    padding: 15px;
 
     .Password {
       height: 25px;
@@ -21,10 +26,11 @@
       padding: 0 7px;
       outline: none;
       border: none;
+      color: black;
     }
 
     .Button {
-      color: black;
+      color: white;
       outline: none;
       border: none;
       font-weight: 400;
@@ -34,5 +40,13 @@
       font-size: 12px;
       color: red;
     }
+  }
+}
+
+.ProtectedChannelLight {
+  filter: invert(1);
+  
+  .Password {
+    filter: invert(1);
   }
 }

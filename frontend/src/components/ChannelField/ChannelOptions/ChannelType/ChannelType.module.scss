@@ -4,12 +4,15 @@
   flex-flow: column nowrap;
   align-items: center;
   gap: 20px;
+  color: black;
 
   .ChannelTypeOptions {
     display: flex;
     flex-flow: column nowrap;
     align-items: stretch;
     gap: 10px;
+	border-radius: 8px;
+	padding: 10px;
 
     .Type {
       cursor: pointer;
@@ -19,6 +22,14 @@
       gap: 10px;
       padding: 10px;
       border-radius: 7px;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, .4);
+      }
+    }
+
+    .ActiveType {
+      outline: 2px solid black;
     }
       
     .TypeNotOwner {
@@ -28,6 +39,7 @@
       gap: 10px;
       padding: 10px;
       border-radius: 7px;
+      color: black;
       }
 
     .TypeIcon {
@@ -71,30 +83,30 @@
 }
 
 .ChannelTypeLight {
-  .Type {
-    &:hover {
-      background-color: rgba(255, 255, 255, .4);
-    }
+  .ChannelTypeOptions {
+    background-color: rgba(255, 255, 255, .2);
   }
 
-  .ActiveType {
-    outline: 2px solid black;
-  }
-  
   .Button {
     background-color: rgba(255, 0, 38, .9);
   }
 }
 
 .ChannelTypeDark {
+  .ChannelTypeOptions {
+    background-color: rgba(0, 0, 0, .2);
+  }
+
   .Type {
-    &:hover {
-      background-color: rgba(0, 0, 0, .4);
-    }
+    filter: invert(1);
   }
 
   .ActiveType {
-    outline: 2px solid white;
+    filter: invert(1);
+  }
+
+  .TypeNotOwner {
+    filter: invert(1);
   }
   
   .Button {

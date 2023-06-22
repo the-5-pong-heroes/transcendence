@@ -63,12 +63,4 @@ export class ChannelsController {
       throw new UnauthorizedException("You are not authorized to modify this channel");
     await this.channelsService.update(updateChannelDto);
   }
-
-  @Delete(":id")
-  async remove(@Param("id") id: string, @Req() req: any) {
-    const channel = await this.channelsService.findOneWithOwner(id);
-    //if (channel.users.some((user) => user.userId !== req.currentUser.id))
-    //throw new UnauthorizedException("You are not the owner of this channel");
-    //return this.channelsService.delete(id);
-  }
 }

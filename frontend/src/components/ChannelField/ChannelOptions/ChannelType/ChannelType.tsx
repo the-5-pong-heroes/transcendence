@@ -2,8 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 
 import styles from "./ChannelType.module.scss";
 
-import { ChannelContext, UserContext, UserContextType } from "@/contexts";
-// import { socket } from "@/socket";
+import { ChannelContext } from "@/contexts";
 import { useUser, useSocket, useTheme } from "@hooks";
 import { Public, Protected, Private, View, Hide } from "@/assets";
 
@@ -44,7 +43,6 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ setReturnMessage }) =
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isOwner, setIsOwner] = useState<boolean>(false);
 
-  // const { user } = useContext(UserContext) as UserContextType;
   const user = useUser();
   const socket = useSocket();
   const theme = useTheme();
@@ -60,8 +58,6 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ setReturnMessage }) =
 
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // const token = window.localStorage.getItem('access_token');
-    // if (!token || !newChannel) return;
     if (!newChannel) {
       return;
     }
@@ -126,7 +122,7 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ setReturnMessage }) =
       <input className={styles.Button} type="submit" value="Save type change" />
     </form>
   ) : (
-    <div className={styles.ChannelType}>
+    <div className={`${styles.ChannelType} ${theme === "light" ? styles.ChannelTypeLight : styles.ChannelTypeDark}`}>
       <div className={styles.ChannelTypeOptions}>
         <div className={styles.TypeNotOwner}>
           <div className={styles.TypeIcon} style={{ backgroundImage: `url(${typeIcons[activeChannel.type]})` }} />

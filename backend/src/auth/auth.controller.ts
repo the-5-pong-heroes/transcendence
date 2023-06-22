@@ -45,35 +45,29 @@ export class AuthController {
 
   @Get("auth42/callback")
   async getToken(@Req() req: Request, @Res() res: Response) {
-    if (req.cookies.access_token) {
-      res.redirect(301, `http://localhost:5173/`);
-      return; 
-    }
-    
     const codeFromUrl = req.query.code as string;
     const token = await this.Oauth42.accessToken(codeFromUrl);
     const user42infos = await this.Oauth42.access42UserInformation(token.access_token);
     this.authService.createCookies(res, token);
-    
     if (!user42infos) {
       res.redirect(301, `http://localhost:5173/`);
-      return; 
+      return;
     } else {
       const userExists = await this.userService.getUserByEmail(user42infos.email);
-      
+
       if (!userExists) {
         this.authService.createDataBase42User(user42infos, token, user42infos.login, false);
       } else {
         this.authService.updateCookies(res, token, userExists);
-        
+
         if (!userExists.auth?.twoFAactivated) {
-          res.redirect(301, `http://localhost:5173/`); 
-          return; 
+          res.redirect(301, `http://localhost:5173/`);
+          return;
         } else {
           this.verify2FAService.updateVerify2FA(userExists);
           this.Generate2FA.sendActivationMail(userExists);
           res.redirect(301, `http://localhost:5173/`);
-          return; 
+          return;
         }
       }
     }
@@ -86,7 +80,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard("local"))
   @Post("signin")
-  async signIn(@Req() req: any, @Res({ passthrough: true }) res: Response): Promise<void> {
+  async signIn(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<void> {
     await this.authService.signIn(res, req.user);
   }
 

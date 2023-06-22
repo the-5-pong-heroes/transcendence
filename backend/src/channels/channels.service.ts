@@ -203,7 +203,7 @@ export class ChannelsService {
     return [...channels, ...endUsers];
   }
 
-  async update(updateChannelDto: UpdateChannelDto) {
+  async update(updateChannelDto: UpdateChannelDto): Promise<Channel> {
     const { users, banned, ...data } = updateChannelDto;
     return this.prismaService.channel.update({
       where: { id: updateChannelDto.id },

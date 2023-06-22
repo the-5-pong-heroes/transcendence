@@ -10,7 +10,7 @@ import { useGameLoop, useScoreLabel, useGameContext } from "../hooks";
 import { type GameContextParameters } from "../@types";
 import { getInitialPongState } from "../helpers";
 
-import { Ball, Board, Paddle, Score, ParticleSystem } from "./components";
+import { Ball, Board, Paddle, Score } from "./components";
 
 const INITIAL_PONG_STATE = getInitialPongState();
 
@@ -30,7 +30,7 @@ const PongGame: React.FC = () => {
   });
 
   const scoreLabel = useScoreLabel();
-  const { paddleLeftRef, paddleRightRef, ballRef, particlesRef } = useGameLoop();
+  const { paddleLeftRef, paddleRightRef, ballRef } = useGameLoop();
 
   return (
     <>
@@ -40,9 +40,7 @@ const PongGame: React.FC = () => {
       <Ball ballRef={ballRef} initialPos={INITIAL_PONG_STATE.ball.pos} />
       <Paddle paddleRef={paddleLeftRef} initialPos={INITIAL_PONG_STATE.paddleLeft.pos} />
       <Paddle paddleRef={paddleRightRef} initialPos={INITIAL_PONG_STATE.paddleRight.pos} />
-      {/* <ParticleSystem particlesRef={particlesRef} initialPos={INITIAL_PONG_STATE.ball.pos} /> */}
       <OrbitControls />
-      {/* <axesHelper args={[GAME_WIDTH]} /> */}
     </>
   );
 };

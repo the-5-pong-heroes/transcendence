@@ -35,6 +35,5 @@ export function useUserQuery(): IUseUser {
 
 export function useUser(): User | null {
   const { user } = useUserQuery();
-
   return user;
 }

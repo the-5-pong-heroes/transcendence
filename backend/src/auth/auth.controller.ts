@@ -33,7 +33,7 @@ export class AuthController {
     private verify2FAService: VerifyService,
   ) {}
 
-  @Get("Oauth42/login")
+  @Post("Oauth42/login")
   async getUserByToken(@Req() req: Request) {
     return await this.authService.getUserByToken(req);
   }
@@ -49,16 +49,22 @@ export class AuthController {
     const token = await this.Oauth42.accessToken(codeFromUrl);
     const user42infos = await this.Oauth42.access42UserInformation(token.access_token);
     this.authService.createCookies(res, token);
-    if (!user42infos.email) res.redirect(301, `http://localhost:5173/`);
-    else {
+    if (!user42infos) {
+      res.redirect(301, "http://localhost:5173/");
+      return;
+    } else {
       const userExists = await this.userService.getUserByEmail(user42infos.email);
       if (!userExists) this.authService.createDataBase42User(user42infos, token, user42infos.login, false);
       else {
         this.authService.updateCookies(res, token, userExists);
-        if (!userExists.auth?.twoFAactivated) res.redirect(301, `http://localhost:5173/`); // ou /Profile ?
-        else {
-          this.Generate2FA.sendActivationMail(userExists); //2FA page
-          res.redirect(301, `http://localhost:5173/Login`);
+        if (!userExists.auth?.twoFAactivated) {
+          res.redirect(301, "http://localhost:5173/");
+          return;
+        } else {
+          this.verify2FAService.updateVerify2FA(userExists);
+          this.Generate2FA.sendActivationMail(userExists);
+          res.redirect(301, `http://localhost:5173/`);
+          return;
         }
       }
     }
@@ -102,19 +108,24 @@ export class AuthController {
     return this.authService.checkIfTokenValid(req, res);
   }
 
-  @Post("2FA/generate")
-  async generate2FA(@Req() req: Request, @Res() res: Response) {
-    return this.Generate2FA.generateService(req, res);
+  @Get("2FA/generate")
+  async generate2FA(@Req() req: Request) {
+    return this.Generate2FA.generateService(req);
   }
 
-  @Get("2FA/verify")
-  async verify2FA(@Req() req: Request, @Res() res: Response) {
-    return this.verify2FAService.validate2FA(req, res);
+  @Post("2FA/verify")
+  async verify2FA(@Req() req: Request, @Res() res: Response, @Body("twoFACode") code: string) {
+    return this.verify2FAService.validate2FA(req, res, code);
   }
 
   @Get("2FA/disable")
-  async disable2FA(@Req() req: Request, @Res() res: Response) {
-    return this.enable2FAService.disable2FA(req, res);
+  async disable2FA(@Req() req: Request) {
+    return this.enable2FAService.disable2FA(req);
+  }
+
+  @Get("2FA/status")
+  async status2FA(@Req() req: Request) {
+    return this.enable2FAService.status2FA(req);
   }
 
   //    @Get("google/callback")

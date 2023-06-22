@@ -10,6 +10,7 @@ import { DefaultAvatar, Leave } from "@/assets";
 import { LoadingIcon } from "@/components/loading/loading";
 import { customFetch } from "@/helpers";
 import { useUser } from "@hooks";
+import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
 import { BASE_URL } from "@/constants";
 
 interface SettingsProps {
@@ -36,10 +37,9 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
   const signOut = useSignOut();
   const user = useUser();
 
-  const twoFACode = React.useState("");
-  const [isActivated, setIsActivated] = React.useState(false);
+  const url = "http://localhost:3333/settings";
 
-  async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>): Promise<void> {
+  async function handleFileChange(event: any) {
     if (!event.target.files) {
       return;
     }
@@ -98,65 +98,6 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
     }));
   }
 
-  async function toggle2FA(isToggled: boolean) {
-    console.log("2FA: ", isToggled);
-    if (!isToggled) {
-      const url = `${BASE_URL}` + "/auth/2FA/disable";
-      window.open(url, "_self");
-    } else {
-      try {
-        const data = await handle2FAfunction();
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  }
-
-  async function handle2FAfunction(): Promise<any> {
-    const response = await customFetch("POST", "auth/2FA/generate", { code: twoFACode, twoFAactivated: isActivated });
-    const data = await response.json();
-    if (data.twoFAactivated === true) {
-      openPopup(data.code);
-    }
-
-    return data;
-  }
-
-  function openPopup(twoFACode: string) {
-    const popup = document.getElementById("popup");
-    if (popup) {
-      popup.style.display = "block";
-      popup.dataset.twoFACode = twoFACode;
-    }
-  }
-
-  function closePopup() {
-    const popup = document.getElementById("popup");
-    if (popup) {
-      popup.style.display = "none";
-      popup.removeAttribute("data-twoFACode");
-    }
-  }
-
-  function submitVerificationCode() {
-    const verificationCodeInput = document.getElementById("verificationCode") as HTMLInputElement;
-    if (verificationCodeInput) {
-      const verificationCode = verificationCodeInput.value;
-      const popup = document.getElementById("popup");
-      if (popup) {
-        const twoFACode = popup.dataset.twoFACode;
-        console.log("twoFA = ", twoFACode);
-        console.log("verif = ", verificationCode);
-        if (verificationCode === twoFACode) {
-          alert("Code de vérification correct !");
-          closePopup();
-        } else {
-          alert("Code de vérification incorrect. Veuillez réessayer.");
-        }
-      }
-    }
-  }
-
   if (!user) {
     return null;
   }
@@ -202,14 +143,7 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
           </label>
         </div>
         <div className="settings-col update-2fa">
-          <Toggle2FA toggled={true} onClick={toggle2FA} />
-        </div>
-        <div id="popup" style={{ display: "none" }}>
-          <h3>Entrez le code de vérification :</h3>
-          <input type="text" id="verificationCode" style={{ color: "black" }} />
-          <button className="walle-button" onClick={submitVerificationCode}>
-            Valider
-          </button>
+          <Toggle2FA/>
         </div>
       </div>
       <div className="settings-block block2">

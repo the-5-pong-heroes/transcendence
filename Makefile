@@ -20,7 +20,7 @@ check-env:
 	fi
 
 run: check-env
-	$(DOCKER_COMPOSE) up --build --remove-orphans --force-recreate
+	$(DOCKER_COMPOSE) up --build --remove-orphans
 
 list:
 	${SUDO} docker container ps -a

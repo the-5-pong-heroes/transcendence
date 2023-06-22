@@ -24,15 +24,11 @@ class EnvironmentVariables {
 
   @IsString()
   @IsNotEmpty()
-  GOOGLE_CLIENT_ID: string;
+  COOKIES_SECRET: string;
 
   @IsString()
   @IsNotEmpty()
-  GOOGLE_SECRET: string;
-
-  @IsString()
-  @IsNotEmpty()
-  GOOGLE_REDIRECT_URI: string;
+  FRONTEND_URL: string;
 
   @IsString()
   @IsNotEmpty()
@@ -49,10 +45,6 @@ class EnvironmentVariables {
   @IsString()
   @IsNotEmpty()
   API_42_SECRET: string;
-
-  @IsString()
-  @IsNotEmpty()
-  VITE_API42_URI: string;
 
   @IsString()
   @IsNotEmpty()

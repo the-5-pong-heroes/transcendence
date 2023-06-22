@@ -1,6 +1,5 @@
 import React from "react";
 
-import "./LobbyMode.css";
 import { GameButton } from "../GameButton";
 import { CloseButton } from "../CloseButton";
 
@@ -26,7 +25,7 @@ export const LobbyModeButton: React.FC<LobbyModeProps> = ({ gameMode, lobbyMode,
   };
 
   return (
-    <div className="game-modal-cross">
+    <div className="game-modal">
       <CloseButton />
       <div className="game-button-wrapper">
         <GameButton

@@ -2,8 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 
 import { ChannelContext } from "../../../../contexts";
 import { type IChannelUser } from "../../../../interfaces";
-
-import { Rocket, Game} from "../../../../assets";
+import { Rocket, Game } from "../../../../assets";
 
 import styles from "./ConversationForm.module.scss";
 
@@ -58,8 +57,8 @@ export const ConversationForm: React.FC = () => {
 
   const sendInviteToPlay = () => {
     setMessage("/InviteToPlay");
-    submit()
-  }
+    submit();
+  };
 
   useEffect(() => {
     window.addEventListener("keypress", handleKeyPress);

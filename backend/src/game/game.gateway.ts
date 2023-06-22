@@ -86,6 +86,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.gameService.inviteToGame(data.userId, client);
   }
 
+  @SubscribeMessage(ClientEvents.GameInviteLink)
+  onInviteGameLink(@ConnectedSocket() client: AuthenticatedSocket, @MessageBody() data: GameInviteDto) {
+    this.gameService.inviteToGameLink(data.userId, client);
+  }
+
   @SubscribeMessage(ClientEvents.GameInviteResponse)
   onInviteGameResponse(@ConnectedSocket() client: AuthenticatedSocket, @MessageBody() data: GameInviteResponseDto) {
     this.gameService.inviteToGameResponse(data.response, data.senderId, client);

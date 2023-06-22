@@ -8,7 +8,6 @@ import { PrismaService } from "../database/prisma.service";
 import { ChannelUsersService } from "../channel-users/channel-users.service";
 import { MessagesModule } from "../messages/messages.module";
 import { ChannelUsersModule } from "../channel-users/channel-users.module";
-import { UserGuard } from "src/auth/user.guard";
 import { AuthModule } from "src/auth/auth.module";
 import { BlockedService } from "src/blocked/blocked.service";
 import { WebSocketInterceptor } from "src/common/interceptors";
@@ -23,7 +22,6 @@ import { WebSocketInterceptor } from "src/common/interceptors";
     ChannelUsersService,
     UserService,
     PrismaService,
-    UserGuard,
     BlockedService,
     WebSocketInterceptor,
   ],

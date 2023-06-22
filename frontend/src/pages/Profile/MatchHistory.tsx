@@ -29,9 +29,15 @@ export const MatchHistory = ({ history }: { history: GameData[] }) => {
               <span>{match.playerTwoScore}</span>
             </div>
             <div className="column player2">
-              <Link to={`/profile/${match.playerTwo?.id}`} className="link-prof">
-                <span>{match.playerTwo?.name}</span>
+			{match.playerTwo ? 
+              <Link to={`/profile/${match.playerTwo.id}`} className="link-prof">
+                <span>{match.playerTwo.name}</span>
               </Link>
+			  :
+              <div className="link-prof">
+                <span>bot</span>
+              </div>
+			  }
             </div>
           </div>
         );

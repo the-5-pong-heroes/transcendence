@@ -28,9 +28,18 @@ export class MessagesService {
         sender: {
           select: {
             name: true,
+            avatar: true,
           },
         },
       },
+    });
+  }
+
+  disableInvitation(messageId: string): Promise<Message> {
+    console.log(messageId);
+    return this.prismaService.message.update({
+      where: { id: messageId },
+      data: { content: "/InviteToPlayDisabled" },
     });
   }
 

@@ -2,8 +2,7 @@ import React, { useContext } from "react";
 
 import styles from "./ChannelHeader.module.scss";
 
-import { ChannelContext, UserContext, UserContextType } from "@/contexts";
-// import { socket } from "@/socket";
+import { ChannelContext } from "@/contexts";
 import { useUser, useSocket, useTheme } from "@hooks";
 import { Setting, Leave } from "@/assets";
 
@@ -14,16 +13,13 @@ interface IChannelHeader {
 export const ChannelHeader: React.FC<IChannelHeader> = ({ setShowOptions }) => {
   const user = useUser();
   const socket = useSocket();
-  // const { user } = useContext(UserContext) as UserContextType;
   const { activeChannel } = useContext(ChannelContext);
   if (activeChannel === undefined) {
     throw new Error("Undefined Active Channel");
   }
   const theme = useTheme();
 
-  const leaveChannel = async () => {
-    // const token = localStorage.getItem('access_token');
-    // if (!token || !activeChannel) return;
+  const leaveChannel = (): void => {
     if (!activeChannel) {
       return;
     }

@@ -27,6 +27,10 @@ export class ChannelUsersService {
     return this.prismaService.channelUser.findFirst({ where: { ...data } });
   }
 
+  async findFromChannel(channelId: string): Promise<ChannelUser[]> {
+    return this.prismaService.channelUser.findMany({ where: { channelId } });
+  }
+
   async update(data: UpdateChannelUserDto): Promise<ChannelUser> {
     return this.prismaService.channelUser.update({
       where: { id: data.id },

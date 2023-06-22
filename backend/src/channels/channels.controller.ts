@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Delete,
-  Put,
-  BadRequestException,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { Controller, Get, Post, Body, Param, Put, BadRequestException, UnauthorizedException } from "@nestjs/common";
 import { ChannelUser } from "@prisma/client";
 import { PrismaService } from "../database/prisma.service";
 import { MessagesService } from "../messages/messages.service";
@@ -63,13 +53,5 @@ export class ChannelsController {
     )
       throw new UnauthorizedException("You are not authorized to modify this channel");
     await this.channelsService.update(updateChannelDto);
-  }
-
-  @Delete(":id")
-  async remove(@Param("id") id: string) {
-    const channel = await this.channelsService.findOneWithOwner(id);
-    //if (channel.users.some((user) => user.userId !== req.currentUser.id))
-    //throw new UnauthorizedException("You are not the owner of this channel");
-    //return this.channelsService.delete(id);
   }
 }

@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty } from "class-validator";
+import { IsString, IsBoolean, IsOptional, IsNotEmpty } from "class-validator";
 
 export class CreateChannelUserDto {
   @IsString()
@@ -8,4 +8,8 @@ export class CreateChannelUserDto {
   @IsString()
   @IsNotEmpty()
   userId: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isAuthorized?: boolean;
 }

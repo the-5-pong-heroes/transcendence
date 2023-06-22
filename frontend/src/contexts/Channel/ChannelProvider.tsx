@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 import { ChannelContext } from "./ChannelContext";
 
-// import { socket } from "@/socket";
 import { useSocket } from "@hooks";
 import { type IChannel } from "@/interfaces";
 import { customFetch } from "@/helpers";

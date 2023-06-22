@@ -33,11 +33,6 @@ export class AuthController {
     return await this.authService.getUserByToken(req);
   }
 
-  @Post("Oauth")
-  async userOauthCreationInDataBase(@Req() req: Request, @Res() res: Response, @Body() userData: UserDto) {
-    await this.authService.handleDataBaseCreation(req, res, userData);
-  }
-
   @Get("auth42/callback")
   async getToken(@Req() req: Request, @Res() res: Response) {
     const codeFromUrl = req.query.code as string;
@@ -63,17 +58,6 @@ export class AuthController {
         }
       }
     }
-  }
-
-  @Post("signup")
-  async signUp(@Res({ passthrough: true }) res: Response, @Body() data: CreateUserDto): Promise<void> {
-    await this.authService.signUp(res, data);
-  }
-
-  @UseGuards(AuthGuard("local"))
-  @Post("signin")
-  async signIn(@Req() req: any, @Res({ passthrough: true }) res: Response): Promise<void> {
-    await this.authService.signIn(res, req.user);
   }
 
   @Get("signout")

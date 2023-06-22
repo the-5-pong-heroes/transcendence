@@ -1,12 +1,9 @@
 import { Injectable, BadRequestException, Req, Res, Body, HttpStatus } from "@nestjs/common";
 import { Request, Response, request } from "express";
-import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 
 import { Auth } from "@prisma/client";
 import { UserService } from "src/user/user.service";
-import { SignInDto, SignUpDto } from "./dto";
-import { CreateUserDto } from "../user/dto";
 import { User } from "@prisma/client";
 import { PrismaService } from "../database/prisma.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
@@ -25,7 +22,6 @@ interface Token {
 @Injectable()
 export class AuthService {
   constructor(
-    private jwtService: JwtService,
     private userService: UserService,
     private prisma: PrismaService,
     private Oauth42: Oauth42Service,
@@ -39,79 +35,6 @@ export class AuthService {
       where: { email: email },
     });
     return result;
-  }
-
-  async signUp(@Res({ passthrough: true }) res: Response, data: SignUpDto): Promise<void> {
-    const { name, email, password } = data;
-
-    const userByName = await this.userService.findUserByName(name);
-    if (userByName) {
-      res.status(HttpStatus.CONFLICT).json({ message: "User already exists" });
-      return;
-    }
-    const userAuth = await this.findOne(email);
-    if (userAuth) {
-      res.status(HttpStatus.CONFLICT).json({ message: "Email already used" });
-      return;
-    }
-    const salt = await bcrypt.genSalt();
-    const hash = await bcrypt.hash(password, salt);
-    const newUser = new CreateUserDto(name, email, hash);
-    const createdUser = await this.userService.create(newUser);
-
-    const payload = { email: email, sub: createdUser.id };
-    const accessToken = this.jwtService.sign(payload);
-    await this.prisma.user.update({
-      where: { id: createdUser.id },
-      data: {
-        auth: {
-          update: {
-            accessToken: accessToken,
-          },
-        },
-      },
-    });
-    res
-      .cookie("access_token", accessToken, {
-        httpOnly: true,
-        secure: false,
-        sameSite: "strict",
-        expires: new Date(Date.now() + 86400 * 1000),
-      })
-      .status(200)
-      .json({ message: "Welcome !", user: createdUser });
-  }
-
-  async validateUserJwt(signInDto: SignInDto): Promise<any> {
-    const { email, password } = signInDto;
-    const userAuth = await this.findOne(email);
-    if (!userAuth) {
-      throw new BadRequestException("User doesn't exist");
-    }
-    if (userAuth.password) {
-      const isMatch = await bcrypt.compare(password, userAuth.password);
-      if (!isMatch) {
-        throw new BadRequestException("Invalid credentials");
-      }
-    }
-    const { password: _, ...result } = userAuth;
-    return result;
-  }
-
-  async signIn(@Res({ passthrough: true }) res: Response, auth: Auth): Promise<void> {
-    const payload = { email: auth.email, sub: auth.userId };
-    const user = await this.userService.findOne(auth.userId);
-    const accessToken = this.jwtService.sign(payload);
-
-    res
-      .cookie("access_token", accessToken, {
-        httpOnly: true,
-        secure: false,
-        sameSite: "strict",
-        expires: new Date(Date.now() + 86400 * 1000),
-      })
-      .status(200)
-      .json({ message: "Welcome back !", user: user });
   }
 
   async signOut(res: Response): Promise<void> {
@@ -135,29 +58,6 @@ export class AuthService {
       return null;
     }
   }
-  // let userId;
-  // if (!access_token) {
-  //   return null;
-  // }
-  // try {
-  //   const decodedToken = this.jwtService.verify(access_token);
-  //   userId = decodedToken.sub;
-  // } catch (error) {
-  //   try {
-  //     const auth = await this.prisma.auth.findFirst({
-  //       where: {
-  //         accessToken: access_token,
-  //       },
-  //     });
-  //     if (!auth) {
-  //       return null;
-  //     }
-  //     userId = auth.userId;
-  //   } catch {
-  //     return null;
-  //   }
-  // }
-  // const user = await this.userService.findOne(userId);
 
   async getUser(req: Request, res: Response): Promise<any> {
     const access_token = req.cookies.access_token;
@@ -237,23 +137,6 @@ export class AuthService {
       return user;
     } catch (error) {
       throw new BadRequestException("Failed to get the user by token (no user found)");
-    }
-  }
-
-  async handleDataBaseCreation(@Req() req: Request, @Res() res: Response, @Body() userData: UserDto) {
-    const token: string = req.cookies.access_token;
-    const user42infos = await this.Oauth42.access42UserInformation(token);
-    if (user42infos) {
-      const finalUser = await this.Oauth42.createDataBase42User(
-        user42infos,
-        token,
-        req.body.name,
-        req.body.isRegistered,
-      );
-      return res.status(200).json({
-        statusCode: 200,
-        path: finalUser,
-      });
     }
   }
 

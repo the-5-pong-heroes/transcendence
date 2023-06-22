@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Dispatch, SetStateAction } from "react";
 import { Link } from "react-router-dom";
 
 import { MenuButton, ScrollToPage, BurgerButton } from "./components";
@@ -10,7 +10,11 @@ import { useAppContext } from "@hooks";
 import type { AppContextParameters, PageRefs } from "@types";
 import { LogoWallE, LogoWallELight } from "@assets";
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+  setGoTo: Dispatch<SetStateAction<string>>;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ setGoTo }) => {
   const [showNavbar, setShowNavbar] = useState<boolean>(false);
   const handleShowNavbar = (): void => {
     setShowNavbar(!showNavbar);
@@ -28,6 +32,7 @@ export const Navbar: React.FC = () => {
   };
 
   const onClick = (event: React.MouseEvent<HTMLAnchorElement>): void => {
+	setGoTo("/");
     handleOnClickButton({ event, path: "/", menuRef: homeRef, gameState, isNavigatingRef });
   };
 
@@ -49,6 +54,7 @@ export const Navbar: React.FC = () => {
               menuRef={menuRefs[item.refName]}
               showNavbar={showNavbar}
               handleShowNavbar={handleShowNavbar}
+			  setGoTo={setGoTo}
             />
           ))}
         </ul>

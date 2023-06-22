@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, Routes, Navigate, useParams } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,6 +10,8 @@ import { useAppContext, useUserQuery } from "./hooks";
 import "./App.css";
 
 const App: React.FC = () => {
+  const [goTo, setGoTo] = useState<string>("");
+
   const { theme, pageRefs }: AppContextParameters = useAppContext();
   const { homeRef, profileRef, myProfileRef, settingsRef, gameRef, boardRef, chatRef, notFoundRef }: PageRefs =
     pageRefs;
@@ -33,10 +35,10 @@ const App: React.FC = () => {
         <Route element={<NotFoundLayout />}>
           <Route path="*" element={<NotFound notFoundRef={notFoundRef} />} />
         </Route>
-        <Route element={<AppLayout user={user} />}>
+        <Route element={<AppLayout user={user} goTo={goTo} setGoTo={setGoTo} />}>
           <Route path="/" element={<Home homeRef={homeRef} />} />
-          <Route path="/Profile" element={<Profile key="my-profile" profileRef={myProfileRef} />}>
-            <Route path=":uuid" element={<Profile key={uuid} profileRef={profileRef} />} />
+          <Route path="/Profile" element={<Profile key="my-profile" profileRef={myProfileRef} setGoTo={setGoTo} />}>
+            <Route path=":uuid" element={<Profile key={uuid} profileRef={profileRef} setGoTo={setGoTo} />} />
           </Route>
           <Route path="/Settings/" element={<Settings settingsRef={settingsRef} />} />
           <Route path="/Game" element={<Game gameRef={gameRef} />} />

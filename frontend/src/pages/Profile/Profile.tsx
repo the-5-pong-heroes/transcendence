@@ -1,5 +1,5 @@
 /* eslint max-lines: ["warn", 300] */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Dispatch, SetStateAction } from "react";
 
 import "./Profile.css";
 import { useParams, Link } from "react-router-dom";
@@ -26,9 +26,10 @@ export interface GameData {
 
 interface ProfileProps {
   profileRef: React.RefObject<HTMLDivElement>;
+  setGoTo: Dispatch<SetStateAction<string>>;
 }
 
-export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
+export const Profile: React.FC<ProfileProps> = ({ profileRef, setGoTo }) => {
   const { uuid } = useParams();
 
   const [history, setHistory] = useState([] as GameData[]);
@@ -65,6 +66,8 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
   };
 
   useEffect(() => {
+    profileRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+	setGoTo("/Profile/id");
     fetchUser();
     fetchHistory();
   }, [uuid]);

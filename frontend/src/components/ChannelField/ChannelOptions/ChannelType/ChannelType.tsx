@@ -48,7 +48,10 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ setReturnMessage }) =
   const theme = useTheme();
 
   const changeType = (type: string) => {
-    setNewChannel((prev: IChannelUpdate) => ({ ...prev, type }));
+	if (type === "PROTECTED")
+		setNewChannel((prev: IChannelUpdate) => ({ ...prev, type, password: "" }));
+	else
+		setNewChannel((prev: IChannelUpdate) => ({ id: prev.id, type }));
   };
 
   const changePassword = (event: React.ChangeEvent<HTMLInputElement>) => {

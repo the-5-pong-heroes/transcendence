@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { DefaultAvatar } from "../../assets";
 
@@ -7,6 +7,12 @@ import { UserLevel } from "./UserLevel";
 import { UserStatus } from "./UserStatus";
 
 const UserData = ({ users }: { users: UserStats[] }) => {
+	const navigate = useNavigate();
+
+	const handleClick = (id: string): void => {
+		navigate(`/Profile/${id}`);
+	}
+
   return (
     <div className="scroll-div">
       {users.map((curUser: UserStats, i: number) => {
@@ -18,9 +24,9 @@ const UserData = ({ users }: { users: UserStats[] }) => {
               <img src={DefaultAvatar} alt="profilePicture" />
             </div>
             <div className="col">
-              <Link to={`/profile/${id}`} className="link-prof">
+              <div onClick={() => handleClick(id)} className="link-prof">
                 {name}
-              </Link>
+              </div>
             </div>
             <div className="col">{score}</div>
             <div className="col">{wins}</div>

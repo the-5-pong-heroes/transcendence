@@ -102,11 +102,6 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
     return null;
   }
 
-  const deleteUser = async (): Promise<void> => {
-    void (await customFetch("DELETE", `users/${user?.id}`));
-    signOut();
-  };
-
   useEffect(() => {
     fetchSettings();
   }, []);
@@ -148,11 +143,6 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
       </div>
       <div className="settings-block block2">
         <Unfollow friends={settings.friends} handleUnfollow={handleUnfollow} />
-      </div>
-      <div className="settings-footer">
-        <button className="delete-button" onClick={deleteUser}>
-          Delete my account
-        </button>
       </div>
     </div>
   );

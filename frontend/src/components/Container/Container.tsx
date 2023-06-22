@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, Dispatch, SetStateAction } from "react";
 import { Parallax } from "react-scroll-parallax";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -21,9 +21,11 @@ import { useAppContext } from "@hooks";
 
 interface ContainerProps {
   children: React.ReactNode;
+  goTo: string;
+  setGoTo: Dispatch<SetStateAction<string>>;
 }
 
-export const Container: React.FC<ContainerProps> = ({ children }) => {
+export const Container: React.FC<ContainerProps> = ({ children, goTo, setGoTo }) => {
   const { theme, isNavigatingRef }: AppContextParameters = useAppContext();
 
   const [x, setX] = useState<number>(0);
@@ -35,29 +37,51 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
   const handleScroll = (event: React.UIEvent<HTMLDivElement>): void => {
     event.stopPropagation();
     setX(event.currentTarget.scrollTop);
-    const ratio = window.innerWidth / window.innerHeight;
-    if (!isNavigatingRef.current && ratio < 2.0) {
+    if (goTo === "") {
       navigateToSection();
     }
+	if (goTo !== "") {
+	  checkNavigation();
+	}
   };
+
+  const checkNavigation = (): void => {
+	  if (sectionSize === 0) return;
+	  if (x >= sectionSize * 3.5 && goTo.substring(0, 8) === "/Profile") {
+		  setGoTo("");
+	  } else if (x >= sectionSize * 2.5 && x < sectionSize * 3.5 && goTo === "/Chat") {
+		  setGoTo("");
+	  } else if (x >= sectionSize * 1.5 && x < sectionSize * 2.5 && goTo === "/Leaderboard") {
+		  setGoTo("");
+	  } else if (x >= sectionSize * .5 && x < sectionSize * 1.5 && goTo === "/Game") {
+		  setGoTo("");
+	  } else if (x < sectionSize * .5 && goTo === "/") {
+		  setGoTo("");
+	  }
+  }
+
   const navigateToSection = (): void => {
-    if (x >= sectionSize * 4 && location.pathname !== "/Profile") {
-      navigate("/Profile");
-    } else if (x >= sectionSize * 3 && x < sectionSize * 4 && location.pathname !== "/Chat") {
-      navigate("/Chat");
-    } else if (x >= sectionSize * 2 && x < sectionSize * 3 && location.pathname !== "/Leaderboard") {
-      navigate("/Leaderboard");
-    } else if (x >= sectionSize && x < sectionSize * 2 && location.pathname !== "/Game") {
-      navigate("/Game");
-      // setTimeout(() => navigate("/Game"), 1000);
-    } else if (x < sectionSize && location.pathname !== "/") {
-      navigate("/");
-    }
+	  if (sectionSize === 0) return;
+	  if (x >= sectionSize * 3.5 && location.pathname.substring(0, 8) !== "/Profile") {
+		  navigate("/Profile");
+	  } else if (x >= sectionSize * 2.5 && x < sectionSize * 3.5 && location.pathname !== "/Chat") {
+		  navigate("/Chat");
+	  } else if (x >= sectionSize * 1.5 && x < sectionSize * 2.5 && location.pathname !== "/Leaderboard") {
+		  navigate("/Leaderboard");
+	  } else if (x >= sectionSize * .5 && x < sectionSize * 1.5 && location.pathname !== "/Game") {
+		  navigate("/Game");
+	  } else if (x < sectionSize * .5 && location.pathname !== "/") {
+		  navigate("/");
+	  }
   };
 
   useEffect(() => {
     if (containerRef.current) {
-      setSectionSize((containerRef.current.scrollWidth - document.documentElement.scrollWidth) / 5);
+		if (containerRef.current.scrollWidth < containerRef.current.scrollHeight) {
+			setSectionSize((containerRef.current.scrollHeight - document.documentElement.scrollWidth) / 4);
+		} else {
+			setSectionSize((containerRef.current.scrollWidth - document.documentElement.scrollWidth) / 4);
+		}
     }
   }, []);
 

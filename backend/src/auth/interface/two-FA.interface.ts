@@ -1,3 +1,3 @@
 export interface TwoFA {
-    twoFA: boolean;
+  twoFA: boolean;
 }

@@ -13,9 +13,7 @@ import { MatchHistory } from "./MatchHistory";
 import { Friends } from "./Friends";
 
 import { InviteButton } from "@/components";
-
 import { customFetch } from "@/helpers";
-
 
 export interface GameData {
   playerOne: { id: string; name: string };

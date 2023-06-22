@@ -2,11 +2,16 @@ import { useQuery } from "react-query";
 
 import { USER_QUERY_KEY } from "@/constants";
 import type { UserAuth, User } from "@types";
-import { customFetch } from "@/helpers";
+import { ResponseError, type ErrorMessage, customFetch } from "@/helpers";
 
 async function fetchUser(): Promise<User | null> {
   const response = await customFetch("GET", "auth/user");
-  const payload = await response.json();
+
+  if (!response.ok) {
+    const { message } = (await response.json()) as ErrorMessage;
+    throw new ResponseError(message ? message : "Fetch request failed", response);
+  }
+  const payload = (await response.json()) as UserAuth;
 
   return payload.user;
 }
@@ -22,8 +27,9 @@ export function useUserQuery(): IUseUser {
     async (): Promise<User | null> => fetchUser(),
     {
       refetchOnMount: false,
-      refetchOnWindowFocus: false,
       refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      // refetchInterval: 5000,
     }
   );
 
@@ -35,5 +41,6 @@ export function useUserQuery(): IUseUser {
 
 export function useUser(): User | null {
   const { user } = useUserQuery();
+
   return user;
 }

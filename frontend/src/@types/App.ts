@@ -32,4 +32,6 @@ export interface AppContextParameters {
   gameState: GameState;
   invitationState: InvitationState;
   isNavigatingRef: React.MutableRefObject<boolean>;
+  // twoFA: boolean;
+  // toggleTwoFA: () => void;
 }

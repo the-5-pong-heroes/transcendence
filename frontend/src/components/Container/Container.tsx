@@ -16,7 +16,7 @@ import {
   Cloud2,
   MoonDayLight,
 } from "@assets";
-import type { AppContextParameters } from "@types";
+import type { AppContextParameters, GameState } from "@types";
 import { useAppContext } from "@hooks";
 
 interface ContainerProps {
@@ -26,7 +26,8 @@ interface ContainerProps {
 }
 
 export const Container: React.FC<ContainerProps> = ({ children, goTo, setGoTo }) => {
-  const { theme, isNavigatingRef }: AppContextParameters = useAppContext();
+  const { theme, isNavigatingRef, gameState }: AppContextParameters = useAppContext();
+  const { isRunning, setQuitGame, newRoute }: GameState = gameState;
 
   const [x, setX] = useState<number>(0);
   const [sectionSize, setSectionSize] = useState<number>(0);
@@ -116,9 +117,7 @@ export const Container: React.FC<ContainerProps> = ({ children, goTo, setGoTo })
           <img src={Trash2} />
         </Parallax>
         <Parallax className="layer trash" speed={60}>
-          <div className="parallax-wrapper">
-            <img src={Trash3} className="parallax-img" />
-          </div>
+          <img src={Trash3} className="parallax-img" />
         </Parallax>
         <div className="container-section">{children}</div>
       </div>

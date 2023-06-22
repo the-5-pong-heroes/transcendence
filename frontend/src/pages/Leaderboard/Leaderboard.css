@@ -47,7 +47,11 @@
   min-width: 775px;
 }
 
-.row>* {
+#light .row {
+  background: linear-gradient(0deg, #b3d9fa97 0%, #85b4e7a1 100%);
+}
+
+.row > * {
   flex-shrink: 0;
   width: 100%;
   max-width: 100%;
@@ -74,19 +78,29 @@
 .firstRow {
   font-weight: 600;
   font-size: 1.1rem;
-  background: linear-gradient(0deg, #504bd2 0%, rgba(80, 75, 210, 0.5) 100%)!important;
+  background: linear-gradient(0deg, #504bd2 0%, rgba(80, 75, 210, 0.5) 100%) !important;
+  display: flex;
+  justify-content: space-around;
+}
+
+#light .firstRow {
+  background: linear-gradient(0deg, #8db8f9 0%, rgba(145, 190, 249, 0.5) 100%) !important;
 }
 
 .row.me {
-  border: 3px solid #011f37;
+  border: 2px solid #ffffff;
+}
+
+#light .row.me {
+  border: 2px solid #011f37;
 }
 
 .row:not(.firstRow) {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
 }
 
-:not(.firstRow) >.col:first-child >img{
+:not(.firstRow) > .col:first-child > img {
   width: 60px;
 }
 
@@ -107,7 +121,82 @@
   font-weight: 600;
 }
 
-.link-prof:hover{
+.link-prof:hover {
   cursor: pointer;
   color: #011f37;
+  font-weight: 500;
+}
+
+#light .link-prof:hover {
+  color: #ffffff;
+}
+
+.col.level {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+  align-self: center;
+}
+
+@media (max-width: 1080px) {
+  .col.level span,
+  .friends {
+    display: none;
+  }
+  .firstRow,
+  .row .col:last-child {
+    font-weight: 550;
+    font-size: 1rem;
+  }
+  .row:not(.firstRow) {
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+  }
+}
+
+@media (max-width: 800px) {
+  .col.wins,
+  .col.defeats,
+  .status-text {
+    display: none;
+  }
+}
+
+@media (max-width: 680px) {
+  .col.status {
+    display: none;
+  }
+  .firstRow,
+  .row .col:last-child {
+    font-weight: 530;
+    font-size: 0.9rem;
+  }
+  :not(.firstRow) > .col:first-child > img {
+    width: 45px;
+  }
+}
+
+@media (max-width: 520px) {
+  .firstRow,
+  .row .col:last-child {
+    font-weight: 500;
+    font-size: 0.8rem;
+  }
+  .col.score {
+    display: none;
+  }
+  .col.name {
+    font-size: 0.8rem;
+  }
+  .firstRow > * {
+    padding: 0rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .col.level,
+  .col.avatar {
+    display: none;
+  }
 }

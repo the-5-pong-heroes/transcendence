@@ -18,7 +18,7 @@ export class CurrentUserMiddleware implements NestMiddleware {
   constructor(private authService: AuthService) {}
 
   async use(req: RequestWithUser, res: Response, next: NextFunction) {
-    const token = req.cookies["access_token"];
+    const token = req.signedCookies["access_token"];
     if (!token) {
       throw new UnauthorizedException("Not authenticated");
     }

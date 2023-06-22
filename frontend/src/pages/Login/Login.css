@@ -60,11 +60,6 @@
   padding-top: 3px;
 }
 
-#logo-Google {
-  height: 30px;
-  padding: 4px;
-}
-
 .login-link {
   text-decoration: underline;
   font-size: 0.9em;
@@ -107,7 +102,7 @@
   width: 220px;
   border-radius: 5px;
   text-indent: 8px;
-  color:rgb(0, 0, 0)
+  color: rgb(0, 0, 0);
 }
 
 .submit {
@@ -126,6 +121,56 @@
   color: black;
 }
 
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+/* .popup-content {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+} */
+
+.popup-content p {
+  margin-bottom: 10px;
+}
+
+.popup-content input[type="number"] {
+  width: 80%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  appearance: none;
+  -moz-appearance: textfield; /* Firefox */
+}
+
+.popup-content input[type="number"]::-webkit-inner-spin-button,
+.popup-content input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none; /* Chrome */
+  margin: 0;
+}
+
+.popup-content button[type="submit"] {
+  display: block;
+  width: 30%;
+  padding: 10px;
+  background-color: #c74dff75;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.popup-content button[type="submit"]:hover {
+  background-color: darkblue;
+}
+
 @media (max-width: 600px) {
 	#login-robot {
 		display: none;
@@ -141,39 +186,20 @@
 	}
 }
 
-.walle-button {
-	background-color: #E67E22; /* Couleur de fond */
-	color: white; /* Couleur du texte */
-	border: none; /* Suppression de la bordure */
-	border-radius: 4px; /* Arrondi des coins */
-	padding: 10px 20px; /* Espacement interne */
-	font-size: 16px; /* Taille de police */
-	font-weight: bold; /* Gras */
-	cursor: pointer; /* Curseur en forme de main */
-	transition: background-color 0.3s; /* Transition pour l'effet de survol */
-  }
-  
-  .walle-button:hover {
-	background-color: #FFA726; /* Couleur de fond au survol */
-  }
-  
-  .walle-button:active {
-	background-color: #D35400; /* Couleur de fond lors du clic */
-  }
-
-  .column {
+.column {
 	flex: 1 0 0%;
-  }
+}
 
-  .column-details span:first-child {
+.column-details span:first-child {
 	font-style: italic;
 	margin-right: 4px;
-  }
-  
-  .column-details span:not(:first-child) {
+}
+
+.column-details span:not(:first-child) {
 	font-size: 1.5rem;
-  }
-  .on-off {
+}
+
+.on-off {
 	position: relative;
 	width: 80px;
 	height: 30px;
@@ -181,9 +207,9 @@
 	background-color: #ccc;
 	cursor: pointer;
 	overflow: hidden;
-  }
-  
-  .on-off .handle {
+}
+
+.on-off .handle {
 	position: absolute;
 	top: 2px;
 	left: 2px;
@@ -192,23 +218,22 @@
 	border-radius: 50%;
 	background-color: #fff;
 	transition: transform 0.3s ease-in-out;
-  }
-  
-  .on-off.on .handle {
+}
+
+.on-off.on .handle {
 	transform: translateX(50px);
 	background-color: orange; /* Couleur de fond lorsque le bouton est en position "on" */
-  }
-  
-  .on-off.off .handle {
+}
+
+.on-off.off .handle {
 	background-color: #ccc; /* Couleur de fond par défaut */
-  }
-  
-  .on-off .status {
+}
+
+.on-off .status {
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	font-size: 10px;
 	color: #fff;
-  }
-  
+}

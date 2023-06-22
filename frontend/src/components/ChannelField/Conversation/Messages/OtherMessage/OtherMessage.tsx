@@ -75,7 +75,7 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
       <div
         className={styles.Avatar}
         onClick={() => setShowOptions()}
-        style={{backgroundImage: `url(${message.sender?.avatar ? message.sender.avatar : DefaultAvatar})` }}
+        style={{ backgroundImage: `url(${message.sender?.avatar ? message.sender.avatar : DefaultAvatar})` }}
       />
       {showOptions && (
         <div className={styles.Options} ref={optionsRef}>

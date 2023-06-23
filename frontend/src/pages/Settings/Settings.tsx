@@ -5,6 +5,7 @@ import { useSignOut } from "../Login/hooks";
 
 import { Unfollow } from "./Unfollow";
 import { Toggle2FA } from "./Toggle2FA";
+import { useChangeName } from "./useChangeName";
 
 import { DefaultAvatar, Leave } from "@/assets";
 import { LoadingIcon } from "@/components/loading/loading";
@@ -35,6 +36,7 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef, setGoTo }) => {
 
   const signOut = useSignOut();
   const user = useUser();
+  const changeName = useChangeName({ settings, setSettings });
 
   async function handleFileChange(event: any) {
     if (!event.target.files) {
@@ -74,17 +76,18 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef, setGoTo }) => {
   async function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
       try {
-        const response = await customFetch("PATCH", "settings", { name: username });
-        if (!response.ok) {
-          alert("Your username must be unique and 3 to 20 characters long.");
+        changeName({ name: username });
+        // const response = await customFetch("PATCH", "settings", { name: username });
+        // if (!response.ok) {
+        //   alert("Your username must be unique and 3 to 20 characters long.");
 
-          return;
-        }
-        const payload = await response.json();
-        if (payload) {
-          console.log("payload: ", payload);
-          setSettings({ ...settings, name: username });
-        }
+        //   return;
+        // }
+        // const payload = await response.json();
+        // if (payload) {
+        //   console.log("payload: ", payload);
+        //   setSettings({ ...settings, name: username });
+        // }
       } catch (err) {
         console.error(err);
       }

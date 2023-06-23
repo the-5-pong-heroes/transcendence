@@ -9,14 +9,6 @@ import { PrismaService } from "../database/prisma.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
 import { User42Infos, UserAuth } from "./interface";
 
-const cookieOptions: CookieOptions = {
-  httpOnly: true,
-  secure: false,
-  sameSite: "strict",
-  expires: new Date(Date.now() + 86400 * 1000),
-  signed: true,
-};
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -168,6 +160,14 @@ export class AuthService {
   /*****************************************************************************************/
 
   async createCookies(@Res() res: Response, token: string): Promise<void> {
+	const date = new Date();
+	const cookieOptions: CookieOptions = {
+		httpOnly: true,
+		secure: false,
+		sameSite: "strict",
+		expires: date.setDate(date.getDate() + 1),
+		signed: true,
+	};
     res.cookie("access_token", token, cookieOptions);
   }
 

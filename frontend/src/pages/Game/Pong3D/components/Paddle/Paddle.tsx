@@ -12,7 +12,7 @@ export const Paddle: React.FC<PaddleProps> = ({ paddleRef, initialPos = new Vec3
   return (
     <mesh ref={paddleRef} position={new Vector3(initialPos.x, initialPos.y, initialPos.z)}>
       <boxGeometry args={[PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_DEPTH]} />
-      <meshStandardMaterial color={"white"} transparent={true} opacity={0.5} />
+      <meshStandardMaterial color={"white"} transparent={true} opacity={0.8} />
     </mesh>
   );
 };

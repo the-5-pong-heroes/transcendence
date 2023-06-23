@@ -5,14 +5,16 @@ import { Trail } from "@react-three/drei";
 import { useLoader } from "@react-three/fiber";
 import { BALL_RADIUS } from "@shared/pongCore/constants";
 
+import { MoonMap, MoonNormalMap } from "@/assets";
+
 interface BallProps {
   ballRef: React.RefObject<THREE.Mesh>;
   initialPos: Vec3 | undefined;
 }
 
 export const Ball: React.FC<BallProps> = ({ ballRef, initialPos = new Vec3(0, 0, 0) }) => {
-  const base = useLoader(TextureLoader, "moon_map.jpg");
-  const normal = useLoader(TextureLoader, "moon_NormalMap.png");
+  const base = useLoader(TextureLoader, MoonMap);
+  const normal = useLoader(TextureLoader, MoonNormalMap);
 
   return (
     <Trail

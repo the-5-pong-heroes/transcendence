@@ -192,7 +192,8 @@
 }
 
 .username-icons {
-  width: 60px;
+  height: 100%;
+  width: 100%;
   margin-left: 10px;
 }
 
@@ -356,38 +357,14 @@
   cursor: pointer;
 }
 
-@media (max-width: 680px) OR (max-height: 480px) {
+@media (max-width: 680px) {
   .avatar > img {
     width: 120px;
   }
   .username {
-    font-size: 1.5rem;
+    font-size: 2rem;
   }
   #settings-icon {
-    width: 22px;
-  }
-  #game-icon {
-    height: 25px;
-  }
-  #chat-icon, #friend-icon {
-    height: 27px;
-  }
-
-  @media (max-width: 480px) OR (max-height: 380px)  {
-    .avatar > img {
-      width: 90px;
-    }
-    .username {
-      font-size: 1.2rem;
-    }
-    #settings-icon {
-      width: 18px;
-    }
-    #game-icon {
-      height: 20px;
-    }
-    #chat-icon, #friend-icon {
-      height: 22px;
-    }
+    width: 20px;
   }
 }

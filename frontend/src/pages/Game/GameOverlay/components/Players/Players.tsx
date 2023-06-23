@@ -4,6 +4,7 @@ import "./Players.css";
 
 import { useGameContext } from "@Game/hooks";
 import { type GameContextParameters } from "@Game/@types";
+import { useTheme } from "@/hooks";
 
 interface Players {
   player1: string;
@@ -12,8 +13,9 @@ interface Players {
 
 export const Players: React.FC<Players> = ({ player1, player2 }) => {
   const { gameMode }: GameContextParameters = useGameContext();
-  const color = gameMode === "2D" ? "white" : "black";
-
+  const theme = useTheme();
+  const color = gameMode === "2D" || theme === "dark" ? "white" : "black";
+  
   return (
     <div className="game-players-container">
       <div className="game-players" style={{ color: color }}>

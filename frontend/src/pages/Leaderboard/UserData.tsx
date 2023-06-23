@@ -31,7 +31,7 @@ const UserData = ({ users }: { users: UserStats[] }) => {
             <div className="col wins ">{wins}</div>
             <div className="col defeats">{defeats}</div>
             <UserLevel myClassName="col level" level={level} />
-            <UserStatus myClassName="col status" status={status} />
+            <UserStatus myClassName="col status" status={isMe ? "ONLINE": status} />
             <div className="col friends">
               <span className={isFriend ? "friend" : "not-friend"}>{isFriend ? "✓" : isMe ? "-" : "✗"}</span>
             </div>

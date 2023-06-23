@@ -82,6 +82,7 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef, setGoTo }) => {
         }
         const payload = await response.json();
         if (payload) {
+          console.log("payload: ", payload);
           setSettings({ ...settings, name: username });
         }
       } catch (err) {

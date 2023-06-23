@@ -46,6 +46,11 @@ export class ChannelsGateway {
     if (payload.name === "") return "Channel must have name.";
     const user = await this.userService.findOneById(payload.users.userId);
     if (!user) return "User does not exist";
+    if (payload.password) {
+      const salt = await bcrypt.genSalt();
+      const hash = await bcrypt.hash(payload.password, salt);
+	  payload.password = hash;
+    }
     const channel = await this.channelsService.create(payload);
     await this.messagesService.create({
       content: `${user.name} created the channel`,
@@ -104,7 +109,8 @@ export class ChannelsGateway {
   async submitPassword(client: Socket, payload: SubmitPasswordDto) {
     const channel = await this.channelsService.findOne(payload.channelId);
     if (!channel) return "Channel does not exist.";
-    if (channel.password !== payload.password) return "Password does not match.";
+	const isMatch = await bcrypt.compare(payload.password, channel.password);
+    if (!isMatch) return "Password does not match.";
     const channelUser = await this.ChannelUsersService.findFirst({
       channelId: payload.channelId,
       userId: payload.userId,
@@ -116,10 +122,11 @@ export class ChannelsGateway {
 
   @SubscribeMessage("updateChannelType")
   async updateChannelType(client: Socket, payload: UpdateChannelTypeDto) {
+	const oldPassword = payload.password;
     if (payload.password) {
       const salt = await bcrypt.genSalt();
       const hash = await bcrypt.hash(payload.password, salt);
-      console.log(hash);
+	  payload.password = hash;
     }
     const channel = await this.channelsService.update(payload);
     this.handleMessage(client, {
@@ -128,7 +135,7 @@ export class ChannelsGateway {
     });
     if (channel.type === "PROTECTED") {
       this.handleMessage(client, {
-        content: `Channel password is now "${channel.password}"`,
+        content: `Channel password is now "${oldPassword}"`,
         channelId: channel.id,
       });
     }

@@ -25,7 +25,7 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
 
   const handleViewProfile = () => {
     if (message.senderId) {
-      navigate("/profile/" + message.senderId);
+      navigate("/Profile/" + message.senderId);
     }
   };
 
@@ -48,7 +48,6 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
   const handleBlock = () => {
     socket.emit("block", { blockedUserId: message.senderId, toBlock: !userIsBlocked, userId: user?.id });
     setShowOptions();
-	setUserIsBlocked((prev: boolean) => !prev);
   };
 
   useEffect(() => {

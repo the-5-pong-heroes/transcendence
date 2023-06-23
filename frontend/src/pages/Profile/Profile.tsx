@@ -65,7 +65,10 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef, setGoTo }) => {
 
   useEffect(() => {
     profileRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-	setGoTo("/Profile/id");
+	if (user.isMe)
+	  setGoTo("/Profile");
+	else
+	  setGoTo("/Profile/id");
     fetchUser();
     fetchHistory();
   }, [uuid]);

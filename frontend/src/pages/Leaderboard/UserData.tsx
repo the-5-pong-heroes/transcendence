@@ -11,7 +11,7 @@ const UserData = ({ users }: { users: UserStats[] }) => {
   const handleClick = (id: string): void => {
     navigate(`/Profile/${id}`);
   }
-  
+
   return (
     <div className="scroll-div">
       {users.map((curUser: UserStats, i: number) => {
@@ -20,7 +20,7 @@ const UserData = ({ users }: { users: UserStats[] }) => {
         return (
           <div className={`row${isMe ? " me" : ""}`} key={i}>
             <div className="col avatar">
-              <img src={DefaultAvatar} alt="profilePicture" />
+              <img src={avatar ? avatar : DefaultAvatar} alt="profilePicture" />
             </div>
             <div className="col name">
               <div onClick={() => handleClick(id)} className="link-prof">

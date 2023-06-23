@@ -24,7 +24,6 @@ export class UserSettingsController {
 
   @Get()
   async getUserSettings(@CurrentUser() user: User) {
-    //: Promise<UserSettings>
     return this.userSettingsService.getUserSettings(user);
   }
 

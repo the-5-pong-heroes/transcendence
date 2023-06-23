@@ -102,6 +102,7 @@ export class AuthService {
       }
     } catch (errToken) {
       console.error(`❌ Failed to get a token: ${errToken}`);
+	  throw new BadRequestException("Invalid code");
     }
   }
 

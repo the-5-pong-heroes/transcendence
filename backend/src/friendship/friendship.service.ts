@@ -7,6 +7,13 @@ export class FriendshipService {
   constructor(private prismaService: PrismaService) {}
 
   async create(user: User, newFriendId: string) {
+    const friendship = await this.prismaService.friendship.findFirst({
+      where: {
+        userId: newFriendId,
+        addedById: user.id,
+      },
+    });
+	  if (friendship) return;
     return this.prismaService.friendship.create({
       data: {
         userId: newFriendId,

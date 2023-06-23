@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, Dispatch, SetStateAction } from "react";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Mousewheel } from "swiper";
@@ -25,9 +25,16 @@ interface SlideProps {
   title: string;
   img: string;
   isActive?: boolean;
+  setGoTo?: Dispatch<SetStateAction<string>>;
 }
 
-const Slide: React.FC<SlideProps> = ({ list, title, img, isActive }) => {
+const Slide: React.FC<SlideProps> = ({ list, title, img, isActive, setGoTo }) => {
+  const handleClick = (link: string | undefined): void => {
+	if (setGoTo && link) {
+	  setGoTo(link);
+	}
+  }
+
   return (
     <div className={`carroussel-slide ${isActive ? "active" : ""}`}>
       <img className="carroussel-img" src={img} alt="wall-e" />
@@ -36,7 +43,7 @@ const Slide: React.FC<SlideProps> = ({ list, title, img, isActive }) => {
         <ul className="carroussel-list">
           {list?.map((elem) =>
             elem.link ? (
-              <li key={elem.text} className="carroussel-list-link">
+              <li key={elem.text} className="carroussel-list-link" onClick={() => handleClick(elem.link)} >
                 <CustomLink to={elem.link}>{elem.text}</CustomLink>
               </li>
             ) : (
@@ -51,7 +58,11 @@ const Slide: React.FC<SlideProps> = ({ list, title, img, isActive }) => {
   );
 };
 
-const Carroussel: React.FC = () => {
+interface CarrousselProps {
+  setGoTo: Dispatch<SetStateAction<string>>;
+}
+
+const Carroussel: React.FC<CarrousselProps> = ({ setGoTo }) => {
   const user = useUser();
   const userName = user ? user.name : "";
 
@@ -81,7 +92,7 @@ const Carroussel: React.FC = () => {
             {({ isActive }) => <Slide list={techList} title="Technologies" img={WallE_Eve_2_Img} isActive={isActive} />}
           </SwiperSlide>
           <SwiperSlide>
-            {({ isActive }) => <Slide list={featuresList} title="Features" img={Eve_Img} isActive={isActive} />}
+            {({ isActive }) => <Slide list={featuresList} title="Features" img={Eve_Img} isActive={isActive} setGoTo={setGoTo} />}
           </SwiperSlide>
           <SwiperSlide>
             {({ isActive }) => (
@@ -108,18 +119,24 @@ const Carroussel: React.FC = () => {
 
 interface HomeProps {
   homeRef: React.RefObject<HTMLDivElement>;
+  setGoTo: Dispatch<SetStateAction<string>>;
 }
 
-export const Home: React.FC<HomeProps> = ({ homeRef }) => {
+export const Home: React.FC<HomeProps> = ({ homeRef, setGoTo }) => {
   const { gameState, isNavigatingRef }: AppContextParameters = useAppContext();
 
+  useEffect(() => {
+    setGoTo("/")
+  }, []);
+
   const onClick = (event: React.MouseEvent<HTMLAnchorElement>): void => {
+    setGoTo("/Game")
     handleOnClickButton({ event, path: "/", menuRef: homeRef, gameState, isNavigatingRef });
   };
 
   return (
     <div ref={homeRef} id="Home" className="home">
-      <Carroussel />
+      <Carroussel setGoTo={setGoTo} />
       <div className="home-play-button">
         <Link to={"/Game"} className="game-link" onClick={onClick}>
           <span>Ready to play ?</span>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Dispatch, SetStateAction } from "react";
 
 import "./Settings.css";
 import { useSignOut } from "../Login/hooks";
@@ -14,6 +14,7 @@ import { BASE_URL } from "@/constants";
 
 interface SettingsProps {
   settingsRef: React.RefObject<HTMLDivElement>;
+  setGoTo: Dispatch<SetStateAction<string>>;
 }
 
 export interface UserSettings {
@@ -23,7 +24,7 @@ export interface UserSettings {
   friends: { id: string; name: string }[];
 }
 
-export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
+export const Settings: React.FC<SettingsProps> = ({ settingsRef, setGoTo }) => {
   const [uploading, setUploading] = useState(false);
 
   const [settings, setSettings] = useState({ name: "" } as UserSettings);
@@ -101,13 +102,9 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
     return null;
   }
 
-  const deleteUser = async (): Promise<void> => {
-    void (await customFetch("DELETE", `users/${user?.id}`));
-    signOut();
-  };
-
   useEffect(() => {
     fetchSettings();
+	setGoTo("/Settings");
   }, []);
 
   return (
@@ -147,11 +144,6 @@ export const Settings: React.FC<SettingsProps> = ({ settingsRef }) => {
       </div>
       <div className="settings-block block2">
         <Unfollow friends={settings.friends} handleUnfollow={handleUnfollow} />
-      </div>
-      <div className="settings-footer">
-        <button className="delete-button" onClick={deleteUser}>
-          Delete my account
-        </button>
       </div>
     </div>
   );

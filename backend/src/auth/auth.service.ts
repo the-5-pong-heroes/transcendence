@@ -106,11 +106,39 @@ export class AuthService {
     }
   }
 
+  async foundUsername(username : string): Promise<boolean> {
+    try {
+        const updatedUser = await this.prisma.user.findFirst({
+            where: { name: username }
+        });
+        if (updatedUser)
+            return true;
+        else
+            return false;
+    }
+    catch (error) {
+        throw new BadRequestException(`Failed founding username`);
+    }
+  }
+
+
+  async verifyUsername(username : string): Promise<string> {
+    try {
+        while (await this.foundUsername(username)) {
+            username = `${username}bis`;
+		}
+		return username;
+    } catch (error) {
+        throw new BadRequestException(`Failed founding username`);
+    }
+  }
+
   async createDataBase42User(user42: User42Infos, token: string, username: string, isRegistered: boolean) {
     try {
+	const updatedUsername = await this.verifyUsername(username);
       const user = await this.prisma.user.create({
         data: {
-          name: username,
+          name: updatedUsername,
           status: "ONLINE",
           lastLogin: new Date(),
           auth: {

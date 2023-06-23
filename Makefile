@@ -1,4 +1,4 @@
-# updates the path to your environment file below
+# updates the path to your environment file below (see the files .env.example)
 DOCKER_ENV_FILE		= ./env/docker.env
 
 ifneq ($(shell docker compose version 2>/dev/null),)
@@ -8,8 +8,6 @@ else
 endif
 
 DATABASE_VOLUME		= $(shell basename '$(CURDIR)_postgresql_data' | tr '[:upper:]' '[:lower:]')
-
-SUDO 				= @sudo
 
 all: run
 
@@ -23,22 +21,22 @@ run: check-env
 	$(DOCKER_COMPOSE) up --build --remove-orphans --force-recreate
 
 list:
-	${SUDO} docker container ps -a
-	${SUDO} docker images
-	${SUDO} docker volume ls
+	docker container ps -a
+	docker images
+	docker volume ls
 
 stop:
-	${SUDO} $(DOCKER_COMPOSE) stop
+	$(DOCKER_COMPOSE) stop
 
 down:
-	${SUDO} $(DOCKER_COMPOSE) down
+	$(DOCKER_COMPOSE) down
 
 clean:  down
-	${SUDO} docker container prune --force
+	docker container prune --force
 
 fclean: clean
-	${SUDO} docker system prune --all --force
-	${SUDO} docker volume rm $(DATABASE_VOLUME)
+	docker system prune --all --force
+	docker volume rm $(DATABASE_VOLUME)
 	@printf "$(UP)"
 
 re: fclean all

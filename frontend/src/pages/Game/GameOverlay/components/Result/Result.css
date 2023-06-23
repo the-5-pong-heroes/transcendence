@@ -16,3 +16,7 @@
   width: 400px;
   font-size: 1.2em;
 }
+
+#light .result {
+  color: black;
+}

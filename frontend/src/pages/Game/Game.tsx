@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, Dispatch, SetStateAction } from "react";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 
 import "./Game.css";
@@ -14,6 +14,7 @@ import { useSocketContext } from "@hooks";
 
 interface GameProps {
   gameRef: React.RefObject<HTMLDivElement>;
+  setGoTo: Dispatch<SetStateAction<string>>;
 }
 
 const fallbackRender: React.FC<FallbackProps> = ({ error }) => {
@@ -38,10 +39,14 @@ const Pong: React.FC = () => {
   );
 };
 
-export const Game: React.FC<GameProps> = ({ gameRef }) => {
+export const Game: React.FC<GameProps> = ({ gameRef, setGoTo }) => {
   const { height, width } = useGameSize();
   const gameStyle: React.CSSProperties = { width, height };
   const { socketReady }: SocketParameters = useSocketContext();
+
+  useEffect(() => {
+    setGoTo("/Game");
+  }, []);
 
   return (
     <div ref={gameRef} id="Game" className={"game-container"}>

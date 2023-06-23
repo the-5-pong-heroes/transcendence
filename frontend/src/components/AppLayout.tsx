@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { Outlet, Navigate } from "react-router-dom";
 
 import { SocketProvider } from "../contexts";
@@ -15,19 +15,21 @@ import { useTheme } from "@/hooks";
 
 interface AppLayoutProps {
   user: User | null;
+  goTo: string;
+  setGoTo: Dispatch<SetStateAction<string>>;
 }
 
-export const AppLayout: React.FC<AppLayoutProps> = ({ user }) => {
+export const AppLayout: React.FC<AppLayoutProps> = ({ user, goTo, setGoTo }) => {
   const theme = useTheme();
-
+  
   return user ? (
     <SocketProvider>
-      <Navbar />
+      <Navbar setGoTo={setGoTo} />
       <ThemeButton />
       <ScrollToPage />
       <InvitationModal />
       <div className="App-container">
-        <Container>
+        <Container goTo={goTo} setGoTo={setGoTo}>
           <Outlet />
           {theme === "dark" && <ShootingStar />}
         </Container>

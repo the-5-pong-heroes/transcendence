@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Dispatch, SetStateAction } from "react";
 
 import "./Leaderboard.css";
 import UserData from "./UserData";
@@ -7,6 +7,7 @@ import { customFetch } from "@/helpers";
 
 interface LeaderboardProps {
   boardRef: React.RefObject<HTMLDivElement>;
+  setGoTo: Dispatch<SetStateAction<string>>;
 }
 
 export interface UserStats {
@@ -28,7 +29,7 @@ export interface UserStats {
   isMe: boolean;
 }
 
-export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
+export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef, setGoTo }) => {
   const [users, setUsers] = useState([] as UserStats[]);
 
   const fetchUsers = async () => {
@@ -45,6 +46,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ boardRef }) => {
 
   useEffect(() => {
     fetchUsers();
+	setGoTo("/Leaderboard");
   }, []);
 
   return (

@@ -40,6 +40,7 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ setReturnMessage }) =
   }, [activeChannel]);
 
   const [newChannel, setNewChannel] = useState<IChannelUpdate>(filterActiveChannel);
+  const [newPassword, setNewPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isOwner, setIsOwner] = useState<boolean>(false);
 
@@ -48,12 +49,15 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ setReturnMessage }) =
   const theme = useTheme();
 
   const changeType = (type: string) => {
-    setNewChannel((prev: IChannelUpdate) => ({ ...prev, type }));
+	if (type === "PROTECTED")
+		setNewChannel((prev: IChannelUpdate) => ({ ...prev, type, password: "" }));
+	else
+		setNewChannel((prev: IChannelUpdate) => ({ id: prev.id, type }));
   };
 
   const changePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setNewChannel((prev: IChannelUpdate) => ({ ...prev, [name]: value }));
+    const { value } = event.target;
+    setNewPassword(value);
   };
 
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
@@ -61,15 +65,15 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ setReturnMessage }) =
     if (!newChannel) {
       return;
     }
-    if (newChannel.type === activeChannel.type && newChannel.password == activeChannel.password) {
+    if (newChannel.type === activeChannel.type && newPassword == activeChannel.password) {
       return;
     }
-    if (newChannel.type === "PROTECTED" && !newChannel.password) {
+    if (newChannel.type === "PROTECTED" && newPassword === "") {
       return setReturnMessage({ error: true, message: "Password cannot be empty" });
     }
     socket.emit("updateChannelType", {
       ...newChannel,
-      password: newChannel.type === "PROTECTED" ? newChannel.password : "",
+      password: newChannel.type === "PROTECTED" ? newPassword : "",
     });
     setReturnMessage({ error: false, message: "Changes to channel saved" });
   };
@@ -108,7 +112,7 @@ export const ChannelType: React.FC<IChannelTypeProps> = ({ setReturnMessage }) =
             type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Password"
-            value={newChannel.password}
+            value={newPassword}
             onChange={changePassword}
             required={newChannel.type === "PROTECTED"}
           />

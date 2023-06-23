@@ -1,10 +1,10 @@
 /* eslint max-lines: ["warn", 300] */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Dispatch, SetStateAction } from "react";
 
 import "./Profile.css";
 import { useParams, Link } from "react-router-dom";
 
-import { DefaultAvatar, Plant, Walle, Eve, Energy, Setting, AddUser, GameDarkFull, ChatDarkFull } from "../../assets";
+import { DefaultAvatar, Plant, Walle, Eve, Energy, Setting, addFriend, GameDark, ChatDark } from "../../assets";
 import { UserStatus } from "../Leaderboard/UserStatus";
 import { UserLevel } from "../Leaderboard/UserLevel";
 import { type UserStats } from "../Leaderboard/Leaderboard";
@@ -24,9 +24,10 @@ export interface GameData {
 
 interface ProfileProps {
   profileRef: React.RefObject<HTMLDivElement>;
+  setGoTo: Dispatch<SetStateAction<string>>;
 }
 
-export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
+export const Profile: React.FC<ProfileProps> = ({ profileRef, setGoTo }) => {
   const { uuid } = useParams();
 
   const [history, setHistory] = useState([] as GameData[]);
@@ -63,6 +64,8 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
   };
 
   useEffect(() => {
+    profileRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+	setGoTo("/Profile/id");
     fetchUser();
     fetchHistory();
   }, [uuid]);
@@ -75,6 +78,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
     try {
       const body = { newFriendId: uuid };
       const data = await customFetch("POST", "friendship", body);
+	  fetchUser();
     } catch (err) {
       console.error("Error adding a friend: ", err);
     }
@@ -96,16 +100,16 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef }) => {
             )}
             {!user.isMe && (
               <Link to={"/Chat"}>
-                <img src={ChatDarkFull} id="chat-icon" />
+                <img src={ChatDark} id="chat-icon" />
               </Link>
             )}
             {!user.isMe && (
               <InviteButton id={user.id}>
-                <img src={GameDarkFull} id="game-icon" />
+                <img src={GameDark} id="game-icon" />
               </InviteButton>
             )}
             {!user.isMe && !user.isFriend && (
-              <img className="addpointer" src={AddUser} onClick={followFriend} id="friend-icon" />
+              <img className="addpointer" src={addFriend} onClick={followFriend} id="friend-icon" />
             )}
           </div>
         </div>

@@ -7,7 +7,7 @@ import { ThemeButton } from "./ThemeButton";
 export const NotFoundLayout: React.FC = () => {
   return (
     <>
-      <Navbar />
+      <Navbar setGoTo={() => {}} />
       <ThemeButton />
       <Outlet />
     </>

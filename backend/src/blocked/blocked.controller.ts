@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Post, Get } from "@nestjs/common";
 import { BlockedService } from "./blocked.service";
 import { CurrentUser } from "src/common/decorators";
 import { User } from "@prisma/client";
@@ -9,7 +9,7 @@ export class BlockedController {
   constructor(private readonly blockedService: BlockedService) {}
 
   @Get()
-  get(@CurrentUser() user: User) {
+  async get(@CurrentUser() user: User) {
     return await this.blockedService.find(user.id);
   }
 

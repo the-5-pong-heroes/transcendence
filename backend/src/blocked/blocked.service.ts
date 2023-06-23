@@ -7,7 +7,7 @@ export class BlockedService {
 
   async find(id: string) {
 	return this.prismaService.blocked.findMany({
-	  where { userId: id },
+	  where: { userId: id },
 	});
   }
 

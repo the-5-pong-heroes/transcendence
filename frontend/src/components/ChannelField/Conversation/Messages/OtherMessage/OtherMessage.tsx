@@ -48,6 +48,7 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
   const handleBlock = () => {
     socket.emit("block", { blockedUserId: message.senderId, toBlock: !userIsBlocked, userId: user?.id });
     setShowOptions();
+	setUserIsBlocked((prev: boolean) => !prev);
   };
 
   useEffect(() => {
@@ -57,15 +58,14 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
 
 	const fetchBlocked = async () => {
 	  const response = await customFetch("GET", "blocked");
-	  if (!reponse.ok) {
+	  if (!response.ok) {
 	    throw new ResponseError("Failed on fetch channels request", response);
 	  }
 	  const data = await response.json();
-	  console.log(data);
+      setUserIsBlocked(data.some((block: any) => block.blockedUserId === message.senderId));
 	}
 
 	fetchBlocked();
-    setUserIsBlocked(user.blocked?.some((block) => block.blockedUserId === message.senderId));
     setUserIsFriend(user.addedBy?.some((friendship) => friendship.userId === message.senderId));
   }, [user]);
 

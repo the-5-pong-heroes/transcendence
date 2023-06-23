@@ -160,12 +160,13 @@ export class AuthService {
   /*****************************************************************************************/
 
   async createCookies(@Res() res: Response, token: string): Promise<void> {
-	const date = new Date();
+	let date = new Date();
+	date.setDate(date.getDate() + 1)
 	const cookieOptions: CookieOptions = {
 		httpOnly: true,
 		secure: false,
 		sameSite: "strict",
-		expires: date.setDate(date.getDate() + 1),
+		expires: date,
 		signed: true,
 	};
     res.cookie("access_token", token, cookieOptions);

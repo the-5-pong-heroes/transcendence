@@ -84,23 +84,3 @@
   height: 28px;
   cursor: pointer;
 }
-
-.settings-footer {
-  width: 100%;
-  padding: 0;
-  height: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.delete-button {
-  text-decoration: underline;
-  font-size: 0.9em;
-  margin: 8px;
-}
-
-.delete-button:hover {
-  transform: translateY(-0.05rem);
-}

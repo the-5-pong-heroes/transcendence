@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Post } from "@nestjs/common";
+import { Body, Controller, Put, Post, Req } from "@nestjs/common";
 import { FriendshipService } from "./friendship.service";
 import { CurrentUser } from "src/common/decorators";
 import { User } from "@prisma/client";
@@ -13,7 +13,7 @@ export class FriendshipController {
     this.friendshipService.create(user, data.newFriendId);
   }
 
-  @Delete()
+  @Put()
   delete(@CurrentUser() user: User, @Body() data: DeleteFriendDto) {
     this.friendshipService.delete(user, data.friendId);
   }

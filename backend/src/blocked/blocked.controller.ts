@@ -8,6 +8,11 @@ import { BlockedUserDto } from "./dto/blocked-user.dto";
 export class BlockedController {
   constructor(private readonly blockedService: BlockedService) {}
 
+  @Get()
+  get(@CurrentUser() user: User) {
+    return await this.blockedService.find(user.id);
+  }
+
   @Post()
   create(@CurrentUser() user: User, @Body() data: BlockedUserDto) {
     if (data.toBlock) this.blockedService.create({ blockedUserId: data.blockedUserId, userId: user.id });

@@ -54,6 +54,17 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
     if (!user) {
       return;
     }
+
+	const fetchBlocked = async () => {
+	  const response = await customFetch("GET", "blocked");
+	  if (!reponse.ok) {
+	    throw new ResponseError("Failed on fetch channels request", response);
+	  }
+	  const data = await response.json();
+	  console.log(data);
+	}
+
+	fetchBlocked();
     setUserIsBlocked(user.blocked?.some((block) => block.blockedUserId === message.senderId));
     setUserIsFriend(user.addedBy?.some((friendship) => friendship.userId === message.senderId));
   }, [user]);

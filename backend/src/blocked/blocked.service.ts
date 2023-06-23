@@ -5,6 +5,12 @@ import { PrismaService } from "src/database/prisma.service";
 export class BlockedService {
   constructor(private prismaService: PrismaService) {}
 
+  async find(id: string) {
+	return this.prismaService.blocked.findMany({
+	  where: { userId: id },
+	});
+  }
+
   async create(data: any) {
     return this.prismaService.blocked.create({
       data: {

@@ -25,7 +25,7 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
 
   const handleViewProfile = () => {
     if (message.senderId) {
-      navigate("/profile/" + message.senderId);
+      navigate("/Profile/" + message.senderId);
     }
   };
 
@@ -54,7 +54,17 @@ export const OtherMessage: React.FC<IOtherMessageProps> = ({ message, theme, sho
     if (!user) {
       return;
     }
-    setUserIsBlocked(user.blocked?.some((block) => block.blockedUserId === message.senderId));
+
+	const fetchBlocked = async () => {
+	  const response = await customFetch("GET", "blocked");
+	  if (!response.ok) {
+	    throw new ResponseError("Failed on fetch channels request", response);
+	  }
+	  const data = await response.json();
+      setUserIsBlocked(data.some((block: any) => block.blockedUserId === message.senderId));
+	}
+
+	fetchBlocked();
     setUserIsFriend(user.addedBy?.some((friendship) => friendship.userId === message.senderId));
   }, [user]);
 

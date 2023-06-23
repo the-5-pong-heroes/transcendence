@@ -6,7 +6,7 @@ import "./Pong2D.css";
 
 import { CAMERA_2D_Z } from "../constants";
 import { type GameContextParameters } from "../@types";
-import { useGameLoop, useScoreLabel, useGameEvents, useGameContext } from "../hooks";
+import { useGameLoop, useScoreLabel, useGameContext } from "../hooks";
 import { getInitialPongState } from "../helpers";
 
 import { Ball, Board, Paddle, Score, DashedLine } from "./components";

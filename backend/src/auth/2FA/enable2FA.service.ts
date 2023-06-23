@@ -37,6 +37,9 @@ export class EnableService {
   async status2FA(@Req() req: Request): Promise<TwoFA> {
     try {
       const accessToken = req.signedCookies.access_token;
+      if (!accessToken) {
+        return { twoFA: false };
+      }
       const user = await this.prisma.user.findFirst({
         where: {
           auth: {

@@ -14,17 +14,6 @@ interface GameLoopValues {
   ballRef: React.RefObject<THREE.Mesh>;
   paddleLeftRef: React.RefObject<THREE.Mesh>;
   paddleRightRef: React.RefObject<THREE.Mesh>;
-  particlesRef: React.RefObject<THREE.Points>;
-}
-
-interface UniformsParameters {
-  uTime: { value: number };
-  uRadius: { value: number };
-  [uniform: string]: THREE.IUniform; // allows for additional uniform properties
-}
-
-interface ParticleSystemMaterial extends THREE.ShaderMaterial {
-  uniforms: UniformsParameters;
 }
 
 export const useGameLoop = (): GameLoopValues => {
@@ -36,7 +25,6 @@ export const useGameLoop = (): GameLoopValues => {
   const ballRef = useRef<THREE.Mesh>(null);
   const paddleLeftRef = useRef<THREE.Mesh>(null);
   const paddleRightRef = useRef<THREE.Mesh>(null);
-  const particlesRef = useRef<THREE.Points>(null);
 
   /* Logic loop */
   const gameLoop = useCallback(
@@ -83,17 +71,7 @@ export const useGameLoop = (): GameLoopValues => {
     if (ballRef.current && gameMode === "3D") {
       ballRef.current.rotation.set(ball.rot, ball.rot, 0);
     }
-
-    // if (particlesRef.current && ballRef.current) {
-    //   const material = particlesRef.current.material as ParticleSystemMaterial;
-    //   material.uniforms.uTime.value = clock.elapsedTime;
-    //   material.uniforms.uBallPosition.value = new Vector3(
-    //     ballRef.current.position.x,
-    //     ballRef.current.position.y,
-    //     ballRef.current.position.z
-    //   );
-    // }
   });
 
-  return { paddleLeftRef, paddleRightRef, ballRef, particlesRef };
+  return { paddleLeftRef, paddleRightRef, ballRef };
 };

@@ -9,14 +9,6 @@ import { PrismaService } from "../database/prisma.service";
 import { Oauth42Service } from "src/auth/auth42/Oauth42.service";
 import { User42Infos, UserAuth } from "./interface";
 
-const cookieOptions: CookieOptions = {
-  httpOnly: true,
-  secure: false,
-  sameSite: "strict",
-  expires: new Date(Date.now() + 86400 * 1000),
-  signed: true,
-};
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -102,14 +94,43 @@ export class AuthService {
       }
     } catch (errToken) {
       console.error(`❌ Failed to get a token: ${errToken}`);
+	  throw new BadRequestException("Invalid code");
+    }
+  }
+
+  async foundUsername(username : string): Promise<boolean> {
+    try {
+        const updatedUser = await this.prisma.user.findFirst({
+            where: { name: username }
+        });
+        if (updatedUser)
+            return true;
+        else
+            return false;
+    }
+    catch (error) {
+        throw new BadRequestException(`Failed founding username`);
+    }
+  }
+
+
+  async verifyUsername(username : string): Promise<string> {
+    try {
+        while (await this.foundUsername(username)) {
+            username = `${username}bis`;
+		}
+		return username;
+    } catch (error) {
+        throw new BadRequestException(`Failed founding username`);
     }
   }
 
   async createDataBase42User(user42: User42Infos, token: string, username: string, isRegistered: boolean) {
     try {
+	const updatedUsername = await this.verifyUsername(username);
       const user = await this.prisma.user.create({
         data: {
-          name: username,
+          name: updatedUsername,
           status: "ONLINE",
           lastLogin: new Date(),
           auth: {
@@ -139,6 +160,15 @@ export class AuthService {
   /*****************************************************************************************/
 
   async createCookies(@Res() res: Response, token: string): Promise<void> {
+	let date = new Date();
+	date.setDate(date.getDate() + 1)
+	const cookieOptions: CookieOptions = {
+		httpOnly: true,
+		secure: false,
+		sameSite: "strict",
+		expires: date,
+		signed: true,
+	};
     res.cookie("access_token", token, cookieOptions);
   }
 

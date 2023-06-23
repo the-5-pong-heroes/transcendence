@@ -65,7 +65,10 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef, setGoTo }) => {
 
   useEffect(() => {
     profileRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-	setGoTo("/Profile/id");
+	if (user.isMe)
+	  setGoTo("/Profile");
+	else
+	  setGoTo("/Profile/id");
     fetchUser();
     fetchHistory();
   }, [uuid]);
@@ -113,7 +116,7 @@ export const Profile: React.FC<ProfileProps> = ({ profileRef, setGoTo }) => {
             )}
           </div>
         </div>
-        <UserStatus myClassName="column status" status={user.status} />
+        <UserStatus myClassName="column status" status={user.isMe ? "ONLINE" : user.status} />
       </div>
       <div className="profile-block block2">
         <div className="column column-details">

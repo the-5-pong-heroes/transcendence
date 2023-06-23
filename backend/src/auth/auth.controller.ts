@@ -1,4 +1,4 @@
-import { Get, Controller, Post, Body, Req, Res, Query } from "@nestjs/common";
+import { Get, Controller, Post, Body, Req, Res, Query, BadRequestException } from "@nestjs/common";
 import { Request, Response } from "express";
 import { AuthService } from "./auth.service";
 import { Generate2FAService } from "./2FA/generate.service";
@@ -40,6 +40,7 @@ export class AuthController {
     } else if (!("code" in callbackDto) || !callbackDto.code) {
       // inconsistent request, wtf is happening?
       console.error("❌ No code found in the request!");
+	  throw new BadRequestException(`Invalid request`);
     } else {
       // the request seems to be valid, let's try to get a token
       await this.authService.proceedCode(res, callbackDto.code as string);
@@ -55,6 +56,10 @@ export class AuthController {
   async signout(@Res() res: Response): Promise<void> {
     await this.authService.signOut(res);
   }
+
+  /*****************************************************************************************/
+  /*                                          2FA                                          */
+  /*****************************************************************************************/
 
   @Get("2FA/generate")
   async generate2FA(@Req() req: Request): Promise<void> {

@@ -19,3 +19,4 @@ export { Setting, Leave, Public, Protected, Private, View, Hide, Rocket, Game } 
 export { DefaultAvatar } from "./avatar";
 export { Eve, Plant, Energy, Walle } from "./levels";
 export { WallE_Img, WallE_2_Img, WallE_Pong_Img, WallE_Eve_Img, Eve_Img, WallE_Eve_2_Img } from "./home";
+export { MoonMap, MoonNormalMap, SpaceMap, SkyMap } from "./game";

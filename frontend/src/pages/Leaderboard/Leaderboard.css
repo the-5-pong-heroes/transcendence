@@ -66,13 +66,16 @@
   text-align: center;
 }
 
+:not(.firstRow) > .col.status {
+  text-transform: lowercase;
+}
+
 .col.status {
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: right;
   align-self: center;
-  text-transform: lowercase;
 }
 
 .firstRow {
@@ -102,11 +105,6 @@
 
 :not(.firstRow) > .col:first-child > img {
   width: 60px;
-}
-
-.row .col:last-child,
-.row .col:nth-last-child(2) {
-  font-size: 1.1rem;
 }
 
 .friend {
@@ -141,7 +139,7 @@
 
 @media (max-width: 1080px) {
   .col.level span,
-  .friends {
+  .wins .defeats {
     display: none;
   }
   .firstRow,

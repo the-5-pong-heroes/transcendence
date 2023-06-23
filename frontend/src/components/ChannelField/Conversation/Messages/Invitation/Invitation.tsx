@@ -20,7 +20,7 @@ export const Invitation: React.FC<IInvitationProps> = ({ message, theme }) => {
       return;
     }
     socket.emit("disableInvitation", { messageId: message.id, channelId: message.channelId });
-    socket.emit(ClientEvents.GameInvite, { userId: message.senderId });
+    socket.emit(ClientEvents.GameInviteLink, { userId: message.senderId });
   };
 
   return (

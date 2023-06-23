@@ -56,6 +56,10 @@ export class AuthController {
     await this.authService.signOut(res);
   }
 
+  /*****************************************************************************************/
+  /*                                          2FA                                          */
+  /*****************************************************************************************/
+
   @Get("2FA/generate")
   async generate2FA(@Req() req: Request): Promise<void> {
     return this.generate2FAservice.generateService(req);

@@ -29,7 +29,6 @@ export function useUserQuery(): IUseUser {
       refetchOnMount: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      // refetchInterval: 5000,
     }
   );
 

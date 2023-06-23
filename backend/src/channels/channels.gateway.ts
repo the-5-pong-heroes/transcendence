@@ -1,4 +1,5 @@
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import * as bcrypt from "bcrypt";
 import { UseInterceptors } from "@nestjs/common";
 import { Socket, Server } from "socket.io";
 import { ChannelUsersService } from "../channel-users/channel-users.service";
@@ -115,6 +116,11 @@ export class ChannelsGateway {
 
   @SubscribeMessage("updateChannelType")
   async updateChannelType(client: Socket, payload: UpdateChannelTypeDto) {
+    if (payload.password) {
+      const salt = await bcrypt.genSalt();
+      const hash = await bcrypt.hash(payload.password, salt);
+      console.log(hash);
+    }
     const channel = await this.channelsService.update(payload);
     this.handleMessage(client, {
       content: `Channel mode is now ${channel.type}`,
